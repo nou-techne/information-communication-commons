@@ -1,194 +1,188 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import type { ArtifactType } from '../lib/supabase'
 
-const TYPES: ArtifactType[] = ['idea', 'proposal', 'commitment', 'pattern', 'synthesis', 'question', 'reflection']
+const WEBHOOK_URL = 'https://hook.us1.make.com/n947p48o1t005yewobmlq479v0ggltb8'
 
-type FormTab = 'artifact' | 'reflection' | 'connection' | 'commitment'
+type ExtractedItem = {
+  type: string
+  title: string
+  summary: string
+  tags: string[]
+  hlamt?: string
+}
+
+type ProcessingState = 'idle' | 'submitting' | 'extracting' | 'review' | 'saving' | 'done' | 'error'
+
+const HLAMT_LABELS: Record<string, { label: string; desc: string }> = {
+  e: { label: 'Ecology', desc: 'Environmental context, place, watershed, seasonal patterns' },
+  H: { label: 'Human', desc: 'People, capabilities, relationships, lived experience' },
+  L: { label: 'Language', desc: 'Shared vocabulary, frameworks, naming, definitions' },
+  A: { label: 'Artifacts', desc: 'Tools, documents, code, physical objects, infrastructure' },
+  M: { label: 'Methodology', desc: 'Processes, workflows, practices, coordination patterns' },
+  T: { label: 'Training', desc: 'Learning, skill development, transformation, practice' },
+}
+
+const PROMPTS: Record<string, string> = {
+  open: "What happened? What did you observe, learn, discuss, or decide? Write naturally — we'll handle the rest.",
+  session: "Describe what happened in this session. Key ideas, proposals, tensions, commitments — whatever stood out.",
+  idea: "Describe an idea that emerged. What is it? Why does it matter? What does it connect to?",
+  commitment: "What are you committing to? What will you do, by when, and why?",
+}
 
 export function Contribute() {
   const navigate = useNavigate()
-  const [tab, setTab] = useState<FormTab>('artifact')
-  const [loading, setLoading] = useState(false)
-  const [msg, setMsg] = useState('')
-  const [artifacts, setArtifacts] = useState<{ id: string; title: string }[]>([])
+  const [text, setText] = useState('')
+  const [context, setContext] = useState('open')
+  const [state, setState] = useState<ProcessingState>('idle')
+  const [extracted, setExtracted] = useState<ExtractedItem[]>([])
+  const [error, setError] = useState('')
+  const [selected, setSelected] = useState<Set<number>>(new Set())
 
-  // Artifact form
-  const [title, setTitle] = useState('')
-  const [summary, setSummary] = useState('')
-  const [type, setType] = useState<ArtifactType>('idea')
-  const [tagsInput, setTagsInput] = useState('')
-
-  // Reflection form
-  const [refArtifactId, setRefArtifactId] = useState('')
-  const [refBody, setRefBody] = useState('')
-
-  // Connection form
-  const [fromId, setFromId] = useState('')
-  const [toId, setToId] = useState('')
-  const [relType, setRelType] = useState('related_to')
-
-  // Commitment form
-  const [commitDesc, setCommitDesc] = useState('')
-  const [commitArtifactId, setCommitArtifactId] = useState('')
-  const [commitDue, setCommitDue] = useState('')
-
-  useEffect(() => {
-    supabase.from('artifacts').select('id, title').order('created_at', { ascending: false }).limit(50)
-      .then(({ data }) => setArtifacts(data || []))
-  }, [])
-
-  async function submitArtifact(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
-    const { data, error } = await supabase.from('artifacts').insert({
-      title, summary, type, state: 'seed',
-    }).select().single()
+    if (!text.trim()) return
 
-    if (error) { setMsg(`Error: ${error.message}`); setLoading(false); return }
+    setState('submitting')
+    setError('')
 
-    // Add tags
-    if (tagsInput.trim()) {
-      const tagNames = tagsInput.split(',').map(t => t.trim()).filter(Boolean)
-      for (const name of tagNames) {
-        const { data: tag } = await supabase.from('tags').upsert({ name, category: 'theme' }, { onConflict: 'name' }).select().single()
-        if (tag) await supabase.from('artifact_tags').insert({ artifact_id: data.id, tag_id: tag.id })
-      }
-    }
-
-    setLoading(false)
-    navigate(`/artifact/${data.id}`)
-  }
-
-  async function submitReflection(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    const { data, error } = await supabase.from('artifacts').insert({
-      title: `Reflection on ${artifacts.find(a => a.id === refArtifactId)?.title || 'artifact'}`,
-      body: refBody, type: 'reflection', state: 'seed',
-    }).select().single()
-
-    if (!error && data) {
-      await supabase.from('artifact_relationships').insert({
-        from_artifact_id: data.id, to_artifact_id: refArtifactId, type: 'builds_on',
+    try {
+      // Send to Make.com webhook (transcript ingestion scenario)
+      // The scenario sends to Claude for extraction, then calls ingest_extraction() RPC
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: text,
+          source: 'app-contribute',
+          context_type: context,
+          convergence: 'ethboulder-2026',
+          timestamp: new Date().toISOString(),
+        }),
       })
-      navigate(`/artifact/${data.id}`)
-    } else {
-      setMsg(`Error: ${error?.message}`)
+
+      if (!response.ok) throw new Error('Failed to submit')
+
+      // The webhook processes asynchronously — we show a success state
+      // and direct the user to check the Garden for their new artifacts
+      setState('done')
+    } catch (err) {
+      setError('Something went wrong. Please try again.')
+      setState('error')
     }
-    setLoading(false)
   }
 
-  async function submitConnection(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    const { error } = await supabase.from('artifact_relationships').insert({
-      from_artifact_id: fromId, to_artifact_id: toId, type: relType,
-    })
-    setMsg(error ? `Error: ${error.message}` : 'Connection created!')
-    setLoading(false)
+  if (state === 'done') {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="text-center py-16">
+          <div className="w-16 h-16 rounded-full bg-[#1a2a44] flex items-center justify-center mx-auto mb-6">
+            <span className="text-[#5b9de4] text-2xl font-bold">+</span>
+          </div>
+          <h2 className="text-xl font-bold mb-3">Contribution received</h2>
+          <p className="text-gray-400 mb-2 max-w-md mx-auto">
+            Your text is being processed. The AI extraction pipeline will identify ideas, proposals, commitments, and connections — and add them to the knowledge graph.
+          </p>
+          <p className="text-gray-500 text-sm mb-8">
+            This usually takes 30–60 seconds.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={() => { setState('idle'); setText(''); }}
+              className="px-6 py-2.5 bg-[#1a2a44] text-white rounded-lg hover:bg-[#243656] transition-colors text-sm"
+            >
+              Contribute more
+            </button>
+            <button
+              onClick={() => navigate('/')}
+              className="px-6 py-2.5 bg-[#3d7cc9] text-white rounded-lg hover:bg-[#5b9de4] transition-colors text-sm"
+            >
+              View the Garden
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
-
-  async function submitCommitment(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-
-    // Get current user's participant ID
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session) { setMsg('Please sign in first'); setLoading(false); return }
-
-    const { data: participant } = await supabase.from('participants').select('id').eq('auth_user_id', session.user.id).single()
-    if (!participant) { setMsg('No participant profile found'); setLoading(false); return }
-
-    const { error } = await supabase.from('commitments').insert({
-      description: commitDesc,
-      participant_id: participant.id,
-      artifact_id: commitArtifactId || null,
-      due_date: commitDue || null,
-      status: 'made',
-    })
-    setMsg(error ? `Error: ${error.message}` : 'Commitment recorded!')
-    setLoading(false)
-  }
-
-  const tabs: { key: FormTab; label: string }[] = [
-    { key: 'artifact', label: 'New Artifact' },
-    { key: 'reflection', label: 'Reflection' },
-    { key: 'connection', label: 'Connection' },
-    { key: 'commitment', label: 'Commitment' },
-  ]
-
-  const selectClass = "w-full bg-[#111d33] border border-[#1a2a44] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#5b9de4]"
-  const inputClass = selectClass
-  const btnClass = "w-full bg-[#3d7cc9] hover:bg-[#5b9de4] text-white py-3 rounded-lg transition-colors disabled:opacity-50"
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Contribute</h1>
+      <h1 className="text-2xl font-bold mb-2">Contribute</h1>
+      <p className="text-gray-400 text-sm mb-6">
+        Write naturally about what you experienced, learned, or want to commit to. 
+        AI will extract ideas, proposals, commitments, and connections for the knowledge graph.
+      </p>
 
+      {/* Context selector */}
       <div className="flex gap-1 mb-6 bg-[#111d33] rounded-lg p-1">
-        {tabs.map(t => (
-          <button key={t.key} onClick={() => { setTab(t.key); setMsg('') }}
-            className={`flex-1 py-2 text-sm rounded-md transition-colors ${tab === t.key ? 'bg-[#1a2a44] text-white' : 'text-gray-400 hover:text-white'}`}>
-            {t.label}
+        {Object.entries({
+          open: 'Open',
+          session: 'Session Notes',
+          idea: 'Idea',
+          commitment: 'Commitment',
+        }).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setContext(key)}
+            className={`flex-1 py-2 text-sm rounded-md transition-colors ${
+              context === key
+                ? 'bg-[#1a2a44] text-white'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            {label}
           </button>
         ))}
       </div>
 
-      {msg && <div className="mb-4 p-3 bg-[#1a2a44] rounded-lg text-sm">{msg}</div>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <textarea
+            value={text}
+            onChange={e => setText(e.target.value)}
+            placeholder={PROMPTS[context]}
+            rows={10}
+            required
+            className="w-full bg-[#111d33] border border-[#1a2a44] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#5b9de4] resize-y leading-relaxed"
+          />
+          <div className="flex justify-between mt-2">
+            <span className="text-xs text-gray-600">
+              The extraction pipeline identifies artifacts, classifies them by e/H-LAM/T dimension, and records relationships.
+            </span>
+            <span className="text-xs text-gray-500">{text.length} chars</span>
+          </div>
+        </div>
 
-      {tab === 'artifact' && (
-        <form onSubmit={submitArtifact} className="space-y-4">
-          <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" required className={inputClass} />
-          <textarea value={summary} onChange={e => setSummary(e.target.value)} placeholder="Summary" rows={4} className={inputClass} />
-          <select value={type} onChange={e => setType(e.target.value as ArtifactType)} className={selectClass}>
-            {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-          </select>
-          <input value={tagsInput} onChange={e => setTagsInput(e.target.value)} placeholder="Tags (comma-separated)" className={inputClass} />
-          <button type="submit" disabled={loading} className={btnClass}>{loading ? 'Creating...' : 'Create Artifact'}</button>
-        </form>
-      )}
+        {error && (
+          <div className="p-3 bg-red-900/20 border border-red-800/30 rounded-lg text-sm text-red-300">
+            {error}
+          </div>
+        )}
 
-      {tab === 'reflection' && (
-        <form onSubmit={submitReflection} className="space-y-4">
-          <select value={refArtifactId} onChange={e => setRefArtifactId(e.target.value)} required className={selectClass}>
-            <option value="">Select artifact to reflect on...</option>
-            {artifacts.map(a => <option key={a.id} value={a.id}>{a.title}</option>)}
-          </select>
-          <textarea value={refBody} onChange={e => setRefBody(e.target.value)} placeholder="Your reflection..." rows={6} required className={inputClass} />
-          <button type="submit" disabled={loading} className={btnClass}>{loading ? 'Submitting...' : 'Submit Reflection'}</button>
-        </form>
-      )}
+        <button
+          type="submit"
+          disabled={state === 'submitting' || !text.trim()}
+          className="w-full bg-[#3d7cc9] hover:bg-[#5b9de4] text-white py-3 rounded-lg transition-colors disabled:opacity-50"
+        >
+          {state === 'submitting' ? 'Sending to extraction pipeline...' : 'Submit to the Commons'}
+        </button>
+      </form>
 
-      {tab === 'connection' && (
-        <form onSubmit={submitConnection} className="space-y-4">
-          <select value={fromId} onChange={e => setFromId(e.target.value)} required className={selectClass}>
-            <option value="">From artifact...</option>
-            {artifacts.map(a => <option key={a.id} value={a.id}>{a.title}</option>)}
-          </select>
-          <select value={relType} onChange={e => setRelType(e.target.value)} className={selectClass}>
-            {['builds_on', 'extends', 'contradicts', 'supersedes', 'related_to'].map(t => <option key={t} value={t}>{t}</option>)}
-          </select>
-          <select value={toId} onChange={e => setToId(e.target.value)} required className={selectClass}>
-            <option value="">To artifact...</option>
-            {artifacts.map(a => <option key={a.id} value={a.id}>{a.title}</option>)}
-          </select>
-          <button type="submit" disabled={loading} className={btnClass}>{loading ? 'Linking...' : 'Create Connection'}</button>
-        </form>
-      )}
-
-      {tab === 'commitment' && (
-        <form onSubmit={submitCommitment} className="space-y-4">
-          <textarea value={commitDesc} onChange={e => setCommitDesc(e.target.value)} placeholder="What are you committing to?" rows={3} required className={inputClass} />
-          <select value={commitArtifactId} onChange={e => setCommitArtifactId(e.target.value)} className={selectClass}>
-            <option value="">Related artifact (optional)</option>
-            {artifacts.map(a => <option key={a.id} value={a.id}>{a.title}</option>)}
-          </select>
-          <input type="date" value={commitDue} onChange={e => setCommitDue(e.target.value)} className={inputClass} />
-          <button type="submit" disabled={loading} className={btnClass}>{loading ? 'Recording...' : 'Record Commitment'}</button>
-        </form>
-      )}
+      {/* e/H-LAM/T reference */}
+      <details className="mt-8">
+        <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-300 transition-colors">
+          What is e/H-LAM/T?
+        </summary>
+        <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">
+          {Object.entries(HLAMT_LABELS).map(([key, { label, desc }]) => (
+            <div key={key} className="bg-[#111d33] border border-[#1a2a44] rounded-lg p-3">
+              <div className="text-xs font-mono text-[#5b9de4] mb-1">{key}/</div>
+              <div className="text-sm font-medium text-gray-300 mb-1">{label}</div>
+              <div className="text-xs text-gray-500 leading-relaxed">{desc}</div>
+            </div>
+          ))}
+        </div>
+      </details>
     </div>
   )
 }
