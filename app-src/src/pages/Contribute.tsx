@@ -85,7 +85,7 @@ export function Contribute() {
               onClick={() => navigate('/')}
               className="px-6 py-2.5 bg-[#3d7cc9] text-white rounded-lg hover:bg-[#5b9de4] transition-colors text-sm"
             >
-              View the Garden
+              Explore
             </button>
           </div>
         </div>
