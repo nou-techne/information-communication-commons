@@ -12,12 +12,12 @@ interface DimensionDef {
 }
 
 const DIMENSIONS: DimensionDef[] = [
-  { key: 'e', letter: 'e/', name: 'Ecology', tagName: 'hlamt:ecology', description: 'Where We Are — place, environment, context', color: '#4a8c6f' },
-  { key: 'H', letter: 'H/', name: 'Human', tagName: 'hlamt:human', description: 'Who\'s Here — people, participants, relationships', color: '#c4956a' },
-  { key: 'L', letter: 'L/', name: 'Language', tagName: 'hlamt:language', description: 'How We Talk — vocabulary, tags, shared concepts', color: '#c3fd50' },
-  { key: 'A', letter: 'A/', name: 'Artifacts', tagName: 'hlamt:artifacts', description: 'What We\'re Building — tools, documents, infrastructure', color: '#8bbfff' },
-  { key: 'M', letter: 'M/', name: 'Methodology', tagName: 'hlamt:methodology', description: 'How We Work — processes, governance, coordination', color: '#7ccfb8' },
-  { key: 'T', letter: 'T/', name: 'Training', tagName: 'hlamt:training', description: 'What We\'re Learning — skills, transformation, practice', color: '#e8927c' },
+  { key: 'e', letter: 'e/', name: 'Ecology', tagName: 'hlamt:E', description: 'Where We Are — place, environment, context', color: '#4a8c6f' },
+  { key: 'H', letter: 'H/', name: 'Human', tagName: 'hlamt:H', description: 'Who\'s Here — people, participants, relationships', color: '#c4956a' },
+  { key: 'L', letter: 'L/', name: 'Language', tagName: 'hlamt:L', description: 'How We Talk — vocabulary, tags, shared concepts', color: '#c3fd50' },
+  { key: 'A', letter: 'A/', name: 'Artifacts', tagName: 'hlamt:A', description: 'What We\'re Building — tools, documents, infrastructure', color: '#8bbfff' },
+  { key: 'M', letter: 'M/', name: 'Methodology', tagName: 'hlamt:M', description: 'How We Work — processes, governance, coordination', color: '#7ccfb8' },
+  { key: 'T', letter: 'T/', name: 'Training', tagName: 'hlamt:T', description: 'What We\'re Learning — skills, transformation, practice', color: '#e8927c' },
 ]
 
 export function Dimensions() {

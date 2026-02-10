@@ -13,12 +13,12 @@ interface DimensionConfig {
 }
 
 const DIMENSION_MAP: Record<string, DimensionConfig> = {
-  e: { letter: 'e/', name: 'Ecology', subtitle: 'Where We Are', tagName: 'hlamt:ecology', color: '#4a8c6f' },
-  H: { letter: 'H/', name: 'Human', subtitle: 'Who\'s Here', tagName: 'hlamt:human', color: '#c4956a' },
-  L: { letter: 'L/', name: 'Language', subtitle: 'How We Talk', tagName: 'hlamt:language', color: '#c3fd50' },
-  A: { letter: 'A/', name: 'Artifacts', subtitle: 'What We\'re Building', tagName: 'hlamt:artifacts', color: '#8bbfff' },
-  M: { letter: 'M/', name: 'Methodology', subtitle: 'How We Work', tagName: 'hlamt:methodology', color: '#7ccfb8' },
-  T: { letter: 'T/', name: 'Training', subtitle: 'What We\'re Learning', tagName: 'hlamt:training', color: '#e8927c' },
+  e: { letter: 'e/', name: 'Ecology', subtitle: 'Where We Are', tagName: 'hlamt:E', color: '#4a8c6f' },
+  H: { letter: 'H/', name: 'Human', subtitle: 'Who\'s Here', tagName: 'hlamt:H', color: '#c4956a' },
+  L: { letter: 'L/', name: 'Language', subtitle: 'How We Talk', tagName: 'hlamt:L', color: '#c3fd50' },
+  A: { letter: 'A/', name: 'Artifacts', subtitle: 'What We\'re Building', tagName: 'hlamt:A', color: '#8bbfff' },
+  M: { letter: 'M/', name: 'Methodology', subtitle: 'How We Work', tagName: 'hlamt:M', color: '#7ccfb8' },
+  T: { letter: 'T/', name: 'Training', subtitle: 'What We\'re Learning', tagName: 'hlamt:T', color: '#e8927c' },
 }
 
 function ArtifactCard({ artifact }: { artifact: Artifact }) {
@@ -165,35 +165,37 @@ function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-          Vocabulary ({tagCounts.length} tags)
-        </h2>
-        <div className="space-y-1">
-          {tagCounts.map(t => (
-            <div key={t.name} className="flex items-center gap-3">
-              <span className="text-sm text-gray-300 w-40 truncate">{t.name}</span>
-              <div className="flex-1 h-4 bg-[#1a1a1a] rounded overflow-hidden">
-                <div
-                  className="h-full rounded"
-                  style={{
-                    width: `${(t.count / maxCount) * 100}%`,
-                    backgroundColor: '#c3fd50',
-                    opacity: 0.6
-                  }}
-                />
-              </div>
-              <span className="text-xs text-gray-500 w-8 text-right">{t.count}</span>
-            </div>
-          ))}
-          {tagCounts.length === 0 && <p className="text-gray-500 text-sm">No tags yet.</p>}
-        </div>
-      </div>
       {artifacts.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Language Artifacts</h2>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Language Artifacts ({artifacts.length})</h2>
           <div className="grid gap-3">
             {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
+          </div>
+        </div>
+      )}
+      {artifacts.length === 0 && <p className="text-gray-500 text-sm">No language artifacts tagged yet.</p>}
+      {tagCounts.length > 0 && (
+        <div>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            Shared Vocabulary ({tagCounts.length} tags)
+          </h2>
+          <div className="space-y-1">
+            {tagCounts.map(t => (
+              <div key={t.name} className="flex items-center gap-3">
+                <span className="text-sm text-gray-300 w-40 truncate">{t.name}</span>
+                <div className="flex-1 h-4 bg-[#1a1a1a] rounded overflow-hidden">
+                  <div
+                    className="h-full rounded"
+                    style={{
+                      width: `${(t.count / maxCount) * 100}%`,
+                      backgroundColor: '#c3fd50',
+                      opacity: 0.6
+                    }}
+                  />
+                </div>
+                <span className="text-xs text-gray-500 w-8 text-right">{t.count}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}
