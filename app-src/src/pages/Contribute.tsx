@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-const WEBHOOK_URL = 'https://hook.us1.make.com/bipq9blpdjf3ekou38lxxfz80j8m6s3y'
+import { supabase } from '../lib/supabase'
 
 type ProcessingState = 'idle' | 'submitting' | 'done' | 'error'
 
@@ -13,6 +12,8 @@ const HLAMT_LABELS: Record<string, { label: string; desc: string }> = {
   M: { label: 'Methodology', desc: 'Processes, workflows, practices, coordination patterns' },
   T: { label: 'Training', desc: 'Learning, skill development, transformation, practice' },
 }
+
+const CONVERGENCE_ID = '00000000-0000-0000-0000-000000000100'
 
 export function Contribute() {
   const navigate = useNavigate()
@@ -28,22 +29,30 @@ export function Contribute() {
     setError('')
 
     try {
-      const response = await fetch(WEBHOOK_URL, {
+      // Insert directly into contributions table
+      const { error: insertError } = await supabase.from('contributions').insert({
+        content: text,
+        convergence_id: CONVERGENCE_ID,
+        status: 'pending',
+      })
+
+      if (insertError) throw insertError
+
+      // Also fire the Make.com webhook for extraction (fire and forget)
+      fetch('https://hook.us1.make.com/bipq9blpdjf3ekou38lxxfz80j8m6s3y', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: text,
-          source: 'app-contribute',
+          convergence: CONVERGENCE_ID,
           context_type: 'auto',
-          convergence: '00000000-0000-0000-0000-000000000100',
-          timestamp: new Date().toISOString(),
+          source: 'app-contribute',
         }),
-      })
+      }).catch(() => {}) // Don't block on webhook
 
-      if (!response.ok) throw new Error('Failed to submit')
       setState('done')
-    } catch (err) {
-      setError('Something went wrong. Please try again.')
+    } catch (err: any) {
+      setError(err?.message || 'Something went wrong. Please try again.')
       setState('error')
     }
   }
@@ -57,10 +66,10 @@ export function Contribute() {
           </div>
           <h2 className="text-xl font-bold mb-3">Contribution received</h2>
           <p className="text-gray-400 mb-2 max-w-md mx-auto">
-            Your text is being processed. AI will determine what kind of contribution this is — idea, session notes, commitment, reflection — and extract structured knowledge for the graph.
+            Your contribution has been saved. The AI extraction pipeline will process it shortly — identifying ideas, proposals, commitments, and connections for the knowledge graph.
           </p>
           <p className="text-gray-500 text-sm mb-8">
-            This usually takes 30–60 seconds.
+            Extraction typically takes 30–60 seconds.
           </p>
           <div className="flex gap-3 justify-center">
             <button
@@ -117,11 +126,10 @@ export function Contribute() {
           disabled={state === 'submitting' || !text.trim()}
           className="w-full bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] py-3 rounded-lg transition-colors disabled:opacity-50"
         >
-          {state === 'submitting' ? 'Processing...' : 'Submit to the Commons'}
+          {state === 'submitting' ? 'Saving...' : 'Submit to the Commons'}
         </button>
       </form>
 
-      {/* e/H-LAM/T reference */}
       <details className="mt-8">
         <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-300 transition-colors">
           What is e/H-LAM/T?
