@@ -1,11 +1,10 @@
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase'
-import { Garden } from './pages/Garden'
+import { Explore } from './pages/Explore'
 import { ArtifactDetail } from './pages/ArtifactDetail'
 import { MyThread } from './pages/MyThread'
 import { Contribute } from './pages/Contribute'
-import { Pulse } from './pages/Pulse'
 import { Auth } from './pages/Auth'
 import type { Session } from '@supabase/supabase-js'
 
@@ -20,10 +19,9 @@ function Nav() {
   }, [])
 
   const links = [
-    { to: '/', label: 'Garden', icon: '' },
-    { to: '/pulse', label: 'Pulse', icon: '' },
-    { to: '/contribute', label: 'Contribute', icon: '' },
-    { to: '/me', label: 'My Thread', icon: '' },
+    { to: '/', label: 'Explore' },
+    { to: '/contribute', label: 'Contribute' },
+    { to: '/me', label: 'My Thread' },
   ]
 
   return (
@@ -66,11 +64,10 @@ export default function App() {
         <Nav />
         <main className="max-w-6xl mx-auto px-4 py-6">
           <Routes>
-            <Route path="/" element={<Garden />} />
+            <Route path="/" element={<Explore />} />
             <Route path="/artifact/:id" element={<ArtifactDetail />} />
             <Route path="/me" element={<MyThread />} />
             <Route path="/contribute" element={<Contribute />} />
-            <Route path="/pulse" element={<Pulse />} />
             <Route path="/auth" element={<Auth />} />
           </Routes>
         </main>
