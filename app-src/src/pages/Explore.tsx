@@ -151,8 +151,10 @@ export function Explore() {
               to={`/d/${d.key}`}
               className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:border-[#c3fd50] transition-colors text-center group"
             >
-              <span className="font-mono text-2xl font-bold block" style={{ color: d.color }}>{d.letter}</span>
-              <span className="text-2xl font-bold block text-white my-1">{count}</span>
+              <div className="flex items-baseline justify-center gap-1.5">
+                <span className="font-mono text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
+                <span className="text-2xl font-bold text-white">{count}</span>
+              </div>
               <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{d.desc}</span>
             </Link>
           )
