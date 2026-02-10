@@ -28,7 +28,7 @@ function Nav() {
   ]
 
   return (
-    <nav className="bg-[#0f0f0f] border-b border-[#262626] px-4 py-3 flex items-center justify-between">
+    <nav className="bg-[#0f0f0f] border-b border-[#262626] px-4 py-3 flex items-center justify-center gap-6">
       <Link to="/" className="text-xl font-bold text-white tracking-tight">
         <span className="text-[#c3fd50]">.id</span> Commons
         <span className="text-[#c3fd50] text-xs font-normal ml-2">· ETHBoulder 2026</span>
