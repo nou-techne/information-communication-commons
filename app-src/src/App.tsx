@@ -28,34 +28,36 @@ function Nav() {
   ]
 
   return (
-    <nav className="bg-[#0f0f0f] border-b border-[#262626] px-4 py-3 flex items-center justify-center gap-6">
-      <Link to="/" className="text-xl font-bold text-white tracking-tight">
-        <span className="text-[#c3fd50]">.id</span> Commons
-        <span className="text-[#c3fd50] text-xs font-normal ml-2">· ETHBoulder 2026</span>
-      </Link>
-      <div className="flex gap-1">
-        {links.map(l => (
-          <Link
-            key={l.to}
-            to={l.to}
-            className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-              (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
-                ? 'bg-[#262626] text-white'
-                : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
-            }`}
-          >
-            {l.label}
-          </Link>
-        ))}
-      </div>
-      <div className="text-sm">
-        {session ? (
-          <button onClick={() => supabase.auth.signOut()} className="text-gray-400 hover:text-white">
-            Sign out
-          </button>
-        ) : (
-          <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link>
-        )}
+    <nav className="bg-[#0f0f0f] border-b border-[#262626] px-4 py-3">
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <Link to="/" className="text-xl font-bold text-white tracking-tight">
+          <span className="text-[#c3fd50]">.id</span> Commons
+          <span className="text-[#c3fd50] text-xs font-normal ml-2">· ETHBoulder 2026</span>
+        </Link>
+        <div className="flex gap-1">
+          {links.map(l => (
+            <Link
+              key={l.to}
+              to={l.to}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
+                  ? 'bg-[#262626] text-white'
+                  : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+              }`}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
+        <div className="text-sm">
+          {session ? (
+            <button onClick={() => supabase.auth.signOut()} className="text-gray-400 hover:text-white">
+              Sign out
+            </button>
+          ) : (
+            <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link>
+          )}
+        </div>
       </div>
     </nav>
   )
