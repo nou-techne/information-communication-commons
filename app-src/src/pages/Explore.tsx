@@ -5,6 +5,15 @@ import type { Artifact, ArtifactType, ArtifactState, Event } from '../lib/supaba
 
 const TYPES: ArtifactType[] = ['idea', 'proposal', 'commitment', 'pattern', 'synthesis', 'question', 'reflection']
 
+const DIMENSIONS = [
+  { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f' },
+  { key: 'H', letter: 'H/', name: 'Human', desc: "Who's Here", color: '#c4956a' },
+  { key: 'L', letter: 'L/', name: 'Language', desc: 'How We Talk', color: '#c3fd50' },
+  { key: 'A', letter: 'A/', name: 'Artifacts', desc: "What We're Building", color: '#8bbfff' },
+  { key: 'M', letter: 'M/', name: 'Methodology', desc: 'How We Work', color: '#7ccfb8' },
+  { key: 'T', letter: 'T/', name: 'Training', desc: "What We're Learning", color: '#e8927c' },
+]
+
 function timeAgo(date: string) {
   const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
   if (s < 60) return `${s}s ago`
@@ -104,6 +113,20 @@ export function Explore() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">Explore</h1>
         <p className="text-gray-400 text-sm">The knowledge graph and live activity, side by side.</p>
+      </div>
+
+      {/* Dimensions */}
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6">
+        {DIMENSIONS.map(d => (
+          <Link
+            key={d.key}
+            to={`/d/${d.key}`}
+            className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 hover:border-[#c3fd50] transition-colors text-center group"
+          >
+            <span className="font-mono text-lg font-bold block" style={{ color: d.color }}>{d.letter}</span>
+            <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{d.desc}</span>
+          </Link>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -22,7 +22,6 @@ function Nav() {
 
   const links = [
     { to: '/', label: 'Explore' },
-    { to: '/dimensions', label: 'Dimensions' },
     { to: '/contribute', label: 'Contribute' },
     { to: '/me', label: 'My Thread' },
   ]
