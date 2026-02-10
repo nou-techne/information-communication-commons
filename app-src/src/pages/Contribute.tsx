@@ -52,8 +52,8 @@ export function Contribute() {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="text-center py-16">
-          <div className="w-16 h-16 rounded-full bg-[#1a2a44] flex items-center justify-center mx-auto mb-6">
-            <span className="text-[#5b9de4] text-2xl font-bold">+</span>
+          <div className="w-16 h-16 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-6">
+            <span className="text-[#c3fd50] text-2xl font-bold">+</span>
           </div>
           <h2 className="text-xl font-bold mb-3">Contribution received</h2>
           <p className="text-gray-400 mb-2 max-w-md mx-auto">
@@ -65,13 +65,13 @@ export function Contribute() {
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => { setState('idle'); setText(''); }}
-              className="px-6 py-2.5 bg-[#1a2a44] text-white rounded-lg hover:bg-[#243656] transition-colors text-sm"
+              className="px-6 py-2.5 bg-[#262626] text-white rounded-lg hover:bg-[#333333] transition-colors text-sm"
             >
               Contribute more
             </button>
             <button
               onClick={() => navigate('/')}
-              className="px-6 py-2.5 bg-[#3d7cc9] text-white rounded-lg hover:bg-[#5b9de4] transition-colors text-sm"
+              className="px-6 py-2.5 bg-[#c3fd50] text-[#0f0f0f] rounded-lg hover:bg-[#d4fe80] transition-colors text-sm"
             >
               Explore
             </button>
@@ -96,7 +96,7 @@ export function Contribute() {
             placeholder="What's on your mind? Session notes, an idea, a commitment, a reflection — just write. The AI will identify what kind of contribution this is, extract the key concepts, classify by e/H-LAM/T dimension, and connect it to the knowledge graph."
             rows={12}
             required
-            className="w-full bg-[#111d33] border border-[#1a2a44] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#5b9de4] resize-y leading-relaxed"
+            className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] resize-y leading-relaxed"
           />
           <div className="flex justify-between mt-2">
             <span className="text-xs text-gray-600">
@@ -115,7 +115,7 @@ export function Contribute() {
         <button
           type="submit"
           disabled={state === 'submitting' || !text.trim()}
-          className="w-full bg-[#3d7cc9] hover:bg-[#5b9de4] text-white py-3 rounded-lg transition-colors disabled:opacity-50"
+          className="w-full bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] py-3 rounded-lg transition-colors disabled:opacity-50"
         >
           {state === 'submitting' ? 'Processing...' : 'Submit to the Commons'}
         </button>
@@ -128,8 +128,8 @@ export function Contribute() {
         </summary>
         <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">
           {Object.entries(HLAMT_LABELS).map(([key, { label, desc }]) => (
-            <div key={key} className="bg-[#111d33] border border-[#1a2a44] rounded-lg p-3">
-              <div className="text-xs font-mono text-[#5b9de4] mb-1">{key}/</div>
+            <div key={key} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-3">
+              <div className="text-xs font-mono text-[#c3fd50] mb-1">{key}/</div>
               <div className="text-sm font-medium text-gray-300 mb-1">{label}</div>
               <div className="text-xs text-gray-500 leading-relaxed">{desc}</div>
             </div>

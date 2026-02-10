@@ -28,9 +28,10 @@ function Nav() {
   ]
 
   return (
-    <nav className="bg-[#0a1628] border-b border-[#1a2a44] px-4 py-3 flex items-center justify-between">
+    <nav className="bg-[#0f0f0f] border-b border-[#262626] px-4 py-3 flex items-center justify-between">
       <Link to="/" className="text-xl font-bold text-white tracking-tight">
-        <span className="text-[#5b9de4]">.id</span> Commons
+        <span className="text-[#c3fd50]">.id</span> Commons
+        <span className="text-[#c3fd50] text-xs font-normal ml-2">· ETHBoulder 2026</span>
       </Link>
       <div className="flex gap-1">
         {links.map(l => (
@@ -39,8 +40,8 @@ function Nav() {
             to={l.to}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
-                ? 'bg-[#1a2a44] text-white'
-                : 'text-gray-400 hover:text-white hover:bg-[#111d33]'
+                ? 'bg-[#262626] text-white'
+                : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
             }`}
           >
             {l.label}
@@ -53,7 +54,7 @@ function Nav() {
             Sign out
           </button>
         ) : (
-          <Link to="/auth" className="text-[#5b9de4] hover:text-white">Sign in</Link>
+          <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link>
         )}
       </div>
     </nav>
@@ -63,7 +64,7 @@ function Nav() {
 export default function App() {
   return (
     <BrowserRouter basename="/app">
-      <div className="min-h-screen bg-[#0a1628] text-white">
+      <div className="min-h-screen bg-[#0f0f0f] text-white">
         <Nav />
         <main className="max-w-6xl mx-auto px-4 py-6">
           <Routes>

@@ -26,7 +26,7 @@ export function Auth() {
       <div className="max-w-md mx-auto text-center py-12">
         <h2 className="text-xl font-bold mb-4">Check your email</h2>
         <p className="text-gray-400">We sent a magic link to <strong>{email}</strong></p>
-        <button onClick={() => navigate('/')} className="mt-4 text-[#5b9de4] hover:text-white">
+        <button onClick={() => navigate('/')} className="mt-4 text-[#c3fd50] hover:text-white">
           Back to Garden
         </button>
       </div>
@@ -43,12 +43,12 @@ export function Auth() {
           onChange={e => setEmail(e.target.value)}
           placeholder="your@email.com"
           required
-          className="w-full bg-[#111d33] border border-[#1a2a44] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#5b9de4]"
+          className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50]"
         />
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#3d7cc9] hover:bg-[#5b9de4] text-white py-3 rounded-lg transition-colors disabled:opacity-50"
+          className="w-full bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] py-3 rounded-lg transition-colors disabled:opacity-50"
         >
           {loading ? 'Sending...' : 'Send Magic Link'}
         </button>

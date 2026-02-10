@@ -15,7 +15,7 @@ interface DimensionConfig {
 const DIMENSION_MAP: Record<string, DimensionConfig> = {
   e: { letter: 'e/', name: 'Ecology', subtitle: 'Where We Are', tagName: 'hlamt:ecology', color: '#4a8c6f' },
   H: { letter: 'H/', name: 'Human', subtitle: 'Who\'s Here', tagName: 'hlamt:human', color: '#c4956a' },
-  L: { letter: 'L/', name: 'Language', subtitle: 'How We Talk', tagName: 'hlamt:language', color: '#5b9de4' },
+  L: { letter: 'L/', name: 'Language', subtitle: 'How We Talk', tagName: 'hlamt:language', color: '#c3fd50' },
   A: { letter: 'A/', name: 'Artifacts', subtitle: 'What We\'re Building', tagName: 'hlamt:artifacts', color: '#8bbfff' },
   M: { letter: 'M/', name: 'Methodology', subtitle: 'How We Work', tagName: 'hlamt:methodology', color: '#7ccfb8' },
   T: { letter: 'T/', name: 'Training', subtitle: 'What We\'re Learning', tagName: 'hlamt:training', color: '#e8927c' },
@@ -25,7 +25,7 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
   return (
     <Link
       to={`/artifact/${artifact.id}`}
-      className="block rounded-lg border border-[#1a2a44] bg-[#0d1b2e] p-4 hover:bg-[#111d33] transition-colors"
+      className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:bg-[#1a1a1a] transition-colors"
     >
       <div className="flex items-center gap-2 mb-1">
         <span
@@ -45,7 +45,7 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
 function EcologyView({ artifacts }: { artifacts: Artifact[] }) {
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-[#1a2a44] bg-[#0d1b2e] p-6">
+      <div className="rounded-xl border border-[#262626] bg-[#1a1a1a] p-6">
         <h2 className="text-lg font-semibold mb-3" style={{ color: '#4a8c6f' }}>Place Context</h2>
         <div className="space-y-2 text-gray-300 text-sm">
           <p className="font-medium text-white">Boulder, Colorado</p>
@@ -99,22 +99,22 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
         </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {participants.map(p => (
-            <div key={p.id} className="rounded-lg border border-[#1a2a44] bg-[#0d1b2e] p-4">
+            <div key={p.id} className="rounded-lg border border-[#262626] bg-[#1a1a1a] p-4">
               <h3 className="font-medium text-white mb-1" style={{ color: '#c4956a' }}>{p.name}</h3>
               {p.affiliation && <p className="text-xs text-gray-500 mb-1">{p.affiliation}</p>}
               {p.bio && <p className="text-sm text-gray-400 mb-2">{p.bio}</p>}
               {p.interests?.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-2">
                   {p.interests.map((i, idx) => (
-                    <span key={idx} className="text-xs px-2 py-0.5 rounded bg-[#1a2a44] text-gray-400">{i}</span>
+                    <span key={idx} className="text-xs px-2 py-0.5 rounded bg-[#262626] text-gray-400">{i}</span>
                   ))}
                 </div>
               )}
               {participantArtifacts[p.id]?.length > 0 && (
-                <div className="mt-2 border-t border-[#1a2a44] pt-2">
+                <div className="mt-2 border-t border-[#262626] pt-2">
                   <span className="text-xs text-gray-500">Recent contributions:</span>
                   {participantArtifacts[p.id].map(a => (
-                    <Link key={a.id} to={`/artifact/${a.id}`} className="block text-xs text-[#5b9de4] hover:text-white mt-1">
+                    <Link key={a.id} to={`/artifact/${a.id}`} className="block text-xs text-[#c3fd50] hover:text-white mt-1">
                       {a.title}
                     </Link>
                   ))}
@@ -173,12 +173,12 @@ function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
           {tagCounts.map(t => (
             <div key={t.name} className="flex items-center gap-3">
               <span className="text-sm text-gray-300 w-40 truncate">{t.name}</span>
-              <div className="flex-1 h-4 bg-[#0d1b2e] rounded overflow-hidden">
+              <div className="flex-1 h-4 bg-[#1a1a1a] rounded overflow-hidden">
                 <div
                   className="h-full rounded"
                   style={{
                     width: `${(t.count / maxCount) * 100}%`,
-                    backgroundColor: '#5b9de4',
+                    backgroundColor: '#c3fd50',
                     opacity: 0.6
                   }}
                 />
@@ -258,7 +258,7 @@ export function DimensionView() {
     return (
       <div className="text-center py-12">
         <p className="text-gray-400">Unknown dimension.</p>
-        <Link to="/dimensions" className="text-[#5b9de4] hover:text-white text-sm mt-2 inline-block">Back to Dimensions</Link>
+        <Link to="/dimensions" className="text-[#c3fd50] hover:text-white text-sm mt-2 inline-block">Back to Dimensions</Link>
       </div>
     )
   }

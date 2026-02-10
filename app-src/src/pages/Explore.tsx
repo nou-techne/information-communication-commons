@@ -117,9 +117,9 @@ export function Explore() {
                 onChange={e => setSearch(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && doSearch()}
                 placeholder="Search artifacts..."
-                className="flex-1 bg-[#111d33] border border-[#1a2a44] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#5b9de4] text-sm"
+                className="flex-1 bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm"
               />
-              <button onClick={doSearch} className="bg-[#3d7cc9] hover:bg-[#5b9de4] px-4 py-2 rounded-lg transition-colors text-sm">
+              <button onClick={doSearch} className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-4 py-2 rounded-lg transition-colors text-sm">
                 Search
               </button>
             </div>
@@ -127,7 +127,7 @@ export function Explore() {
               <select
                 value={typeFilter}
                 onChange={e => setTypeFilter(e.target.value as ArtifactType | '')}
-                className="bg-[#111d33] border border-[#1a2a44] rounded-lg px-3 py-1.5 text-xs text-white"
+                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white"
               >
                 <option value="">All types</option>
                 {TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
@@ -135,7 +135,7 @@ export function Explore() {
               <select
                 value={stateFilter}
                 onChange={e => setStateFilter(e.target.value as ArtifactState | '')}
-                className="bg-[#111d33] border border-[#1a2a44] rounded-lg px-3 py-1.5 text-xs text-white"
+                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white"
               >
                 <option value="">All states</option>
                 {Object.entries(STATE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
@@ -157,7 +157,7 @@ export function Explore() {
                 <Link
                   key={a.id}
                   to={`/artifact/${a.id}`}
-                  className="block bg-[#111d33] border border-[#1a2a44] rounded-xl p-4 hover:border-[#5b9de4] transition-colors group"
+                  className="block bg-[#1a1a1a] border border-[#262626] rounded-xl p-4 hover:border-[#c3fd50] transition-colors group"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span
@@ -167,7 +167,7 @@ export function Explore() {
                     <span className="text-xs uppercase tracking-wider text-gray-400">{a.type}</span>
                     <span className="ml-auto text-xs text-gray-500">{STATE_LABELS[a.state]}</span>
                   </div>
-                  <h3 className="font-semibold text-white group-hover:text-[#5b9de4] transition-colors mb-1 text-sm">
+                  <h3 className="font-semibold text-white group-hover:text-[#c3fd50] transition-colors mb-1 text-sm">
                     {a.title}
                   </h3>
                   {a.summary && (
@@ -190,9 +190,9 @@ export function Explore() {
           ) : (
             <div className="space-y-1.5">
               {events.map(e => (
-                <div key={e.id} className="bg-[#111d33] border border-[#1a2a44] rounded-lg p-2.5">
+                <div key={e.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-2.5">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#5b9de4]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#c3fd50]" />
                     <span className="text-xs font-medium text-white capitalize">{e.type}</span>
                     <span className="text-xs text-gray-600 ml-auto">{timeAgo(e.created_at)}</span>
                   </div>

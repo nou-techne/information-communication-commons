@@ -55,30 +55,30 @@ export function ArtifactDetail() {
     <div className="max-w-3xl mx-auto">
       <Link to="/" className="text-sm text-gray-400 hover:text-white mb-4 inline-block">← Back to Garden</Link>
 
-      <div className="bg-[#111d33] border border-[#1a2a44] rounded-xl p-6">
+      <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <span className="w-4 h-4 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[artifact.type] }} />
           <span className="text-sm uppercase tracking-wider" style={{ color: ARTIFACT_COLORS[artifact.type] }}>{artifact.type}</span>
           <span className="text-sm text-gray-500">{STATE_LABELS[artifact.state]}</span>
-          {artifact.created_by_agent && <span className="text-xs bg-[#1a2a44] text-gray-400 px-2 py-0.5 rounded">Agent-created</span>}
+          {artifact.created_by_agent && <span className="text-xs bg-[#262626] text-gray-400 px-2 py-0.5 rounded">Agent-created</span>}
         </div>
 
         <h1 className="text-2xl font-bold mb-3">{artifact.title}</h1>
 
         {artifact.summary && <p className="text-gray-300 mb-4 leading-relaxed">{artifact.summary}</p>}
-        {artifact.body && <div className="text-gray-400 mb-4 whitespace-pre-wrap text-sm border-t border-[#1a2a44] pt-4">{artifact.body}</div>}
+        {artifact.body && <div className="text-gray-400 mb-4 whitespace-pre-wrap text-sm border-t border-[#262626] pt-4">{artifact.body}</div>}
 
         <div className="flex flex-wrap gap-2 mb-4">
           {tags.map(t => (
-            <span key={t} className="bg-[#1a2a44] text-[#5b9de4] text-xs px-2 py-1 rounded-full">{t}</span>
+            <span key={t} className="bg-[#262626] text-[#c3fd50] text-xs px-2 py-1 rounded-full">{t}</span>
           ))}
           {tents.map(t => (
-            <span key={t} className="bg-[#1a2a44] text-[#7ccfb8] text-xs px-2 py-1 rounded-full">{t}</span>
+            <span key={t} className="bg-[#262626] text-[#7ccfb8] text-xs px-2 py-1 rounded-full">{t}</span>
           ))}
         </div>
 
         {dimensions.length > 0 && (
-          <div className="mb-4 border-t border-[#1a2a44] pt-4">
+          <div className="mb-4 border-t border-[#262626] pt-4">
             <h3 className="text-sm font-semibold text-gray-400 mb-2">Dimensions</h3>
             <div className="grid grid-cols-2 gap-2">
               {dimensions.map((d, i) => (
@@ -92,19 +92,19 @@ export function ArtifactDetail() {
         )}
 
         {steward && (
-          <div className="text-sm text-gray-400 border-t border-[#1a2a44] pt-4">
+          <div className="text-sm text-gray-400 border-t border-[#262626] pt-4">
             <span className="text-gray-500">Steward:</span> {steward}
           </div>
         )}
 
         {relationships.length > 0 && (
-          <div className="border-t border-[#1a2a44] pt-4 mt-4">
+          <div className="border-t border-[#262626] pt-4 mt-4">
             <h3 className="text-sm font-semibold text-gray-400 mb-2">Relationships</h3>
             {relationships.map((r: any) => (
               <Link
                 key={r.id}
                 to={`/artifact/${r.direction === 'to' ? r.to_artifact_id : r.from_artifact_id}`}
-                className="block text-sm text-[#5b9de4] hover:text-white py-1"
+                className="block text-sm text-[#c3fd50] hover:text-white py-1"
               >
                 {r.type} → {r.related_title || 'Unknown'}
               </Link>
@@ -112,7 +112,7 @@ export function ArtifactDetail() {
           </div>
         )}
 
-        <div className="text-xs text-gray-600 mt-4 border-t border-[#1a2a44] pt-4">
+        <div className="text-xs text-gray-600 mt-4 border-t border-[#262626] pt-4">
           Created {new Date(artifact.created_at).toLocaleString()} · ID: {artifact.id.slice(0, 8)}
         </div>
       </div>

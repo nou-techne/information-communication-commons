@@ -38,7 +38,7 @@ export function MyThread() {
       <div className="text-center py-12">
         <h2 className="text-xl font-bold mb-4">My Thread</h2>
         <p className="text-gray-400 mb-4">Sign in to see your artifacts, commitments, and connections.</p>
-        <Link to="/auth" className="bg-[#3d7cc9] hover:bg-[#5b9de4] text-white px-6 py-2 rounded-lg transition-colors">
+        <Link to="/auth" className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-6 py-2 rounded-lg transition-colors">
           Sign in
         </Link>
       </div>
@@ -51,13 +51,13 @@ export function MyThread() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">My Thread</h1>
-        <Link to="/contribute" className="bg-[#3d7cc9] hover:bg-[#5b9de4] text-white px-4 py-2 rounded-lg text-sm transition-colors">
+        <Link to="/contribute" className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-4 py-2 rounded-lg text-sm transition-colors">
           + Contribute
         </Link>
       </div>
 
       {!participantId && (
-        <div className="bg-[#111d33] border border-[#1a2a44] rounded-xl p-6 text-center">
+        <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 text-center">
           <p className="text-gray-400">No participant profile linked to your account yet.</p>
           <p className="text-sm text-gray-500 mt-2">Your profile will be created when you contribute your first artifact.</p>
         </div>
@@ -68,7 +68,7 @@ export function MyThread() {
           <h2 className="text-lg font-semibold mb-3 text-gray-300">My Artifacts</h2>
           <div className="space-y-2">
             {artifacts.map(a => (
-              <Link key={a.id} to={`/artifact/${a.id}`} className="flex items-center gap-3 bg-[#111d33] border border-[#1a2a44] rounded-lg p-3 hover:border-[#5b9de4] transition-colors">
+              <Link key={a.id} to={`/artifact/${a.id}`} className="flex items-center gap-3 bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors">
                 <span className="w-3 h-3 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[a.type] }} />
                 <span className="flex-1 font-medium">{a.title}</span>
                 <span className="text-xs text-gray-500">{STATE_LABELS[a.state]}</span>
@@ -83,7 +83,7 @@ export function MyThread() {
           <h2 className="text-lg font-semibold mb-3 text-gray-300">My Commitments</h2>
           <div className="space-y-2">
             {commitments.map(c => (
-              <div key={c.id} className="bg-[#111d33] border border-[#1a2a44] rounded-lg p-3">
+              <div key={c.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-3">
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-[#f4d9a0]">{c.description}</span>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${
