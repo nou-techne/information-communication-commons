@@ -4,20 +4,58 @@ import { supabase, ARTIFACT_COLORS, STATE_LABELS } from '../lib/supabase'
 import type { Artifact, Commitment } from '../lib/supabase'
 import type { Session } from '@supabase/supabase-js'
 
+interface Contribution {
+  id: string
+  content: string
+  status: string
+  created_at: string
+  processed_at: string | null
+}
+
+function timeAgo(date: string) {
+  const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
+  if (s < 60) return `${s}s ago`
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
+  return `${Math.floor(s / 86400)}d ago`
+}
+
 export function MyThread() {
   const [session, setSession] = useState<Session | null>(null)
   const [participantId, setParticipantId] = useState<string | null>(null)
   const [artifacts, setArtifacts] = useState<Artifact[]>([])
   const [commitments, setCommitments] = useState<Commitment[]>([])
+  const [contributions, setContributions] = useState<Contribution[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Load contributions for everyone (no auth required)
+    loadContributions()
+
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session)
       if (!data.session) { setLoading(false); return }
       loadParticipant(data.session.user.id)
     })
+
+    // Real-time subscription for contribution status updates
+    const contribSub = supabase.channel('my-contributions')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'contributions' }, () => {
+        loadContributions()
+      })
+      .subscribe()
+
+    return () => { supabase.removeChannel(contribSub) }
   }, [])
+
+  async function loadContributions() {
+    const { data } = await supabase
+      .from('contributions')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(20)
+    setContributions(data || [])
+  }
 
   async function loadParticipant(authId: string) {
     const { data: p } = await supabase.from('participants').select('id').eq('auth_user_id', authId).single()
@@ -33,19 +71,12 @@ export function MyThread() {
     setLoading(false)
   }
 
-  if (!session) {
-    return (
-      <div className="text-center py-12">
-        <h2 className="text-xl font-bold mb-4">My Thread</h2>
-        <p className="text-gray-400 mb-4">Sign in to see your artifacts, commitments, and connections.</p>
-        <Link to="/auth" className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-6 py-2 rounded-lg transition-colors">
-          Sign in
-        </Link>
-      </div>
-    )
+  const statusColors: Record<string, string> = {
+    pending: 'bg-yellow-900/50 text-yellow-300',
+    processing: 'bg-blue-900/50 text-blue-300',
+    complete: 'bg-green-900/50 text-green-300',
+    error: 'bg-red-900/50 text-red-300',
   }
-
-  if (loading) return <div className="text-center text-gray-500 py-12">Loading...</div>
 
   return (
     <div>
@@ -56,13 +87,35 @@ export function MyThread() {
         </Link>
       </div>
 
-      {!participantId && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 text-center">
-          <p className="text-gray-400">No participant profile linked to your account yet.</p>
-          <p className="text-sm text-gray-500 mt-2">Your profile will be created when you contribute your first artifact.</p>
-        </div>
-      )}
+      {/* Contributions */}
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold mb-3 text-gray-300">Contributions</h2>
+        {contributions.length === 0 ? (
+          <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 text-center">
+            <p className="text-gray-400">No contributions yet.</p>
+            <p className="text-sm text-gray-500 mt-2">Share something on the Contribute page and watch it appear here.</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {contributions.map(c => (
+              <div key={c.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[c.status] || 'bg-gray-800 text-gray-400'}`}>
+                    {c.status}
+                  </span>
+                  <span className="text-xs text-gray-500">{timeAgo(c.created_at)}</span>
+                </div>
+                <p className="text-sm text-gray-300 line-clamp-3">{c.content}</p>
+                {c.processed_at && (
+                  <p className="text-xs text-gray-600 mt-2">Processed {timeAgo(c.processed_at)}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
+      {/* Artifacts (if signed in with linked participant) */}
       {artifacts.length > 0 && (
         <section className="mb-8">
           <h2 className="text-lg font-semibold mb-3 text-gray-300">My Artifacts</h2>
@@ -78,6 +131,7 @@ export function MyThread() {
         </section>
       )}
 
+      {/* Commitments (if signed in with linked participant) */}
       {commitments.length > 0 && (
         <section>
           <h2 className="text-lg font-semibold mb-3 text-gray-300">My Commitments</h2>
