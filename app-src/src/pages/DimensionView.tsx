@@ -282,12 +282,7 @@ export function DimensionView() {
         <p className="text-gray-500 text-sm">Loading...</p>
       ) : (
         <>
-          {dimension === 'e' && <EcologyView artifacts={artifacts} />}
-          {dimension === 'H' && <HumanView artifacts={artifacts} />}
-          {dimension === 'L' && <LanguageView artifacts={artifacts} />}
-          {(dimension === 'A' || dimension === 'M' || dimension === 'T') && (
-            <GenericDimensionView artifacts={artifacts} dim={dim} />
-          )}
+          <GenericDimensionView artifacts={artifacts} dim={dim} />
         </>
       )}
     </div>
