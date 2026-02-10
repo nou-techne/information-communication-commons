@@ -6,12 +6,12 @@ import type { Artifact, ArtifactType, ArtifactState, Event } from '../lib/supaba
 const TYPES: ArtifactType[] = ['idea', 'proposal', 'commitment', 'pattern', 'synthesis', 'question', 'reflection']
 
 const DIMENSIONS = [
-  { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f' },
-  { key: 'H', letter: 'H/', name: 'Human', desc: "Who's Here", color: '#c4956a' },
-  { key: 'L', letter: 'L/', name: 'Language', desc: 'How We Talk', color: '#c3fd50' },
-  { key: 'A', letter: 'A/', name: 'Artifacts', desc: "What We're Building", color: '#8bbfff' },
-  { key: 'M', letter: 'M/', name: 'Methodology', desc: 'How We Work', color: '#7ccfb8' },
-  { key: 'T', letter: 'T/', name: 'Training', desc: "What We're Learning", color: '#e8927c' },
+  { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f', tag: 'hlamt:E' },
+  { key: 'H', letter: 'H/', name: 'Human', desc: "Who's Here", color: '#c4956a', tag: 'hlamt:H' },
+  { key: 'L', letter: 'L/', name: 'Language', desc: 'How We Talk', color: '#c3fd50', tag: 'hlamt:L' },
+  { key: 'A', letter: 'A/', name: 'Artifacts', desc: "What We're Building", color: '#8bbfff', tag: 'hlamt:A' },
+  { key: 'M', letter: 'M/', name: 'Methodology', desc: 'How We Work', color: '#7ccfb8', tag: 'hlamt:M' },
+  { key: 'T', letter: 'T/', name: 'Training', desc: "What We're Learning", color: '#e8927c', tag: 'hlamt:T' },
 ]
 
 function timeAgo(date: string) {
@@ -33,6 +33,9 @@ export function Explore() {
 
   // Pulse state
   const [events, setEvents] = useState<Event[]>([])
+
+  // Dimension counts
+  const [dimCounts, setDimCounts] = useState<Record<string, number>>({})
 
   useEffect(() => {
     loadData()
@@ -80,12 +83,21 @@ export function Explore() {
   }, [typeFilter, stateFilter])
 
   async function loadData() {
-    const [{ data: arts }, { data: evts }] = await Promise.all([
+    const [{ data: arts }, { data: evts }, { data: tagData }] = await Promise.all([
       supabase.from('artifacts').select('*').order('created_at', { ascending: false }).limit(50),
       supabase.from('events').select('*').order('created_at', { ascending: false }).limit(20),
+      supabase.from('tags').select('name, artifact_tags(count)').like('name', 'hlamt:%'),
     ])
     setArtifacts(arts || [])
     setEvents(evts || [])
+    if (tagData) {
+      const c: Record<string, number> = {}
+      for (const tag of tagData) {
+        const arr = tag.artifact_tags as unknown as { count: number }[]
+        c[tag.name] = arr?.[0]?.count ?? 0
+      }
+      setDimCounts(c)
+    }
     setLoading(false)
   }
 
@@ -123,7 +135,12 @@ export function Explore() {
             to={`/d/${d.key}`}
             className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 hover:border-[#c3fd50] transition-colors text-center group"
           >
-            <span className="font-mono text-lg font-bold block" style={{ color: d.color }}>{d.letter}</span>
+            <div className="flex items-baseline justify-center gap-1.5">
+              <span className="font-mono text-lg font-bold" style={{ color: d.color }}>{d.letter}</span>
+              {(dimCounts[d.tag] ?? 0) > 0 && (
+                <span className="text-xs text-gray-500">{dimCounts[d.tag]}</span>
+              )}
+            </div>
             <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{d.desc}</span>
           </Link>
         ))}
