@@ -85,33 +85,30 @@ export function Explore() {
   }, [typeFilter, stateFilter])
 
   async function refreshDimCounts() {
-    const { data: tagData } = await supabase.from('tags').select('name, artifact_tags(count)').like('name', 'hlamt:%')
+    const [{ data: tagData }, { count: participantCount }] = await Promise.all([
+      supabase.from('tags').select('name, artifact_tags(count)').like('name', 'hlamt:%'),
+      supabase.from('participants').select('*', { count: 'exact', head: true }),
+    ])
+    const c: Record<string, number> = {}
     if (tagData) {
-      const c: Record<string, number> = {}
       for (const tag of tagData) {
         const arr = tag.artifact_tags as unknown as { count: number }[]
         c[tag.name] = arr?.[0]?.count ?? 0
       }
-      setDimCounts(c)
     }
+    // H/ counts participants, not artifacts
+    c['hlamt:H'] = participantCount ?? 0
+    setDimCounts(c)
   }
 
   async function loadData() {
-    const [{ data: arts }, { data: evts }, { data: tagData }] = await Promise.all([
+    const [{ data: arts }, { data: evts }] = await Promise.all([
       supabase.from('artifacts').select('*').order('created_at', { ascending: false }).limit(50),
       supabase.from('events').select('*').order('created_at', { ascending: false }).limit(20),
-      supabase.from('tags').select('name, artifact_tags(count)').like('name', 'hlamt:%'),
     ])
     setArtifacts(arts || [])
     setEvents(evts || [])
-    if (tagData) {
-      const c: Record<string, number> = {}
-      for (const tag of tagData) {
-        const arr = tag.artifact_tags as unknown as { count: number }[]
-        c[tag.name] = arr?.[0]?.count ?? 0
-      }
-      setDimCounts(c)
-    }
+    await refreshDimCounts()
     setLoading(false)
   }
 

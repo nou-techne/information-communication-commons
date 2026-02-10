@@ -282,7 +282,8 @@ export function DimensionView() {
         <p className="text-gray-500 text-sm">Loading...</p>
       ) : (
         <>
-          <GenericDimensionView artifacts={artifacts} dim={dim} />
+          {dimension === 'H' && <HumanView artifacts={artifacts} />}
+          {dimension !== 'H' && <GenericDimensionView artifacts={artifacts} dim={dim} />}
         </>
       )}
     </div>
