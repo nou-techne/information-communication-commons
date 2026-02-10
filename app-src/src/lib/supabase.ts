@@ -79,12 +79,12 @@ export const ARTIFACT_COLORS: Record<ArtifactType, string> = {
 }
 
 export const STATE_LABELS: Record<ArtifactState, string> = {
-  seed: '🌱 Seed',
-  discussed: '💬 Discussed',
-  proposed: '📋 Proposed',
+  seed: 'Seed',
+  discussed: 'Discussed',
+  proposed: 'Proposed',
   committed: '🤝 Committed',
-  active: '⚡ Active',
-  completed: '✅ Completed',
+  active: 'Active',
+  completed: 'Completed',
   archived: '📦 Archived',
-  superseded: '🔄 Superseded',
+  superseded: 'Superseded',
 }

@@ -12,8 +12,8 @@ function timeAgo(date: string) {
 }
 
 const EVENT_ICONS: Record<string, string> = {
-  created: '🌱', evolved: '🔄', connected: '🔗', observed: '👁️',
-  committed: '🤝', extracted: '⚡', synthesized: '✨',
+  created: 'created', evolved: 'evolved', connected: 'connected', observed: 'observed',
+  committed: 'committed', extracted: 'extracted', synthesized: 'synthesized',
 }
 
 export function Pulse() {
@@ -76,7 +76,7 @@ export function Pulse() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">⚡ Live Pulse</h1>
+      <h1 className="text-2xl font-bold mb-6">Live Pulse</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Event Feed */}

@@ -115,7 +115,7 @@ export function Contribute() {
   const tabs: { key: FormTab; label: string }[] = [
     { key: 'artifact', label: '✍️ New Artifact' },
     { key: 'reflection', label: '💭 Reflection' },
-    { key: 'connection', label: '🔗 Connection' },
+    { key: 'connection', label: 'Connection' },
     { key: 'commitment', label: '🤝 Commitment' },
   ]
 

@@ -39,7 +39,7 @@ export function Garden() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4">🌿 The Garden</h1>
+        <h1 className="text-2xl font-bold mb-4">The Garden</h1>
         <div className="flex gap-2 mb-4">
           <input
             value={search}

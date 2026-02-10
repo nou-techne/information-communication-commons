@@ -20,8 +20,8 @@ function Nav() {
   }, [])
 
   const links = [
-    { to: '/', label: '🌿 Garden', icon: '' },
-    { to: '/pulse', label: '⚡ Pulse', icon: '' },
+    { to: '/', label: 'Garden', icon: '' },
+    { to: '/pulse', label: 'Pulse', icon: '' },
     { to: '/contribute', label: '✍️ Contribute', icon: '' },
     { to: '/me', label: '🧵 My Thread', icon: '' },
   ]
