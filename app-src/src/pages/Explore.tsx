@@ -130,7 +130,7 @@ export function Explore() {
                 className="bg-[#111d33] border border-[#1a2a44] rounded-lg px-3 py-1.5 text-xs text-white"
               >
                 <option value="">All types</option>
-                {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                {TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
               </select>
               <select
                 value={stateFilter}
