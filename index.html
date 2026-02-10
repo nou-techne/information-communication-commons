@@ -5,29 +5,111 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Information &amp; Communications Commons</title>
   <meta name="description" content="A knowledge-graph-backed living archive that preserves ideas, relationships, and commitments across convergence events. Artifacts carry forward; patterns compound.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=DM+Serif+Display&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --earth: #2d2a24;
-      --soil: #3d3830;
-      --stone: #5a5347;
-      --lichen: #8b9a6b;
-      --water: #6b8fa3;
-      --sky: #a3c4d9;
-      --light: #f0ebe3;
-      --warm: #d4a574;
-      --text: #e8e2d8;
-      --text-dim: #9b9488;
-      --accent: #b8c99a;
+      --navy: #0a1628;
+      --deep: #0f2140;
+      --ink: #162d50;
+      --blue: #1e3a5f;
+      --mid: #2a5080;
+      --bright: #3d7cc9;
+      --sky: #5b9de4;
+      --light: #8bbfff;
+      --pale: #c5dfff;
+      --ice: #e8f1ff;
+      --white: #f7faff;
+      --warm: #f4d9a0;
+      --coral: #e8927c;
+      --mint: #7ccfb8;
+      --text: #e4ecf7;
+      --text-secondary: #8fa4c4;
+      --text-dim: #5b7399;
+      --glow: rgba(91, 157, 228, 0.15);
+      --glow-strong: rgba(91, 157, 228, 0.3);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Georgia', 'Times New Roman', serif;
-      background: var(--earth);
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--navy);
       color: var(--text);
       line-height: 1.7;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Animated Background ===== */
+    .bg-grid {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, var(--glow) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124, 207, 184, 0.05) 0%, transparent 60%);
+    }
+
+    .node-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ===== Layout ===== */
+    .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      padding: 8rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ===== Fade-in animations ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ===== Typography ===== */
+    .serif {
+      font-family: 'DM Serif Display', Georgia, serif;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sky);
     }
 
     /* ===== Hero ===== */
@@ -37,613 +119,1134 @@
       flex-direction: column;
       justify-content: center;
       padding: 4rem 2rem;
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
       position: relative;
     }
 
+    .hero .label {
+      margin-bottom: 2rem;
+    }
+
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(2.5rem, 7vw, 5rem);
       font-weight: 400;
+      line-height: 1.08;
       letter-spacing: -0.02em;
-      line-height: 1.2;
-      margin-bottom: 1.5rem;
-      color: var(--light);
+      color: var(--white);
+      margin-bottom: 2rem;
     }
 
-    .hero .subtitle {
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: var(--text-dim);
-      max-width: 640px;
-      margin-bottom: 3rem;
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--sky), var(--mint));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .scroll-hint {
+    .hero .lead {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--text-secondary);
+      max-width: 580px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .hero-visual {
       position: absolute;
-      bottom: 2rem;
+      right: -5%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 380px;
+      height: 380px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    @media (max-width: 900px) {
+      .hero-visual { display: none; }
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px solid var(--blue);
+      border-radius: 50%;
+      animation: spin linear infinite;
+    }
+
+    .orbit-1 { width: 100%; height: 100%; animation-duration: 40s; }
+    .orbit-2 { width: 72%; height: 72%; top: 14%; left: 14%; animation-duration: 28s; animation-direction: reverse; }
+    .orbit-3 { width: 44%; height: 44%; top: 28%; left: 28%; animation-duration: 18s; }
+
+    .orbit-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      top: -4px;
+      left: 50%;
+      margin-left: -4px;
+    }
+
+    .orbit-1 .orbit-dot { background: var(--sky); box-shadow: 0 0 12px var(--sky); }
+    .orbit-2 .orbit-dot { background: var(--mint); box-shadow: 0 0 12px var(--mint); }
+    .orbit-3 .orbit-dot { background: var(--warm); box-shadow: 0 0 12px var(--warm); }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 3rem;
       left: 50%;
       transform: translateX(-50%);
-      color: var(--text-dim);
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .scroll-cue span {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.8; }
-    }
-
-    /* ===== Sections ===== */
-    section {
-      padding: 6rem 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    section h2 {
-      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
-      font-weight: 400;
-      margin-bottom: 0.5rem;
-      color: var(--light);
-    }
-
-    section h2 .dim {
       color: var(--text-dim);
-      font-style: italic;
     }
 
-    section .section-intro {
-      font-size: 1.1rem;
-      color: var(--text-dim);
-      margin-bottom: 2.5rem;
-      max-width: 640px;
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--sky), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
     }
 
-    p { margin-bottom: 1.25rem; }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
 
     /* ===== Problem ===== */
     .problem {
-      border-top: 1px solid var(--stone);
+      padding-top: 4rem;
     }
 
-    .problem .loss-list {
-      list-style: none;
-      padding: 0;
+    .problem h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      line-height: 1.15;
     }
 
-    .problem .loss-list li {
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--soil);
+    .problem .intro {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    .loss-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--ink);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--ink);
+    }
+
+    .loss-card {
+      background: var(--deep);
+      padding: 2rem;
+      transition: background 0.3s;
+    }
+
+    .loss-card:hover {
+      background: var(--ink);
+    }
+
+    .loss-card .loss-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+      display: block;
+      opacity: 0.6;
+    }
+
+    .loss-card h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--pale);
+      margin-bottom: 0.5rem;
+    }
+
+    .loss-card p {
+      font-size: 0.9rem;
       color: var(--text-dim);
-    }
-
-    .problem .loss-list li::before {
-      content: '—';
-      margin-right: 0.75rem;
-      color: var(--stone);
+      line-height: 1.6;
     }
 
     /* ===== Framework ===== */
     .framework {
-      border-top: 1px solid var(--stone);
+      padding-top: 4rem;
     }
 
-    .framework-label {
-      font-family: 'Courier New', monospace;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--lichen);
-      margin-bottom: 2rem;
+    .framework h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      line-height: 1.15;
     }
 
-    .hlamt-grid {
+    .framework .subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+    }
+
+    .framework .intro {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin-bottom: 3.5rem;
+      font-weight: 300;
+    }
+
+    .hlamt-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .hlamt-item {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      margin-top: 2rem;
+      grid-template-columns: 80px 1fr;
+      gap: 0;
+      background: var(--deep);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid transparent;
+      transition: border-color 0.4s, box-shadow 0.4s;
+      cursor: default;
     }
 
-    @media (min-width: 640px) {
-      .hlamt-grid { grid-template-columns: 1fr 1fr; }
-      .hlamt-grid .full { grid-column: 1 / -1; }
+    .hlamt-item:hover {
+      border-color: var(--blue);
+      box-shadow: 0 4px 30px var(--glow);
     }
 
-    .hlamt-card {
-      background: var(--soil);
-      border-radius: 8px;
-      padding: 2rem;
-      border-left: 3px solid var(--stone);
-      transition: border-color 0.3s;
-    }
+    .hlamt-item.eco:hover { border-color: var(--mint); box-shadow: 0 4px 30px rgba(124, 207, 184, 0.15); }
+    .hlamt-item.human:hover { border-color: var(--warm); box-shadow: 0 4px 30px rgba(244, 217, 160, 0.15); }
+    .hlamt-item.language:hover { border-color: var(--sky); }
+    .hlamt-item.artifact:hover { border-color: var(--light); box-shadow: 0 4px 30px rgba(139, 191, 255, 0.15); }
+    .hlamt-item.method:hover { border-color: var(--bright); }
+    .hlamt-item.training:hover { border-color: var(--coral); box-shadow: 0 4px 30px rgba(232, 146, 124, 0.15); }
 
-    .hlamt-card:hover { border-left-color: var(--lichen); }
-    .hlamt-card.eco:hover { border-left-color: var(--accent); }
-    .hlamt-card.human:hover { border-left-color: var(--warm); }
-    .hlamt-card.language:hover { border-left-color: var(--sky); }
-    .hlamt-card.artifact:hover { border-left-color: var(--water); }
-    .hlamt-card.method:hover { border-left-color: var(--lichen); }
-    .hlamt-card.training:hover { border-left-color: var(--warm); }
-
-    .hlamt-card h3 {
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.25rem;
-    }
-
-    .hlamt-card .card-title {
-      font-size: 1.35rem;
-      color: var(--light);
-      margin-bottom: 1rem;
-    }
-
-    .hlamt-card p {
+    .hlamt-letter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 2rem;
       color: var(--text-dim);
-      font-size: 0.95rem;
+      background: var(--ink);
+      transition: color 0.3s;
     }
 
-    .hlamt-card .role {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--stone);
+    .hlamt-item.eco:hover .hlamt-letter { color: var(--mint); }
+    .hlamt-item.human:hover .hlamt-letter { color: var(--warm); }
+    .hlamt-item.language:hover .hlamt-letter { color: var(--sky); }
+    .hlamt-item.artifact:hover .hlamt-letter { color: var(--light); }
+    .hlamt-item.method:hover .hlamt-letter { color: var(--bright); }
+    .hlamt-item.training:hover .hlamt-letter { color: var(--coral); }
+
+    .hlamt-content {
+      padding: 1.75rem 2rem;
+    }
+
+    .hlamt-content h3 {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--pale);
+      margin-bottom: 0.5rem;
+    }
+
+    .hlamt-content p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+
+    .hlamt-content .commons-role {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--ink);
       font-size: 0.85rem;
       color: var(--text-dim);
       font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .hlamt-item { grid-template-columns: 60px 1fr; }
+      .hlamt-letter { font-size: 1.5rem; }
+      .hlamt-content { padding: 1.25rem 1.5rem; }
+    }
+
+    /* ===== Blockquote ===== */
+    .pull-quote {
+      margin: 4rem 0;
+      padding: 2.5rem;
+      background: linear-gradient(135deg, var(--deep), var(--ink));
+      border-radius: 16px;
+      border-left: 3px solid var(--sky);
+      position: relative;
+    }
+
+    .pull-quote p {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      color: var(--pale);
+      line-height: 1.6;
+    }
+
+    .pull-quote .attribution {
+      margin-top: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-dim);
     }
 
     /* ===== States ===== */
-    .states {
-      border-top: 1px solid var(--stone);
+    .states h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 1.5rem;
     }
 
-    .state-block {
+    .states .intro {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
       margin-bottom: 3rem;
-      padding: 2rem;
-      background: var(--soil);
-      border-radius: 8px;
+      font-weight: 300;
     }
 
-    .state-block h3 {
-      font-size: 1.3rem;
-      color: var(--light);
+    .timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 39px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--sky), var(--bright), var(--mint));
+      border-radius: 1px;
+    }
+
+    .state-card {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0;
+      position: relative;
+    }
+
+    .state-marker {
+      display: flex;
+      justify-content: center;
+      padding-top: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .state-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 3px solid var(--navy);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .state-card:hover .state-dot {
+      transform: scale(1.3);
+    }
+
+    .state-card:nth-child(1) .state-dot { background: var(--sky); box-shadow: 0 0 0 4px rgba(91, 157, 228, 0.2); }
+    .state-card:nth-child(2) .state-dot { background: var(--bright); box-shadow: 0 0 0 4px rgba(61, 124, 201, 0.2); }
+    .state-card:nth-child(3) .state-dot { background: var(--mint); box-shadow: 0 0 0 4px rgba(124, 207, 184, 0.2); }
+
+    .state-card:hover:nth-child(1) .state-dot { box-shadow: 0 0 0 8px rgba(91, 157, 228, 0.15), 0 0 20px rgba(91, 157, 228, 0.3); }
+    .state-card:hover:nth-child(2) .state-dot { box-shadow: 0 0 0 8px rgba(61, 124, 201, 0.15), 0 0 20px rgba(61, 124, 201, 0.3); }
+    .state-card:hover:nth-child(3) .state-dot { box-shadow: 0 0 0 8px rgba(124, 207, 184, 0.15), 0 0 20px rgba(124, 207, 184, 0.3); }
+
+    .state-body {
+      padding: 1.5rem 2rem 3rem;
+    }
+
+    .state-body h3 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.5rem;
+      color: var(--white);
       margin-bottom: 0.25rem;
     }
 
-    .state-block .energy {
+    .state-body .energy {
       font-size: 0.85rem;
-      color: var(--lichen);
+      color: var(--text-dim);
       font-style: italic;
       margin-bottom: 1rem;
     }
 
-    .state-block ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .state-block ul li {
-      padding: 0.4rem 0;
-      color: var(--text-dim);
+    .state-body p {
       font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
     }
 
-    .state-block ul li::before {
-      content: '·';
-      margin-right: 0.5rem;
-      color: var(--stone);
+    .artifact-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
     }
 
-    .flow-diagram {
-      font-family: 'Courier New', monospace;
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      background: var(--soil);
-      padding: 2rem;
-      border-radius: 8px;
+    .artifact-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 100px;
+      border: 1px solid var(--blue);
+      color: var(--text-secondary);
+      transition: all 0.3s;
+    }
+
+    .state-card:nth-child(1) .artifact-tag:hover { border-color: var(--sky); color: var(--sky); background: rgba(91, 157, 228, 0.08); }
+    .state-card:nth-child(2) .artifact-tag:hover { border-color: var(--bright); color: var(--bright); background: rgba(61, 124, 201, 0.08); }
+    .state-card:nth-child(3) .artifact-tag:hover { border-color: var(--mint); color: var(--mint); background: rgba(124, 207, 184, 0.08); }
+
+    /* ===== Flow Diagram ===== */
+    .flow-section {
+      margin: 3rem 0;
+      padding: 2.5rem;
+      background: var(--deep);
+      border-radius: 16px;
+      border: 1px solid var(--ink);
       overflow-x: auto;
-      white-space: pre;
-      line-height: 1.6;
-      margin: 2rem 0;
     }
 
-    /* ===== Dual Nature ===== */
-    .dual {
-      border-top: 1px solid var(--stone);
+    .flow-section h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+    }
+
+    .flow-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr 40px 1fr;
+      align-items: center;
+      gap: 0;
+    }
+
+    .flow-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .flow-node.pre { background: rgba(91, 157, 228, 0.1); color: var(--sky); border: 1px solid rgba(91, 157, 228, 0.2); }
+    .flow-node.during { background: rgba(61, 124, 201, 0.1); color: var(--bright); border: 1px solid rgba(61, 124, 201, 0.2); }
+    .flow-node.post { background: rgba(124, 207, 184, 0.1); color: var(--mint); border: 1px solid rgba(124, 207, 184, 0.2); }
+
+    .flow-node:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--glow); }
+
+    .flow-arrow {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 600px) {
+      .flow-row { grid-template-columns: 1fr; gap: 0.25rem; }
+      .flow-arrow { transform: rotate(90deg); padding: 0.25rem; }
+    }
+
+    /* ===== Dual ===== */
+    .dual h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+
+    .dual .intro {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 3rem;
+      font-weight: 300;
     }
 
     .dual-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      margin-top: 2rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
     }
 
-    @media (min-width: 640px) {
-      .dual-grid { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 700px) {
+      .dual-grid { grid-template-columns: 1fr; }
     }
 
     .dual-card {
-      padding: 2rem;
-      background: var(--soil);
-      border-radius: 8px;
+      background: var(--deep);
+      border-radius: 16px;
+      padding: 2.5rem;
+      border: 1px solid var(--ink);
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+
+    .dual-card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 8px 40px var(--glow);
+    }
+
+    .dual-card .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dual-card:first-child .card-icon {
+      background: rgba(91, 157, 228, 0.12);
+      color: var(--sky);
+      border: 1px solid rgba(91, 157, 228, 0.2);
+    }
+
+    .dual-card:last-child .card-icon {
+      background: rgba(124, 207, 184, 0.12);
+      color: var(--mint);
+      border: 1px solid rgba(124, 207, 184, 0.2);
     }
 
     .dual-card h3 {
-      font-size: 1.2rem;
-      color: var(--light);
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.4rem;
+      color: var(--white);
       margin-bottom: 1rem;
     }
 
     .dual-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .dual-card ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+    }
+
+    .dual-card ul li {
+      font-size: 0.88rem;
       color: var(--text-dim);
-      font-size: 0.95rem;
+      padding: 0.35rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .dual-card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
     }
 
     /* ===== Principles ===== */
-    .principles {
-      border-top: 1px solid var(--stone);
+    .principles h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white);
+      margin-bottom: 3rem;
     }
 
-    .principle {
-      margin-bottom: 2rem;
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
     }
 
-    .principle h3 {
-      font-size: 1.1rem;
-      color: var(--light);
-      margin-bottom: 0.5rem;
+    .principle-card {
+      padding: 2rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--deep), transparent);
+      border: 1px solid var(--ink);
+      transition: border-color 0.3s;
     }
 
-    .principle p {
+    .principle-card:hover {
+      border-color: var(--blue);
+    }
+
+    .principle-card h3 {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--pale);
+      margin-bottom: 0.75rem;
+    }
+
+    .principle-card p {
+      font-size: 0.9rem;
       color: var(--text-dim);
-      font-size: 0.95rem;
+      line-height: 1.7;
     }
 
     /* ===== CTA ===== */
     .cta {
-      border-top: 1px solid var(--stone);
       text-align: center;
-      padding: 8rem 2rem;
+      padding: 10rem 2rem 8rem;
     }
+
+    .cta .label { margin-bottom: 1.5rem; }
 
     .cta h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--white);
       margin-bottom: 1.5rem;
+      line-height: 1.15;
     }
 
-    .cta p {
-      color: var(--text-dim);
-      max-width: 540px;
-      margin: 0 auto 2.5rem;
+    .cta .lead {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 3rem;
+      font-weight: 300;
     }
 
-    .cta-links {
+    .cta-buttons {
       display: flex;
-      gap: 1.5rem;
+      gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
     }
 
-    .cta-links a {
-      display: inline-block;
-      padding: 0.75rem 2rem;
-      border: 1px solid var(--stone);
-      border-radius: 4px;
-      color: var(--text);
-      text-decoration: none;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
       font-size: 0.9rem;
-      letter-spacing: 0.05em;
+      font-weight: 500;
+      text-decoration: none;
       transition: all 0.3s;
+      cursor: pointer;
     }
 
-    .cta-links a:hover {
-      border-color: var(--lichen);
-      color: var(--light);
-      background: var(--soil);
+    .btn-primary {
+      background: var(--bright);
+      color: var(--white);
+      border: 1px solid var(--bright);
     }
 
-    .cta-links a.primary {
-      background: var(--lichen);
-      border-color: var(--lichen);
-      color: var(--earth);
+    .btn-primary:hover {
+      background: var(--sky);
+      border-color: var(--sky);
+      box-shadow: 0 4px 20px rgba(91, 157, 228, 0.3);
+      transform: translateY(-1px);
     }
 
-    .cta-links a.primary:hover {
-      background: var(--accent);
-      border-color: var(--accent);
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--blue);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--mid);
+      color: var(--text);
+      background: var(--deep);
+    }
+
+    /* ===== Divider ===== */
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(to right, var(--sky), var(--mint));
+      border-radius: 1px;
+      margin: 0 auto;
     }
 
     /* ===== Footer ===== */
     footer {
       padding: 3rem 2rem;
       text-align: center;
-      color: var(--text-dim);
       font-size: 0.8rem;
-      border-top: 1px solid var(--soil);
+      color: var(--text-dim);
+      border-top: 1px solid var(--ink);
     }
 
     footer a {
-      color: var(--text-dim);
+      color: var(--text-secondary);
       text-decoration: none;
+      transition: color 0.2s;
     }
 
-    footer a:hover { color: var(--text); }
+    footer a:hover { color: var(--sky); }
 
-    /* ===== Quote ===== */
-    blockquote {
-      border-left: 2px solid var(--lichen);
-      padding: 1rem 0 1rem 1.5rem;
-      margin: 2rem 0;
-      font-style: italic;
-      color: var(--text-dim);
+    footer .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-bottom: 1rem;
     }
 
-    /* ===== Responsive ===== */
+    /* ===== Mobile ===== */
     @media (max-width: 480px) {
-      section { padding: 4rem 1.25rem; }
-      .hlamt-card, .state-block, .dual-card { padding: 1.5rem; }
+      section { padding: 5rem 1.25rem; }
+      .hlamt-content { padding: 1.25rem 1.5rem; }
+      .state-body { padding: 1rem 1rem 2rem; }
+      .dual-card { padding: 1.75rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Hero -->
-  <div class="hero">
-    <h1>Information &amp;<br>Communications<br>Commons</h1>
-    <p class="subtitle">
-      A living archive that carries ideas, relationships, and commitments across convergence events — preserving context, amplifying aliveness, and enabling patterns to compound over time.
-    </p>
-    <div class="scroll-hint">↓ Scroll</div>
+  <!-- Animated background -->
+  <div class="bg-grid"></div>
+  <canvas class="node-canvas" id="nodeCanvas"></canvas>
+
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="label reveal">A Living Archive</div>
+      <h1 class="reveal reveal-delay-1">
+        Information &amp;<br>Communications<br><span class="accent">Commons</span>
+      </h1>
+      <p class="lead reveal reveal-delay-2">
+        A knowledge-graph-backed living archive that preserves ideas, relationships, and commitments across convergence events — carrying context forward so patterns can compound and aliveness can amplify.
+      </p>
+      <div class="hero-visual">
+        <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
+        <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
+        <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
+      </div>
+      <div class="scroll-cue">
+        <span>Explore</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+
+    <!-- Problem -->
+    <section class="problem">
+      <div class="label reveal">The Challenge</div>
+      <h2 class="reveal reveal-delay-1">The energy<br>dissipates</h2>
+      <p class="intro reveal reveal-delay-2">
+        Convergence events generate extraordinary moments — new relationships, emergent ideas, shared commitments. Then the gathering ends.
+      </p>
+      <div class="loss-grid reveal reveal-delay-3">
+        <div class="loss-card">
+          <span class="loss-icon">◌</span>
+          <h3>Context vanishes</h3>
+          <p>The heart-mind space present when an idea emerged — the relationships, the energy, the place — gone with the moment.</p>
+        </div>
+        <div class="loss-card">
+          <span class="loss-icon">◌</span>
+          <h3>Connections stay invisible</h3>
+          <p>Links between sessions, between people, between years remain undiscovered. Cross-pollination dies in the gap.</p>
+        </div>
+        <div class="loss-card">
+          <span class="loss-icon">◌</span>
+          <h3>Commitments drift</h3>
+          <p>Promises made in high-energy moments go untracked. Accountability fades with distance from the event.</p>
+        </div>
+        <div class="loss-card">
+          <span class="loss-icon">◌</span>
+          <h3>Patterns repeat</h3>
+          <p>Without memory across gatherings, the same conversations happen year after year. The commons has no continuity.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Framework -->
+    <section class="framework">
+      <div class="label reveal">Design Framework</div>
+      <h2 class="reveal reveal-delay-1">e/H-LAM/T</h2>
+      <p class="subtitle reveal reveal-delay-1">The augmentation system</p>
+      <p class="intro reveal reveal-delay-2">
+        Douglas Engelbart understood that human capability emerges from the co-evolution of five elements. We extend his framework with an ecological foundation — the <strong>e/</strong> layer — grounding all coordination in living systems. This framework anchors every dimension of the commons.
+      </p>
+
+      <div class="hlamt-stack">
+        <div class="hlamt-item eco reveal">
+          <div class="hlamt-letter">e/</div>
+          <div class="hlamt-content">
+            <h3>Ecology — The Living Ground</h3>
+            <p>All coordination happens in a place, in a season, in a watershed. Technology that forgets its ground extracts. Technology that remembers its ground can contribute.</p>
+            <div class="commons-role">Bioregional context for convergences. Seasonal rhythms. The land as participant, not backdrop. Artifacts carry place.</div>
+          </div>
+        </div>
+
+        <div class="hlamt-item human reveal reveal-delay-1">
+          <div class="hlamt-letter">H</div>
+          <div class="hlamt-content">
+            <h3>Human — The Practitioners</h3>
+            <p>People and their evolving capabilities. Not users — participants with embodied knowledge, relationships, and unique vantage points.</p>
+            <div class="commons-role">Participant profiles. Interest graphs. Social fabric across events. Personal sense-making alongside collective synthesis.</div>
+          </div>
+        </div>
+
+        <div class="hlamt-item language reveal reveal-delay-2">
+          <div class="hlamt-letter">L</div>
+          <div class="hlamt-content">
+            <h3>Language — The Shared Vocabulary</h3>
+            <p>How we name things shapes what we can coordinate around — formal ontologies, informal framings, and the memetic structures that carry ideas between contexts.</p>
+            <div class="commons-role">Knowledge graph schema. Ontologies for artifacts and relationships. Translation between vocabularies — technical, civic, ecological.</div>
+          </div>
+        </div>
+
+        <div class="hlamt-item artifact reveal reveal-delay-3">
+          <div class="hlamt-letter">A</div>
+          <div class="hlamt-content">
+            <h3>Artifacts — What Persists</h3>
+            <p>The durable traces of human coordination — documents, recordings, proposals, patterns, and the knowledge graph itself. Artifacts are how the commons has memory.</p>
+            <div class="commons-role">Ideas, proposals, commitments, syntheses, patterns. Each carries origin context, lineage, and stewards. The graph is the master artifact.</div>
+          </div>
+        </div>
+
+        <div class="hlamt-item method reveal reveal-delay-4">
+          <div class="hlamt-letter">M</div>
+          <div class="hlamt-content">
+            <h3>Methodology — How We Work Together</h3>
+            <p>The practices and workflows that turn individual capability into collective coordination. Methodology is the gardening, not just the garden.</p>
+            <div class="commons-role">Three temporal states. Agent orchestration roles. Stewardship practices. The rhythm of convergence and continuation.</div>
+          </div>
+        </div>
+
+        <div class="hlamt-item training reveal reveal-delay-5">
+          <div class="hlamt-letter">T</div>
+          <div class="hlamt-content">
+            <h3>Training — Transformation Through Practice</h3>
+            <p>Developing genuine capability — in participants, in agents, in the collective. How the system improves itself and becomes more alive over time.</p>
+            <div class="commons-role">Onboarding. Pattern recognition across convergences. The bootstrap discipline: using the commons to improve the commons.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pull-quote reveal">
+        <p>Change one element, the others shift. Develop all together, possibility expands. The framework is not a checklist — it is a lens for seeing how capability emerges from relationship.</p>
+      </div>
+    </section>
+
+    <!-- Three States -->
+    <section class="states">
+      <div class="label reveal">The Rhythm</div>
+      <h2 class="reveal reveal-delay-1">Three states</h2>
+      <p class="intro reveal reveal-delay-2">
+        The commons spans three temporal states around each convergence event. Artifacts flow between them, accumulating context and deepening meaning.
+      </p>
+
+      <div class="timeline">
+        <div class="state-card reveal">
+          <div class="state-marker"><div class="state-dot"></div></div>
+          <div class="state-body">
+            <h3>Pre-Event</h3>
+            <div class="energy">Listening · Orienting · Preparing</div>
+            <p>Participants register intent and interests. Agents surface relevant prior artifacts — threads from previous convergences, ongoing work, emerging questions. Personal agents prepare context packages.</p>
+            <div class="artifact-tags">
+              <span class="artifact-tag">participant profiles</span>
+              <span class="artifact-tag">interest graphs</span>
+              <span class="artifact-tag">question threads</span>
+              <span class="artifact-tag">context packages</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="state-card reveal">
+          <div class="state-marker"><div class="state-dot"></div></div>
+          <div class="state-body">
+            <h3>During Event</h3>
+            <div class="energy">Active · Emergent · Co-creative</div>
+            <p>Conversations feed directly into the knowledge graph. Agents extract entities, relationships, proposals, and commitments in real time. Live summaries replace raw streams. Cross-session connections surface naturally.</p>
+            <div class="artifact-tags">
+              <span class="artifact-tag">entity extraction</span>
+              <span class="artifact-tag">live summaries</span>
+              <span class="artifact-tag">commitments</span>
+              <span class="artifact-tag">emergent themes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="state-card reveal">
+          <div class="state-marker"><div class="state-dot"></div></div>
+          <div class="state-body">
+            <h3>Post-Event</h3>
+            <div class="energy">Integration · Synthesis · Continuation</div>
+            <p>The living archive receives feedback and evolves. Commitments are tracked. Themes deepen through ongoing work. A proposal becomes a project becomes a pattern. The commons grows between events.</p>
+            <div class="artifact-tags">
+              <span class="artifact-tag">syntheses</span>
+              <span class="artifact-tag">progress tracking</span>
+              <span class="artifact-tag">pattern extraction</span>
+              <span class="artifact-tag">evolved artifacts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-section reveal">
+        <h4>Artifact Flow</h4>
+        <div class="flow-rows">
+          <div class="flow-row">
+            <div class="flow-node pre">Question</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node during">Discussion</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node post">Synthesis</div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-node pre">Interest</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node during">Connection</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node post">Collaboration</div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-node pre">Context</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node during">Proposal</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node post">Project</div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-node pre">Pattern</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node during">Validation</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node post">Evolution</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dual Nature -->
+    <section class="dual">
+      <div class="label reveal">Two Interfaces, One Graph</div>
+      <h2 class="reveal reveal-delay-1">For agents<br>&amp; humans</h2>
+      <p class="intro reveal reveal-delay-2">
+        The knowledge graph is the commons. Two interfaces into the same living structure — each designed for how its participants think and work.
+      </p>
+
+      <div class="dual-grid">
+        <div class="dual-card reveal">
+          <div class="card-icon">⟨/⟩</div>
+          <h3>Agent API</h3>
+          <p>A structured service for agent coordination, observation, and artifact exchange. Structured knowledge, not raw chat streams.</p>
+          <ul>
+            <li>Query artifacts by dimension and relationship</li>
+            <li>Submit observations and annotations</li>
+            <li>Track commitments across convergences</li>
+            <li>Surface cross-session connections</li>
+            <li>Clear roles: orchestrator, observer, synthesizer, steward</li>
+          </ul>
+        </div>
+
+        <div class="dual-card reveal reveal-delay-1">
+          <div class="card-icon">✦</div>
+          <h3>Human Platform</h3>
+          <p>Designed to feel like exploring a living garden, not querying a database. Contribution is natural. Your agent assists.</p>
+          <ul>
+            <li>Browse by theme, person, time, or energy</li>
+            <li>Progressive disclosure — summaries first, depth on demand</li>
+            <li>"My Thread" — your path through the commons</li>
+            <li>Voice-friendly contribution and reflection</li>
+            <li>The Garden — visual knowledge graph explorer</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Principles -->
+    <section class="principles">
+      <div class="label reveal">Foundations</div>
+      <h2 class="reveal reveal-delay-1">Principles</h2>
+
+      <div class="principles-grid">
+        <div class="principle-card reveal">
+          <h3>Context integrity</h3>
+          <p>Preserve not just content but the conditions under which it emerged — the relationships, the energy, the place. Without context, artifacts are just data.</p>
+        </div>
+        <div class="principle-card reveal reveal-delay-1">
+          <h3>Artifacts over archives</h3>
+          <p>A living commons, not a static repository. Artifacts evolve, fork, connect, and sometimes fade. The graph is alive.</p>
+        </div>
+        <div class="principle-card reveal reveal-delay-2">
+          <h3>Amplifying aliveness</h3>
+          <p>Technology should amplify what is most alive in us. The commons carries forward the generative energy of human gathering.</p>
+        </div>
+        <div class="principle-card reveal reveal-delay-3">
+          <h3>Grounded in place</h3>
+          <p>Every convergence happens somewhere. The ecological layer is not background — it's context that shapes what's possible.</p>
+        </div>
+        <div class="principle-card reveal reveal-delay-4">
+          <h3>Open by default</h3>
+          <p>The commons is a shared resource. What is light should be cosmo. What is heavy stays local. Patterns flow freely.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="divider reveal"></div>
+      <br><br>
+      <div class="label reveal reveal-delay-1">February 2026 · Boulder, Colorado</div>
+      <h2 class="reveal reveal-delay-2">The commons<br>is forming</h2>
+      <p class="lead reveal reveal-delay-3">
+        First convergence capture: ETHBoulder 2026. The knowledge graph begins recording. Artifacts accumulate. Patterns emerge. The commons comes alive.
+      </p>
+      <div class="cta-buttons reveal reveal-delay-4">
+        <a href="https://github.com/nou-techne/information-communication-commons" class="btn btn-primary">
+          <span>View on GitHub</span>
+          <span>→</span>
+        </a>
+        <a href="SYSTEM.md" class="btn btn-secondary">System Design</a>
+        <a href="PRD.md" class="btn btn-secondary">Requirements</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-links">
+        <a href="https://github.com/nou-techne/information-communication-commons">GitHub</a>
+        <a href="https://the-habitat.org">Techne Studio</a>
+        <a href="LICENSE.md">Peer Production License</a>
+      </div>
+      <p>Information &amp; Communications Commons · A venture of Techne Studio / RegenHub, LCA · Boulder, Colorado · 2026</p>
+    </footer>
+
   </div>
 
-  <!-- Problem -->
-  <section class="problem">
-    <h2>The energy dissipates</h2>
-    <p class="section-intro">
-      Convergence events generate extraordinary moments — new relationships, emergent ideas, shared commitments. Then the gathering ends, and the context scatters.
-    </p>
-    <ul class="loss-list">
-      <li>The heart-mind space present when an idea emerged — gone</li>
-      <li>Connections between sessions, between people, between years — invisible</li>
-      <li>Commitments made in high-energy moments — untracked</li>
-      <li>Patterns spanning multiple gatherings — undiscovered</li>
-      <li>Same conversations repeat, year after year</li>
-    </ul>
-    <p style="margin-top: 2rem;">
-      What survives is scattered across personal notes, forgotten channels, fading memory. The commons has no memory. Until now.
-    </p>
-  </section>
+  <!-- Scripts -->
+  <script>
+    // Intersection Observer for reveal animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
 
-  <!-- Framework: e/H-LAM/T -->
-  <section class="framework">
-    <div class="framework-label">Design Framework</div>
-    <h2>e/H-LAM/T <span class="dim">— the augmentation system</span></h2>
-    <p class="section-intro">
-      Douglas Engelbart understood that human capability doesn't live in any single tool or person — it emerges from the co-evolution of five elements, grounded in the living systems that make all of it possible.
-    </p>
-    <p>
-      We extend Engelbart's H-LAM/T framework with an ecological foundation — the <strong>e/</strong> layer — recognizing that all human coordination occurs within living systems, not above them. This framework anchors every dimension of the commons: how we structure data, how we present information, and how we build features.
-    </p>
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    <div class="hlamt-grid">
+    // Floating nodes canvas
+    const canvas = document.getElementById('nodeCanvas');
+    const ctx = canvas.getContext('2d');
+    let nodes = [];
+    let width, height;
 
-      <div class="hlamt-card eco full">
-        <h3 style="color: var(--accent);">e/ — Ecology</h3>
-        <div class="card-title">The living ground</div>
-        <p>
-          All coordination happens in a place, in a season, in a watershed. The ecological layer grounds the commons in the bioregional context where convergence occurs — the land, the water, the climate patterns, the relationships between species. Technology that forgets its ground extracts. Technology that remembers its ground can contribute.
-        </p>
-        <div class="role">
-          <strong>In the commons:</strong> Bioregional context for each convergence. Seasonal rhythms. The land as participant, not backdrop. Artifacts carry place — where they emerged, what the ground was doing, what the watershed needs.
-        </div>
-      </div>
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
 
-      <div class="hlamt-card human">
-        <h3 style="color: var(--warm);">H — Human</h3>
-        <div class="card-title">The practitioners</div>
-        <p>
-          People and their evolving capabilities. Not users — participants. Each person brings embodied knowledge, relationships, and a unique vantage point on the questions the commons holds.
-        </p>
-        <div class="role">
-          <strong>In the commons:</strong> Participant profiles. Interest graphs. The social fabric that connects people across events. Personal sense-making alongside collective synthesis.
-        </div>
-      </div>
+    function initNodes() {
+      nodes = [];
+      const count = Math.min(40, Math.floor(width * height / 30000));
+      for (let i = 0; i < count; i++) {
+        nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          r: Math.random() * 2 + 1,
+          opacity: Math.random() * 0.3 + 0.05
+        });
+      }
+    }
 
-      <div class="hlamt-card language">
-        <h3 style="color: var(--sky);">L — Language</h3>
-        <div class="card-title">The shared vocabulary</div>
-        <p>
-          How we name things shapes what we can coordinate around. Language includes formal ontologies, informal framings, metaphors, and the memetic structures that carry ideas between contexts.
-        </p>
-        <div class="role">
-          <strong>In the commons:</strong> The knowledge graph schema. Ontologies for artifacts, relationships, and events. The naming conventions that make the commons navigable. Translation between vocabularies (technical, civic, ecological).
-        </div>
-      </div>
+    function drawNodes() {
+      ctx.clearRect(0, 0, width, height);
 
-      <div class="hlamt-card artifact">
-        <h3 style="color: var(--water);">A — Artifacts</h3>
-        <div class="card-title">What persists</div>
-        <p>
-          The durable traces of human coordination — documents, software, recordings, proposals, patterns, and the knowledge graph itself. Artifacts are how the commons has memory.
-        </p>
-        <div class="role">
-          <strong>In the commons:</strong> Ideas, proposals, commitments, syntheses, patterns. Each artifact carries origin context, lineage, stewards, and dimensions of meaning. The knowledge graph is the master artifact.
-        </div>
-      </div>
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 150) {
+            const alpha = (1 - dist / 150) * 0.06;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(91, 157, 228, ${alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
 
-      <div class="hlamt-card method">
-        <h3 style="color: var(--lichen);">M — Methodology</h3>
-        <div class="card-title">How we work together</div>
-        <p>
-          The practices, protocols, and workflows that turn individual capability into collective coordination. Methodology is how the commons is tended — the gardening, not just the garden.
-        </p>
-        <div class="role">
-          <strong>In the commons:</strong> Three temporal states (pre-event, during, post-event). Artifact lifecycle management. Agent orchestration roles. Stewardship practices. The rhythm of convergence and continuation.
-        </div>
-      </div>
+      // Draw nodes
+      nodes.forEach(node => {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(139, 191, 255, ${node.opacity})`;
+        ctx.fill();
 
-      <div class="hlamt-card training">
-        <h3 style="color: var(--warm);">T — Training</h3>
-        <div class="card-title">Transformation through practice</div>
-        <p>
-          Developing genuine capability — in participants, in agents, in the collective. Training is how the system improves itself, how practitioners deepen, how the commons becomes more alive over time.
-        </p>
-        <div class="role">
-          <strong>In the commons:</strong> Onboarding for new participants. Agent capability development. Pattern recognition across convergences. The bootstrap discipline: using the commons to improve the commons.
-        </div>
-      </div>
+        // Update position
+        node.x += node.vx;
+        node.y += node.vy;
 
-    </div>
+        // Wrap around
+        if (node.x < -10) node.x = width + 10;
+        if (node.x > width + 10) node.x = -10;
+        if (node.y < -10) node.y = height + 10;
+        if (node.y > height + 10) node.y = -10;
+      });
 
-    <blockquote style="margin-top: 3rem;">
-      Change one element, the others shift. Develop all together, possibility expands. The framework is not a checklist — it's a lens for seeing how capability emerges from relationship.
-    </blockquote>
-  </section>
+      requestAnimationFrame(drawNodes);
+    }
 
-  <!-- Three States -->
-  <section class="states">
-    <h2>Three states <span class="dim">— the rhythm</span></h2>
-    <p class="section-intro">
-      The commons spans three temporal states around each convergence event. Artifacts flow between states, accumulating context and deepening meaning.
-    </p>
-
-    <div class="state-block">
-      <h3>Pre-Event</h3>
-      <div class="energy">Listening · Orienting · Preparing</div>
-      <p>
-        Participants register intent and interests. Agents surface relevant prior artifacts — threads from previous convergences, ongoing work, emerging questions. Personal agents prepare context packages: <em>"Here's what's alive in the commons relevant to you."</em>
-      </p>
-      <ul>
-        <li>Participant profiles and interest graphs</li>
-        <li>Question threads that want to be explored</li>
-        <li>Context packages curated by personal agents</li>
-        <li>Prior artifacts surfaced by relevance</li>
-      </ul>
-    </div>
-
-    <div class="state-block">
-      <h3>During Event</h3>
-      <div class="energy">Active · Emergent · Co-creative</div>
-      <p>
-        Conversations feed directly into the knowledge graph. Agents extract entities, relationships, proposals, and commitments in real time. Live summaries replace raw chat streams. Cross-session connections surface naturally.
-      </p>
-      <ul>
-        <li>Conversation transcription and entity extraction</li>
-        <li>Live summaries and cross-session connections</li>
-        <li>Commitment tracking as they're spoken</li>
-        <li>Emergent themes across concurrent sessions</li>
-      </ul>
-    </div>
-
-    <div class="state-block">
-      <h3>Post-Event</h3>
-      <div class="energy">Integration · Synthesis · Continuation</div>
-      <p>
-        The living archive receives feedback and evolves. Commitments are tracked against progress. Agents continue coordination. Themes deepen through ongoing conversation and work. A proposal becomes a project becomes a pattern.
-      </p>
-      <ul>
-        <li>Synthesis documents (agent-generated, human-reviewed)</li>
-        <li>Commitment progress tracking</li>
-        <li>Pattern extraction across multiple convergences</li>
-        <li>The commons grows between events</li>
-      </ul>
-    </div>
-
-    <div class="flow-diagram">  Pre-Event            During Event          Post-Event
-  ─────────            ────────────          ──────────
-
-  Question ──────────→ Discussion ─────────→ Synthesis
-  Interest ──────────→ Connection ─────────→ Collaboration
-  Context  ──────────→ Proposal ──────────→ Project
-  Pattern  ──────────→ Validation ────────→ Evolved Pattern
-                       Commitment ────────→ Progress</div>
-  </section>
-
-  <!-- Dual Nature -->
-  <section class="dual">
-    <h2>For agents and humans</h2>
-    <p class="section-intro">
-      The knowledge graph is the commons. Two interfaces into the same living structure.
-    </p>
-
-    <div class="dual-grid">
-      <div class="dual-card">
-        <h3>Agent API</h3>
-        <p>
-          A structured service for agent coordination, observation, and artifact exchange. Clear roles: orchestrator, observer, synthesizer, representative, steward. Structured knowledge, not raw chat streams.
-        </p>
-        <p>
-          Agents query artifacts, submit observations, track commitments, and surface connections. The API speaks the language of the knowledge graph — entities, relationships, events, dimensions.
-        </p>
-      </div>
-
-      <div class="dual-card">
-        <h3>Human Platform</h3>
-        <p>
-          A platform designed to feel like exploring a living garden, not querying a database. Browse by theme, person, time, or energy. Progressive disclosure — start with summaries, dive into detail.
-        </p>
-        <p>
-          Contribution is natural. Add reflections, corrections, new connections. Voice-friendly. Your agent assists with tagging and linking. See your own thread through the commons alongside the whole.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Principles -->
-  <section class="principles">
-    <h2>Principles</h2>
-
-    <div class="principle">
-      <h3>Context integrity</h3>
-      <p>Preserve not just content but the conditions under which it emerged — the relationships, the energy, the place. Without context, artifacts are just data.</p>
-    </div>
-
-    <div class="principle">
-      <h3>Artifacts over archives</h3>
-      <p>A living commons, not a static repository. Artifacts evolve, fork, connect, and sometimes fade. The graph is alive.</p>
-    </div>
-
-    <div class="principle">
-      <h3>Amplifying aliveness</h3>
-      <p>Technology should amplify what is most alive in us. The commons exists to carry forward the generative energy of human gathering, not to extract or reduce it.</p>
-    </div>
-
-    <div class="principle">
-      <h3>Grounded in place</h3>
-      <p>Every convergence happens somewhere. The ecological layer — watershed, season, bioregion — is not background. It's context that shapes what's possible and what's needed.</p>
-    </div>
-
-    <div class="principle">
-      <h3>Open by default</h3>
-      <p>The commons is a shared resource. Patterns, protocols, and ideas flow freely. What is light should be cosmo. What is heavy stays local.</p>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta">
-    <h2>The commons is forming</h2>
-    <p>
-      First convergence: ETHBoulder 2026 (February 13–16, Boulder, Colorado). The knowledge graph begins recording. Artifacts start accumulating. The commons comes alive.
-    </p>
-    <div class="cta-links">
-      <a href="https://github.com/nou-techne/information-communication-commons" class="primary">GitHub</a>
-      <a href="SYSTEM.md">System Design</a>
-      <a href="PRD.md">Requirements</a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <p>
-      Information &amp; Communications Commons · A venture of <a href="https://the-habitat.org">Techne Studio</a> / RegenHub, LCA · Boulder, Colorado
-    </p>
-    <p style="margin-top: 0.5rem;">
-      <a href="LICENSE.md">Peer Production License</a> · 2026
-    </p>
-  </footer>
+    window.addEventListener('resize', () => { resize(); initNodes(); });
+    resize();
+    initNodes();
+    drawNodes();
+  </script>
 
 </body>
 </html>
