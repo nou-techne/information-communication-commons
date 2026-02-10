@@ -39,7 +39,8 @@ export function Garden() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4">The Garden</h1>
+        <h1 className="text-2xl font-bold mb-2">The Garden</h1>
+        <p className="text-gray-400 text-sm mb-4">Browse the knowledge graph. Ideas, proposals, commitments, and patterns from across the commons — searchable, filterable, persistent.</p>
         <div className="flex gap-2 mb-4">
           <input
             value={search}

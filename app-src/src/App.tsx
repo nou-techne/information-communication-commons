@@ -22,14 +22,14 @@ function Nav() {
   const links = [
     { to: '/', label: 'Garden', icon: '' },
     { to: '/pulse', label: 'Pulse', icon: '' },
-    { to: '/contribute', label: '✍️ Contribute', icon: '' },
+    { to: '/contribute', label: 'Contribute', icon: '' },
     { to: '/me', label: 'My Thread', icon: '' },
   ]
 
   return (
     <nav className="bg-[#0a1628] border-b border-[#1a2a44] px-4 py-3 flex items-center justify-between">
       <Link to="/" className="text-xl font-bold text-white tracking-tight">
-        <span className="text-[#5b9de4]">⬡</span> Commons
+        <span className="text-[#5b9de4]">.id</span> Commons
       </Link>
       <div className="flex gap-1">
         {links.map(l => (
@@ -61,7 +61,7 @@ function Nav() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/app">
       <div className="min-h-screen bg-[#0a1628] text-white">
         <Nav />
         <main className="max-w-6xl mx-auto px-4 py-6">
