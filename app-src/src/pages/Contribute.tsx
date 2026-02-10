@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-const WEBHOOK_URL = 'https://hook.us1.make.com/n947p48o1t005yewobmlq479v0ggltb8'
+const WEBHOOK_URL = 'https://hook.us1.make.com/bipq9blpdjf3ekou38lxxfz80j8m6s3y'
 
 type ProcessingState = 'idle' | 'submitting' | 'done' | 'error'
 
