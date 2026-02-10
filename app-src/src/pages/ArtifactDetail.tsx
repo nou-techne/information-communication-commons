@@ -60,7 +60,7 @@ export function ArtifactDetail() {
           <span className="w-4 h-4 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[artifact.type] }} />
           <span className="text-sm uppercase tracking-wider" style={{ color: ARTIFACT_COLORS[artifact.type] }}>{artifact.type}</span>
           <span className="text-sm text-gray-500">{STATE_LABELS[artifact.state]}</span>
-          {artifact.created_by_agent && <span className="text-xs bg-[#1a2a44] text-gray-400 px-2 py-0.5 rounded">🤖 Agent-created</span>}
+          {artifact.created_by_agent && <span className="text-xs bg-[#1a2a44] text-gray-400 px-2 py-0.5 rounded">Agent-created</span>}
         </div>
 
         <h1 className="text-2xl font-bold mb-3">{artifact.title}</h1>
@@ -73,7 +73,7 @@ export function ArtifactDetail() {
             <span key={t} className="bg-[#1a2a44] text-[#5b9de4] text-xs px-2 py-1 rounded-full">{t}</span>
           ))}
           {tents.map(t => (
-            <span key={t} className="bg-[#1a2a44] text-[#7ccfb8] text-xs px-2 py-1 rounded-full">🎪 {t}</span>
+            <span key={t} className="bg-[#1a2a44] text-[#7ccfb8] text-xs px-2 py-1 rounded-full">{t}</span>
           ))}
         </div>
 

@@ -82,9 +82,9 @@ export const STATE_LABELS: Record<ArtifactState, string> = {
   seed: 'Seed',
   discussed: 'Discussed',
   proposed: 'Proposed',
-  committed: '🤝 Committed',
+  committed: 'Committed',
   active: 'Active',
   completed: 'Completed',
-  archived: '📦 Archived',
+  archived: 'Archived',
   superseded: 'Superseded',
 }

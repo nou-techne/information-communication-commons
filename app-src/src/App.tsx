@@ -23,7 +23,7 @@ function Nav() {
     { to: '/', label: 'Garden', icon: '' },
     { to: '/pulse', label: 'Pulse', icon: '' },
     { to: '/contribute', label: '✍️ Contribute', icon: '' },
-    { to: '/me', label: '🧵 My Thread', icon: '' },
+    { to: '/me', label: 'My Thread', icon: '' },
   ]
 
   return (

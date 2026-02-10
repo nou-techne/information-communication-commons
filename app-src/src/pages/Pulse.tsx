@@ -88,12 +88,12 @@ export function Pulse() {
             <div className="space-y-2">
               {events.map(e => (
                 <div key={e.id} className="bg-[#111d33] border border-[#1a2a44] rounded-lg p-3 flex items-start gap-3">
-                  <span className="text-lg">{EVENT_ICONS[e.type] || '📌'}</span>
+                  <span className="text-lg">{EVENT_ICONS[e.type] || '·'}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-white capitalize">{e.type}</span>
                       <span className="text-xs text-gray-500">{e.entity_type}</span>
-                      {e.actor_type === 'agent' && <span className="text-xs bg-[#1a2a44] text-gray-400 px-1.5 py-0.5 rounded">🤖</span>}
+                      {e.actor_type === 'agent' && <span className="text-xs bg-[#1a2a44] text-gray-400 px-1.5 py-0.5 rounded"></span>}
                     </div>
                     {e.data && (typeof e.data === 'object') && (
                       <p className="text-sm text-gray-400 truncate mt-0.5">

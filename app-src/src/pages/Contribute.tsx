@@ -114,9 +114,9 @@ export function Contribute() {
 
   const tabs: { key: FormTab; label: string }[] = [
     { key: 'artifact', label: '✍️ New Artifact' },
-    { key: 'reflection', label: '💭 Reflection' },
+    { key: 'reflection', label: 'Reflection' },
     { key: 'connection', label: 'Connection' },
-    { key: 'commitment', label: '🤝 Commitment' },
+    { key: 'commitment', label: 'Commitment' },
   ]
 
   const selectClass = "w-full bg-[#111d33] border border-[#1a2a44] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#5b9de4]"

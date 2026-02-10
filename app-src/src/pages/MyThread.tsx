@@ -36,7 +36,7 @@ export function MyThread() {
   if (!session) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-xl font-bold mb-4">🧵 My Thread</h2>
+        <h2 className="text-xl font-bold mb-4">My Thread</h2>
         <p className="text-gray-400 mb-4">Sign in to see your artifacts, commitments, and connections.</p>
         <Link to="/auth" className="bg-[#3d7cc9] hover:bg-[#5b9de4] text-white px-6 py-2 rounded-lg transition-colors">
           Sign in
@@ -50,7 +50,7 @@ export function MyThread() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">🧵 My Thread</h1>
+        <h1 className="text-2xl font-bold">My Thread</h1>
         <Link to="/contribute" className="bg-[#3d7cc9] hover:bg-[#5b9de4] text-white px-4 py-2 rounded-lg text-sm transition-colors">
           + Contribute
         </Link>
