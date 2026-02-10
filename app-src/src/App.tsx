@@ -29,12 +29,12 @@ function Nav() {
 
   return (
     <nav className="bg-[#0f0f0f] border-b border-[#262626] px-4 py-3">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <div className="max-w-6xl mx-auto flex items-center justify-between relative">
         <Link to="/" className="text-xl font-bold text-white tracking-tight">
           <span className="text-[#c3fd50]">.id</span> Commons
           <span className="text-[#c3fd50] text-xs font-normal ml-2">· ETHBoulder 2026</span>
         </Link>
-        <div className="flex gap-1">
+        <div className="absolute left-1/2 -translate-x-1/2 flex gap-1">
           {links.map(l => (
             <Link
               key={l.to}
