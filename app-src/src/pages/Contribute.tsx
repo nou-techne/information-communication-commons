@@ -44,7 +44,7 @@ export function Contribute() {
           content: text,
           source: 'app-contribute',
           context_type: context,
-          convergence: 'ethboulder-2026',
+          convergence: '00000000-0000-0000-0000-000000000100',
           timestamp: new Date().toISOString(),
         }),
       })
