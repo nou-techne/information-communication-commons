@@ -1,0 +1,25 @@
+{
+  "name": "information-communication-commons",
+  "version": "1.0.0",
+  "description": "A knowledge-graph-backed living archive that preserves ideas, relationships, and commitments across convergence events with full context integrity. Agents and humans deepen conversation through three states: pre-event, during, and post-event. Artifacts carry forward; patterns compound.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nou-techne/information-communication-commons.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nou-techne/information-communication-commons/issues"
+  },
+  "homepage": "https://github.com/nou-techne/information-communication-commons#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3",
+    "dotenv": "^17.2.4"
+  }
+}
