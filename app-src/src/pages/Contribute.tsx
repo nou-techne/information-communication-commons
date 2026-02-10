@@ -38,18 +38,6 @@ export function Contribute() {
 
       if (insertError) throw insertError
 
-      // Also fire the Make.com webhook for extraction (fire and forget)
-      fetch('https://hook.us1.make.com/bipq9blpdjf3ekou38lxxfz80j8m6s3y', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content: text,
-          convergence: CONVERGENCE_ID,
-          context_type: 'auto',
-          source: 'app-contribute',
-        }),
-      }).catch(() => {}) // Don't block on webhook
-
       setState('done')
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please try again.')
