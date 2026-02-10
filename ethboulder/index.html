@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ETHBoulder 2026 — commons.id</title>
   <meta name="description" content="ETHBoulder 2026 on the Information & Communications Commons. A living archive capturing ideas, relationships, and commitments — where mountains meet the knowledge graph.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="canonical" href="https://commons.id/ethboulder/">
 
   <!-- Open Graph -->
@@ -43,29 +44,25 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=DM+Serif+Display&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Commons.id blues */
-      --navy: #0a1628;
-      --deep: #0f2140;
-      --ink: #162d50;
-      --blue: #1e3a5f;
-      --mid: #2a5080;
-      --bright: #3d7cc9;
-      --sky: #5b9de4;
-      --light: #8bbfff;
-      --pale: #c5dfff;
-      --white: #f7faff;
-      /* ETHBoulder accents — mountain earth tones woven with commons blue */
-      --rock: #8b7355;
+      /* Dark grey base */
+      --navy: #0f0f0f;
+      --deep: #1a1a1a;
+      --ink: #262626;
+      --blue: #333333;
+      --mid: #444444;
+      --lime: #c3fd50;
+      --lime-dim: rgba(195, 253, 80, 0.15);
+      --lime-mid: rgba(195, 253, 80, 0.3);
       --alpine: #4a8c6f;
-      --snow: #e8edf5;
-      --summit: #c4956a;
-      --warm: #f4d9a0;
-      --mint: #7ccfb8;
-      /* Shared */
-      --text: #e4ecf7;
-      --text-secondary: #8fa4c4;
-      --text-dim: #5b7399;
-      --glow: rgba(91, 157, 228, 0.15);
+      --text: #e8e8e8;
+      --text-secondary: #999999;
+      --text-dim: #666666;
+      --white: #f5f5f5;
+      --sky: #5b9de4;
+      /* Legacy aliases for minimal diff */
+      --bright: var(--lime);
+      --pale: var(--white);
+      --glow: var(--lime-dim);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -88,8 +85,8 @@
       pointer-events: none;
       background:
         radial-gradient(ellipse 100% 50% at 50% 100%, rgba(74, 140, 111, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 80% 60% at 50% 0%, var(--glow) 0%, transparent 70%),
-        linear-gradient(to bottom, var(--navy) 0%, #0c1a2f 50%, #0e1f35 100%);
+        radial-gradient(ellipse 80% 60% at 50% 0%, var(--lime-dim) 0%, transparent 70%),
+        linear-gradient(to bottom, var(--navy) 0%, #111111 50%, #141414 100%);
     }
 
     canvas#mountainCanvas {
@@ -118,7 +115,7 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.72rem; font-weight: 400;
       letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--sky);
+      color: var(--lime);
     }
 
     /* ===== Hero ===== */
@@ -160,9 +157,9 @@
       margin-bottom: 0.5rem;
     }
 
-    .hero h1 .eth { color: var(--sky); }
+    .hero h1 .eth { color: var(--white); }
     .hero h1 .boulder {
-      background: linear-gradient(135deg, var(--summit), var(--warm));
+      background: linear-gradient(135deg, var(--lime), var(--alpine));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
@@ -170,7 +167,7 @@
     .hero .year {
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.1rem;
-      color: var(--text-dim);
+      color: var(--lime);
       margin-bottom: 2rem;
     }
 
@@ -206,7 +203,7 @@
       display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
     }
     .scroll-cue span { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
-    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--sky), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--lime), transparent); animation: scrollPulse 2s ease-in-out infinite; }
     @keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.6); } 50% { opacity: 1; transform: scaleY(1); } }
 
     /* ===== What is this ===== */
@@ -235,20 +232,20 @@
       transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    .feature-card:hover { border-color: var(--blue); box-shadow: 0 4px 30px var(--glow); }
+    .feature-card:hover { border-color: var(--lime); box-shadow: 0 4px 30px var(--lime-dim); }
 
     .feature-card .f-icon {
       width: 40px; height: 40px;
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
       font-size: 1rem; margin-bottom: 1.25rem;
-      background: rgba(91, 157, 228, 0.1);
-      color: var(--sky);
-      border: 1px solid rgba(91, 157, 228, 0.15);
+      background: var(--lime-dim);
+      color: var(--lime);
+      border: 1px solid var(--lime-mid);
     }
 
     .feature-card:nth-child(2) .f-icon { background: rgba(74, 140, 111, 0.1); color: var(--alpine); border-color: rgba(74, 140, 111, 0.15); }
-    .feature-card:nth-child(3) .f-icon { background: rgba(196, 149, 106, 0.1); color: var(--summit); border-color: rgba(196, 149, 106, 0.15); }
+    .feature-card:nth-child(3) .f-icon { background: var(--lime-dim); color: var(--lime); border-color: var(--lime-mid); }
 
     .feature-card h3 { font-size: 1.05rem; font-weight: 500; color: var(--pale); margin-bottom: 0.5rem; }
     .feature-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
@@ -272,9 +269,9 @@
     .tent-card:hover { border-color: var(--ink); }
 
     .tent-bar { border-radius: 4px 0 0 4px; }
-    .tent-card:nth-child(1) .tent-bar { background: var(--sky); }
+    .tent-card:nth-child(1) .tent-bar { background: var(--lime); }
     .tent-card:nth-child(2) .tent-bar { background: var(--alpine); }
-    .tent-card:nth-child(3) .tent-bar { background: var(--summit); }
+    .tent-card:nth-child(3) .tent-bar { background: var(--lime-dim); }
 
     .tent-content { padding: 1.75rem 2rem; }
     .tent-content h3 { font-size: 1.15rem; font-weight: 500; color: var(--pale); margin-bottom: 0.5rem; }
@@ -287,9 +284,9 @@
       border-radius: 100px; border: 1px solid var(--ink);
       color: var(--text-dim); transition: all 0.2s;
     }
-    .tent-card:nth-child(1) .tent-tag:hover { border-color: var(--sky); color: var(--sky); }
+    .tent-card:nth-child(1) .tent-tag:hover { border-color: var(--lime); color: var(--lime); }
     .tent-card:nth-child(2) .tent-tag:hover { border-color: var(--alpine); color: var(--alpine); }
-    .tent-card:nth-child(3) .tent-tag:hover { border-color: var(--summit); color: var(--summit); }
+    .tent-card:nth-child(3) .tent-tag:hover { border-color: var(--lime); color: var(--lime); }
 
     /* ===== How it works ===== */
     .how h2 {
@@ -302,7 +299,7 @@
     .steps { display: flex; flex-direction: column; gap: 0; position: relative; }
     .steps::before {
       content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
-      width: 2px; background: linear-gradient(to bottom, var(--sky), var(--alpine), var(--summit));
+      width: 2px; background: linear-gradient(to bottom, var(--lime), var(--alpine), var(--lime-mid));
     }
 
     .step {
@@ -319,10 +316,10 @@
       transition: all 0.3s;
     }
 
-    .step:nth-child(1) .step-number { border-color: var(--sky); color: var(--sky); }
-    .step:nth-child(2) .step-number { border-color: var(--sky); color: var(--sky); }
+    .step:nth-child(1) .step-number { border-color: var(--lime); color: var(--lime); }
+    .step:nth-child(2) .step-number { border-color: var(--lime); color: var(--lime); }
     .step:nth-child(3) .step-number { border-color: var(--alpine); color: var(--alpine); }
-    .step:nth-child(4) .step-number { border-color: var(--summit); color: var(--summit); }
+    .step:nth-child(4) .step-number { border-color: var(--lime-mid); color: var(--lime); }
 
     .step-content h3 { font-size: 1.05rem; font-weight: 500; color: var(--pale); margin-bottom: 0.35rem; }
     .step-content p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
@@ -332,7 +329,7 @@
       margin: 3rem 0; padding: 2.5rem;
       background: linear-gradient(135deg, var(--deep), var(--ink));
       border-radius: 16px;
-      border-left: 3px solid var(--alpine);
+      border-left: 3px solid var(--lime);
     }
     .pull-quote p {
       font-family: 'DM Serif Display', Georgia, serif;
@@ -362,7 +359,7 @@
       border: 1px solid var(--ink); text-align: center;
       transition: border-color 0.3s;
     }
-    .speaker-card:hover { border-color: var(--blue); }
+    .speaker-card:hover { border-color: var(--lime); }
 
     .speaker-card .initials {
       width: 48px; height: 48px; border-radius: 50%;
@@ -393,14 +390,14 @@
       font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
       text-decoration: none; transition: all 0.3s; cursor: pointer;
     }
-    .btn-primary { background: var(--bright); color: var(--white); border: 1px solid var(--bright); }
-    .btn-primary:hover { background: var(--sky); border-color: var(--sky); box-shadow: 0 4px 20px rgba(91, 157, 228, 0.3); transform: translateY(-1px); }
-    .btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--blue); }
-    .btn-secondary:hover { border-color: var(--mid); color: var(--text); background: var(--deep); }
-    .btn-earth { background: var(--alpine); color: var(--white); border: 1px solid var(--alpine); }
-    .btn-earth:hover { background: #5a9c7f; border-color: #5a9c7f; box-shadow: 0 4px 20px rgba(74, 140, 111, 0.3); transform: translateY(-1px); }
+    .btn-primary { background: var(--lime); color: #0f0f0f; border: 1px solid var(--lime); font-weight: 600; }
+    .btn-primary:hover { background: #d4ff7a; border-color: #d4ff7a; box-shadow: 0 4px 20px var(--lime-mid); transform: translateY(-1px); }
+    .btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--mid); }
+    .btn-secondary:hover { border-color: var(--text-dim); color: var(--text); background: var(--deep); }
+    .btn-earth { background: var(--lime); color: #0f0f0f; border: 1px solid var(--lime); font-weight: 600; }
+    .btn-earth:hover { background: #d4ff7a; border-color: #d4ff7a; box-shadow: 0 4px 20px var(--lime-mid); transform: translateY(-1px); }
 
-    .divider { width: 60px; height: 2px; background: linear-gradient(to right, var(--sky), var(--alpine)); border-radius: 1px; margin: 0 auto 3rem; }
+    .divider { width: 60px; height: 2px; background: linear-gradient(to right, var(--lime), var(--alpine)); border-radius: 1px; margin: 0 auto 3rem; }
 
     /* Footer */
     footer {
@@ -409,7 +406,7 @@
       border-top: 1px solid var(--ink);
     }
     footer a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
-    footer a:hover { color: var(--sky); }
+    footer a:hover { color: var(--lime); }
     footer .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1rem; }
 
     @media (max-width: 600px) {
@@ -713,7 +710,7 @@
       }
       ctx.lineTo(w, h);
       ctx.closePath();
-      ctx.fillStyle = 'rgba(15, 25, 45, 0.6)';
+      ctx.fillStyle = 'rgba(18, 18, 18, 0.6)';
       ctx.fill();
 
       // Near range
