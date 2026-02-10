@@ -129,21 +129,20 @@ export function Explore() {
 
       {/* Dimensions */}
       <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6">
-        {DIMENSIONS.map(d => (
-          <Link
-            key={d.key}
-            to={`/d/${d.key}`}
-            className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 hover:border-[#c3fd50] transition-colors text-center group"
-          >
-            <div className="flex items-baseline justify-center gap-1.5">
-              <span className="font-mono text-lg font-bold" style={{ color: d.color }}>{d.letter}</span>
-              {(dimCounts[d.tag] ?? 0) > 0 && (
-                <span className="text-xs text-gray-500">{dimCounts[d.tag]}</span>
-              )}
-            </div>
-            <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{d.desc}</span>
-          </Link>
-        ))}
+        {DIMENSIONS.map(d => {
+          const count = dimCounts[d.tag] ?? 0
+          return (
+            <Link
+              key={d.key}
+              to={`/d/${d.key}`}
+              className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:border-[#c3fd50] transition-colors text-center group"
+            >
+              <span className="font-mono text-2xl font-bold block" style={{ color: d.color }}>{d.letter}</span>
+              <span className="text-2xl font-bold block text-white my-1">{count}</span>
+              <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{d.desc}</span>
+            </Link>
+          )
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
