@@ -11,7 +11,12 @@ export function Auth() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOtp({ email })
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: 'https://commons.id/app/',
+      },
+    })
     setLoading(false)
     if (!error) setSent(true)
   }
