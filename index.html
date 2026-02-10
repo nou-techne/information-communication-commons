@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Information &amp; Communications Commons</title>
+  <meta name="description" content="A knowledge-graph-backed living archive that preserves ideas, relationships, and commitments across convergence events. Artifacts carry forward; patterns compound.">
+  <style>
+    :root {
+      --earth: #2d2a24;
+      --soil: #3d3830;
+      --stone: #5a5347;
+      --lichen: #8b9a6b;
+      --water: #6b8fa3;
+      --sky: #a3c4d9;
+      --light: #f0ebe3;
+      --warm: #d4a574;
+      --text: #e8e2d8;
+      --text-dim: #9b9488;
+      --accent: #b8c99a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--earth);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      color: var(--light);
+    }
+
+    .hero .subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--text-dim);
+      max-width: 640px;
+      margin-bottom: 3rem;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.8; }
+    }
+
+    /* ===== Sections ===== */
+    section {
+      padding: 6rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    section h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      color: var(--light);
+    }
+
+    section h2 .dim {
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    section .section-intro {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      margin-bottom: 2.5rem;
+      max-width: 640px;
+    }
+
+    p { margin-bottom: 1.25rem; }
+
+    /* ===== Problem ===== */
+    .problem {
+      border-top: 1px solid var(--stone);
+    }
+
+    .problem .loss-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .problem .loss-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--soil);
+      color: var(--text-dim);
+    }
+
+    .problem .loss-list li::before {
+      content: '—';
+      margin-right: 0.75rem;
+      color: var(--stone);
+    }
+
+    /* ===== Framework ===== */
+    .framework {
+      border-top: 1px solid var(--stone);
+    }
+
+    .framework-label {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--lichen);
+      margin-bottom: 2rem;
+    }
+
+    .hlamt-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (min-width: 640px) {
+      .hlamt-grid { grid-template-columns: 1fr 1fr; }
+      .hlamt-grid .full { grid-column: 1 / -1; }
+    }
+
+    .hlamt-card {
+      background: var(--soil);
+      border-radius: 8px;
+      padding: 2rem;
+      border-left: 3px solid var(--stone);
+      transition: border-color 0.3s;
+    }
+
+    .hlamt-card:hover { border-left-color: var(--lichen); }
+    .hlamt-card.eco:hover { border-left-color: var(--accent); }
+    .hlamt-card.human:hover { border-left-color: var(--warm); }
+    .hlamt-card.language:hover { border-left-color: var(--sky); }
+    .hlamt-card.artifact:hover { border-left-color: var(--water); }
+    .hlamt-card.method:hover { border-left-color: var(--lichen); }
+    .hlamt-card.training:hover { border-left-color: var(--warm); }
+
+    .hlamt-card h3 {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .hlamt-card .card-title {
+      font-size: 1.35rem;
+      color: var(--light);
+      margin-bottom: 1rem;
+    }
+
+    .hlamt-card p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .hlamt-card .role {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--stone);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    /* ===== States ===== */
+    .states {
+      border-top: 1px solid var(--stone);
+    }
+
+    .state-block {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--soil);
+      border-radius: 8px;
+    }
+
+    .state-block h3 {
+      font-size: 1.3rem;
+      color: var(--light);
+      margin-bottom: 0.25rem;
+    }
+
+    .state-block .energy {
+      font-size: 0.85rem;
+      color: var(--lichen);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .state-block ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .state-block ul li {
+      padding: 0.4rem 0;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .state-block ul li::before {
+      content: '·';
+      margin-right: 0.5rem;
+      color: var(--stone);
+    }
+
+    .flow-diagram {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      background: var(--soil);
+      padding: 2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.6;
+      margin: 2rem 0;
+    }
+
+    /* ===== Dual Nature ===== */
+    .dual {
+      border-top: 1px solid var(--stone);
+    }
+
+    .dual-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (min-width: 640px) {
+      .dual-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .dual-card {
+      padding: 2rem;
+      background: var(--soil);
+      border-radius: 8px;
+    }
+
+    .dual-card h3 {
+      font-size: 1.2rem;
+      color: var(--light);
+      margin-bottom: 1rem;
+    }
+
+    .dual-card p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    /* ===== Principles ===== */
+    .principles {
+      border-top: 1px solid var(--stone);
+    }
+
+    .principle {
+      margin-bottom: 2rem;
+    }
+
+    .principle h3 {
+      font-size: 1.1rem;
+      color: var(--light);
+      margin-bottom: 0.5rem;
+    }
+
+    .principle p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    /* ===== CTA ===== */
+    .cta {
+      border-top: 1px solid var(--stone);
+      text-align: center;
+      padding: 8rem 2rem;
+    }
+
+    .cta h2 {
+      margin-bottom: 1.5rem;
+    }
+
+    .cta p {
+      color: var(--text-dim);
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .cta-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-links a {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      border: 1px solid var(--stone);
+      border-radius: 4px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      transition: all 0.3s;
+    }
+
+    .cta-links a:hover {
+      border-color: var(--lichen);
+      color: var(--light);
+      background: var(--soil);
+    }
+
+    .cta-links a.primary {
+      background: var(--lichen);
+      border-color: var(--lichen);
+      color: var(--earth);
+    }
+
+    .cta-links a.primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--soil);
+    }
+
+    footer a {
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--text); }
+
+    /* ===== Quote ===== */
+    blockquote {
+      border-left: 2px solid var(--lichen);
+      padding: 1rem 0 1rem 1.5rem;
+      margin: 2rem 0;
+      font-style: italic;
+      color: var(--text-dim);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 480px) {
+      section { padding: 4rem 1.25rem; }
+      .hlamt-card, .state-block, .dual-card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Information &amp;<br>Communications<br>Commons</h1>
+    <p class="subtitle">
+      A living archive that carries ideas, relationships, and commitments across convergence events — preserving context, amplifying aliveness, and enabling patterns to compound over time.
+    </p>
+    <div class="scroll-hint">↓ Scroll</div>
+  </div>
+
+  <!-- Problem -->
+  <section class="problem">
+    <h2>The energy dissipates</h2>
+    <p class="section-intro">
+      Convergence events generate extraordinary moments — new relationships, emergent ideas, shared commitments. Then the gathering ends, and the context scatters.
+    </p>
+    <ul class="loss-list">
+      <li>The heart-mind space present when an idea emerged — gone</li>
+      <li>Connections between sessions, between people, between years — invisible</li>
+      <li>Commitments made in high-energy moments — untracked</li>
+      <li>Patterns spanning multiple gatherings — undiscovered</li>
+      <li>Same conversations repeat, year after year</li>
+    </ul>
+    <p style="margin-top: 2rem;">
+      What survives is scattered across personal notes, forgotten channels, fading memory. The commons has no memory. Until now.
+    </p>
+  </section>
+
+  <!-- Framework: e/H-LAM/T -->
+  <section class="framework">
+    <div class="framework-label">Design Framework</div>
+    <h2>e/H-LAM/T <span class="dim">— the augmentation system</span></h2>
+    <p class="section-intro">
+      Douglas Engelbart understood that human capability doesn't live in any single tool or person — it emerges from the co-evolution of five elements, grounded in the living systems that make all of it possible.
+    </p>
+    <p>
+      We extend Engelbart's H-LAM/T framework with an ecological foundation — the <strong>e/</strong> layer — recognizing that all human coordination occurs within living systems, not above them. This framework anchors every dimension of the commons: how we structure data, how we present information, and how we build features.
+    </p>
+
+    <div class="hlamt-grid">
+
+      <div class="hlamt-card eco full">
+        <h3 style="color: var(--accent);">e/ — Ecology</h3>
+        <div class="card-title">The living ground</div>
+        <p>
+          All coordination happens in a place, in a season, in a watershed. The ecological layer grounds the commons in the bioregional context where convergence occurs — the land, the water, the climate patterns, the relationships between species. Technology that forgets its ground extracts. Technology that remembers its ground can contribute.
+        </p>
+        <div class="role">
+          <strong>In the commons:</strong> Bioregional context for each convergence. Seasonal rhythms. The land as participant, not backdrop. Artifacts carry place — where they emerged, what the ground was doing, what the watershed needs.
+        </div>
+      </div>
+
+      <div class="hlamt-card human">
+        <h3 style="color: var(--warm);">H — Human</h3>
+        <div class="card-title">The practitioners</div>
+        <p>
+          People and their evolving capabilities. Not users — participants. Each person brings embodied knowledge, relationships, and a unique vantage point on the questions the commons holds.
+        </p>
+        <div class="role">
+          <strong>In the commons:</strong> Participant profiles. Interest graphs. The social fabric that connects people across events. Personal sense-making alongside collective synthesis.
+        </div>
+      </div>
+
+      <div class="hlamt-card language">
+        <h3 style="color: var(--sky);">L — Language</h3>
+        <div class="card-title">The shared vocabulary</div>
+        <p>
+          How we name things shapes what we can coordinate around. Language includes formal ontologies, informal framings, metaphors, and the memetic structures that carry ideas between contexts.
+        </p>
+        <div class="role">
+          <strong>In the commons:</strong> The knowledge graph schema. Ontologies for artifacts, relationships, and events. The naming conventions that make the commons navigable. Translation between vocabularies (technical, civic, ecological).
+        </div>
+      </div>
+
+      <div class="hlamt-card artifact">
+        <h3 style="color: var(--water);">A — Artifacts</h3>
+        <div class="card-title">What persists</div>
+        <p>
+          The durable traces of human coordination — documents, software, recordings, proposals, patterns, and the knowledge graph itself. Artifacts are how the commons has memory.
+        </p>
+        <div class="role">
+          <strong>In the commons:</strong> Ideas, proposals, commitments, syntheses, patterns. Each artifact carries origin context, lineage, stewards, and dimensions of meaning. The knowledge graph is the master artifact.
+        </div>
+      </div>
+
+      <div class="hlamt-card method">
+        <h3 style="color: var(--lichen);">M — Methodology</h3>
+        <div class="card-title">How we work together</div>
+        <p>
+          The practices, protocols, and workflows that turn individual capability into collective coordination. Methodology is how the commons is tended — the gardening, not just the garden.
+        </p>
+        <div class="role">
+          <strong>In the commons:</strong> Three temporal states (pre-event, during, post-event). Artifact lifecycle management. Agent orchestration roles. Stewardship practices. The rhythm of convergence and continuation.
+        </div>
+      </div>
+
+      <div class="hlamt-card training">
+        <h3 style="color: var(--warm);">T — Training</h3>
+        <div class="card-title">Transformation through practice</div>
+        <p>
+          Developing genuine capability — in participants, in agents, in the collective. Training is how the system improves itself, how practitioners deepen, how the commons becomes more alive over time.
+        </p>
+        <div class="role">
+          <strong>In the commons:</strong> Onboarding for new participants. Agent capability development. Pattern recognition across convergences. The bootstrap discipline: using the commons to improve the commons.
+        </div>
+      </div>
+
+    </div>
+
+    <blockquote style="margin-top: 3rem;">
+      Change one element, the others shift. Develop all together, possibility expands. The framework is not a checklist — it's a lens for seeing how capability emerges from relationship.
+    </blockquote>
+  </section>
+
+  <!-- Three States -->
+  <section class="states">
+    <h2>Three states <span class="dim">— the rhythm</span></h2>
+    <p class="section-intro">
+      The commons spans three temporal states around each convergence event. Artifacts flow between states, accumulating context and deepening meaning.
+    </p>
+
+    <div class="state-block">
+      <h3>Pre-Event</h3>
+      <div class="energy">Listening · Orienting · Preparing</div>
+      <p>
+        Participants register intent and interests. Agents surface relevant prior artifacts — threads from previous convergences, ongoing work, emerging questions. Personal agents prepare context packages: <em>"Here's what's alive in the commons relevant to you."</em>
+      </p>
+      <ul>
+        <li>Participant profiles and interest graphs</li>
+        <li>Question threads that want to be explored</li>
+        <li>Context packages curated by personal agents</li>
+        <li>Prior artifacts surfaced by relevance</li>
+      </ul>
+    </div>
+
+    <div class="state-block">
+      <h3>During Event</h3>
+      <div class="energy">Active · Emergent · Co-creative</div>
+      <p>
+        Conversations feed directly into the knowledge graph. Agents extract entities, relationships, proposals, and commitments in real time. Live summaries replace raw chat streams. Cross-session connections surface naturally.
+      </p>
+      <ul>
+        <li>Conversation transcription and entity extraction</li>
+        <li>Live summaries and cross-session connections</li>
+        <li>Commitment tracking as they're spoken</li>
+        <li>Emergent themes across concurrent sessions</li>
+      </ul>
+    </div>
+
+    <div class="state-block">
+      <h3>Post-Event</h3>
+      <div class="energy">Integration · Synthesis · Continuation</div>
+      <p>
+        The living archive receives feedback and evolves. Commitments are tracked against progress. Agents continue coordination. Themes deepen through ongoing conversation and work. A proposal becomes a project becomes a pattern.
+      </p>
+      <ul>
+        <li>Synthesis documents (agent-generated, human-reviewed)</li>
+        <li>Commitment progress tracking</li>
+        <li>Pattern extraction across multiple convergences</li>
+        <li>The commons grows between events</li>
+      </ul>
+    </div>
+
+    <div class="flow-diagram">  Pre-Event            During Event          Post-Event
+  ─────────            ────────────          ──────────
+
+  Question ──────────→ Discussion ─────────→ Synthesis
+  Interest ──────────→ Connection ─────────→ Collaboration
+  Context  ──────────→ Proposal ──────────→ Project
+  Pattern  ──────────→ Validation ────────→ Evolved Pattern
+                       Commitment ────────→ Progress</div>
+  </section>
+
+  <!-- Dual Nature -->
+  <section class="dual">
+    <h2>For agents and humans</h2>
+    <p class="section-intro">
+      The knowledge graph is the commons. Two interfaces into the same living structure.
+    </p>
+
+    <div class="dual-grid">
+      <div class="dual-card">
+        <h3>Agent API</h3>
+        <p>
+          A structured service for agent coordination, observation, and artifact exchange. Clear roles: orchestrator, observer, synthesizer, representative, steward. Structured knowledge, not raw chat streams.
+        </p>
+        <p>
+          Agents query artifacts, submit observations, track commitments, and surface connections. The API speaks the language of the knowledge graph — entities, relationships, events, dimensions.
+        </p>
+      </div>
+
+      <div class="dual-card">
+        <h3>Human Platform</h3>
+        <p>
+          A platform designed to feel like exploring a living garden, not querying a database. Browse by theme, person, time, or energy. Progressive disclosure — start with summaries, dive into detail.
+        </p>
+        <p>
+          Contribution is natural. Add reflections, corrections, new connections. Voice-friendly. Your agent assists with tagging and linking. See your own thread through the commons alongside the whole.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principles -->
+  <section class="principles">
+    <h2>Principles</h2>
+
+    <div class="principle">
+      <h3>Context integrity</h3>
+      <p>Preserve not just content but the conditions under which it emerged — the relationships, the energy, the place. Without context, artifacts are just data.</p>
+    </div>
+
+    <div class="principle">
+      <h3>Artifacts over archives</h3>
+      <p>A living commons, not a static repository. Artifacts evolve, fork, connect, and sometimes fade. The graph is alive.</p>
+    </div>
+
+    <div class="principle">
+      <h3>Amplifying aliveness</h3>
+      <p>Technology should amplify what is most alive in us. The commons exists to carry forward the generative energy of human gathering, not to extract or reduce it.</p>
+    </div>
+
+    <div class="principle">
+      <h3>Grounded in place</h3>
+      <p>Every convergence happens somewhere. The ecological layer — watershed, season, bioregion — is not background. It's context that shapes what's possible and what's needed.</p>
+    </div>
+
+    <div class="principle">
+      <h3>Open by default</h3>
+      <p>The commons is a shared resource. Patterns, protocols, and ideas flow freely. What is light should be cosmo. What is heavy stays local.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>The commons is forming</h2>
+    <p>
+      First convergence: ETHBoulder 2026 (February 13–16, Boulder, Colorado). The knowledge graph begins recording. Artifacts start accumulating. The commons comes alive.
+    </p>
+    <div class="cta-links">
+      <a href="https://github.com/nou-techne/information-communication-commons" class="primary">GitHub</a>
+      <a href="SYSTEM.md">System Design</a>
+      <a href="PRD.md">Requirements</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      Information &amp; Communications Commons · A venture of <a href="https://the-habitat.org">Techne Studio</a> / RegenHub, LCA · Boulder, Colorado
+    </p>
+    <p style="margin-top: 0.5rem;">
+      <a href="LICENSE.md">Peer Production License</a> · 2026
+    </p>
+  </footer>
+
+</body>
+</html>

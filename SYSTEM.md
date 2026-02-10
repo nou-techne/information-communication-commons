@@ -122,33 +122,100 @@ Each artifact carries:
 
 ---
 
+## Design Framework: e/H-LAM/T
+
+The commons is structured around Douglas Engelbart's augmentation framework (H-LAM/T), extended with an ecological foundation (e/) that grounds all coordination in living systems.
+
+**e/H-LAM/T is not a feature list — it is the lens through which every mechanism, feature, and design decision is evaluated.** Each element of the framework maps to a structural component of the system and a narrative anchor for communicating its purpose.
+
+### e/ — Ecology (The Ground)
+
+Every convergence happens in a place, in a season, in a watershed. The ecological layer ensures the commons remembers its ground.
+
+**System role:** Bioregional metadata for convergences and artifacts. Seasonal context. The land as participant.
+**Narrative anchor:** "Technology that forgets its ground extracts. Technology that remembers its ground can contribute."
+**Features:** Location-aware artifact tagging. Bioregional context in convergence profiles. Ecological dimensions in the knowledge graph.
+
+### H — Human (The Practitioners)
+
+People and their evolving capabilities. Not users — participants with embodied knowledge and unique vantage points.
+
+**System role:** Participant identity, interest graphs, social fabric across events. Personal sense-making alongside collective synthesis.
+**Narrative anchor:** "The commons is tended by people. Agents amplify; humans steward."
+**Features:** Participant profiles. Interest matching. "My Thread" personal view. Contribution interfaces.
+
+### L — Language (The Shared Vocabulary)
+
+How we name things shapes what we can coordinate around. The knowledge graph schema IS the language of the commons.
+
+**System role:** Ontology design. Entity types, relationship types, event types. Translation between vocabularies.
+**Narrative anchor:** "The graph is how the commons speaks to itself."
+**Features:** Knowledge graph schema. Tagging and categorization. Cross-vocabulary mapping. Glossary and ontology documentation.
+
+### A — Artifacts (What Persists)
+
+The durable traces of human coordination — the knowledge graph itself, and every node within it.
+
+**System role:** Artifact lifecycle (seed → discussed → proposed → committed → active → completed). Lineage tracking. Context preservation.
+**Narrative anchor:** "Artifacts carry forward; patterns compound."
+**Features:** Artifact CRUD. Lineage visualization. Version history. Steward assignment. Context dimensions.
+
+### M — Methodology (How We Work Together)
+
+The practices, protocols, and workflows that turn individual capability into collective coordination.
+
+**System role:** Three temporal states. Agent orchestration roles. Stewardship practices. The rhythm of convergence and continuation.
+**Narrative anchor:** "The gardening, not just the garden."
+**Features:** Pre/during/post workflows. Agent role assignment. Commitment tracking. Periodic review cycles.
+
+### T — Training (Transformation Through Practice)
+
+How the system improves itself. How practitioners deepen. How the commons becomes more alive over time.
+
+**System role:** Onboarding flows. Pattern recognition across convergences. Bootstrap discipline (using the commons to improve the commons).
+**Narrative anchor:** "Each convergence builds on the last. Capability compounds."
+**Features:** Participant onboarding. Agent capability development. Cross-convergence pattern extraction. System retrospectives.
+
+### How e/H-LAM/T Guides Design Decisions
+
+When evaluating any proposed feature or mechanism, ask:
+
+1. **e/ — Is it grounded?** Does it acknowledge place, season, ecological context? Or does it float above the world?
+2. **H — Does it serve practitioners?** Does it amplify human capability, or replace it? Is it fun and easy?
+3. **L — Is the language clear?** Will agents and humans understand the vocabulary? Does it translate across contexts?
+4. **A — Does it produce durable artifacts?** Will something persist that carries context forward?
+5. **M — Does it fit the methodology?** Which temporal state does it serve? What workflow does it support?
+6. **T — Does it help the system learn?** Does it contribute to pattern recognition? Does it make the next convergence better?
+
+---
+
 ## Dimensions of Context
 
-The knowledge graph encodes multiple dimensions for each artifact:
+The knowledge graph encodes multiple dimensions for each artifact, mapped to the e/H-LAM/T framework:
 
-### Temporal
+### Temporal (M — Methodology)
 - Which convergence year (2026, 2027, ...)
 - Which state (pre, during, post)
 - Timestamp and sequence
 
-### Social
+### Social (H — Human)
 - Who was present (participants, agents)
 - What relationships formed or deepened
 - Trust/familiarity levels
 
-### Thematic
+### Thematic (L — Language)
 - Topics, tags, domains
 - Which "tent" (ETHBoulder, Cosmolocal, Civic Finance)
 - Cross-cutting themes
 
-### Energetic
+### Energetic (T — Training)
 - Sentiment / aliveness level
 - Convergence or divergence of perspectives
 - Maturity (nascent idea → established pattern)
 
-### Spatial
+### Spatial (e/ — Ecology)
 - Physical location (which room, which city)
-- Bioregional context
+- Bioregional context (watershed, elevation, season)
 - Digital space (which channel, which platform)
 
 ---
