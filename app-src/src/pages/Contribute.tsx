@@ -38,25 +38,7 @@ export function Contribute() {
 
       if (insertError) throw insertError
 
-      // Fire Make.com webhook for AI extraction (fire and forget)
-      // Pre-build Claude API body with proper JSON escaping to avoid Make.com template issues
-      const prompt = `Extract structured knowledge from this convergence event text. Return ONLY valid JSON, no code fences. IMPORTANT: dimension must be one of exactly: temporal, social, thematic, energetic, spatial. Schema: {"artifacts": [{"title": "short title", "summary": "1-2 sentences", "type": "idea|proposal|commitment|question|pattern|reflection", "tags": ["tag1", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value"}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"} Tag each artifact with hlamt:e (ecology), hlamt:H (human), hlamt:L (language), hlamt:A (artifacts), hlamt:M (methodology), or hlamt:T (training). Text: ${text}`
-
-      const claudeBody = JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
-        messages: [{ role: 'user', content: prompt }],
-      })
-
-      fetch('https://hook.us1.make.com/bipq9blpdjf3ekou38lxxfz80j8m6s3y', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          claude_body: claudeBody,
-          convergence: CONVERGENCE_ID,
-        }),
-      }).catch(() => {})
-
+      // Extraction is triggered automatically via database webhook → Edge Function
       setState('done')
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please try again.')
