@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>commons.id — Information &amp; Communications Commons</title>
-  <meta name="description" content="A knowledge-graph-backed living archive that preserves ideas, relationships, and commitments across convergence events. Artifacts carry forward; patterns compound.">
+  <title>commons.id — Capture What Conferences Create</title>
+  <meta name="description" content="A living archive that captures ideas, commitments, and relationships from events and gives them permanent addresses. The knowledge graph is the commons.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="canonical" href="https://commons.id">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://commons.id">
-  <meta property="og:title" content="commons.id — Information & Communications Commons">
-  <meta property="og:description" content="A knowledge-graph-backed living archive that preserves ideas, relationships, and commitments across convergence events. Artifacts carry forward; patterns compound.">
+  <meta property="og:title" content="commons.id — Capture What Conferences Create">
+  <meta property="og:description" content="A living archive that captures ideas, commitments, and relationships from events and gives them permanent addresses.">
   <meta property="og:site_name" content="commons.id">
   <meta property="og:locale" content="en_US">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="commons.id — Information & Communications Commons">
-  <meta name="twitter:description" content="A knowledge-graph-backed living archive for convergence events. The knowledge graph is the commons.">
+  <meta name="twitter:title" content="commons.id — Capture What Conferences Create">
+  <meta name="twitter:description" content="A living archive that captures ideas, commitments, and relationships from events. The knowledge graph is the commons.">
 
   <!-- Additional SEO -->
   <meta name="robots" content="index, follow">
   <meta name="author" content="Techne Studio / RegenHub, LCA">
-  <meta name="keywords" content="information commons, knowledge graph, convergence events, collective intelligence, cooperative, Boulder Colorado, ETHBoulder, e/H-LAM/T, living archive">
+  <meta name="keywords" content="event knowledge capture, knowledge graph, conference archive, collective intelligence, ETHBoulder, living archive, white-label events">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <!-- Structured Data (JSON-LD) -->
@@ -32,10 +32,10 @@
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Information & Communications Commons",
-    "alternateName": "commons.id",
+    "name": "commons.id",
+    "alternateName": "Information & Communications Commons",
     "url": "https://commons.id",
-    "description": "A knowledge-graph-backed living archive that preserves ideas, relationships, and commitments across convergence events.",
+    "description": "A living archive that captures ideas, commitments, and relationships from events and gives them permanent addresses.",
     "publisher": {
       "@type": "Organization",
       "name": "Techne Studio / RegenHub, LCA",
@@ -75,7 +75,7 @@
         "addressCountry": "US"
       }
     },
-    "description": "Annual Ethereum and public goods convergence in Boulder, Colorado. First live capture for the Information & Communications Commons.",
+    "description": "Annual Ethereum and public goods convergence in Boulder, Colorado. First live deployment of the commons.id knowledge capture platform.",
     "organizer": {
       "@type": "Organization",
       "name": "Techne Studio / RegenHub, LCA",
@@ -111,7 +111,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -123,7 +122,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ===== Animated Background ===== */
+    /* ===== Background ===== */
     .bg-grid {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -143,10 +142,7 @@
     }
 
     /* ===== Layout ===== */
-    .container {
-      position: relative;
-      z-index: 1;
-    }
+    .container { position: relative; z-index: 1; }
 
     section {
       padding: 8rem 2rem;
@@ -154,19 +150,14 @@
       margin: 0 auto;
     }
 
-    /* ===== Fade-in animations ===== */
+    /* ===== Animations ===== */
     .reveal {
       opacity: 0;
       transform: translateY(40px);
       transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
                   transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
+    .reveal.visible { opacity: 1; transform: translateY(0); }
     .reveal-delay-1 { transition-delay: 0.1s; }
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
@@ -174,13 +165,8 @@
     .reveal-delay-5 { transition-delay: 0.5s; }
 
     /* ===== Typography ===== */
-    .serif {
-      font-family: 'DM Serif Display', Georgia, serif;
-    }
-
-    .mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
+    .serif { font-family: 'DM Serif Display', Georgia, serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
 
     .label {
       font-family: 'JetBrains Mono', monospace;
@@ -189,6 +175,15 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--sky);
+    }
+
+    code {
+      color: var(--sky);
+      background: var(--ink);
+      padding: 0.15em 0.5em;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
     }
 
     /* ===== Hero ===== */
@@ -203,18 +198,17 @@
       position: relative;
     }
 
-    .hero .label {
-      margin-bottom: 2rem;
-    }
+    .hero .label { margin-bottom: 2rem; }
 
     .hero h1 {
       font-family: 'DM Serif Display', Georgia, serif;
-      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-size: clamp(2.2rem, 6vw, 4rem);
       font-weight: 400;
-      line-height: 1.08;
+      line-height: 1.15;
       letter-spacing: -0.02em;
       color: var(--white);
       margin-bottom: 2rem;
+      max-width: 700px;
     }
 
     .hero h1 .accent {
@@ -227,10 +221,12 @@
     .hero .lead {
       font-size: clamp(1.05rem, 2vw, 1.25rem);
       color: var(--text-secondary);
-      max-width: 580px;
+      max-width: 600px;
       line-height: 1.8;
       font-weight: 300;
     }
+
+    .hero .lead strong { color: var(--text); font-weight: 500; }
 
     .hero-visual {
       position: absolute;
@@ -243,9 +239,7 @@
       pointer-events: none;
     }
 
-    @media (max-width: 900px) {
-      .hero-visual { display: none; }
-    }
+    @media (max-width: 900px) { .hero-visual { display: none; } }
 
     .orbit {
       position: absolute;
@@ -253,21 +247,16 @@
       border-radius: 50%;
       animation: spin linear infinite;
     }
-
     .orbit-1 { width: 100%; height: 100%; animation-duration: 40s; }
     .orbit-2 { width: 72%; height: 72%; top: 14%; left: 14%; animation-duration: 28s; animation-direction: reverse; }
     .orbit-3 { width: 44%; height: 44%; top: 28%; left: 28%; animation-duration: 18s; }
 
     .orbit-dot {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       border-radius: 50%;
-      top: -4px;
-      left: 50%;
-      margin-left: -4px;
+      top: -4px; left: 50%; margin-left: -4px;
     }
-
     .orbit-1 .orbit-dot { background: var(--sky); box-shadow: 0 0 12px var(--sky); }
     .orbit-2 .orbit-dot { background: var(--mint); box-shadow: 0 0 12px var(--mint); }
     .orbit-3 .orbit-dot { background: var(--warm); box-shadow: 0 0 12px var(--warm); }
@@ -276,40 +265,31 @@
 
     .scroll-cue {
       position: absolute;
-      bottom: 3rem;
-      left: 50%;
+      bottom: 3rem; left: 50%;
       transform: translateX(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
     }
-
     .scroll-cue span {
       font-size: 0.7rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--text-dim);
     }
-
     .scroll-line {
-      width: 1px;
-      height: 40px;
+      width: 1px; height: 40px;
       background: linear-gradient(to bottom, var(--sky), transparent);
       animation: scrollPulse 2s ease-in-out infinite;
     }
-
     @keyframes scrollPulse {
       0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
       50% { opacity: 1; transform: scaleY(1); }
     }
 
-    /* ===== Problem ===== */
-    .problem {
-      padding-top: 4rem;
-    }
-
-    .problem h2 {
+    /* ===== Section headers ===== */
+    .section-title {
       font-family: 'DM Serif Display', Georgia, serif;
       font-size: clamp(1.8rem, 4vw, 2.8rem);
       color: var(--white);
@@ -317,386 +297,310 @@
       line-height: 1.15;
     }
 
-    .problem .intro {
+    .section-intro {
       font-size: 1.1rem;
       color: var(--text-secondary);
-      max-width: 600px;
+      max-width: 620px;
       margin-bottom: 3rem;
       font-weight: 300;
     }
 
-    .loss-grid {
+    /* ===== Steps (How it works) ===== */
+    .steps-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1px;
-      background: var(--ink);
-      border-radius: 12px;
-      overflow: hidden;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 700px) { .steps-grid { grid-template-columns: 1fr; } }
+
+    .step-card {
+      background: var(--deep);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
       border: 1px solid var(--ink);
-    }
-
-    .loss-card {
-      background: var(--deep);
-      padding: 2rem;
-      transition: background 0.3s;
-    }
-
-    .loss-card:hover {
-      background: var(--ink);
-    }
-
-    .loss-card .loss-icon {
-      font-size: 1.8rem;
-      margin-bottom: 0.75rem;
-      display: block;
-      opacity: 0.6;
-    }
-
-    .loss-card h3 {
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--pale);
-      margin-bottom: 0.5rem;
-    }
-
-    .loss-card p {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      line-height: 1.6;
-    }
-
-    /* ===== Framework ===== */
-    .framework {
-      padding-top: 4rem;
-    }
-
-    .framework h2 {
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      color: var(--white);
-      margin-bottom: 0.5rem;
-      line-height: 1.15;
-    }
-
-    .framework .subtitle {
-      font-size: 1.15rem;
-      color: var(--text-secondary);
-      font-weight: 300;
-      margin-bottom: 1.5rem;
-    }
-
-    .framework .intro {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      max-width: 640px;
-      margin-bottom: 3.5rem;
-      font-weight: 300;
-    }
-
-    .hlamt-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .hlamt-item {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 0;
-      background: var(--deep);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid transparent;
       transition: border-color 0.4s, box-shadow 0.4s;
-      cursor: default;
     }
 
-    .hlamt-item:hover {
+    .step-card:hover {
       border-color: var(--blue);
-      box-shadow: 0 4px 30px var(--glow);
+      box-shadow: 0 8px 40px var(--glow);
     }
 
-    .hlamt-item.eco:hover { border-color: var(--mint); box-shadow: 0 4px 30px rgba(124, 207, 184, 0.15); }
-    .hlamt-item.human:hover { border-color: var(--warm); box-shadow: 0 4px 30px rgba(244, 217, 160, 0.15); }
-    .hlamt-item.language:hover { border-color: var(--sky); }
-    .hlamt-item.artifact:hover { border-color: var(--light); box-shadow: 0 4px 30px rgba(139, 191, 255, 0.15); }
-    .hlamt-item.method:hover { border-color: var(--bright); }
-    .hlamt-item.training:hover { border-color: var(--coral); box-shadow: 0 4px 30px rgba(232, 146, 124, 0.15); }
+    .step-number {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 2.5rem;
+      color: var(--ink);
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
 
-    .hlamt-letter {
+    .step-card:nth-child(1) .step-number { color: var(--sky); opacity: 0.4; }
+    .step-card:nth-child(2) .step-number { color: var(--bright); opacity: 0.4; }
+    .step-card:nth-child(3) .step-number { color: var(--mint); opacity: 0.4; }
+
+    .step-card .card-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-size: 2rem;
-      color: var(--text-dim);
-      background: var(--ink);
-      transition: color 0.3s;
+      margin-bottom: 1.25rem;
     }
 
-    .hlamt-item.eco:hover .hlamt-letter { color: var(--mint); }
-    .hlamt-item.human:hover .hlamt-letter { color: var(--warm); }
-    .hlamt-item.language:hover .hlamt-letter { color: var(--sky); }
-    .hlamt-item.artifact:hover .hlamt-letter { color: var(--light); }
-    .hlamt-item.method:hover .hlamt-letter { color: var(--bright); }
-    .hlamt-item.training:hover .hlamt-letter { color: var(--coral); }
-
-    .hlamt-content {
-      padding: 1.75rem 2rem;
+    .step-card:nth-child(1) .card-icon {
+      background: rgba(91, 157, 228, 0.12);
+      color: var(--sky);
+      border: 1px solid rgba(91, 157, 228, 0.2);
+    }
+    .step-card:nth-child(2) .card-icon {
+      background: rgba(61, 124, 201, 0.12);
+      color: var(--bright);
+      border: 1px solid rgba(61, 124, 201, 0.2);
+    }
+    .step-card:nth-child(3) .card-icon {
+      background: rgba(124, 207, 184, 0.12);
+      color: var(--mint);
+      border: 1px solid rgba(124, 207, 184, 0.2);
     }
 
-    .hlamt-content h3 {
+    .step-card h3 {
       font-size: 1.15rem;
       font-weight: 500;
       color: var(--pale);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
-    .hlamt-content p {
+    .step-card p {
       font-size: 0.92rem;
       color: var(--text-secondary);
       line-height: 1.7;
-      margin-bottom: 0;
     }
 
-    .hlamt-content .commons-role {
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid var(--ink);
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      font-style: italic;
-    }
-
-    @media (max-width: 600px) {
-      .hlamt-item { grid-template-columns: 60px 1fr; }
-      .hlamt-letter { font-size: 1.5rem; }
-      .hlamt-content { padding: 1.25rem 1.5rem; }
-    }
-
-    /* ===== Blockquote ===== */
-    .pull-quote {
-      margin: 4rem 0;
-      padding: 2.5rem;
+    /* ===== Case study (ETHBoulder) ===== */
+    .case-study {
       background: linear-gradient(135deg, var(--deep), var(--ink));
-      border-radius: 16px;
-      border-left: 3px solid var(--sky);
-      position: relative;
-    }
-
-    .pull-quote p {
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-      color: var(--pale);
-      line-height: 1.6;
-    }
-
-    .pull-quote .attribution {
-      margin-top: 1rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      color: var(--text-dim);
-    }
-
-    /* ===== States ===== */
-    .states h2 {
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      color: var(--white);
-      margin-bottom: 1.5rem;
-    }
-
-    .states .intro {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      max-width: 600px;
-      margin-bottom: 3rem;
-      font-weight: 300;
-    }
-
-    .timeline {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 39px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--sky), var(--bright), var(--mint));
-      border-radius: 1px;
-    }
-
-    .state-card {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 0;
-      position: relative;
-    }
-
-    .state-marker {
-      display: flex;
-      justify-content: center;
-      padding-top: 2rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .state-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      border: 3px solid var(--navy);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .state-card:hover .state-dot {
-      transform: scale(1.3);
-    }
-
-    .state-card:nth-child(1) .state-dot { background: var(--sky); box-shadow: 0 0 0 4px rgba(91, 157, 228, 0.2); }
-    .state-card:nth-child(2) .state-dot { background: var(--bright); box-shadow: 0 0 0 4px rgba(61, 124, 201, 0.2); }
-    .state-card:nth-child(3) .state-dot { background: var(--mint); box-shadow: 0 0 0 4px rgba(124, 207, 184, 0.2); }
-
-    .state-card:hover:nth-child(1) .state-dot { box-shadow: 0 0 0 8px rgba(91, 157, 228, 0.15), 0 0 20px rgba(91, 157, 228, 0.3); }
-    .state-card:hover:nth-child(2) .state-dot { box-shadow: 0 0 0 8px rgba(61, 124, 201, 0.15), 0 0 20px rgba(61, 124, 201, 0.3); }
-    .state-card:hover:nth-child(3) .state-dot { box-shadow: 0 0 0 8px rgba(124, 207, 184, 0.15), 0 0 20px rgba(124, 207, 184, 0.3); }
-
-    .state-body {
-      padding: 1.5rem 2rem 3rem;
-    }
-
-    .state-body h3 {
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-size: 1.5rem;
-      color: var(--white);
-      margin-bottom: 0.25rem;
-    }
-
-    .state-body .energy {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      font-style: italic;
-      margin-bottom: 1rem;
-    }
-
-    .state-body p {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-    }
-
-    .artifact-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .artifact-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: 100px;
+      border-radius: 20px;
       border: 1px solid var(--blue);
-      color: var(--text-secondary);
-      transition: all 0.3s;
+      padding: 3.5rem;
+      margin-top: 1rem;
     }
 
-    .state-card:nth-child(1) .artifact-tag:hover { border-color: var(--sky); color: var(--sky); background: rgba(91, 157, 228, 0.08); }
-    .state-card:nth-child(2) .artifact-tag:hover { border-color: var(--bright); color: var(--bright); background: rgba(61, 124, 201, 0.08); }
-    .state-card:nth-child(3) .artifact-tag:hover { border-color: var(--mint); color: var(--mint); background: rgba(124, 207, 184, 0.08); }
-
-    /* ===== Flow Diagram ===== */
-    .flow-section {
-      margin: 3rem 0;
-      padding: 2.5rem;
-      background: var(--deep);
-      border-radius: 16px;
-      border: 1px solid var(--ink);
-      overflow-x: auto;
+    .case-study .case-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
     }
 
-    .flow-section h4 {
+    .case-study .case-meta {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
+      font-size: 0.78rem;
       color: var(--text-dim);
+      line-height: 2;
+    }
+
+    .case-study h3 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .case-study p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 600px;
       margin-bottom: 1.5rem;
     }
 
-    .flow-rows {
+    .case-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .case-cta {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--blue);
+    }
+
+    .case-cta p {
+      font-size: 1.05rem;
+      color: var(--pale);
+      font-weight: 400;
+    }
+
+    /* ===== Namespace ===== */
+    .namespace-stack {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
     }
 
-    .flow-row {
+    .ns-item {
       display: grid;
-      grid-template-columns: 1fr 40px 1fr 40px 1fr;
-      align-items: center;
+      grid-template-columns: 140px 1fr;
       gap: 0;
+      background: var(--deep);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid transparent;
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    .flow-node {
+    .ns-item:hover {
+      border-color: var(--blue);
+      box-shadow: 0 4px 20px var(--glow);
+    }
+
+    .ns-url {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.78rem;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
+      color: var(--sky);
+      background: var(--ink);
+      padding: 1rem 0.75rem;
       text-align: center;
-      transition: all 0.3s;
+      word-break: break-all;
     }
 
-    .flow-node.pre { background: rgba(91, 157, 228, 0.1); color: var(--sky); border: 1px solid rgba(91, 157, 228, 0.2); }
-    .flow-node.during { background: rgba(61, 124, 201, 0.1); color: var(--bright); border: 1px solid rgba(61, 124, 201, 0.2); }
-    .flow-node.post { background: rgba(124, 207, 184, 0.1); color: var(--mint); border: 1px solid rgba(124, 207, 184, 0.2); }
+    .ns-desc {
+      padding: 1.25rem 1.5rem;
+    }
 
-    .flow-node:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--glow); }
+    .ns-desc h4 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--pale);
+      margin-bottom: 0.25rem;
+    }
 
-    .flow-arrow {
-      text-align: center;
+    .ns-desc p {
+      font-size: 0.85rem;
       color: var(--text-dim);
-      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+
+    .ns-desc .ns-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 100px;
+      border: 1px solid var(--blue);
+      color: var(--text-dim);
+      margin-top: 0.5rem;
     }
 
     @media (max-width: 600px) {
-      .flow-row { grid-template-columns: 1fr; gap: 0.25rem; }
-      .flow-arrow { transform: rotate(90deg); padding: 0.25rem; }
+      .ns-item { grid-template-columns: 1fr; }
+      .ns-url { padding: 0.75rem; }
     }
 
-    /* ===== Dual ===== */
-    .dual h2 {
+    .pull-quote {
+      margin: 3rem 0 0;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, var(--deep), var(--ink));
+      border-radius: 16px;
+      border-left: 3px solid var(--sky);
+    }
+
+    .pull-quote p {
       font-family: 'DM Serif Display', Georgia, serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      color: var(--pale);
+      line-height: 1.6;
+    }
+
+    /* ===== Framework (collapsible) ===== */
+    .framework-summary {
+      background: var(--deep);
+      border-radius: 16px;
+      border: 1px solid var(--ink);
+      overflow: hidden;
+    }
+
+    .framework-summary summary {
+      padding: 2rem 2.5rem;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .framework-summary summary::-webkit-details-marker { display: none; }
+
+    .framework-summary summary h3 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.3rem;
       color: var(--white);
-      margin-bottom: 1.5rem;
     }
 
-    .dual .intro {
-      font-size: 1.1rem;
+    .framework-summary summary p {
+      font-size: 0.92rem;
       color: var(--text-secondary);
+      margin-top: 0.5rem;
       max-width: 600px;
-      margin-bottom: 3rem;
-      font-weight: 300;
     }
 
+    .framework-summary .expand-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+
+    .framework-summary .framework-body {
+      padding: 0 2.5rem 2.5rem;
+      border-top: 1px solid var(--ink);
+    }
+
+    .dim-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .dim-card {
+      padding: 1.5rem;
+      background: var(--ink);
+      border-radius: 10px;
+    }
+
+    .dim-card h4 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--pale);
+      margin-bottom: 0.4rem;
+    }
+
+    .dim-card p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ===== CTA Cards (organizers / tech) ===== */
     .dual-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
     }
 
-    @media (max-width: 700px) {
-      .dual-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 700px) { .dual-grid { grid-template-columns: 1fr; } }
 
-    .dual-card {
+    .cta-card {
       background: var(--deep);
       border-radius: 16px;
       padding: 2.5rem;
@@ -704,54 +608,52 @@
       transition: border-color 0.4s, box-shadow 0.4s;
     }
 
-    .dual-card:hover {
+    .cta-card:hover {
       border-color: var(--blue);
       box-shadow: 0 8px 40px var(--glow);
     }
 
-    .dual-card .card-icon {
-      width: 48px;
-      height: 48px;
+    .cta-card .card-icon {
+      width: 48px; height: 48px;
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
       margin-bottom: 1.5rem;
     }
 
-    .dual-card:first-child .card-icon {
+    .cta-card:first-child .card-icon {
+      background: rgba(244, 217, 160, 0.12);
+      color: var(--warm);
+      border: 1px solid rgba(244, 217, 160, 0.2);
+    }
+
+    .cta-card:last-child .card-icon {
       background: rgba(91, 157, 228, 0.12);
       color: var(--sky);
       border: 1px solid rgba(91, 157, 228, 0.2);
     }
 
-    .dual-card:last-child .card-icon {
-      background: rgba(124, 207, 184, 0.12);
-      color: var(--mint);
-      border: 1px solid rgba(124, 207, 184, 0.2);
-    }
-
-    .dual-card h3 {
+    .cta-card h3 {
       font-family: 'DM Serif Display', Georgia, serif;
       font-size: 1.4rem;
       color: var(--white);
       margin-bottom: 1rem;
     }
 
-    .dual-card p {
+    .cta-card p {
       font-size: 0.92rem;
       color: var(--text-secondary);
       line-height: 1.7;
+      margin-bottom: 1rem;
     }
 
-    .dual-card ul {
+    .cta-card ul {
       list-style: none;
       padding: 0;
-      margin-top: 1rem;
     }
 
-    .dual-card ul li {
+    .cta-card ul li {
       font-size: 0.88rem;
       color: var(--text-dim);
       padding: 0.35rem 0;
@@ -759,87 +661,22 @@
       position: relative;
     }
 
-    .dual-card ul li::before {
+    .cta-card ul li::before {
       content: '';
       position: absolute;
-      left: 0;
-      top: 0.75rem;
-      width: 6px;
-      height: 6px;
+      left: 0; top: 0.75rem;
+      width: 6px; height: 6px;
       border-radius: 50%;
       background: var(--blue);
     }
 
-    /* ===== Principles ===== */
-    .principles h2 {
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      color: var(--white);
-      margin-bottom: 3rem;
+    .cta-card .contact {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--ink);
     }
 
-    .principles-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .principle-card {
-      padding: 2rem;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--deep), transparent);
-      border: 1px solid var(--ink);
-      transition: border-color 0.3s;
-    }
-
-    .principle-card:hover {
-      border-color: var(--blue);
-    }
-
-    .principle-card h3 {
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: var(--pale);
-      margin-bottom: 0.75rem;
-    }
-
-    .principle-card p {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      line-height: 1.7;
-    }
-
-    /* ===== CTA ===== */
-    .cta {
-      text-align: center;
-      padding: 10rem 2rem 8rem;
-    }
-
-    .cta .label { margin-bottom: 1.5rem; }
-
-    .cta h2 {
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      color: var(--white);
-      margin-bottom: 1.5rem;
-      line-height: 1.15;
-    }
-
-    .cta .lead {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      max-width: 520px;
-      margin: 0 auto 3rem;
-      font-weight: 300;
-    }
-
-    .cta-buttons {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
+    /* ===== Buttons ===== */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -859,7 +696,6 @@
       color: var(--white);
       border: 1px solid var(--bright);
     }
-
     .btn-primary:hover {
       background: var(--sky);
       border-color: var(--sky);
@@ -872,7 +708,6 @@
       color: var(--text-secondary);
       border: 1px solid var(--blue);
     }
-
     .btn-secondary:hover {
       border-color: var(--mid);
       color: var(--text);
@@ -881,8 +716,7 @@
 
     /* ===== Divider ===== */
     .divider {
-      width: 60px;
-      height: 2px;
+      width: 60px; height: 2px;
       background: linear-gradient(to right, var(--sky), var(--mint));
       border-radius: 1px;
       margin: 0 auto;
@@ -902,7 +736,6 @@
       text-decoration: none;
       transition: color 0.2s;
     }
-
     footer a:hover { color: var(--sky); }
 
     footer .footer-links {
@@ -910,56 +743,38 @@
       gap: 1.5rem;
       justify-content: center;
       margin-bottom: 1rem;
+      flex-wrap: wrap;
     }
 
     /* ===== Mobile ===== */
     @media (max-width: 480px) {
       section { padding: 5rem 1.25rem; }
-      .hlamt-content { padding: 1.25rem 1.5rem; }
-      .state-body { padding: 1rem 1rem 2rem; }
-      .dual-card { padding: 1.75rem; }
+      .case-study { padding: 2rem; }
+      .cta-card { padding: 1.75rem; }
     }
 
-    /* Lucide icon base */
-    /* Lucide icon spacing */
+    /* ===== Lucide ===== */
     .lucide { display: inline-block; vertical-align: middle; flex-shrink: 0; }
-    .icon-xs { width: 14px; height: 14px; }
-    .icon-sm { width: 18px; height: 18px; }
-    .icon-md { width: 24px; height: 24px; }
-    .icon-lg { width: 32px; height: 32px; }
-    .icon-xl { width: 48px; height: 48px; }
-    .label i { width: 14px; height: 14px; margin-right: 0.75rem; opacity: 0.7; position: relative; top: -1px; }
-    .feature-card .f-icon i, .card-icon i { width: 24px; height: 24px; }
-    .principle-card > i { width: 20px; height: 20px; margin-bottom: 1rem; display: block; opacity: 0.6; }
+    .card-icon i { width: 24px; height: 24px; }
     .btn i { width: 16px; height: 16px; margin-right: 0.25rem; }
-    .loss-card .loss-icon { margin-bottom: 1rem; display: block; }
-    .loss-card .loss-icon i { width: 28px; height: 28px; }
-    .state-body h3 i { width: 18px; height: 18px; margin-right: 0.6rem; position: relative; top: -1px; }
-    .hlamt-content h3 i { width: 18px; height: 18px; margin-right: 0.5rem; position: relative; top: -1px; }
-    .tent-content h3 i { width: 18px; height: 18px; margin-right: 0.5rem; position: relative; top: -1px; }
-    .step-content h3 i { width: 18px; height: 18px; margin-right: 0.5rem; position: relative; top: -1px; }
-    footer a i { width: 14px; height: 14px; margin-right: 0.4rem; position: relative; top: -1px; }
-    .state-body h3 i { width: 18px; height: 18px; margin-right: 0.4rem; opacity: 0.6; }
-    .hlamt-content h3 i { width: 18px; height: 18px; margin-right: 0.4rem; opacity: 0.6; }
-    .footer-links a i { width: 12px; height: 12px; margin-right: 0.3rem; }
   </style>
 </head>
 <body>
 
-  <!-- Animated background -->
   <div class="bg-grid"></div>
   <canvas class="node-canvas" id="nodeCanvas"></canvas>
 
   <div class="container">
 
-    <!-- Hero -->
+    <!-- ==================== HERO ==================== -->
     <div class="hero">
-      <div class="label reveal">Layer 1 · Identity</div>
+      <div class="label reveal">Knowledge that lasts</div>
       <h1 class="reveal reveal-delay-1">
-        <span class="accent">commons</span>.id
+        Conferences produce incredible ideas.<br>
+        <span class="accent">Most of them disappear within weeks.</span>
       </h1>
       <p class="lead reveal reveal-delay-2">
-        The first act of any commons is distinguishing one thing from another. A name. An address. A place to stand. <strong>commons.id</strong> is the root identity of a living archive — the namespace from which every idea, every relationship, and every commitment becomes findable, linkable, and persistent.
+        <strong>commons.id</strong> is a living archive that captures what happens at events — ideas, commitments, relationships — and gives them permanent addresses. Not another notes app. A knowledge graph that grows with every conversation.
       </p>
       <div class="hero-visual">
         <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
@@ -967,402 +782,236 @@
         <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
       </div>
       <div class="scroll-cue">
-        <span>Explore</span>
+        <span>How it works</span>
         <div class="scroll-line"></div>
       </div>
     </div>
 
-    <!-- Identity -->
-    <section class="problem">
-      <div class="label reveal">The Root</div>
-      <h2 class="reveal reveal-delay-1">Identity is<br>the first layer</h2>
-      <p class="intro reveal reveal-delay-2">
-        In any information system, identity precedes everything. Before you can record state, form relationships, track events, or create views — you must first be able to distinguish one thing from another. <strong>commons.id</strong> is that act of distinguishing, applied to everything the commons holds.
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section id="how">
+      <div class="label reveal">Three steps</div>
+      <h2 class="section-title reveal reveal-delay-1">From conversation<br>to knowledge graph</h2>
+      <p class="section-intro reveal reveal-delay-2">
+        The value loop is simple. Participants contribute naturally. AI does the structuring. Everything gets a permanent home.
       </p>
-      <div class="loss-grid reveal reveal-delay-3">
-        <div class="loss-card">
-          <span class="loss-icon"><i data-lucide="link"></i></span>
-          <h3>Ideas get addresses</h3>
-          <p>Every artifact in the knowledge graph resolves to a permanent URL. A proposal born in a 2026 conversation is still findable in 2030. Ideas become citable, linkable, alive.</p>
+
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-number">1</div>
+          <div class="card-icon"><i data-lucide="message-square-text"></i></div>
+          <h3>Contribute naturally</h3>
+          <p>Participants share text, notes, reflections, and observations during and after sessions. No special tools needed — just write what matters to you.</p>
         </div>
-        <div class="loss-card">
-          <span class="loss-icon"><i data-lucide="users"></i></span>
-          <h3>People get threads</h3>
-          <p>Participants carry a persistent identity across convergence events. Your contributions, your connections, your commitments — one thread, woven through many gatherings.</p>
+        <div class="step-card reveal reveal-delay-1">
+          <div class="step-number">2</div>
+          <div class="card-icon"><i data-lucide="sparkles"></i></div>
+          <h3>AI extracts structure</h3>
+          <p>An extraction pipeline identifies artifacts, people, commitments, and connections. Raw contributions become structured knowledge — tagged, linked, and contextualized.</p>
         </div>
-        <div class="loss-card">
-          <span class="loss-icon"><i data-lucide="calendar"></i></span>
-          <h3>Events get memory</h3>
-          <p>Each convergence is a named, locatable moment in time — with its own knowledge graph, its own artifacts, its own ecology. Identity gives events continuity.</p>
-        </div>
-        <div class="loss-card">
-          <span class="loss-icon"><i data-lucide="bot"></i></span>
-          <h3>Agents get roles</h3>
-          <p>AI agents that observe, extract, and synthesize are first-class participants with their own identities, capabilities, and accountability within the commons.</p>
+        <div class="step-card reveal reveal-delay-2">
+          <div class="step-number">3</div>
+          <div class="card-icon"><i data-lucide="globe"></i></div>
+          <h3>Everything gets an address</h3>
+          <p>Every idea, every person, every commitment receives a permanent URL in the knowledge graph. Searchable. Linkable. Persistent. Still findable in five years.</p>
         </div>
       </div>
     </section>
 
-    <!-- Namespace -->
-    <section class="framework">
-      <div class="label reveal">The Namespace</div>
-      <h2 class="reveal reveal-delay-1">Everything<br>resolves here</h2>
-      <p class="subtitle reveal reveal-delay-1">commons.id as root identity</p>
-      <p class="intro reveal reveal-delay-2">
-        The <code style="color: var(--sky); background: var(--ink); padding: 0.15em 0.5em; border-radius: 4px; font-size: 0.95em;">.id</code> is literal. This domain is an identity layer — the namespace from which every entity in the commons derives a resolvable address. Not a website with a clever name, but the root from which the graph becomes navigable.
+    <!-- ==================== ETHBOULDER 2026 ==================== -->
+    <section id="ethboulder">
+      <div class="label reveal">First convergence partner</div>
+      <h2 class="section-title reveal reveal-delay-1">ETHBoulder 2026</h2>
+      <p class="section-intro reveal reveal-delay-2">
+        Our first live deployment. Four days of Ethereum and public goods conversations in Boulder, Colorado — captured, structured, and preserved in real time.
       </p>
 
-      <div class="hlamt-stack">
-        <div class="hlamt-item eco reveal">
-          <div class="hlamt-letter" style="font-size: 1.1rem; letter-spacing: -0.02em;">/.id</div>
-          <div class="hlamt-content">
-            <h3>commons.id</h3>
-            <p>The root. The living archive itself — the landing, the story, the entry point. Everything below is reachable from here.</p>
-            <div class="commons-role">You are here.</div>
+      <div class="case-study reveal reveal-delay-3">
+        <div class="case-header">
+          <div>
+            <h3>A white-label knowledge layer for events</h3>
+            <p>ETHBoulder gets its own branded landing page, its own scoped view of the knowledge graph, and a post-event archive that outlasts the gathering itself. Every session, every idea, every commitment — addressable and persistent.</p>
+          </div>
+          <div class="case-meta">
+            Feb 13 &ndash; 16, 2026<br>
+            Boulder, Colorado<br>
+            4 days, 100+ sessions
           </div>
         </div>
 
-        <div class="hlamt-item human reveal reveal-delay-1">
-          <div class="hlamt-letter" style="font-size: 1.1rem; letter-spacing: -0.02em;">/a</div>
-          <div class="hlamt-content">
-            <h3>commons.id/a/<em>{id}</em></h3>
-            <p>Artifacts — the knowledge objects. Ideas, proposals, commitments, patterns, syntheses. Each has a permanent, citable URL. An idea born at ETHBoulder 2026 remains addressable forever.</p>
-            <div class="commons-role">commons.id/a/3f631713 → "Knowledge Graph as Living Archive"</div>
-          </div>
+        <div class="case-links">
+          <a href="/ethboulder/" class="btn btn-primary"><span>ETHBoulder Landing</span></a>
+          <a href="/app/" class="btn btn-secondary"><span>Open the Platform</span></a>
         </div>
 
-        <div class="hlamt-item language reveal reveal-delay-2">
-          <div class="hlamt-letter" style="font-size: 1.1rem; letter-spacing: -0.02em;">/p</div>
-          <div class="hlamt-content">
-            <h3>commons.id/p/<em>{name}</em></h3>
-            <p>Participants — people who contribute to the commons. Your thread: what you've authored, what you're stewarding, who you've connected with, what you've committed to. One identity across many convergences.</p>
-            <div class="commons-role">commons.id/p/todd → artifacts, connections, commitments, convergences</div>
+        <div class="case-cta">
+          <p>Your event could be next. Every conference generates knowledge worth keeping. We provide the infrastructure to capture it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== URL AS DESIGN SPACE ==================== -->
+    <section id="namespace">
+      <div class="label reveal">The URL is the identity layer</div>
+      <h2 class="section-title reveal reveal-delay-1">Every event gets a namespace.<br>Every idea gets an address.</h2>
+      <p class="section-intro reveal reveal-delay-2">
+        The domain is not just a website. It is infrastructure — a design space where events, ideas, people, and APIs each resolve to a predictable, permanent location.
+      </p>
+
+      <div class="namespace-stack">
+        <div class="ns-item reveal">
+          <div class="ns-url">commons.id</div>
+          <div class="ns-desc">
+            <h4>The root</h4>
+            <p>The living archive itself. The story, the entry point. Everything below is reachable from here.</p>
+            <span class="ns-tag">you are here</span>
           </div>
         </div>
-
-        <div class="hlamt-item artifact reveal reveal-delay-3">
-          <div class="hlamt-letter" style="font-size: 1.1rem; letter-spacing: -0.02em;">/c</div>
-          <div class="hlamt-content">
-            <h3>commons.id/c/<em>{event}</em></h3>
-            <p>Convergences — named gatherings with their own knowledge graphs, bioregions, sessions, and tents. Each event has identity. Each carries the artifacts forward into the next.</p>
-            <div class="commons-role">commons.id/c/ethboulder-2026 → sessions, artifacts, participants, themes</div>
+        <div class="ns-item reveal reveal-delay-1">
+          <div class="ns-url">commons.id/app/</div>
+          <div class="ns-desc">
+            <h4>The platform</h4>
+            <p>Browse the knowledge graph. Explore artifacts, people, convergences. Contribute and search.</p>
+            <span class="ns-tag">live now</span>
           </div>
         </div>
-
-        <div class="hlamt-item method reveal reveal-delay-4">
-          <div class="hlamt-letter" style="font-size: 1.1rem; letter-spacing: -0.02em;">/t</div>
-          <div class="hlamt-content">
-            <h3>commons.id/t/<em>{tent}</em></h3>
-            <p>Tents — thematic frames that span convergences. A tent like "Civic Finance" carries its own thread across events and years, accumulating artifacts and practitioners. Identity at the level of shared concern.</p>
-            <div class="commons-role">commons.id/t/cosmolocal → artifacts, participants, convergences under this frame</div>
+        <div class="ns-item reveal reveal-delay-2">
+          <div class="ns-url">commons.id/ethboulder/</div>
+          <div class="ns-desc">
+            <h4>Convergence landing page</h4>
+            <p>A branded entry point for ETHBoulder 2026 — event details, sessions, and a gateway to the event's knowledge graph.</p>
           </div>
         </div>
-
-        <div class="hlamt-item training reveal reveal-delay-5">
-          <div class="hlamt-letter" style="font-size: 1.1rem; letter-spacing: -0.02em;">api</div>
-          <div class="hlamt-content">
-            <h3>api.commons.id</h3>
-            <p>The agent interface. Structured queries, observation submission, artifact creation — the same knowledge graph, accessed through a programmatic identity layer. Agents and humans resolve to the same graph; only the interface differs.</p>
-            <div class="commons-role">api.commons.id/rest/v1/artifacts → the knowledge graph, queryable</div>
+        <div class="ns-item reveal reveal-delay-3">
+          <div class="ns-url">commons.id/app/c/ethboulder-2026/</div>
+          <div class="ns-desc">
+            <h4>Convergence-scoped app</h4>
+            <p>The platform filtered to a single event. All artifacts, sessions, and participants scoped to ETHBoulder 2026.</p>
+            <span class="ns-tag">coming soon</span>
+          </div>
+        </div>
+        <div class="ns-item reveal reveal-delay-4">
+          <div class="ns-url">api.commons.id</div>
+          <div class="ns-desc">
+            <h4>Agent interface</h4>
+            <p>Programmatic access to the knowledge graph. Query artifacts, submit observations, track commitments. The same data, structured for machines.</p>
+          </div>
+        </div>
+        <div class="ns-item reveal reveal-delay-5">
+          <div class="ns-url">{event}.commons.id</div>
+          <div class="ns-desc">
+            <h4>White-label subdomains</h4>
+            <p>Partner events can run on their own subdomain. Full branding, scoped data, shared infrastructure.</p>
+            <span class="ns-tag">for partners</span>
           </div>
         </div>
       </div>
 
       <div class="pull-quote reveal">
-        <p>Without identity, nothing is findable. Without findability, nothing compounds. The namespace is not infrastructure — it is the first creative act of the commons. To name something is to give it a place to stand.</p>
+        <p>Every event gets its own namespace. Every idea gets a permanent address. The URL is the identity layer.</p>
       </div>
     </section>
 
-    <!-- Problem reframed through identity -->
-    <section class="states">
-      <div class="label reveal">Why Identity Matters</div>
-      <h2 class="reveal reveal-delay-1">Without identity,<br>the energy dissipates</h2>
-      <p class="intro reveal reveal-delay-2">
-        Convergence events generate extraordinary moments — new relationships, emergent ideas, shared commitments. Then the gathering ends. The problem is not that energy fades. The problem is that nothing had a name.
-      </p>
-
-      <div class="timeline">
-        <div class="state-card reveal">
-          <div class="state-marker"><div class="state-dot"></div></div>
-          <div class="state-body">
-            <h3>Pre-Event — Identities Gather</h3>
-            <div class="energy">Listening · Orienting · Preparing</div>
-            <p>Participants register their identity and interests. Agents surface prior artifacts by name — threads from previous convergences, open questions, ongoing work. Because everything has an address, context arrives before people do.</p>
-            <div class="artifact-tags">
-              <span class="artifact-tag">commons.id/p/{you}</span>
-              <span class="artifact-tag">interest graphs</span>
-              <span class="artifact-tag">prior threads</span>
-              <span class="artifact-tag">context packages</span>
+    <!-- ==================== DESIGN FRAMEWORK ==================== -->
+    <section id="framework">
+      <div class="label reveal">Design framework</div>
+      <details class="framework-summary reveal reveal-delay-1">
+        <summary>
+          <div>
+            <h3>e/H-LAM/T</h3>
+            <p>Built on a design framework that classifies knowledge across six dimensions: ecology, human, language, artifacts, methodology, and training. Inspired by Douglas Engelbart's augmentation framework, extended with an ecological foundation.</p>
+          </div>
+          <span class="expand-hint">Learn more</span>
+        </summary>
+        <div class="framework-body">
+          <div class="dim-grid">
+            <div class="dim-card">
+              <h4>Ecology</h4>
+              <p>All coordination happens in a place. Convergences carry bioregional context — watershed, season, landscape. Place shapes what's possible.</p>
+            </div>
+            <div class="dim-card">
+              <h4>Human</h4>
+              <p>Participants with persistent identity across events. Practitioners with embodied knowledge, relationships, and vantage points that deepen over time.</p>
+            </div>
+            <div class="dim-card">
+              <h4>Language</h4>
+              <p>How we name things shapes what we can coordinate around. The knowledge graph schema is a shared vocabulary that gives the commons a grammar.</p>
+            </div>
+            <div class="dim-card">
+              <h4>Artifacts</h4>
+              <p>The durable traces of human coordination. Each artifact carries origin context, lineage, and stewards. Permanent URLs make them citable and evolvable.</p>
+            </div>
+            <div class="dim-card">
+              <h4>Methodology</h4>
+              <p>Pre-event, during, post-event states. Agent orchestration roles. Stewardship practices. The rhythm of convergence and continuation.</p>
+            </div>
+            <div class="dim-card">
+              <h4>Training</h4>
+              <p>How the system learns. Pattern recognition across convergences. Using the commons to improve the commons. You can't improve what you can't name.</p>
             </div>
           </div>
         </div>
-
-        <div class="state-card reveal">
-          <div class="state-marker"><div class="state-dot"></div></div>
-          <div class="state-body">
-            <h3>During Event — Identities Emerge</h3>
-            <div class="energy">Active · Emergent · Co-creative</div>
-            <p>Conversations feed into the knowledge graph. New artifacts receive identities the moment they emerge — an idea gets a name, an address, a steward. Real-time extraction gives form to the formless. Cross-session connections surface because both sides have names.</p>
-            <div class="artifact-tags">
-              <span class="artifact-tag">commons.id/a/{new}</span>
-              <span class="artifact-tag">entity extraction</span>
-              <span class="artifact-tag">live graph</span>
-              <span class="artifact-tag">commitments</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="state-card reveal">
-          <div class="state-marker"><div class="state-dot"></div></div>
-          <div class="state-body">
-            <h3>Post-Event — Identities Persist</h3>
-            <div class="energy">Integration · Synthesis · Continuation</div>
-            <p>Because everything has an address, nothing is lost to the gap between events. Commitments are tracked by name. Themes deepen through continued work. A proposal becomes a project becomes a pattern — each state change recorded, each artifact still findable at the same URL it was born at.</p>
-            <div class="artifact-tags">
-              <span class="artifact-tag">syntheses</span>
-              <span class="artifact-tag">commitment tracking</span>
-              <span class="artifact-tag">pattern evolution</span>
-              <span class="artifact-tag">persistent URLs</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="flow-section reveal">
-        <h4>Identity Flow — Artifacts Carry Forward</h4>
-        <div class="flow-rows">
-          <div class="flow-row">
-            <div class="flow-node pre">Question</div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-node during">Discussion</div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-node post">Synthesis</div>
-          </div>
-          <div class="flow-row">
-            <div class="flow-node pre">Interest</div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-node during">Connection</div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-node post">Collaboration</div>
-          </div>
-          <div class="flow-row">
-            <div class="flow-node pre">Context</div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-node during">Proposal</div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-node post">Project</div>
-          </div>
-          <div class="flow-row">
-            <div class="flow-node pre">Pattern</div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-node during">Validation</div>
-            <div class="flow-arrow">→</div>
-            <div class="flow-node post">Evolution</div>
-          </div>
-        </div>
-      </div>
+      </details>
     </section>
 
-    <!-- Framework -->
-    <section class="dual">
-      <div class="label reveal">Design Framework</div>
-      <h2 class="reveal reveal-delay-1">e/H-LAM/T</h2>
-      <p class="intro reveal reveal-delay-2">
-        Douglas Engelbart understood that human capability emerges from the co-evolution of five elements. We extend his framework with an ecological foundation — the <strong>e/</strong> layer. Identity is the thread that runs through all six: you cannot name what you cannot distinguish.
-      </p>
-
-      <div class="dual-grid">
-        <div class="dual-card reveal">
-          <div class="card-icon"><i data-lucide="tree-pine"></i></div>
-          <h3>Ecology</h3>
-          <p>All coordination happens in a place. Every convergence carries bioregional identity — watershed, elevation, season. The land is not backdrop; it is context that shapes what's possible.</p>
-          <ul>
-            <li>Bioregion identity per convergence</li>
-            <li>Seasonal and ecological metadata</li>
-            <li>Place as first-class dimension</li>
-          </ul>
-        </div>
-
-        <div class="dual-card reveal reveal-delay-1">
-          <div class="card-icon"><i data-lucide="heart-handshake"></i></div>
-          <h3>Human</h3>
-          <p>Participants with persistent identity across events. Not users — practitioners with embodied knowledge, relationships, and unique vantage points that deepen over time.</p>
-          <ul>
-            <li>commons.id/p/{name} — your thread</li>
-            <li>Interest graphs and social fabric</li>
-            <li>Personal sense-making + collective synthesis</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="dual-grid" style="margin-top: 1.5rem;">
-        <div class="dual-card reveal">
-          <div class="card-icon"><i data-lucide="message-square"></i></div>
-          <h3>Language</h3>
-          <p>How we name things shapes what we can coordinate around. The knowledge graph schema is a shared vocabulary — tags, dimensions, relationship types — that gives the commons a grammar.</p>
-          <ul>
-            <li>Ontology for artifacts and relationships</li>
-            <li>Tags as shared vocabulary</li>
-            <li>Translation between technical, civic, ecological frames</li>
-          </ul>
-        </div>
-
-        <div class="dual-card reveal reveal-delay-1">
-          <div class="card-icon"><i data-lucide="file-text"></i></div>
-          <h3>Artifacts</h3>
-          <p>The durable traces of human coordination. Each artifact carries origin context, lineage, and stewards. Because they have identity (a permanent URL), they can be cited, linked, evolved.</p>
-          <ul>
-            <li>commons.id/a/{id} — permanent address</li>
-            <li>State lifecycle: seed → active → pattern</li>
-            <li>The graph is the master artifact</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="dual-grid" style="margin-top: 1.5rem;">
-        <div class="dual-card reveal">
-          <div class="card-icon"><i data-lucide="git-branch"></i></div>
-          <h3>Methodology</h3>
-          <p>Three temporal states. Agent orchestration roles. Stewardship practices. The rhythm of convergence and continuation — methodology is the gardening, not just the garden.</p>
-          <ul>
-            <li>Pre / During / Post event states</li>
-            <li>Agent roles: observer, synthesizer, steward</li>
-            <li>Commitment tracking as methodology</li>
-          </ul>
-        </div>
-
-        <div class="dual-card reveal reveal-delay-1">
-          <div class="card-icon"><i data-lucide="graduation-cap"></i></div>
-          <h3>Training</h3>
-          <p>How the system learns. Pattern recognition across convergences. The bootstrap discipline: using the commons to improve the commons. Identity enables learning — you can't improve what you can't name.</p>
-          <ul>
-            <li>Pattern extraction across events</li>
-            <li>Onboarding as identity creation</li>
-            <li>The commons improves itself</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Two interfaces -->
-    <section class="dual">
-      <div class="label reveal">Two Interfaces, One Identity</div>
-      <h2 class="reveal reveal-delay-1">For agents<br>&amp; humans</h2>
-      <p class="intro reveal reveal-delay-2">
-        The knowledge graph is the commons. Two interfaces into the same identity layer — each designed for how its participants think and work. An artifact at <code style="color: var(--sky); background: var(--ink); padding: 0.15em 0.5em; border-radius: 4px; font-size: 0.9em;">commons.id/a/3f631713</code> resolves the same whether an agent or a human follows the link.
-      </p>
-
-      <div class="dual-grid">
-        <div class="dual-card reveal">
-          <div class="card-icon"><i data-lucide="terminal"></i></div>
-          <h3>Agent API</h3>
-          <p>Structured access to the knowledge graph. Agents query, observe, extract, and synthesize — each with their own identity and role within the commons.</p>
-          <ul>
-            <li>api.commons.id — the programmatic interface</li>
-            <li>Query artifacts by dimension and relationship</li>
-            <li>Submit observations and annotations</li>
-            <li>Track commitments across convergences</li>
-            <li>Roles: orchestrator, observer, synthesizer, steward</li>
-          </ul>
-        </div>
-
-        <div class="dual-card reveal reveal-delay-1">
-          <div class="card-icon"></div>
-          <h3>Human Platform</h3>
-          <p>Exploring the commons should feel like walking through a living garden, not querying a database. Your identity is your thread through the landscape.</p>
-          <ul>
-            <li>The Garden — visual knowledge graph explorer</li>
-            <li>My Thread — your path through the commons</li>
-            <li>Progressive disclosure — summaries first, depth on demand</li>
-            <li>Voice-friendly contribution and reflection</li>
-            <li>Browse by theme, person, time, or energy</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Principles -->
-    <section class="principles">
-      <div class="label reveal">Foundations</div>
-      <h2 class="reveal reveal-delay-1">Principles</h2>
-
-      <div class="principles-grid">
-        <div class="principle-card reveal">
-          
-          <h3>Identity precedes everything</h3>
-          <p>Before state, before relationships, before events — you must first distinguish one thing from another. Naming is the first act of care. commons.id is that act, applied to the commons.</p>
-        </div>
-        <div class="principle-card reveal reveal-delay-1">
-          <h3>Context integrity</h3>
-          <p>Preserve not just content but the conditions under which it emerged — the relationships, the energy, the place, the moment. Without context, artifacts are just data.</p>
-        </div>
-        <div class="principle-card reveal reveal-delay-2">
-          <h3>Artifacts over archives</h3>
-          <p>A living commons, not a static repository. Artifacts evolve, fork, connect, and sometimes gracefully fade. The graph is alive. Every artifact has identity; not every identity persists.</p>
-        </div>
-        <div class="principle-card reveal reveal-delay-3">
-          <h3>Grounded in place</h3>
-          <p>Every convergence happens somewhere. The ecological layer carries identity too — watershed, elevation, season. Technology that forgets its ground extracts. Technology that remembers can contribute.</p>
-        </div>
-        <div class="principle-card reveal reveal-delay-4">
-          <h3>Amplifying aliveness</h3>
-          <p>Technology should amplify what is most alive in us. The commons carries forward the generative energy of human gathering — not by capturing it, but by giving it names that endure.</p>
-        </div>
-        <div class="principle-card reveal reveal-delay-5">
-          <h3>Open by default</h3>
-          <p>The commons is a shared resource. What is light should be cosmo — patterns and identities that flow freely across communities. What is heavy stays local. The namespace is open.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta">
+    <!-- ==================== FOR ORGANIZERS + TECHNOLOGISTS ==================== -->
+    <section id="get-involved">
       <div class="divider reveal"></div>
       <br><br>
-      <div class="label reveal reveal-delay-1">February 2026 · Boulder, Colorado</div>
-      <h2 class="reveal reveal-delay-2">The first names<br>are being written</h2>
-      <p class="lead reveal reveal-delay-3">
-        ETHBoulder 2026 is the first convergence to enter the commons. Ideas are receiving addresses. Participants are creating threads. The knowledge graph is beginning to remember. The identity layer is alive.
-      </p>
-      <div class="cta-buttons reveal reveal-delay-4">
-        <a href="/app/" class="btn btn-primary">
-          
-          <span>Enter the Garden</span>
-        </a>
-        <a href="https://github.com/nou-techne/information-communication-commons" class="btn btn-secondary">
-          
-          <span>View on GitHub</span>
-        </a>
-        <a href="SYSTEM.md" class="btn btn-secondary">System Design</a>
-        <a href="mailto:hello@commons.id" class="btn btn-secondary">Get in Touch</a>
+
+      <div class="dual-grid">
+        <div class="cta-card reveal">
+          <div class="card-icon"><i data-lucide="calendar-check"></i></div>
+          <h3>For event organizers</h3>
+          <p>Run your next event on the commons. We handle the infrastructure so your ideas outlast the gathering.</p>
+          <ul>
+            <li>White-label deployment under your brand</li>
+            <li>AI extraction pipeline for sessions</li>
+            <li>Real-time knowledge graph during the event</li>
+            <li>Permanent post-event archive</li>
+          </ul>
+          <div class="contact">
+            <a href="mailto:hello@commons.id" class="btn btn-primary"><span>Get in touch</span></a>
+          </div>
+        </div>
+
+        <div class="cta-card reveal reveal-delay-1">
+          <div class="card-icon"><i data-lucide="code-2"></i></div>
+          <h3>For technologists</h3>
+          <p>The platform is open source. Built on a practical stack, designed for extension.</p>
+          <ul>
+            <li>Supabase + Make.com + React</li>
+            <li>API at <code>api.commons.id</code></li>
+            <li>Peer Production License</li>
+            <li>Contributions welcome</li>
+          </ul>
+          <div class="contact">
+            <a href="https://github.com/nou-techne/information-communication-commons" class="btn btn-secondary"><span>View on GitHub</span></a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ==================== FOOTER ==================== -->
     <footer>
       <div class="footer-links">
+        <a href="https://commons.id">commons.id</a>
+        <a href="/ethboulder/">ETHBoulder</a>
         <a href="https://github.com/nou-techne/information-communication-commons">GitHub</a>
         <a href="https://the-habitat.org">Techne Studio</a>
         <a href="LICENSE.md">Peer Production License</a>
       </div>
-      <p>commons.id · Information &amp; Communications Commons · A venture of Techne Studio / RegenHub, LCA · Boulder, Colorado · 2026</p>
+      <p>commons.id &middot; A venture of Techne Studio / RegenHub, LCA &middot; Boulder, Colorado &middot; 2026</p>
     </footer>
 
   </div>
 
   <!-- Scripts -->
   <script>
-    // Intersection Observer for reveal animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('visible');
       });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
@@ -1394,43 +1043,33 @@
 
     function drawNodes() {
       ctx.clearRect(0, 0, width, height);
-
-      // Draw connections
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 150) {
-            const alpha = (1 - dist / 150) * 0.06;
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.strokeStyle = `rgba(91, 157, 228, ${alpha})`;
+            ctx.strokeStyle = `rgba(91, 157, 228, ${(1 - dist / 150) * 0.06})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         }
       }
-
-      // Draw nodes
       nodes.forEach(node => {
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(139, 191, 255, ${node.opacity})`;
         ctx.fill();
-
-        // Update position
         node.x += node.vx;
         node.y += node.vy;
-
-        // Wrap around
         if (node.x < -10) node.x = width + 10;
         if (node.x > width + 10) node.x = -10;
         if (node.y < -10) node.y = height + 10;
         if (node.y > height + 10) node.y = -10;
       });
-
       requestAnimationFrame(drawNodes);
     }
 
