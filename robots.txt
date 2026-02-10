@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Sitemap: https://commons.id/sitemap.xml
+
+# API endpoints — don't index
+User-agent: *
+Disallow: /api/
