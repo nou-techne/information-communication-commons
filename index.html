@@ -228,6 +228,64 @@
 
     .hero .lead strong { color: var(--text); font-weight: 500; }
 
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* ===== Jump Nav ===== */
+    .jump-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(10, 22, 40, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--ink);
+      padding: 0 2rem;
+      opacity: 0;
+      transform: translateY(-100%);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .jump-nav.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .jump-nav-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .jump-nav-inner::-webkit-scrollbar { display: none; }
+
+    .jump-nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 0.85rem 0;
+      white-space: nowrap;
+      transition: color 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+
+    .jump-nav a:hover,
+    .jump-nav a.active {
+      color: var(--sky);
+      border-bottom-color: var(--sky);
+    }
+
     .hero-visual {
       position: absolute;
       right: -5%;
@@ -781,11 +839,27 @@
         <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
         <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
       </div>
+      <div class="hero-buttons reveal reveal-delay-3">
+        <a href="https://commons.id/app/" class="btn btn-primary"><span>Try the App</span></a>
+        <a href="#how" class="btn btn-secondary"><span>Learn More</span></a>
+      </div>
+
       <div class="scroll-cue">
         <span>How it works</span>
         <div class="scroll-line"></div>
       </div>
     </div>
+
+    <!-- Jump links -->
+    <nav class="jump-nav" id="jumpNav">
+      <div class="jump-nav-inner">
+        <a href="#how">How It Works</a>
+        <a href="#ethboulder">ETHBoulder 2026</a>
+        <a href="#namespace">The Namespace</a>
+        <a href="#get-involved">For Organizers</a>
+        <a href="#get-involved">For Developers</a>
+      </div>
+    </nav>
 
     <!-- ==================== HOW IT WORKS ==================== -->
     <section id="how">
@@ -1014,6 +1088,27 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Sticky jump nav: show after scrolling past hero
+    const jumpNav = document.getElementById('jumpNav');
+    const heroEl = document.querySelector('.hero');
+    const navObserver = new IntersectionObserver(([entry]) => {
+      jumpNav.classList.toggle('visible', !entry.isIntersecting);
+    }, { threshold: 0 });
+    navObserver.observe(heroEl);
+
+    // Active link highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = jumpNav.querySelectorAll('a');
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+    sections.forEach(s => sectionObserver.observe(s));
 
     // Floating nodes canvas
     const canvas = document.getElementById('nodeCanvas');
