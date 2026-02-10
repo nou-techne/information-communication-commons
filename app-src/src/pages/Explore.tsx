@@ -44,6 +44,8 @@ export function Explore() {
     const artifactSub = supabase.channel('explore-artifacts')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, payload => {
         setArtifacts(prev => [payload.new as Artifact, ...prev].slice(0, 50))
+        // Refresh dimension counts when new artifacts arrive
+        refreshDimCounts()
       })
       .subscribe()
 
@@ -81,6 +83,18 @@ export function Explore() {
   useEffect(() => {
     loadArtifacts()
   }, [typeFilter, stateFilter])
+
+  async function refreshDimCounts() {
+    const { data: tagData } = await supabase.from('tags').select('name, artifact_tags(count)').like('name', 'hlamt:%')
+    if (tagData) {
+      const c: Record<string, number> = {}
+      for (const tag of tagData) {
+        const arr = tag.artifact_tags as unknown as { count: number }[]
+        c[tag.name] = arr?.[0]?.count ?? 0
+      }
+      setDimCounts(c)
+    }
+  }
 
   async function loadData() {
     const [{ data: arts }, { data: evts }, { data: tagData }] = await Promise.all([
