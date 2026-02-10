@@ -113,7 +113,7 @@ export function Contribute() {
   }
 
   const tabs: { key: FormTab; label: string }[] = [
-    { key: 'artifact', label: '✍️ New Artifact' },
+    { key: 'artifact', label: 'New Artifact' },
     { key: 'reflection', label: 'Reflection' },
     { key: 'connection', label: 'Connection' },
     { key: 'commitment', label: 'Commitment' },
@@ -125,7 +125,7 @@ export function Contribute() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">✍️ Contribute</h1>
+      <h1 className="text-2xl font-bold mb-6">Contribute</h1>
 
       <div className="flex gap-1 mb-6 bg-[#111d33] rounded-lg p-1">
         {tabs.map(t => (
