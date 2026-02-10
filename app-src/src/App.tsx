@@ -6,6 +6,8 @@ import { ArtifactDetail } from './pages/ArtifactDetail'
 import { MyThread } from './pages/MyThread'
 import { Contribute } from './pages/Contribute'
 import { Auth } from './pages/Auth'
+import { Dimensions } from './pages/Dimensions'
+import { DimensionView } from './pages/DimensionView'
 import type { Session } from '@supabase/supabase-js'
 
 function Nav() {
@@ -20,6 +22,7 @@ function Nav() {
 
   const links = [
     { to: '/', label: 'Explore' },
+    { to: '/dimensions', label: 'Dimensions' },
     { to: '/contribute', label: 'Contribute' },
     { to: '/me', label: 'My Thread' },
   ]
@@ -35,7 +38,7 @@ function Nav() {
             key={l.to}
             to={l.to}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-              location.pathname === l.to
+              (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
                 ? 'bg-[#1a2a44] text-white'
                 : 'text-gray-400 hover:text-white hover:bg-[#111d33]'
             }`}
@@ -65,6 +68,8 @@ export default function App() {
         <main className="max-w-6xl mx-auto px-4 py-6">
           <Routes>
             <Route path="/" element={<Explore />} />
+            <Route path="/dimensions" element={<Dimensions />} />
+            <Route path="/d/:dimension" element={<DimensionView />} />
             <Route path="/artifact/:id" element={<ArtifactDetail />} />
             <Route path="/me" element={<MyThread />} />
             <Route path="/contribute" element={<Contribute />} />

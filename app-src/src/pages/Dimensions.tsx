@@ -1,0 +1,72 @@
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
+
+interface DimensionDef {
+  key: string
+  letter: string
+  name: string
+  tagName: string
+  description: string
+  color: string
+}
+
+const DIMENSIONS: DimensionDef[] = [
+  { key: 'e', letter: 'e/', name: 'Ecology', tagName: 'hlamt:ecology', description: 'Where We Are — place, environment, context', color: '#4a8c6f' },
+  { key: 'H', letter: 'H/', name: 'Human', tagName: 'hlamt:human', description: 'Who\'s Here — people, participants, relationships', color: '#c4956a' },
+  { key: 'L', letter: 'L/', name: 'Language', tagName: 'hlamt:language', description: 'How We Talk — vocabulary, tags, shared concepts', color: '#5b9de4' },
+  { key: 'A', letter: 'A/', name: 'Artifacts', tagName: 'hlamt:artifacts', description: 'What We\'re Building — tools, documents, infrastructure', color: '#8bbfff' },
+  { key: 'M', letter: 'M/', name: 'Methodology', tagName: 'hlamt:methodology', description: 'How We Work — processes, governance, coordination', color: '#7ccfb8' },
+  { key: 'T', letter: 'T/', name: 'Training', tagName: 'hlamt:training', description: 'What We\'re Learning — skills, transformation, practice', color: '#e8927c' },
+]
+
+export function Dimensions() {
+  const [counts, setCounts] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    async function load() {
+      const { data } = await supabase
+        .from('tags')
+        .select('name, artifact_tags(count)')
+        .like('name', 'hlamt:%')
+
+      if (data) {
+        const c: Record<string, number> = {}
+        for (const tag of data) {
+          const arr = tag.artifact_tags as unknown as { count: number }[]
+          c[tag.name] = arr?.[0]?.count ?? 0
+        }
+        setCounts(c)
+      }
+    }
+    load()
+  }, [])
+
+  return (
+    <div>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold mb-2">e/H-LAM/T</h1>
+        <p className="text-gray-400">Six dimensions of the knowledge graph. Each is a lens into the commons.</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {DIMENSIONS.map(d => (
+          <Link
+            key={d.key}
+            to={`/d/${d.key}`}
+            className="block rounded-xl border border-[#1a2a44] bg-[#0d1b2e] p-5 hover:bg-[#111d33] transition-colors group"
+          >
+            <div className="flex items-baseline gap-3 mb-2">
+              <span className="font-mono text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
+              <span className="text-lg font-semibold text-white">{d.name}</span>
+            </div>
+            <p className="text-sm text-gray-400 mb-3">{d.description}</p>
+            <div className="text-xs text-gray-500">
+              {counts[d.tagName] !== undefined ? `${counts[d.tagName]} artifacts` : '--'}
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
