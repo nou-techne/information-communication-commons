@@ -1,3 +1,4 @@
 .env
-.env.local
+app-src/node_modules/
+app-src/dist/
 node_modules/

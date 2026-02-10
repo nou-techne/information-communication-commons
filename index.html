@@ -918,6 +918,22 @@
       .state-body { padding: 1rem 1rem 2rem; }
       .dual-card { padding: 1.75rem; }
     }
+
+    /* Lucide icon base */
+    .lucide { display: inline-block; vertical-align: middle; }
+    .icon-xs { width: 14px; height: 14px; }
+    .icon-sm { width: 18px; height: 18px; }
+    .icon-md { width: 24px; height: 24px; }
+    .icon-lg { width: 32px; height: 32px; }
+    .icon-xl { width: 48px; height: 48px; }
+    .label i { width: 14px; height: 14px; margin-right: 0.5rem; opacity: 0.7; }
+    .feature-card .f-icon i, .card-icon i { width: 24px; height: 24px; }
+    .principle-card i { width: 20px; height: 20px; margin-bottom: 0.75rem; display: block; opacity: 0.6; }
+    .btn i { width: 16px; height: 16px; }
+    .loss-card .loss-icon i { width: 28px; height: 28px; }
+    .state-body h3 i { width: 18px; height: 18px; margin-right: 0.4rem; opacity: 0.6; }
+    .hlamt-content h3 i { width: 18px; height: 18px; margin-right: 0.4rem; opacity: 0.6; }
+    .footer-links a i { width: 12px; height: 12px; margin-right: 0.3rem; }
   </style>
 </head>
 <body>
@@ -930,7 +946,7 @@
 
     <!-- Hero -->
     <div class="hero">
-      <div class="label reveal">Layer 1 · Identity</div>
+      <div class="label reveal"><i data-lucide="fingerprint"></i>Layer 1 · Identity</div>
       <h1 class="reveal reveal-delay-1">
         <span class="accent">commons</span>.id
       </h1>
@@ -950,7 +966,7 @@
 
     <!-- Identity -->
     <section class="problem">
-      <div class="label reveal">The Root</div>
+      <div class="label reveal"><i data-lucide="anchor"></i>The Root</div>
       <h2 class="reveal reveal-delay-1">Identity is<br>the first layer</h2>
       <p class="intro reveal reveal-delay-2">
         In any information system, identity precedes everything. Before you can record state, form relationships, track events, or create views — you must first be able to distinguish one thing from another. <strong>commons.id</strong> is that act of distinguishing, applied to everything the commons holds.
@@ -1300,9 +1316,12 @@
         ETHBoulder 2026 is the first convergence to enter the commons. Ideas are receiving addresses. Participants are creating threads. The knowledge graph is beginning to remember. The identity layer is alive.
       </p>
       <div class="cta-buttons reveal reveal-delay-4">
-        <a href="https://github.com/nou-techne/information-communication-commons" class="btn btn-primary">
+        <a href="/app/" class="btn btn-primary">
+          <span>Enter the Garden</span>
+          <span>🌿</span>
+        </a>
+        <a href="https://github.com/nou-techne/information-communication-commons" class="btn btn-secondary">
           <span>View on GitHub</span>
-          <span>→</span>
         </a>
         <a href="SYSTEM.md" class="btn btn-secondary">System Design</a>
         <a href="mailto:hello@commons.id" class="btn btn-secondary">Get in Touch</a>

@@ -333,7 +333,7 @@ Each sprint is evaluated against the framework:
 |-------|---------|---------------|--------|
 | Foundation | 1-8 | ~2 hours (8 × 15 min) | Feb 10-11 |
 | Integration | 9-16 | ~2 hours | Feb 11-12 |
-| Platform | 17-24 | ~2 hours | Feb 12-13 |
+| Platform | 17-24 | ~2 hours | Feb 12-13 | ✅ COMPLETE |
 
 **Total:** 24 sprints (~6 hours)  
 **Beta ready:** February 13, 2026 (ETHBoulder opening day)
@@ -368,7 +368,7 @@ Each sprint is evaluated against the framework:
 |---------|-------|-----------|
 | 0.1.0 | Foundation (1-8) | Schema + Supabase live |
 | 0.2.0 | Integration (9-16) | Ingestion pipeline + agent API |
-| 0.3.0 | Platform (17-24) | GlideApps beta + workflows |
+| 0.3.0 | Platform (17-24) | React app beta + workflows ✅ |
 | 0.4.0 | ETHBoulder Live | Real-time capture operational |
 | 1.0.0 | Post-ETHBoulder | Full synthesis cycle complete |
 
