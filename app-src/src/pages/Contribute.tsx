@@ -1,18 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
-
 const WEBHOOK_URL = 'https://hook.us1.make.com/n947p48o1t005yewobmlq479v0ggltb8'
 
-type ExtractedItem = {
-  type: string
-  title: string
-  summary: string
-  tags: string[]
-  hlamt?: string
-}
-
-type ProcessingState = 'idle' | 'submitting' | 'extracting' | 'review' | 'saving' | 'done' | 'error'
+type ProcessingState = 'idle' | 'submitting' | 'done' | 'error'
 
 const HLAMT_LABELS: Record<string, { label: string; desc: string }> = {
   e: { label: 'Ecology', desc: 'Environmental context, place, watershed, seasonal patterns' },
@@ -35,9 +25,7 @@ export function Contribute() {
   const [text, setText] = useState('')
   const [context, setContext] = useState('open')
   const [state, setState] = useState<ProcessingState>('idle')
-  const [extracted, setExtracted] = useState<ExtractedItem[]>([])
   const [error, setError] = useState('')
-  const [selected, setSelected] = useState<Set<number>>(new Set())
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
