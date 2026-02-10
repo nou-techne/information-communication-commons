@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETHBoulder 2026 — commons.id</title>
+  <meta name="description" content="ETHBoulder 2026 on the Information & Communications Commons. A living archive capturing ideas, relationships, and commitments — where mountains meet the knowledge graph.">
+  <link rel="canonical" href="https://commons.id/ethboulder/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://commons.id/ethboulder/">
+  <meta property="og:title" content="ETHBoulder 2026 — commons.id">
+  <meta property="og:description" content="Where mountains meet the knowledge graph. A living archive capturing ETHBoulder 2026 — ideas, relationships, and commitments that persist beyond the event.">
+  <meta property="og:site_name" content="commons.id">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ETHBoulder 2026 — commons.id">
+  <meta name="twitter:description" content="Where mountains meet the knowledge graph. The commons remembers.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "ETHBoulder 2026",
+    "startDate": "2026-02-13",
+    "endDate": "2026-02-16",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "location": {
+      "@type": "Place",
+      "name": "Boulder, Colorado",
+      "address": { "@type": "PostalAddress", "addressLocality": "Boulder", "addressRegion": "CO", "addressCountry": "US" }
+    },
+    "description": "Annual Ethereum and public goods convergence. First convergence on the Information & Communications Commons.",
+    "organizer": { "@type": "Organization", "name": "EthBoulder", "url": "https://ethboulder.xyz" },
+    "url": "https://commons.id/ethboulder/"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=DM+Serif+Display&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Commons.id blues */
+      --navy: #0a1628;
+      --deep: #0f2140;
+      --ink: #162d50;
+      --blue: #1e3a5f;
+      --mid: #2a5080;
+      --bright: #3d7cc9;
+      --sky: #5b9de4;
+      --light: #8bbfff;
+      --pale: #c5dfff;
+      --white: #f7faff;
+      /* ETHBoulder accents — mountain earth tones woven with commons blue */
+      --rock: #8b7355;
+      --alpine: #4a8c6f;
+      --snow: #e8edf5;
+      --summit: #c4956a;
+      --warm: #f4d9a0;
+      --mint: #7ccfb8;
+      /* Shared */
+      --text: #e4ecf7;
+      --text-secondary: #8fa4c4;
+      --text-dim: #5b7399;
+      --glow: rgba(91, 157, 228, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background */
+    .bg-mountain {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 100% 50% at 50% 100%, rgba(74, 140, 111, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 50% 0%, var(--glow) 0%, transparent 70%),
+        linear-gradient(to bottom, var(--navy) 0%, #0c1a2f 50%, #0e1f35 100%);
+    }
+
+    canvas#mountainCanvas {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container { position: relative; z-index: 1; }
+    section { padding: 6rem 2rem; max-width: 1000px; margin: 0 auto; }
+
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; font-weight: 400;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--sky);
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 4rem 2rem;
+      max-width: 1000px; margin: 0 auto;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge .commons-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--sky);
+      text-decoration: none;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid var(--blue);
+      border-radius: 100px;
+      transition: all 0.3s;
+    }
+
+    .hero-badge .commons-link:hover {
+      border-color: var(--sky);
+      background: rgba(91, 157, 228, 0.08);
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 400; line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero h1 .eth { color: var(--sky); }
+    .hero h1 .boulder {
+      background: linear-gradient(135deg, var(--summit), var(--warm));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+    }
+
+    .hero .lead {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--text-secondary);
+      max-width: 600px; line-height: 1.8; font-weight: 300;
+    }
+
+    .hero .lead strong { color: var(--pale); font-weight: 500; }
+
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .meta-item {
+      display: flex; flex-direction: column; gap: 0.25rem;
+    }
+
+    .meta-item .meta-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+
+    .meta-item .meta-value {
+      font-size: 1rem; color: var(--pale); font-weight: 500;
+    }
+
+    .scroll-cue {
+      position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .scroll-cue span { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--sky), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.6); } 50% { opacity: 1; transform: scaleY(1); } }
+
+    /* ===== What is this ===== */
+    .what h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white); margin-bottom: 1.5rem; line-height: 1.15;
+    }
+
+    .what .intro {
+      font-size: 1.1rem; color: var(--text-secondary);
+      max-width: 640px; margin-bottom: 3rem; font-weight: 300;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--deep);
+      border-radius: 12px;
+      padding: 2rem;
+      border: 1px solid var(--ink);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .feature-card:hover { border-color: var(--blue); box-shadow: 0 4px 30px var(--glow); }
+
+    .feature-card .f-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; margin-bottom: 1.25rem;
+      background: rgba(91, 157, 228, 0.1);
+      color: var(--sky);
+      border: 1px solid rgba(91, 157, 228, 0.15);
+    }
+
+    .feature-card:nth-child(2) .f-icon { background: rgba(74, 140, 111, 0.1); color: var(--alpine); border-color: rgba(74, 140, 111, 0.15); }
+    .feature-card:nth-child(3) .f-icon { background: rgba(196, 149, 106, 0.1); color: var(--summit); border-color: rgba(196, 149, 106, 0.15); }
+
+    .feature-card h3 { font-size: 1.05rem; font-weight: 500; color: var(--pale); margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
+
+    /* ===== Tents ===== */
+    .tents h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white); margin-bottom: 1.5rem;
+    }
+
+    .tents .intro { font-size: 1.05rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 3rem; font-weight: 300; }
+
+    .tent-stack { display: flex; flex-direction: column; gap: 1rem; }
+
+    .tent-card {
+      display: grid; grid-template-columns: 6px 1fr; gap: 0;
+      background: var(--deep); border-radius: 12px; overflow: hidden;
+      border: 1px solid transparent; transition: border-color 0.3s;
+    }
+    .tent-card:hover { border-color: var(--ink); }
+
+    .tent-bar { border-radius: 4px 0 0 4px; }
+    .tent-card:nth-child(1) .tent-bar { background: var(--sky); }
+    .tent-card:nth-child(2) .tent-bar { background: var(--alpine); }
+    .tent-card:nth-child(3) .tent-bar { background: var(--summit); }
+
+    .tent-content { padding: 1.75rem 2rem; }
+    .tent-content h3 { font-size: 1.15rem; font-weight: 500; color: var(--pale); margin-bottom: 0.5rem; }
+    .tent-content p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
+
+    .tent-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .tent-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; padding: 0.25rem 0.6rem;
+      border-radius: 100px; border: 1px solid var(--ink);
+      color: var(--text-dim); transition: all 0.2s;
+    }
+    .tent-card:nth-child(1) .tent-tag:hover { border-color: var(--sky); color: var(--sky); }
+    .tent-card:nth-child(2) .tent-tag:hover { border-color: var(--alpine); color: var(--alpine); }
+    .tent-card:nth-child(3) .tent-tag:hover { border-color: var(--summit); color: var(--summit); }
+
+    /* ===== How it works ===== */
+    .how h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white); margin-bottom: 1.5rem;
+    }
+    .how .intro { font-size: 1.05rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 3rem; font-weight: 300; }
+
+    .steps { display: flex; flex-direction: column; gap: 0; position: relative; }
+    .steps::before {
+      content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(to bottom, var(--sky), var(--alpine), var(--summit));
+    }
+
+    .step {
+      display: grid; grid-template-columns: 42px 1fr; gap: 1.5rem;
+      padding: 1.5rem 0;
+    }
+
+    .step-number {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 500;
+      background: var(--deep); border: 2px solid var(--blue);
+      color: var(--text-dim); position: relative; z-index: 1;
+      transition: all 0.3s;
+    }
+
+    .step:nth-child(1) .step-number { border-color: var(--sky); color: var(--sky); }
+    .step:nth-child(2) .step-number { border-color: var(--sky); color: var(--sky); }
+    .step:nth-child(3) .step-number { border-color: var(--alpine); color: var(--alpine); }
+    .step:nth-child(4) .step-number { border-color: var(--summit); color: var(--summit); }
+
+    .step-content h3 { font-size: 1.05rem; font-weight: 500; color: var(--pale); margin-bottom: 0.35rem; }
+    .step-content p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
+
+    /* ===== Pull quote ===== */
+    .pull-quote {
+      margin: 3rem 0; padding: 2.5rem;
+      background: linear-gradient(135deg, var(--deep), var(--ink));
+      border-radius: 16px;
+      border-left: 3px solid var(--alpine);
+    }
+    .pull-quote p {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      color: var(--pale); line-height: 1.6;
+    }
+    .pull-quote .attribution {
+      margin-top: 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; color: var(--text-dim);
+    }
+
+    /* ===== Speakers ===== */
+    .speakers h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white); margin-bottom: 1.5rem;
+    }
+    .speakers .intro { font-size: 1.05rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 2.5rem; font-weight: 300; }
+
+    .speaker-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .speaker-card {
+      background: var(--deep); border-radius: 10px; padding: 1.25rem;
+      border: 1px solid var(--ink); text-align: center;
+      transition: border-color 0.3s;
+    }
+    .speaker-card:hover { border-color: var(--blue); }
+
+    .speaker-card .initials {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--ink); display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      color: var(--text-dim); margin: 0 auto 0.75rem;
+    }
+
+    .speaker-card h4 { font-size: 0.9rem; font-weight: 500; color: var(--pale); margin-bottom: 0.25rem; }
+    .speaker-card p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
+    .speaker-card a { color: var(--sky); text-decoration: none; font-size: 0.75rem; }
+    .speaker-card a:hover { text-decoration: underline; }
+
+    /* ===== CTA ===== */
+    .cta { text-align: center; padding: 8rem 2rem; }
+    .cta h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--white); margin-bottom: 1.5rem; line-height: 1.15;
+    }
+    .cta .lead { font-size: 1.1rem; color: var(--text-secondary); max-width: 520px; margin: 0 auto 3rem; font-weight: 300; }
+
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 2rem; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+      text-decoration: none; transition: all 0.3s; cursor: pointer;
+    }
+    .btn-primary { background: var(--bright); color: var(--white); border: 1px solid var(--bright); }
+    .btn-primary:hover { background: var(--sky); border-color: var(--sky); box-shadow: 0 4px 20px rgba(91, 157, 228, 0.3); transform: translateY(-1px); }
+    .btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--blue); }
+    .btn-secondary:hover { border-color: var(--mid); color: var(--text); background: var(--deep); }
+    .btn-earth { background: var(--alpine); color: var(--white); border: 1px solid var(--alpine); }
+    .btn-earth:hover { background: #5a9c7f; border-color: #5a9c7f; box-shadow: 0 4px 20px rgba(74, 140, 111, 0.3); transform: translateY(-1px); }
+
+    .divider { width: 60px; height: 2px; background: linear-gradient(to right, var(--sky), var(--alpine)); border-radius: 1px; margin: 0 auto 3rem; }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem; text-align: center;
+      font-size: 0.8rem; color: var(--text-dim);
+      border-top: 1px solid var(--ink);
+    }
+    footer a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--sky); }
+    footer .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1rem; }
+
+    @media (max-width: 600px) {
+      section { padding: 4rem 1.25rem; }
+      .hero-meta { gap: 1.5rem; }
+      .step { grid-template-columns: 36px 1fr; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-mountain"></div>
+  <canvas id="mountainCanvas"></canvas>
+
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-badge reveal">
+        <a href="https://commons.id" class="commons-link">commons.id</a>
+        <span class="label">Convergence</span>
+      </div>
+      <h1 class="reveal reveal-delay-1">
+        <span class="eth">Eth</span><span class="boulder">Boulder</span>
+      </h1>
+      <div class="year reveal reveal-delay-1">2026</div>
+      <p class="lead reveal reveal-delay-2">
+        Where mountains meet the knowledge graph. ETHBoulder 2026 is the first convergence on <strong>commons.id</strong> — a living archive that captures ideas, relationships, and commitments so they persist beyond the event.
+      </p>
+
+      <div class="hero-meta reveal reveal-delay-3">
+        <div class="meta-item">
+          <span class="meta-label">When</span>
+          <span class="meta-value">February 13–16, 2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Where</span>
+          <span class="meta-value">Boulder, Colorado</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Elevation</span>
+          <span class="meta-value">5,430 ft</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Watershed</span>
+          <span class="meta-value">South Boulder Creek</span>
+        </div>
+      </div>
+
+      <div class="scroll-cue">
+        <span>Explore</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+
+    <!-- What is this -->
+    <section class="what">
+      <div class="label reveal">The Living Archive</div>
+      <h2 class="reveal reveal-delay-1">Every conversation<br>gets a name</h2>
+      <p class="intro reveal reveal-delay-2">
+        Most conference content disappears within weeks. At ETHBoulder 2026, ideas become artifacts in a shared knowledge graph — named, linked, and persistent. The commons remembers what happened here.
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature-card reveal">
+          <div class="f-icon">◆</div>
+          <h3>Real-time extraction</h3>
+          <p>AI agents observe conversations and extract ideas, proposals, commitments, and connections as they emerge — giving them identity in the knowledge graph the moment they're spoken.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="f-icon">◆</div>
+          <h3>Persistent identity</h3>
+          <p>Every artifact gets a permanent address at commons.id. A proposal from Thursday's session is still findable in March, in 2027, in 2030. Ideas don't expire.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="f-icon">◆</div>
+          <h3>Cross-session connections</h3>
+          <p>The graph surfaces relationships between conversations happening in different rooms, different tents, different days. Patterns emerge that no individual could see alone.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tents -->
+    <section class="tents">
+      <div class="label reveal">Thematic Frames</div>
+      <h2 class="reveal reveal-delay-1">Three tents</h2>
+      <p class="intro reveal reveal-delay-2">
+        ETHBoulder 2026 hosts three overlapping thematic tents. Each carries its own thread through the knowledge graph — its own identity, its own accumulated wisdom.
+      </p>
+
+      <div class="tent-stack">
+        <div class="tent-card reveal">
+          <div class="tent-bar"></div>
+          <div class="tent-content">
+            <h3>ETHBoulder</h3>
+            <p>Ethereum community, public goods infrastructure, open-source technology. The General Forum on Ethereum Localism (GFEL). Strengthening the infrastructure of Ethereum's local and global commons.</p>
+            <div class="tent-tags">
+              <span class="tent-tag">ethereum</span>
+              <span class="tent-tag">public goods</span>
+              <span class="tent-tag">open source</span>
+              <span class="tent-tag">localism</span>
+              <span class="tent-tag">governance</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tent-card reveal reveal-delay-1">
+          <div class="tent-bar"></div>
+          <div class="tent-content">
+            <h3>Cosmolocal Convergence</h3>
+            <p>Technology and society. Local-first communities. Agent orchestration and swarm intelligence. The patterns that emerge when cosmological thinking meets local action.</p>
+            <div class="tent-tags">
+              <span class="tent-tag">cosmolocal</span>
+              <span class="tent-tag">agent orchestration</span>
+              <span class="tent-tag">swarm intelligence</span>
+              <span class="tent-tag">local-first</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tent-card reveal reveal-delay-2">
+          <div class="tent-bar"></div>
+          <div class="tent-content">
+            <h3>Civic Finance Forum</h3>
+            <p>Civics, governance, cooperative economics, democratic finance. How communities fund and govern shared infrastructure. The economics of the commons.</p>
+            <div class="tent-tags">
+              <span class="tent-tag">civic finance</span>
+              <span class="tent-tag">cooperatives</span>
+              <span class="tent-tag">democratic governance</span>
+              <span class="tent-tag">commons economics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how">
+      <div class="label reveal">For Participants</div>
+      <h2 class="reveal reveal-delay-1">How it works</h2>
+      <p class="intro reveal reveal-delay-2">
+        You attend ETHBoulder as you normally would. The commons works alongside you — capturing, connecting, and carrying forward what matters.
+      </p>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Register your identity</h3>
+            <p>Create your thread at commons.id/p/{you}. Tell us your interests and what you're working on. Your agent can prepare context packages — surfacing relevant prior work before you arrive.</p>
+          </div>
+        </div>
+
+        <div class="step reveal reveal-delay-1">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Attend and contribute</h3>
+            <p>Conversations are captured with consent. AI agents extract ideas, proposals, and commitments in real time. You can also contribute directly — add reflections, make connections, propose actions.</p>
+          </div>
+        </div>
+
+        <div class="step reveal reveal-delay-2">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Watch the graph grow</h3>
+            <p>Live Pulse shows the knowledge graph expanding in real time. New artifacts appear. Cross-session connections surface. Themes emerge. The commons comes alive during the event.</p>
+          </div>
+        </div>
+
+        <div class="step reveal reveal-delay-3">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Carry it forward</h3>
+            <p>After the event, the archive lives on at commons.id. Track your commitments. Revisit proposals. Build on patterns. When ETHBoulder 2027 arrives, the context is already there — waiting.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pull-quote reveal">
+        <p>Strengthening the infrastructure of Ethereum's local and global commons, together — and now, remembering what we build.</p>
+        <div class="attribution">commons.id/c/ethboulder-2026</div>
+      </div>
+    </section>
+
+    <!-- Speakers with commons identity -->
+    <section class="speakers">
+      <div class="label reveal">Speakers & Participants</div>
+      <h2 class="reveal reveal-delay-1">The people</h2>
+      <p class="intro reveal reveal-delay-2">
+        Each participant carries a thread through the commons. These speakers are among the first identities in the ETHBoulder 2026 knowledge graph.
+      </p>
+
+      <div class="speaker-grid">
+        <div class="speaker-card reveal">
+          <div class="initials">EA</div>
+          <h4>Eric Alston</h4>
+          <p>Scholar in Residence, CU Boulder. Law, economics, constitutional design, digital governance.</p>
+        </div>
+        <div class="speaker-card reveal reveal-delay-1">
+          <div class="initials">NB</div>
+          <h4>Naomi Brockwell</h4>
+          <p>Founder, Ludlow Institute. Privacy, autonomy, freedom through technology.</p>
+        </div>
+        <div class="speaker-card reveal reveal-delay-2">
+          <div class="initials">KO</div>
+          <h4>Kevin Owocki</h4>
+          <p>Co-founder Gitcoin & Allo Capital. Open-source funding, regenerative crypto, DAO governance.</p>
+        </div>
+        <div class="speaker-card reveal reveal-delay-3">
+          <div class="initials">BL</div>
+          <h4>Benjamin Life</h4>
+          <p>OpenCivics. Community currencies, blockchain civic innovation, systems design.</p>
+        </div>
+        <div class="speaker-card reveal reveal-delay-4">
+          <div class="initials">NS</div>
+          <h4>Nathan Schneider</h4>
+          <p>CU Boulder. Media Economies Design Lab. Cooperative digital governance.</p>
+        </div>
+        <div class="speaker-card reveal reveal-delay-5">
+          <div class="initials">TS</div>
+          <h4>Tomasz Stanczak</h4>
+          <p>Co-Executive Director, Ethereum Foundation. Blockchain, AI, robotics.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="divider reveal"></div>
+      <div class="label reveal reveal-delay-1">February 13–16, 2026</div>
+      <h2 class="reveal reveal-delay-2">Join the first<br>convergence</h2>
+      <p class="lead reveal reveal-delay-3">
+        ETHBoulder 2026 is the first event where the knowledge graph begins recording. Your ideas will have addresses. Your commitments will have names. The commons will remember.
+      </p>
+      <div class="cta-buttons reveal reveal-delay-4">
+        <a href="https://luma.com/o9qpeepn" class="btn btn-earth">
+          <span>Register on Luma</span>
+          <span>→</span>
+        </a>
+        <a href="https://ethboulder.xyz" class="btn btn-secondary">ETHBoulder.xyz</a>
+        <a href="https://commons.id" class="btn btn-secondary">commons.id</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-links">
+        <a href="https://commons.id">commons.id</a>
+        <a href="https://ethboulder.xyz">ETHBoulder</a>
+        <a href="https://the-habitat.org">Techne Studio</a>
+        <a href="https://github.com/nou-techne/information-communication-commons">GitHub</a>
+      </div>
+      <p>commons.id/c/ethboulder-2026 · Information &amp; Communications Commons · Techne Studio / RegenHub, LCA · Boulder, Colorado</p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Reveal animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Mountain silhouette canvas
+    const canvas = document.getElementById('mountainCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      drawMountains();
+    }
+
+    function drawMountains() {
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Far range (Flatirons-inspired angular peaks)
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      ctx.lineTo(0, h * 0.72);
+      const peaks1 = [0.08, 0.65, 0.15, 0.58, 0.22, 0.62, 0.3, 0.55, 0.38, 0.6, 0.45, 0.52, 0.52, 0.57, 0.6, 0.5, 0.68, 0.56, 0.75, 0.48, 0.82, 0.54, 0.88, 0.58, 0.95, 0.52, 1.0, 0.6];
+      for (let i = 0; i < peaks1.length; i += 2) {
+        ctx.lineTo(w * peaks1[i], h * peaks1[i+1]);
+      }
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(15, 25, 45, 0.6)';
+      ctx.fill();
+
+      // Near range
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      ctx.lineTo(0, h * 0.78);
+      const peaks2 = [0.1, 0.74, 0.18, 0.7, 0.25, 0.73, 0.35, 0.68, 0.42, 0.72, 0.5, 0.66, 0.58, 0.7, 0.65, 0.64, 0.72, 0.69, 0.8, 0.65, 0.88, 0.71, 0.95, 0.68, 1.0, 0.72];
+      for (let i = 0; i < peaks2.length; i += 2) {
+        ctx.lineTo(w * peaks2[i], h * peaks2[i+1]);
+      }
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(10, 18, 32, 0.7)';
+      ctx.fill();
+
+      // Treeline
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      ctx.lineTo(0, h * 0.85);
+      const trees = [0.05, 0.84, 0.12, 0.82, 0.2, 0.84, 0.28, 0.81, 0.35, 0.83, 0.42, 0.8, 0.5, 0.82, 0.58, 0.79, 0.65, 0.82, 0.72, 0.8, 0.8, 0.83, 0.88, 0.81, 0.95, 0.83, 1.0, 0.82];
+      for (let i = 0; i < trees.length; i += 2) {
+        ctx.lineTo(w * trees[i], h * trees[i+1]);
+      }
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(8, 14, 26, 0.8)';
+      ctx.fill();
+
+      // Stars
+      for (let i = 0; i < 60; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h * 0.5;
+        const r = Math.random() * 1.2;
+        const a = Math.random() * 0.4 + 0.1;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200, 220, 255, ${a})`;
+        ctx.fill();
+      }
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+  </script>
+
+</body>
+</html>
