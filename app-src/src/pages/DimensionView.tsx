@@ -173,65 +173,140 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
 }
 
 // @ts-ignore - unused component, reserved for future use
+type WordFreq = { word: string; count: number; contributors: number }
+
+function WordFrequencyChart({ words, maxCount, label }: { words: WordFreq[]; maxCount: number; label: string }) {
+  if (words.length === 0) return null
+  return (
+    <div>
+      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">{label} ({words.length} terms)</h3>
+      <div className="space-y-1">
+        {words.map(w => (
+          <div key={w.word} className="flex items-center gap-3">
+            <span className="text-sm text-gray-300 w-32 sm:w-40 truncate font-mono">{w.word}</span>
+            <div className="flex-1 h-4 bg-[#1a1a1a] rounded overflow-hidden">
+              <div
+                className="h-full rounded"
+                style={{
+                  width: `${(w.count / maxCount) * 100}%`,
+                  backgroundColor: '#c3fd50',
+                  opacity: 0.6
+                }}
+              />
+            </div>
+            <span className="text-xs text-gray-500 w-8 text-right">{w.count}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
-  const [tagCounts, setTagCounts] = useState<{ name: string; count: number }[]>([])
+  const [collectiveWords, setCollectiveWords] = useState<WordFreq[]>([])
+  const [participantWords, setParticipantWords] = useState<Record<string, WordFreq[]>>({})
+  const [participants, setParticipants] = useState<{ id: string; name: string }[]>([])
+  const [selectedParticipant, setSelectedParticipant] = useState<string | null>(null)
+  const [view, setView] = useState<'collective' | 'participant'>('collective')
 
   useEffect(() => {
     async function load() {
-      const { data } = await supabase
-        .from('tags')
-        .select('name, artifact_tags(count)')
-        .not('name', 'like', 'hlamt:%')
+      // Collective word frequencies
+      const { data: cw } = await supabase.rpc('word_frequencies')
+      if (cw) setCollectiveWords(cw.slice(0, 50))
 
-      if (data) {
-        const tags = data
-          .map(t => ({
-            name: t.name,
-            count: (t.artifact_tags as unknown as { count: number }[])?.[0]?.count ?? 0
-          }))
-          .filter(t => t.count > 0)
-          .sort((a, b) => b.count - a.count)
-        setTagCounts(tags)
-      }
+      // Load participants who have contributions
+      const { data: parts } = await supabase
+        .from('participants')
+        .select('id, name')
+        .order('name')
+      if (parts) setParticipants(parts)
     }
     load()
   }, [])
 
-  const maxCount = tagCounts[0]?.count ?? 1
+  async function loadParticipantWords(pid: string) {
+    if (participantWords[pid]) return
+    const { data } = await supabase.rpc('word_frequencies', { p_participant_id: pid })
+    if (data) setParticipantWords(prev => ({ ...prev, [pid]: data.slice(0, 30) }))
+  }
+
+  useEffect(() => {
+    if (selectedParticipant) loadParticipantWords(selectedParticipant)
+  }, [selectedParticipant])
+
+  const maxCollective = collectiveWords[0]?.count ?? 1
+  const currentParticipantWords = selectedParticipant ? (participantWords[selectedParticipant] || []) : []
+  const maxParticipant = currentParticipantWords[0]?.count ?? 1
 
   return (
     <div className="space-y-6">
+      {/* Toggle */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setView('collective')}
+          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            view === 'collective' ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-400 hover:text-white'
+          }`}
+        >
+          Collective
+        </button>
+        <button
+          onClick={() => setView('participant')}
+          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            view === 'participant' ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-400 hover:text-white'
+          }`}
+        >
+          By Participant
+        </button>
+      </div>
+
+      {view === 'collective' && (
+        <WordFrequencyChart words={collectiveWords} maxCount={maxCollective} label="Emergent Vocabulary" />
+      )}
+
+      {view === 'participant' && (
+        <div className="space-y-4">
+          {participants.length > 0 ? (
+            <>
+              <div className="flex flex-wrap gap-2">
+                {participants.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => setSelectedParticipant(p.id)}
+                    className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                      selectedParticipant === p.id
+                        ? 'bg-[#c4956a] text-[#0f0f0f] font-medium'
+                        : 'bg-[#262626] text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+              {selectedParticipant && (
+                <WordFrequencyChart
+                  words={currentParticipantWords}
+                  maxCount={maxParticipant}
+                  label={`${participants.find(p => p.id === selectedParticipant)?.name || 'Participant'} Vocabulary`}
+                />
+              )}
+              {!selectedParticipant && (
+                <p className="text-gray-500 text-sm">Select a participant to see their vocabulary.</p>
+              )}
+            </>
+          ) : (
+            <p className="text-gray-500 text-sm">No participants yet.</p>
+          )}
+        </div>
+      )}
+
+      {/* Language artifacts below */}
       {artifacts.length > 0 && (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Language Artifacts ({artifacts.length})</h2>
           <div className="grid gap-3">
             {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
-          </div>
-        </div>
-      )}
-      {artifacts.length === 0 && <p className="text-gray-500 text-sm">No language artifacts tagged yet.</p>}
-      {tagCounts.length > 0 && (
-        <div>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            Shared Vocabulary ({tagCounts.length} tags)
-          </h2>
-          <div className="space-y-1">
-            {tagCounts.map(t => (
-              <div key={t.name} className="flex items-center gap-3">
-                <span className="text-sm text-gray-300 w-40 truncate">{t.name}</span>
-                <div className="flex-1 h-4 bg-[#1a1a1a] rounded overflow-hidden">
-                  <div
-                    className="h-full rounded"
-                    style={{
-                      width: `${(t.count / maxCount) * 100}%`,
-                      backgroundColor: '#c3fd50',
-                      opacity: 0.6
-                    }}
-                  />
-                </div>
-                <span className="text-xs text-gray-500 w-8 text-right">{t.count}</span>
-              </div>
-            ))}
           </div>
         </div>
       )}
@@ -348,7 +423,8 @@ export function DimensionView() {
       ) : (
         <>
           {dimension === 'H' && <HumanView artifacts={artifacts} />}
-          {dimension !== 'H' && <GenericDimensionView artifacts={artifacts} dim={dim} />}
+          {dimension === 'L' && <LanguageView artifacts={artifacts} />}
+          {dimension !== 'H' && dimension !== 'L' && <GenericDimensionView artifacts={artifacts} dim={dim} />}
         </>
       )}
     </div>
