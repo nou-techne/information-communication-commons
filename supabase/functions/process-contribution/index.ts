@@ -40,7 +40,7 @@ IMPORTANT: "dimension" must be one of EXACTLY: "temporal", "social", "thematic",
 
 ## Output Schema
 
-{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "type": "idea|proposal|commitment|question|pattern|reflection", "confidence": 0.0-1.0, "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value"}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
+{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "type": "idea|proposal|commitment|question|pattern|reflection", "confidence": 0.0-1.0, "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value", "weight": 0.0-1.0}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
 
 ## Confidence Scoring
 Rate each artifact 0.0-1.0 for extraction confidence:
@@ -49,6 +49,14 @@ Rate each artifact 0.0-1.0 for extraction confidence:
 - 0.4-0.6: Moderate inference required
 - 0.1-0.3: Speculative, loosely derived
 Only extract artifacts with confidence >= 0.4. Quality over quantity.
+
+## Dimension Weighting
+Assign weight (0.0-1.0) to EACH dimension tag based on relevance/intensity:
+- 1.0: Central to the artifact's purpose or identity
+- 0.7-0.9: Strong relevance, explicit connection
+- 0.4-0.6: Moderate relevance, implied connection
+- 0.1-0.3: Tangential, minor aspect
+An artifact about "regenerative finance training in Boulder" would get: hlamt:T=1.0, hlamt:A=0.8, hlamt:e=0.6, hlamt:H=0.4
 
 ## Guidance
 
