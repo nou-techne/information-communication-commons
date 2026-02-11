@@ -6,6 +6,59 @@ Format: [Semantic Versioning](https://semver.org/). Each entry includes sprint r
 
 ---
 
+## [0.11.0] — 2026-02-11
+
+### Cycle 2 Complete (Sprints 23-31)
+
+**Sprint 23: Improved Extraction Pipeline** (Event Systems Engineer)
+- Confidence scoring (0-1) for each extracted artifact
+- Structured validation filters invalid types, ensures hlamt tags, rejects low confidence
+- Validation stats logging
+
+**Sprint 24: Participant Profile Pages** (Frontend & DevOps Engineer)
+- `/p/:id` route with profile page
+- Shows contributions, artifacts, dimension activity
+- Clickable participant names throughout app
+
+**Sprint 25: Error Recovery UI** (Frontend & DevOps Engineer)
+- Failed contributions shown in `/status` with retry button
+- Auth-gated retry re-triggers extraction
+
+**Sprint 26: Auth Flow Hardening** (Compliance & Security Engineer)
+- Session expiry detection and token refresh
+- Graceful logout with cleanup
+
+**Sprint 27: Data Export JSON-LD** (Backend Engineer)
+- `export_convergence_jsonld()` function
+- Schema.org-compliant export
+
+**Sprint 28: Automated Backup** (Frontend & DevOps Engineer)
+- `scripts/backup.sh` with GPG encryption
+- `scripts/restore.sh` with verification
+- 30-day retention, S3 upload support
+- Requires PostgreSQL 17 client
+
+**Sprint 29: Contribution Threading** (Workflow Engineer)
+- `parent_contribution_id` FK for reply chains
+- Reply form with auth gate
+- Recursive thread display with depth indentation
+
+**Sprint 30: Dimension Weighting** (Schema Architect)
+- Weight column (0-1) on artifact_dimensions
+- Extraction assigns intensity scores per dimension
+- `get_weighted_dimension_distribution()` function
+
+**Sprint 31: Artifact Merging** (Backend Engineer)
+- `merge_artifacts()` function consolidates duplicates
+- Preserves all relationships, dimensions, tags, participants
+
+**Infrastructure:**
+- Migrated app to `ethboulder-commons-id` repo
+- Added LICENSE (Peer Production), README, CODE_OF_CONDUCT, PRIVACY
+- Live at https://ethboulder.commons.id
+
+---
+
 ## [0.10.0] — 2026-02-11
 
 ### Cycle 1 Complete + Cycle 2 Flow (Sprints 13-22)
