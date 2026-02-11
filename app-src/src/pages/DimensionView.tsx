@@ -123,8 +123,26 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
               )}
             </div>
           ))}
-          {participants.length === 0 && <p className="text-gray-500 text-sm">No participants yet.</p>}
         </div>
+        {participants.length === 0 && (
+          <div className="text-center py-12 bg-[#1a1a1a] border border-[#262626] rounded-lg mt-4">
+            <div className="max-w-sm mx-auto">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#c4956a20' }}>
+                <svg className="w-8 h-8" style={{ color: '#c4956a' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h3 className="text-white font-semibold mb-2">No participants registered yet</h3>
+              <p className="text-gray-400 text-sm mb-4">Sign in to create your participant profile and link your contributions to your identity.</p>
+              <Link
+                to="/auth"
+                className="inline-block bg-[#c3fd50] text-[#0f0f0f] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#d4fe80] transition-colors"
+              >
+                Sign In
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
       {artifacts.length > 0 && (
         <div>
@@ -205,16 +223,45 @@ function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
   )
 }
 
+const DIMENSION_PROMPTS: Record<string, string> = {
+  e: 'Share observations about place, environment, or ecological context.',
+  H: 'Introduce yourself, share who you met, or describe collaborative dynamics.',
+  L: 'Define terms, propose frameworks, or capture shared vocabulary.',
+  A: 'Document tools, code, designs, or infrastructure being built.',
+  M: 'Describe processes, workflows, or coordination patterns.',
+  T: 'Share learnings, skill development, or transformative experiences.',
+}
+
 function GenericDimensionView({ artifacts, dim }: { artifacts: Artifact[]; dim: DimensionConfig }) {
+  const dimKey = Object.keys(DIMENSION_MAP).find(k => DIMENSION_MAP[k] === dim)
+  const prompt = dimKey ? DIMENSION_PROMPTS[dimKey] : 'Be the first to contribute here.'
+
   return (
     <div>
       <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
         {dim.name} Artifacts ({artifacts.length})
       </h2>
-      <div className="grid gap-3">
-        {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
-        {artifacts.length === 0 && <p className="text-gray-500 text-sm">No artifacts tagged yet.</p>}
-      </div>
+      {artifacts.length === 0 ? (
+        <div className="text-center py-12 bg-[#1a1a1a] border border-[#262626] rounded-lg">
+          <div className="max-w-sm mx-auto">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: dim.color + '20' }}>
+              <span className="text-3xl font-mono font-bold" style={{ color: dim.color }}>{dim.letter}</span>
+            </div>
+            <h3 className="text-white font-semibold mb-2">No {dim.name.toLowerCase()} artifacts yet</h3>
+            <p className="text-gray-400 text-sm mb-4">{prompt}</p>
+            <Link
+              to="/contribute"
+              className="inline-block bg-[#c3fd50] text-[#0f0f0f] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#d4fe80] transition-colors"
+            >
+              Contribute
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-3">
+          {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
+        </div>
+      )}
     </div>
   )
 }

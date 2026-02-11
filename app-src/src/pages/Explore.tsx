@@ -131,11 +131,67 @@ export function Explore() {
 
   if (loading) return <div className="text-center text-gray-500 py-12">Loading...</div>
 
+  const [showHowItWorks, setShowHowItWorks] = useState(false)
+
   return (
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">Explore</h1>
         <p className="text-gray-400 text-sm">The knowledge graph and live activity, side by side.</p>
+      </div>
+
+      {/* How it works */}
+      <div className="mb-6 bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden">
+        <button
+          onClick={() => setShowHowItWorks(!showHowItWorks)}
+          className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#262626] transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-[#c3fd50]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-sm font-medium text-white">How it works</span>
+          </div>
+          <svg
+            className={`w-5 h-5 text-gray-400 transition-transform ${showHowItWorks ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        {showHowItWorks && (
+          <div className="px-4 pb-4 text-sm space-y-3 border-t border-[#262626] pt-4">
+            <div className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <div className="text-white font-medium mb-1">Contribute observations</div>
+                <div className="text-gray-400">Share what you noticed at ETHBoulder — session notes, ideas, commitments, questions. Write naturally.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <div className="text-white font-medium mb-1">AI extracts knowledge</div>
+                <div className="text-gray-400">Each contribution is analyzed, broken into artifacts (resources, events, agents), and tagged by dimension.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <div className="text-white font-medium mb-1">The graph grows</div>
+                <div className="text-gray-400">Artifacts connect to each other. Patterns emerge. The collective knowledge becomes navigable by dimension, type, and relationship.</div>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-[#262626]">
+              <Link to="/contribute" className="text-[#c3fd50] hover:text-white text-sm font-medium">
+                Try it yourself →
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Dimensions */}
@@ -202,7 +258,29 @@ export function Explore() {
 
           {/* Artifact Grid */}
           {display.length === 0 ? (
-            <div className="text-center text-gray-500 py-12">No artifacts found</div>
+            <div className="text-center py-16">
+              <div className="max-w-md mx-auto">
+                <div className="w-20 h-20 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  {searchResults ? 'No matching artifacts' : 'The knowledge graph is empty'}
+                </h3>
+                <p className="text-gray-400 mb-6 leading-relaxed">
+                  {searchResults 
+                    ? 'Try a different search term or clear your filters.'
+                    : 'Be the first to contribute. Share an observation, idea, or commitment from ETHBoulder and watch it become part of the living archive.'}
+                </p>
+                <Link
+                  to="/contribute"
+                  className="inline-block bg-[#c3fd50] text-[#0f0f0f] font-medium px-6 py-3 rounded-lg hover:bg-[#d4fe80] transition-colors"
+                >
+                  Contribute to the Commons
+                </Link>
+              </div>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {display.map(a => (
