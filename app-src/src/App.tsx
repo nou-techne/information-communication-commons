@@ -10,6 +10,7 @@ import { Auth } from './pages/Auth'
 import { Dimensions } from './pages/Dimensions'
 import { DimensionView } from './pages/DimensionView'
 import { NotFound } from './pages/NotFound'
+import { Profile } from './pages/Profile'
 import type { Session } from '@supabase/supabase-js'
 
 function Nav() {
@@ -27,6 +28,7 @@ function Nav() {
     { to: '/', label: 'Explore' },
     { to: '/contribute', label: 'Contribute' },
     { to: '/me', label: 'My Thread' },
+    { to: '/profile', label: 'Profile' },
   ]
 
   return (
@@ -137,6 +139,7 @@ export default function App() {
             <Route path="/artifact/:id" element={<ArtifactDetail />} />
             <Route path="/me" element={<MyThread />} />
             <Route path="/contribute" element={<Contribute />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
