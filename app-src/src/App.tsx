@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { supabase } from './lib/supabase'
 import { Menu, X, Search as SearchIcon } from 'lucide-react'
 import { ConvergenceProvider, useConvergence } from './contexts/ConvergenceContext'
@@ -12,14 +12,16 @@ import { Dimensions } from './pages/Dimensions'
 import { DimensionView } from './pages/DimensionView'
 import { NotFound } from './pages/NotFound'
 import { Profile } from './pages/Profile'
-import { Status } from './pages/Status'
-import { Graph } from './pages/Graph'
 import { Coordinate } from './pages/Coordinate'
-import Dashboard from './pages/Dashboard'
 import { Search } from './pages/Search'
 import { ContributionDetail } from './pages/ContributionDetail'
 import { ParticipantProfile } from './pages/ParticipantProfile'
 import type { Session } from '@supabase/supabase-js'
+
+// Sprint 41: Lazy load heavy pages for code splitting
+const Graph = lazy(() => import('./pages/Graph').then(m => ({ default: m.Graph })))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Status = lazy(() => import('./pages/Status').then(m => ({ default: m.Status })))
 
 function Nav() {
   const location = useLocation()
@@ -167,12 +169,12 @@ export default function App() {
             <Route path="/contribute" element={<Contribute />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/contribution/:id" element={<ContributionDetail />} />
-            <Route path="/graph" element={<Graph />} />
+            <Route path="/graph" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Graph /></Suspense>} />
             <Route path="/coordinate" element={<Coordinate />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Dashboard /></Suspense>} />
             <Route path="/search" element={<Search />} />
             <Route path="/p/:id" element={<ParticipantProfile />} />
-            <Route path="/status" element={<Status />} />
+            <Route path="/status" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Status /></Suspense>} />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
