@@ -1,8 +1,14 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
-type ProcessingState = 'idle' | 'submitting' | 'done' | 'error'
+type ProcessingState = 'idle' | 'submitting' | 'extracting' | 'done' | 'error'
+
+interface CreatedArtifact {
+  id: string
+  title: string
+  type: string
+}
 
 const HLAMT_LABELS: Record<string, { label: string; desc: string }> = {
   e: { label: 'Ecology', desc: 'Environmental context, place, watershed, seasonal patterns' },
@@ -20,6 +26,52 @@ export function Contribute() {
   const [text, setText] = useState('')
   const [state, setState] = useState<ProcessingState>('idle')
   const [error, setError] = useState('')
+  const [contributionId, setContributionId] = useState<string | null>(null)
+  const [artifactCount, setArtifactCount] = useState(0)
+  const [createdArtifacts, setCreatedArtifacts] = useState<CreatedArtifact[]>([])
+
+  // Real-time subscription to contribution status
+  useEffect(() => {
+    if (!contributionId) return
+
+    const channel = supabase.channel(`contribution-${contributionId}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'contributions',
+        filter: `id=eq.${contributionId}`
+      }, async (payload) => {
+        const status = payload.new.status
+        
+        if (status === 'processing') {
+          setState('extracting')
+        } else if (status === 'complete') {
+          // Fetch created artifacts from extraction
+          const extraction = payload.new.extraction
+          if (extraction?.artifacts) {
+            setArtifactCount(extraction.artifacts.length)
+            
+            // Fetch full artifact records by title
+            const titles = extraction.artifacts.map((a: any) => a.title)
+            const { data: artifacts } = await supabase
+              .from('artifacts')
+              .select('id, title, type')
+              .in('title', titles)
+              .order('created_at', { ascending: false })
+              .limit(10)
+            
+            setCreatedArtifacts(artifacts || [])
+          }
+          setState('done')
+        } else if (status === 'error') {
+          setError('Extraction failed. Please try again.')
+          setState('error')
+        }
+      })
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [contributionId])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -64,40 +116,84 @@ export function Contribute() {
       }
 
       // Insert contribution with optional participant_id
-      const { error: insertError } = await supabase.from('contributions').insert({
-        content: text,
-        convergence_id: CONVERGENCE_ID,
-        participant_id: participantId,
-        status: 'pending',
-      })
+      const { data: newContribution, error: insertError } = await supabase
+        .from('contributions')
+        .insert({
+          content: text,
+          convergence_id: CONVERGENCE_ID,
+          participant_id: participantId,
+          status: 'pending',
+        })
+        .select('id')
+        .single()
 
       if (insertError) throw insertError
 
-      // Extraction is triggered automatically via database webhook → Edge Function
-      setState('done')
+      // Save contribution ID and transition to extracting state
+      setContributionId(newContribution.id)
+      setState('extracting')
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please try again.')
       setState('error')
     }
   }
 
+  if (state === 'extracting') {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="text-center py-16">
+          <div className="w-16 h-16 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-6 animate-pulse">
+            <span className="text-[#c3fd50] text-2xl font-bold">⚡</span>
+          </div>
+          <h2 className="text-xl font-bold mb-3">Extracting knowledge...</h2>
+          <p className="text-gray-400 max-w-md mx-auto">
+            AI is analyzing your contribution, identifying artifacts, tagging by dimension, and linking to the knowledge graph.
+          </p>
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (state === 'done') {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="text-center py-16">
-          <div className="w-16 h-16 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-6">
-            <span className="text-[#c3fd50] text-2xl font-bold">+</span>
+          <div className="w-16 h-16 rounded-full bg-[#c3fd50] flex items-center justify-center mx-auto mb-6">
+            <span className="text-[#0f0f0f] text-2xl font-bold">✓</span>
           </div>
-          <h2 className="text-xl font-bold mb-3">Contribution received</h2>
-          <p className="text-gray-400 mb-2 max-w-md mx-auto">
-            Your contribution has been saved. The AI extraction pipeline will process it shortly — identifying ideas, proposals, commitments, and connections for the knowledge graph.
+          <h2 className="text-xl font-bold mb-3">Done! {artifactCount} {artifactCount === 1 ? 'artifact' : 'artifacts'} created</h2>
+          <p className="text-gray-400 mb-6 max-w-md mx-auto">
+            Your contribution has been processed and added to the knowledge graph.
           </p>
-          <p className="text-gray-500 text-sm mb-8">
-            Extraction typically takes 30–60 seconds.
-          </p>
+
+          {createdArtifacts.length > 0 && (
+            <div className="mb-8 max-w-md mx-auto">
+              <p className="text-sm text-gray-500 mb-3">Extracted artifacts:</p>
+              <div className="space-y-2">
+                {createdArtifacts.map(artifact => (
+                  <Link
+                    key={artifact.id}
+                    to={`/artifact/${artifact.id}`}
+                    className="block bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors text-left"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-[#262626] text-gray-400">{artifact.type}</span>
+                      <span className="text-sm text-gray-300">{artifact.title}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex gap-3 justify-center">
             <button
-              onClick={() => { setState('idle'); setText(''); }}
+              onClick={() => { setState('idle'); setText(''); setContributionId(null); setCreatedArtifacts([]); setArtifactCount(0); }}
               className="px-6 py-2.5 bg-[#262626] text-white rounded-lg hover:bg-[#333333] transition-colors text-sm"
             >
               Contribute more
