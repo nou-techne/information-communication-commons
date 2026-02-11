@@ -416,7 +416,12 @@ export function Explore() {
                       item.status === 'processing' ? 'bg-blue-400 animate-pulse' : 
                       item.status === 'error' ? 'bg-red-400' : 'bg-yellow-400'
                     }`} />
-                    {item.participant_name && (
+                    {item.participant_name && item.participant_id && (
+                      <Link to={`/p/${item.participant_id}`} className="text-xs font-medium text-gray-300 truncate hover:text-[#c3fd50] transition-colors" onClick={e => e.stopPropagation()}>
+                        {item.participant_name}
+                      </Link>
+                    )}
+                    {item.participant_name && !item.participant_id && (
                       <span className="text-xs font-medium text-gray-300 truncate">{item.participant_name}</span>
                     )}
                     <span className="text-xs text-gray-600 ml-auto flex-shrink-0">{timeAgo(item.created_at)}</span>

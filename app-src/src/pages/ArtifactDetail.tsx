@@ -30,7 +30,7 @@ export function ArtifactDetail() {
   const [hlamtTags, setHlamtTags] = useState<string[]>([])
   const [relationships, setRelationships] = useState<any[]>([])
   const [relatedArtifacts, setRelatedArtifacts] = useState<Artifact[]>([])
-  const [steward, setSteward] = useState<string | null>(null)
+  const [steward, setSteward] = useState<{ name: string; id: string } | null>(null)
   const [sourceContribution, setSourceContribution] = useState<{ id: string; content: string; created_at: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [participantId, setParticipantId] = useState<string | null>(null)
@@ -66,8 +66,8 @@ export function ArtifactDetail() {
 
     // Load steward
     if (a.steward_id) {
-      const { data: s } = await supabase.from('participants').select('name').eq('id', a.steward_id).single()
-      if (s) setSteward(s.name)
+      const { data: s } = await supabase.from('participants').select('id, name').eq('id', a.steward_id).single()
+      if (s) setSteward(s)
     }
 
     // Load relationships
@@ -207,7 +207,8 @@ export function ArtifactDetail() {
         <div className="text-xs text-gray-600 pt-4 border-t border-[#262626] space-y-1">
           {steward && (
             <div>
-              <span className="text-gray-500">Steward:</span> <span className="text-gray-400">{steward}</span>
+              <span className="text-gray-500">Steward:</span>{' '}
+              <Link to={`/p/${steward.id}`} className="text-gray-400 hover:text-[#c3fd50] transition-colors">{steward.name}</Link>
             </div>
           )}
           <div>
