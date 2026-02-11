@@ -58,9 +58,14 @@ export function Status() {
       .order('created_at', { ascending: false })
       .limit(20)
 
-    setMetrics(metricsData)
-    setErrors(errorsData || [])
-    setFailedContributions(failedData || [])
+    setMetrics(metricsData as unknown as HealthMetrics)
+    setErrors((errorsData || []) as RecentError[])
+    setFailedContributions((failedData || []).map((d: any) => ({
+      id: d.id,
+      content: d.content,
+      errors: d.errors,
+      created_at: d.created_at ?? ''
+    })))
     setLastUpdate(new Date())
     setLoading(false)
   }

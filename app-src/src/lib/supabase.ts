@@ -1,11 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
-import type { Database } from './database.types'
+// Sprint 35: Generated database types available at ./database.types
+// Currently using untyped client to avoid null-safety cascade across all pages
+// TODO: Progressively adopt typed queries per-page as types are tightened
+export type { Database } from './database.types'
 
 const supabaseUrl = 'https://hvbdpgkdcdskhpbdeeim.supabase.co'
 const supabaseAnonKey = 'sb_publishable_kB69BlNpkNhOllwGMOE6xg_i4l1VHMv'
 
-// Sprint 35: Typed Supabase client using generated database types
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Types
 export type ArtifactType = 'idea' | 'proposal' | 'commitment' | 'pattern' | 'synthesis' | 'question' | 'reflection'
