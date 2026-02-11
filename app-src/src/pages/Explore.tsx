@@ -127,11 +127,11 @@ export function Explore() {
     setSearchResults(data || [])
   }
 
+  const [showHowItWorks, setShowHowItWorks] = useState(false)
+
   const display = searchResults ?? artifacts
 
   if (loading) return <div className="text-center text-gray-500 py-12">Loading...</div>
-
-  const [showHowItWorks, setShowHowItWorks] = useState(false)
 
   return (
     <div>
