@@ -10,10 +10,108 @@ interface ParticipantProfile {
   name: string
   affiliation: string | null
   bio: string | null
+  background: string | null
+  experience: string[]
+  skills: string[]
+  capabilities: string[]
   interests: string[]
+  looking_for: string[]
+  offering: string[]
+  location: string | null
 }
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://hvbdpgkdcdskhpbdeeim.supabase.co'
+
+function TagList({ items, color = 'bg-[#262626] text-gray-300' }: { items: string[], color?: string }) {
+  if (!items || items.length === 0) return null
+  return (
+    <div className="flex flex-wrap gap-2">
+      {items.map((item, i) => (
+        <span key={i} className={`text-xs px-2 py-1 rounded-full ${color}`}>{item}</span>
+      ))}
+    </div>
+  )
+}
+
+function ProfileSection({ label, children }: { label: string, children: React.ReactNode }) {
+  return (
+    <div className="mb-4">
+      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1.5">{label}</div>
+      {children}
+    </div>
+  )
+}
+
+function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfile, extracted?: any, label?: string }) {
+  return (
+    <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h3 className="text-lg font-bold">{profile.name}</h3>
+          {profile.affiliation && <p className="text-sm text-gray-400">{profile.affiliation}</p>}
+          {profile.location && <p className="text-xs text-gray-500">{profile.location}</p>}
+        </div>
+        {label && <span className="text-xs text-gray-500">{label}</span>}
+      </div>
+
+      {profile.bio && (
+        <p className="text-gray-300 text-sm mb-4">{profile.bio}</p>
+      )}
+
+      {profile.background && (
+        <ProfileSection label="Background">
+          <p className="text-sm text-gray-400">{profile.background}</p>
+        </ProfileSection>
+      )}
+
+      {profile.skills && profile.skills.length > 0 && (
+        <ProfileSection label="Skills">
+          <TagList items={profile.skills} color="bg-[#262626] text-gray-300" />
+        </ProfileSection>
+      )}
+
+      {profile.experience && profile.experience.length > 0 && (
+        <ProfileSection label="Experience">
+          <TagList items={profile.experience} color="bg-[#262626] text-gray-300" />
+        </ProfileSection>
+      )}
+
+      {profile.capabilities && profile.capabilities.length > 0 && (
+        <ProfileSection label="Capabilities">
+          <TagList items={profile.capabilities} color="bg-blue-900/30 text-blue-300" />
+        </ProfileSection>
+      )}
+
+      {profile.offering && profile.offering.length > 0 && (
+        <ProfileSection label="Offering">
+          <TagList items={profile.offering} color="bg-green-900/30 text-green-300" />
+        </ProfileSection>
+      )}
+
+      {profile.looking_for && profile.looking_for.length > 0 && (
+        <ProfileSection label="Looking for">
+          <TagList items={profile.looking_for} color="bg-amber-900/30 text-amber-300" />
+        </ProfileSection>
+      )}
+
+      {profile.interests && profile.interests.length > 0 && (
+        <ProfileSection label="Interests">
+          <TagList items={profile.interests} />
+        </ProfileSection>
+      )}
+
+      {extracted?.hlamt_tags && extracted.hlamt_tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          {extracted.hlamt_tags.map((tag: string, i: number) => (
+            <span key={i} className="text-xs px-2 py-1 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] font-mono">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function Profile() {
   const navigate = useNavigate()
@@ -38,7 +136,7 @@ export function Profile() {
 
       const { data: participant } = await supabase
         .from('participants')
-        .select('id, name, affiliation, bio, interests')
+        .select('id, name, affiliation, bio, background, experience, skills, capabilities, interests, looking_for, offering, location')
         .eq('auth_user_id', user.id)
         .maybeSingle()
 
@@ -129,33 +227,7 @@ export function Profile() {
           <h2 className="text-xl font-bold mb-3">Profile {extracted?.isUpdate ? 'updated' : 'created'}!</h2>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">
-          <h3 className="text-lg font-bold mb-1">{profile.name}</h3>
-          {profile.affiliation && (
-            <p className="text-sm text-gray-400 mb-3">{profile.affiliation}</p>
-          )}
-          {profile.bio && (
-            <p className="text-gray-300 text-sm mb-4">{profile.bio}</p>
-          )}
-          {profile.interests && profile.interests.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {profile.interests.map((interest, i) => (
-                <span key={i} className="text-xs px-2 py-1 rounded-full bg-[#262626] text-gray-300">
-                  {interest}
-                </span>
-              ))}
-            </div>
-          )}
-          {extracted?.hlamt_tags && extracted.hlamt_tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {extracted.hlamt_tags.map((tag: string, i: number) => (
-                <span key={i} className="text-xs px-2 py-1 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] font-mono">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
+        <ProfileCard profile={profile} extracted={extracted} />
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
@@ -179,21 +251,7 @@ export function Profile() {
     <div className="max-w-2xl mx-auto">
       {profile ? (
         <>
-          <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-bold">{profile.name}</h2>
-              <span className="text-xs text-gray-500">Your current profile</span>
-            </div>
-            {profile.affiliation && <p className="text-sm text-gray-400 mb-2">{profile.affiliation}</p>}
-            {profile.bio && <p className="text-sm text-gray-300 mb-3">{profile.bio}</p>}
-            {profile.interests && profile.interests.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {profile.interests.map((interest, i) => (
-                  <span key={i} className="text-xs px-2 py-1 rounded-full bg-[#262626] text-gray-300">{interest}</span>
-                ))}
-              </div>
-            )}
-          </div>
+          <ProfileCard profile={profile} label="Your current profile" />
           <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
             <PenLine className="w-5 h-5 text-[#c3fd50]" />
             Update Your Profile

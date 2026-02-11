@@ -17,7 +17,14 @@ Return ONLY valid JSON, no code fences.
   "name": "their full name (required — infer from context if they mention it)",
   "affiliation": "organization, company, project, or community they're part of (null if not mentioned)",
   "bio": "a concise 1-3 sentence bio synthesized from what they shared (not a copy — a clear, third-person summary)",
-  "interests": ["array", "of", "specific", "interests", "or", "topics", "they mentioned"],
+  "background": "longer narrative about their professional/personal background (null if not enough detail)",
+  "experience": ["specific experience areas — e.g. 'smart contract development', '10 years community organizing'"],
+  "skills": ["concrete skills — e.g. 'Solidity', 'facilitation', 'data visualization', 'grant writing'"],
+  "capabilities": ["what they can do for others — e.g. 'technical architecture review', 'fundraising strategy'"],
+  "interests": ["specific topics they're drawn to — e.g. 'regenerative finance', 'bioregional governance'"],
+  "looking_for": ["what they want to find — e.g. 'co-founder for climate project', 'Rust developers', 'funding'],
+  "offering": ["what they're offering — e.g. 'mentorship in web3', 'free design reviews', 'office space in Boulder'"],
+  "location": "where they're based (city, region — null if not mentioned)",
   "hlamt_tags": ["hlamt:X tags that describe their dimensional focus — which domains of capacity they bring"],
   "rea_role_hint": "What kind of agent are they? Brief note like 'builder', 'researcher', 'organizer', 'artist', 'investor', 'educator'"
 }
@@ -33,9 +40,13 @@ Return ONLY valid JSON, no code fences.
 ## Guidance
 - If they don't give their name, set name to null — the system will fall back to their email
 - Bio should be third-person ("Sarah is a..." not "I am a...")
-- Interests should be specific topics, not generic ("regenerative finance" not "finance")
+- All array fields should contain specific, actionable items — not generic categories
+- skills vs capabilities: skills are what they know, capabilities are what they can do for others
+- looking_for + offering are the coordination engine — extract these carefully, they enable matchmaking
+- Background is the longer narrative; bio is the 1-3 sentence summary
 - Tag them with the hlamt dimensions that best describe where their capability lives
 - Most people touch 2-3 dimensions
+- Omit any field where there's no signal (use null for strings, empty array for arrays)
 
 Text:
 `
@@ -117,7 +128,14 @@ serve(async (req) => {
       name: profile.name || 'Anonymous',
       affiliation: profile.affiliation || null,
       bio: profile.bio || null,
+      background: profile.background || null,
+      experience: profile.experience || [],
+      skills: profile.skills || [],
+      capabilities: profile.capabilities || [],
       interests: profile.interests || [],
+      looking_for: profile.looking_for || [],
+      offering: profile.offering || [],
+      location: profile.location || null,
       ...(auth_user_id && { auth_user_id }),
     }
 
