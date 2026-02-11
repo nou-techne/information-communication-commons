@@ -12,6 +12,8 @@ interface Node {
   dimensionLabel?: string
   dimensionColor?: string
   dimensionDegree?: number
+  cluster_id?: string
+  cluster_label?: string
 }
 
 interface Link {
@@ -64,16 +66,18 @@ const DIMENSION_KEYS = ['e', 'H', 'L', 'A', 'M', 'T']
 export function Graph() {
   const [data, setData] = useState<GraphData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [colorBy, setColorBy] = useState<'rea' | 'type' | 'dimension'>('rea')
+  const [colorBy, setColorBy] = useState<'rea' | 'type' | 'dimension' | 'cluster'>('rea')
   const svgRef = useRef<SVGSVGElement>(null)
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
+  const [clusters, setClusters] = useState<any[]>([])
 
   useEffect(() => {
     async function loadGraph() {
-      const [{ data: artifacts }, { data: relationships }, { data: tagData }] = await Promise.all([
+      const [{ data: artifacts }, { data: relationships }, { data: tagData }, { data: clusterData }] = await Promise.all([
         supabase.from('artifacts').select('id, title, type, rea_role').order('created_at', { ascending: false }).limit(200),
         supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(400),
         supabase.from('artifact_tags').select('artifact_id, tags!inner(name)'),
+        supabase.rpc('get_graph_clusters', { p_convergence_id: '00000000-0000-0000-0000-000000000100' }),
       ])
 
       // Extract hlamt dimension links from tags
@@ -96,12 +100,24 @@ export function Graph() {
         degreeCounts[ad.artifact_id] = (degreeCounts[ad.artifact_id] || 0) + 1
       }
 
+      // Build cluster map
+      const clusterMap: Record<string, { cluster_id: string; label: string }> = {}
+      const parsedClusters = (clusterData as any) || []
+      setClusters(parsedClusters)
+      for (const cluster of parsedClusters) {
+        for (const nodeId of cluster.node_ids || []) {
+          clusterMap[nodeId] = { cluster_id: cluster.cluster_id, label: cluster.label }
+        }
+      }
+
       const nodes: Node[] = artifacts.map(a => ({
         id: a.id,
         title: a.title,
         type: a.type,
         rea_role: a.rea_role || 'resource',
         dimensionDegree: degreeCounts[a.id] || 0,
+        cluster_id: clusterMap[a.id]?.cluster_id,
+        cluster_label: clusterMap[a.id]?.label,
       }))
 
       // Add dimension nodes
@@ -222,6 +238,13 @@ export function Graph() {
         if (d.isDimension) return d.dimensionColor
         if (colorBy === 'rea') return REA_COLORS[d.rea_role] || '#999'
         if (colorBy === 'type') return TYPE_COLORS[d.type] || '#999'
+        if (colorBy === 'cluster') {
+          if (!d.cluster_id) return '#444'  // Unclustered nodes
+          // Generate consistent color from cluster_id hash
+          const hash = d.cluster_id.split('').reduce((a: number, b: string) => ((a << 5) - a) + b.charCodeAt(0), 0)
+          const hue = Math.abs(hash % 360)
+          return `hsl(${hue}, 65%, 55%)`
+        }
         // dimension mode: color artifacts by their strongest dimension
         const artifactLinks = data.links.filter(l => {
           const src = typeof l.source === 'string' ? l.source : (l.source as any).id
@@ -332,7 +355,7 @@ export function Graph() {
           </p>
         </div>
         <div className="flex gap-2">
-          {(['rea', 'type', 'dimension'] as const).map(mode => (
+          {(['rea', 'type', 'dimension', 'cluster'] as const).map(mode => (
             <button
               key={mode}
               onClick={() => setColorBy(mode)}
@@ -340,7 +363,7 @@ export function Graph() {
                 colorBy === mode ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-300 hover:bg-[#333]'
               }`}
             >
-              {mode === 'rea' ? 'REA' : mode === 'type' ? 'Type' : 'Dimension'}
+              {mode === 'rea' ? 'REA' : mode === 'type' ? 'Type' : mode === 'dimension' ? 'Dimension' : 'Cluster'}
             </button>
           ))}
         </div>
@@ -367,6 +390,12 @@ export function Graph() {
                 <div>
                   <span className="text-gray-500">Dimensions:</span>
                   <span className="ml-2 px-2 py-0.5 rounded-full bg-[#262626] text-xs">{selectedNode.dimensionDegree}</span>
+                </div>
+              )}
+              {selectedNode.cluster_label && (
+                <div>
+                  <span className="text-gray-500">Cluster:</span>
+                  <span className="ml-2 px-2 py-0.5 rounded-full bg-[#262626] text-xs">{selectedNode.cluster_label}</span>
                 </div>
               )}
               <button
@@ -409,6 +438,22 @@ export function Graph() {
                 <span className="text-gray-400">{DIMENSION_LABELS[key]}</span>
               </div>
             ))}
+          </div>
+        )}
+        {colorBy === 'cluster' && clusters.length > 0 && (
+          <div className="flex gap-4 flex-wrap">
+            {clusters.slice(0, 8).map((cluster: any) => {
+              const hash = cluster.cluster_id.split('').reduce((a: number, b: string) => ((a << 5) - a) + b.charCodeAt(0), 0)
+              const hue = Math.abs(hash % 360)
+              const color = `hsl(${hue}, 65%, 55%)`
+              return (
+                <div key={cluster.cluster_id} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+                  <span className="text-gray-400 text-xs">{cluster.label} ({cluster.size})</span>
+                </div>
+              )
+            })}
+            {clusters.length > 8 && <span className="text-gray-500 text-xs">+{clusters.length - 8} more</span>}
           </div>
         )}
       </div>
