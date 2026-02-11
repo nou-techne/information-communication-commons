@@ -86,9 +86,10 @@ export function Explore() {
   }, [dimFilter, typeFilter, stateFilter, sortBy])
 
   async function refreshDimCounts() {
-    const [{ data: tagData }, { count: participantCount }] = await Promise.all([
+    const [{ data: tagData }, { count: participantCount }, { data: wordData }] = await Promise.all([
       supabase.from('tags').select('name, artifact_tags(count)').like('name', 'hlamt:%'),
       supabase.from('participants').select('*', { count: 'exact', head: true }),
+      supabase.rpc('word_frequencies'),
     ])
     const c: Record<string, number> = {}
     if (tagData) {
@@ -99,6 +100,10 @@ export function Explore() {
     }
     // H/ counts participants, not artifacts
     c['hlamt:H'] = participantCount ?? 0
+    // L/ counts unique terms from word frequency analysis
+    if (wordData) {
+      c['hlamt:L'] = Math.min(wordData.length, 50)
+    }
     setDimCounts(c)
   }
 
