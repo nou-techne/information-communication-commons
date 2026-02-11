@@ -43,6 +43,7 @@ export function Explore() {
   const [artifacts, setArtifacts] = useState<Artifact[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [dimFilter, setDimFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState<ArtifactType | ''>('')
   const [stateFilter, setStateFilter] = useState<ArtifactState | ''>('')
   const [searchResults, setSearchResults] = useState<Artifact[] | null>(null)
@@ -80,7 +81,7 @@ export function Explore() {
 
   useEffect(() => {
     loadArtifacts()
-  }, [typeFilter, stateFilter])
+  }, [dimFilter, typeFilter, stateFilter])
 
   async function refreshDimCounts() {
     const [{ data: tagData }, { count: participantCount }] = await Promise.all([
@@ -117,11 +118,40 @@ export function Explore() {
   }
 
   async function loadArtifacts() {
-    let q = supabase.from('artifacts').select('*').order('created_at', { ascending: false }).limit(50)
-    if (typeFilter) q = q.eq('type', typeFilter)
-    if (stateFilter) q = q.eq('state', stateFilter)
-    const { data } = await q
-    setArtifacts(data || [])
+    if (dimFilter) {
+      // Filter by dimension: get artifact IDs tagged with this dimension
+      const { data: tagData } = await supabase
+        .from('tags')
+        .select('id')
+        .eq('name', dimFilter)
+        .single()
+
+      if (tagData) {
+        const { data: taggedIds } = await supabase
+          .from('artifact_tags')
+          .select('artifact_id')
+          .eq('tag_id', tagData.id)
+
+        if (taggedIds && taggedIds.length > 0) {
+          const ids = taggedIds.map(t => t.artifact_id)
+          let q = supabase.from('artifacts').select('*').in('id', ids).order('created_at', { ascending: false }).limit(50)
+          if (typeFilter) q = q.eq('type', typeFilter)
+          if (stateFilter) q = q.eq('state', stateFilter)
+          const { data } = await q
+          setArtifacts(data || [])
+        } else {
+          setArtifacts([])
+        }
+      } else {
+        setArtifacts([])
+      }
+    } else {
+      let q = supabase.from('artifacts').select('*').order('created_at', { ascending: false }).limit(50)
+      if (typeFilter) q = q.eq('type', typeFilter)
+      if (stateFilter) q = q.eq('state', stateFilter)
+      const { data } = await q
+      setArtifacts(data || [])
+    }
     setSearchResults(null)
   }
 
@@ -217,8 +247,9 @@ export function Explore() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: Artifacts (Garden) */}
+        {/* Left: Graph Index */}
         <div className="lg:col-span-2">
+          <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Graph Index</h2>
           {/* Search + Filters */}
           <div className="mb-4">
             <div className="flex gap-2 mb-3">
@@ -226,7 +257,7 @@ export function Explore() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && doSearch()}
-                placeholder="Search artifacts..."
+                placeholder="Search the graph..."
                 className="flex-1 bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm"
               />
               <button onClick={doSearch} className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm whitespace-nowrap">
@@ -234,6 +265,14 @@ export function Explore() {
               </button>
             </div>
             <div className="flex gap-2 flex-wrap items-center">
+              <select
+                value={dimFilter}
+                onChange={e => setDimFilter(e.target.value)}
+                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
+              >
+                <option value="">All dimensions</option>
+                {DIMENSIONS.map(d => <option key={d.key} value={d.tag}>{d.letter} {d.name}</option>)}
+              </select>
               <select
                 value={typeFilter}
                 onChange={e => setTypeFilter(e.target.value as ArtifactType | '')}
@@ -250,8 +289,8 @@ export function Explore() {
                 <option value="">All states</option>
                 {Object.entries(STATE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
-              {(typeFilter || stateFilter || searchResults) && (
-                <button onClick={() => { setTypeFilter(''); setStateFilter(''); setSearch(''); setSearchResults(null); }} className="text-xs text-gray-400 hover:text-white flex-shrink-0">
+              {(dimFilter || typeFilter || stateFilter || searchResults) && (
+                <button onClick={() => { setDimFilter(''); setTypeFilter(''); setStateFilter(''); setSearch(''); setSearchResults(null); }} className="text-xs text-gray-400 hover:text-white flex-shrink-0">
                   Clear
                 </button>
               )}
