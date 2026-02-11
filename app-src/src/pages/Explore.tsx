@@ -100,9 +100,9 @@ export function Explore() {
     }
     // H/ counts participants, not artifacts
     c['hlamt:H'] = participantCount ?? 0
-    // L/ counts unique terms from word frequency analysis (top 25)
+    // L/ counts total unique words from word frequency analysis
     if (wordData) {
-      c['hlamt:L'] = Math.min(wordData.length, 25)
+      c['hlamt:L'] = wordData.length
     }
     setDimCounts(c)
   }
