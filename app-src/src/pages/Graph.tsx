@@ -70,11 +70,20 @@ export function Graph() {
 
   useEffect(() => {
     async function loadGraph() {
-      const [{ data: artifacts }, { data: relationships }, { data: artifactDimensions }] = await Promise.all([
+      const [{ data: artifacts }, { data: relationships }, { data: tagData }] = await Promise.all([
         supabase.from('artifacts').select('id, title, type, rea_role').order('created_at', { ascending: false }).limit(200),
         supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(400),
-        supabase.from('artifact_dimensions').select('artifact_id, dimension, key, weight'),
+        supabase.from('artifact_tags').select('artifact_id, tags!inner(name)'),
       ])
+
+      // Extract hlamt dimension links from tags
+      const artifactDimensions = (tagData || [])
+        .filter((t: any) => t.tags?.name?.startsWith('hlamt:'))
+        .map((t: any) => ({
+          artifact_id: t.artifact_id,
+          dimension: t.tags.name.replace('hlamt:', ''),
+          weight: 1.0,
+        }))
 
       if (!artifacts) {
         setLoading(false)
