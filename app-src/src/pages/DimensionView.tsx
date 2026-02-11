@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import type { Artifact, Participant } from '../lib/supabase'
-import { ARTIFACT_COLORS, REA_COLORS, REA_LABELS } from '../lib/supabase'
+import { ARTIFACT_COLORS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import { Users } from 'lucide-react'
 
 function timeAgo(date: string) {
@@ -48,6 +48,14 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
             style={{ color: REA_COLORS[artifact.rea_role], borderColor: REA_COLORS[artifact.rea_role] + '40' }}
           >
             {REA_LABELS[artifact.rea_role]}
+          </span>
+        )}
+        {artifact.agent_type && (
+          <span
+            className="text-xs px-1.5 py-0.5 rounded border"
+            style={{ color: AGENT_TYPE_COLORS[artifact.agent_type], borderColor: AGENT_TYPE_COLORS[artifact.agent_type] + '40' }}
+          >
+            {AGENT_TYPE_LABELS[artifact.agent_type]}
           </span>
         )}
         <span className="ml-auto text-xs text-gray-600">{timeAgo(artifact.created_at)}</span>

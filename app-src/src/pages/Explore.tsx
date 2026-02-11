@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS } from '../lib/supabase'
+import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState, Event } from '../lib/supabase'
 import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch } from 'lucide-react'
 
@@ -297,6 +297,14 @@ export function Explore() {
                         style={{ color: REA_COLORS[a.rea_role], borderColor: REA_COLORS[a.rea_role] + '40' }}
                       >
                         {REA_LABELS[a.rea_role]}
+                      </span>
+                    )}
+                    {a.agent_type && (
+                      <span
+                        className="text-xs px-1.5 py-0.5 rounded border"
+                        style={{ color: AGENT_TYPE_COLORS[a.agent_type], borderColor: AGENT_TYPE_COLORS[a.agent_type] + '40' }}
+                      >
+                        {AGENT_TYPE_LABELS[a.agent_type]}
                       </span>
                     )}
                     <span className="ml-auto text-xs text-gray-500">{STATE_LABELS[a.state]}</span>

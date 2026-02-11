@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS } from '../lib/supabase'
+import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact } from '../lib/supabase'
 import { ChevronLeft, MessageSquare, Link2 } from 'lucide-react'
 
@@ -125,6 +125,14 @@ export function ArtifactDetail() {
               style={{ color: REA_COLORS[artifact.rea_role], borderColor: REA_COLORS[artifact.rea_role] + '40' }}
             >
               {REA_LABELS[artifact.rea_role]}
+            </span>
+          )}
+          {artifact.agent_type && (
+            <span
+              className="text-xs px-2 py-0.5 rounded border font-medium"
+              style={{ color: AGENT_TYPE_COLORS[artifact.agent_type], borderColor: AGENT_TYPE_COLORS[artifact.agent_type] + '40' }}
+            >
+              {AGENT_TYPE_LABELS[artifact.agent_type]}
             </span>
           )}
           <span className="text-xs text-gray-500">{STATE_LABELS[artifact.state]}</span>

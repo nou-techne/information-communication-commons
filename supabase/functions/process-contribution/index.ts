@@ -40,13 +40,14 @@ IMPORTANT: "dimension" must be one of EXACTLY: "temporal", "social", "thematic",
 
 ## Output Schema
 
-{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "type": "idea|proposal|commitment|question|pattern|reflection", "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value"}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
+{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "type": "idea|proposal|commitment|question|pattern|reflection", "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value"}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
 
 ## Guidance
 
 - When someone describes a skill, tool, funding source, or available capacity → rea_role: "resource"
 - When someone describes something that happened, a session, a decision, an action → rea_role: "event"
 - When someone is identified as a participant, speaker, organizer, team → rea_role: "agent"
+- For agents, also classify agent_type: "human" (people) or "non-human" (AI agents, bots, DAOs, protocols, software systems, organizations-as-actors)
 - One observation often contains all three: "Maria (agent) presented (event) a regenerative finance framework (resource)"
 - Tag EVERY artifact with at least one hlamt: tag. Most artifacts touch 1-2 dimensions.
 - Prefer specificity: a person teaching a workshop is H/ (human) + T/ (training), not just H/

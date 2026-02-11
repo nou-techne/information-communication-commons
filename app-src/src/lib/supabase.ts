@@ -9,6 +9,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export type ArtifactType = 'idea' | 'proposal' | 'commitment' | 'pattern' | 'synthesis' | 'question' | 'reflection'
 export type ArtifactState = 'seed' | 'discussed' | 'proposed' | 'committed' | 'active' | 'completed' | 'archived' | 'superseded'
 export type ReaRole = 'resource' | 'event' | 'agent'
+export type AgentType = 'human' | 'non-human'
 export type CommitmentStatus = 'made' | 'in_progress' | 'fulfilled' | 'broken' | 'deferred'
 
 export interface Artifact {
@@ -23,6 +24,7 @@ export interface Artifact {
   created_by: string | null
   created_by_agent: string | null
   rea_role: ReaRole | null
+  agent_type: AgentType | null
   steward_id: string | null
   created_at: string
   updated_at: string
@@ -90,6 +92,16 @@ export const REA_LABELS: Record<ReaRole, string> = {
   resource: 'Resource',
   event: 'Event',
   agent: 'Agent',
+}
+
+export const AGENT_TYPE_COLORS: Record<AgentType, string> = {
+  human: '#c4956a',      // warm amber
+  'non-human': '#8bbfff', // cool blue
+}
+
+export const AGENT_TYPE_LABELS: Record<AgentType, string> = {
+  human: 'Human',
+  'non-human': 'Non-Human',
 }
 
 export const STATE_LABELS: Record<ArtifactState, string> = {
