@@ -221,7 +221,7 @@ function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
     async function load() {
       // Collective word frequencies
       const { data: cw } = await supabase.rpc('word_frequencies')
-      if (cw) setCollectiveWords(cw.slice(0, 50))
+      if (cw) setCollectiveWords(cw.slice(0, 25))
 
       // Load participants who have contributions
       const { data: parts } = await supabase
