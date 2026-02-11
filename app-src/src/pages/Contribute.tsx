@@ -220,7 +220,9 @@ export function Contribute() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
+          <label htmlFor="contribution-text" className="sr-only">Your contribution</label>
           <textarea
+            id="contribution-text"
             value={text}
             onChange={e => setText(e.target.value)}
             placeholder="What's on your mind? Session notes, an idea, a commitment, a reflection — just write. The AI will identify what kind of contribution this is, extract the key concepts, classify by e/H-LAM/T dimension, and connect it to the knowledge graph."

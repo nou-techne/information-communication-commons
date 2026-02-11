@@ -67,7 +67,7 @@ function Nav() {
             ))}
           </div>
           <div className="flex items-center gap-4 text-sm">
-            <Link to="/search" className="text-gray-400 hover:text-white">
+            <Link to="/search" className="text-gray-400 hover:text-white" aria-label="Search">
               <SearchIcon className="w-5 h-5" />
             </Link>
             {session ? (

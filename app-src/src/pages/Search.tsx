@@ -80,7 +80,9 @@ export function Search() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold mb-4">Search</h1>
         <form onSubmit={handleSubmit} className="relative">
+          <label htmlFor="search-query" className="sr-only">Search query</label>
           <input
+            id="search-query"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
