@@ -70,6 +70,13 @@ export function Graph() {
   const svgRef = useRef<SVGSVGElement>(null)
   const [selectedNode, setSelectedNode] = useState<Node | null>(null)
   const [clusters, setClusters] = useState<any[]>([])
+  const [filters, setFilters] = useState({
+    types: [] as string[],
+    dimensions: [] as string[],
+    dateRange: 'all' as 'week' | 'month' | 'all',
+    participant: '',
+  })
+  const [showFilters, setShowFilters] = useState(false)
 
   useEffect(() => {
     async function loadGraph() {
@@ -170,6 +177,49 @@ export function Graph() {
 
     svg.selectAll('*').remove()
 
+    // Apply filters
+    let filteredNodes = data.nodes
+    let filteredLinks = data.links
+
+    if (filters.types.length > 0) {
+      const nodeIds = new Set(filteredNodes.filter(n => n.isDimension || filters.types.includes(n.type)).map(n => n.id))
+      filteredNodes = filteredNodes.filter(n => nodeIds.has(n.id))
+      filteredLinks = filteredLinks.filter(l => {
+        const srcId = typeof l.source === 'string' ? l.source : (l.source as any).id
+        const tgtId = typeof l.target === 'string' ? l.target : (l.target as any).id
+        return nodeIds.has(srcId) && nodeIds.has(tgtId)
+      })
+    }
+
+    if (filters.dimensions.length > 0) {
+      const dimNodeIds = filters.dimensions.map(d => `dim-${d}`)
+      const connectedIds = new Set(dimNodeIds)
+      for (const link of filteredLinks) {
+        const srcId = typeof link.source === 'string' ? link.source : (link.source as any).id
+        const tgtId = typeof link.target === 'string' ? link.target : (link.target as any).id
+        if (dimNodeIds.includes(srcId) || dimNodeIds.includes(tgtId)) {
+          connectedIds.add(srcId)
+          connectedIds.add(tgtId)
+        }
+      }
+      filteredNodes = filteredNodes.filter(n => connectedIds.has(n.id))
+      filteredLinks = filteredLinks.filter(l => {
+        const srcId = typeof l.source === 'string' ? l.source : (l.source as any).id
+        const tgtId = typeof l.target === 'string' ? l.target : (l.target as any).id
+        return connectedIds.has(srcId) && connectedIds.has(tgtId)
+      })
+    }
+
+    if (filters.participant) {
+      // Filter would require participant data per artifact - skipping for now
+      // This would need additional data loaded from DB
+    }
+
+    if (filters.dateRange !== 'all') {
+      // Date filtering would require created_at timestamps on nodes
+      // Skipping for now as artifact data doesn't include dates in current query
+    }
+
     const g = svg.append('g')
 
     svg.append('defs').selectAll('marker')
@@ -191,7 +241,7 @@ export function Graph() {
     const ringRadius = Math.min(width, height) * 0.3
 
     // Pre-position dimension nodes in hexagonal layout
-    const simNodes = data.nodes.map((n, _i) => {
+    const simNodes = filteredNodes.map((n, _i) => {
       const copy = { ...n } as any
       if (n.isDimension) {
         const dimIdx = DIMENSION_KEYS.indexOf(n.dimensionLabel!)
@@ -203,7 +253,7 @@ export function Graph() {
     })
 
     const simulation = d3.forceSimulation(simNodes)
-      .force('link', d3.forceLink(data.links as any).id((d: any) => d.id).distance((d: any) => d.type === 'dimension_link' ? 120 : 80))
+      .force('link', d3.forceLink(filteredLinks as any).id((d: any) => d.id).distance((d: any) => d.type === 'dimension_link' ? 120 : 80))
       .force('charge', d3.forceManyBody().strength((d: any) => d.isDimension ? -600 : -200))
       .force('center', d3.forceCenter(cx, cy).strength(0.05))
       .force('collision', d3.forceCollide().radius((d: any) => d.isDimension ? 30 : 12))
@@ -211,7 +261,7 @@ export function Graph() {
     // Draw links
     const link = g.append('g')
       .selectAll('line')
-      .data(data.links)
+      .data(filteredLinks)
       .enter().append('line')
       .attr('stroke', (d: any) => {
         if (d.type === 'dimension_link') {
@@ -246,7 +296,7 @@ export function Graph() {
           return `hsl(${hue}, 65%, 55%)`
         }
         // dimension mode: color artifacts by their strongest dimension
-        const artifactLinks = data.links.filter(l => {
+        const artifactLinks = filteredLinks.filter(l => {
           const src = typeof l.source === 'string' ? l.source : (l.source as any).id
           return src === d.id && l.type === 'dimension_link'
         })
@@ -317,7 +367,7 @@ export function Graph() {
 
     svg.call(zoom as any)
 
-  }, [data, colorBy])
+  }, [data, colorBy, filters])
 
   if (loading) {
     return (
@@ -366,8 +416,83 @@ export function Graph() {
               {mode === 'rea' ? 'REA' : mode === 'type' ? 'Type' : mode === 'dimension' ? 'Dimension' : 'Cluster'}
             </button>
           ))}
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+              showFilters ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-300 hover:bg-[#333]'
+            }`}
+          >
+            Filters
+          </button>
         </div>
       </div>
+
+      {showFilters && (
+        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-gray-400 mb-2">Artifact Types</label>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(TYPE_COLORS).map(type => (
+                  <button
+                    key={type}
+                    onClick={() => {
+                      setFilters(prev => ({
+                        ...prev,
+                        types: prev.types.includes(type)
+                          ? prev.types.filter(t => t !== type)
+                          : [...prev.types, type]
+                      }))
+                    }}
+                    className={`px-2 py-1 text-xs rounded ${
+                      filters.types.includes(type)
+                        ? 'bg-[#c3fd50] text-[#0f0f0f]'
+                        : 'bg-[#262626] text-gray-400 hover:bg-[#333]'
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-400 mb-2">Dimensions</label>
+              <div className="flex flex-wrap gap-2">
+                {DIMENSION_KEYS.map(dim => (
+                  <button
+                    key={dim}
+                    onClick={() => {
+                      setFilters(prev => ({
+                        ...prev,
+                        dimensions: prev.dimensions.includes(dim)
+                          ? prev.dimensions.filter(d => d !== dim)
+                          : [...prev.dimensions, dim]
+                      }))
+                    }}
+                    className={`px-2 py-1 text-xs rounded ${
+                      filters.dimensions.includes(dim)
+                        ? 'bg-[#c3fd50] text-[#0f0f0f]'
+                        : 'bg-[#262626] text-gray-400 hover:bg-[#333]'
+                    }`}
+                  >
+                    {dim}/
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {(filters.types.length > 0 || filters.dimensions.length > 0) && (
+            <button
+              onClick={() => setFilters({ types: [], dimensions: [], dateRange: 'all', participant: '' })}
+              className="mt-4 px-3 py-1.5 text-xs bg-[#262626] text-gray-400 hover:bg-[#333] rounded"
+            >
+              Clear all filters
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="flex gap-4">
         <div className="flex-1 bg-[#0a0a0a] border border-[#262626] rounded-lg overflow-hidden">
