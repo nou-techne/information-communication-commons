@@ -40,7 +40,7 @@ IMPORTANT: "dimension" must be one of EXACTLY: "temporal", "social", "thematic",
 
 ## Output Schema
 
-{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "type": "idea|proposal|commitment|question|pattern|reflection", "confidence": 0.0-1.0, "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value", "weight": 0.0-1.0}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
+{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "event_temporality": "past|present|future (only when rea_role is event)", "type": "idea|proposal|commitment|question|pattern|reflection", "confidence": 0.0-1.0, "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value", "weight": 0.0-1.0}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
 
 ## Confidence Scoring
 Rate each artifact 0.0-1.0 for extraction confidence:
@@ -64,6 +64,7 @@ An artifact about "regenerative finance training in Boulder" would get: hlamt:T=
 - When someone describes something that happened, a session, a decision, an action → rea_role: "event"
 - When someone is identified as a participant, speaker, organizer, team → rea_role: "agent"
 - For agents, also classify agent_type: "human" (people) or "non-human" (AI agents, bots, DAOs, protocols, software systems, organizations-as-actors)
+- For events, also classify event_temporality: "past" (already happened — recaps, reports, reviews), "present" (happening now — live sessions, ongoing activities), "future" (planned or proposed — upcoming talks, proposals, commitments)
 - One observation often contains all three: "Maria (agent) presented (event) a regenerative finance framework (resource)"
 - Tag EVERY artifact with at least one hlamt: tag. Most artifacts touch 1-2 dimensions.
 - Prefer specificity: a person teaching a workshop is H/ (human) + T/ (training), not just H/
@@ -279,6 +280,22 @@ serve(async (req) => {
         processed_at: new Date().toISOString(),
       })
       .eq('id', contributionId)
+
+    // Set event_temporality on event artifacts (post-ingestion)
+    if (extraction.artifacts && Array.isArray(extraction.artifacts)) {
+      for (const artifact of extraction.artifacts) {
+        if (artifact.rea_role === 'event' && artifact.event_temporality) {
+          const validTemporalities = ['past', 'present', 'future']
+          if (validTemporalities.includes(artifact.event_temporality)) {
+            await supabase
+              .from('artifacts')
+              .update({ event_temporality: artifact.event_temporality })
+              .eq('title', artifact.title)
+              .eq('rea_role', 'event')
+          }
+        }
+      }
+    }
 
     return new Response(JSON.stringify({ success: true, result: data }), {
       headers: { 'Content-Type': 'application/json' },
