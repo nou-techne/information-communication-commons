@@ -14,6 +14,7 @@ import { Profile } from './pages/Profile'
 import { Status } from './pages/Status'
 import { Graph } from './pages/Graph'
 import { Coordinate } from './pages/Coordinate'
+import Dashboard from './pages/Dashboard'
 import type { Session } from '@supabase/supabase-js'
 
 function Nav() {
@@ -145,6 +146,7 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/graph" element={<Graph />} />
             <Route path="/coordinate" element={<Coordinate />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/status" element={<Status />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
