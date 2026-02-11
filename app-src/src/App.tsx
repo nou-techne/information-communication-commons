@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase'
 import { Menu, X, Search as SearchIcon } from 'lucide-react'
+import { ConvergenceProvider, useConvergence } from './contexts/ConvergenceContext'
 import { Explore } from './pages/Explore'
 import { ArtifactDetail } from './pages/ArtifactDetail'
 import { MyThread } from './pages/MyThread'
@@ -23,6 +24,7 @@ function Nav() {
   const location = useLocation()
   const [session, setSession] = useState<Session | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { convergence } = useConvergence()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
@@ -43,7 +45,8 @@ function Nav() {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center justify-between relative">
           <Link to="/" className="text-xl font-bold tracking-tight">
-            <span className="text-[#c3fd50]">EthBoulder</span><span className="text-gray-500">.commons.id</span>
+            <span style={{ color: convergence.theme_primary }}>{convergence.logo_text}</span>
+            <span className="text-gray-500">{convergence.logo_accent}</span>
           </Link>
           <div className="absolute left-1/2 -translate-x-1/2 flex gap-1">
             {links.map(l => (
@@ -78,7 +81,8 @@ function Nav() {
         <div className="md:hidden">
           <div className="flex items-center justify-between">
             <Link to="/" className="text-lg font-bold tracking-tight">
-              <span className="text-[#c3fd50]">EthBoulder</span><span className="text-gray-500">.commons.id</span>
+              <span style={{ color: convergence.theme_primary }}>{convergence.logo_text}</span>
+              <span className="text-gray-500">{convergence.logo_accent}</span>
             </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -149,9 +153,10 @@ function Nav() {
 export default function App() {
   return (
     <BrowserRouter basename="/app">
-      <div className="min-h-screen bg-[#0f0f0f] text-white">
-        <Nav />
-        <main className="max-w-6xl mx-auto px-4 py-6">
+      <ConvergenceProvider>
+        <div className="min-h-screen bg-[#0f0f0f] text-white">
+          <Nav />
+          <main className="max-w-6xl mx-auto px-4 py-6">
           <Routes>
             <Route path="/" element={<Explore />} />
             <Route path="/dimensions" element={<Dimensions />} />
@@ -171,6 +176,7 @@ export default function App() {
           </Routes>
         </main>
       </div>
+      </ConvergenceProvider>
     </BrowserRouter>
   )
 }

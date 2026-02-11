@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
 import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, GitCommit, Handshake } from 'lucide-react'
+import { useConvergence } from '../contexts/ConvergenceContext'
 
 interface ContributionFeedItem {
   id: string
@@ -21,15 +22,6 @@ interface ContributionFeedItem {
 
 const TYPES: ArtifactType[] = ['idea', 'proposal', 'commitment', 'pattern', 'synthesis', 'question', 'reflection']
 
-const DIMENSIONS = [
-  { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f', tag: 'hlamt:E' },
-  { key: 'H', letter: 'H/', name: 'Human', desc: "Who's Here", color: '#c4956a', tag: 'hlamt:H' },
-  { key: 'L', letter: 'L/', name: 'Language', desc: 'How We Talk', color: '#c3fd50', tag: 'hlamt:L' },
-  { key: 'A', letter: 'A/', name: 'Artifacts', desc: "What We're Building", color: '#8bbfff', tag: 'hlamt:A' },
-  { key: 'M', letter: 'M/', name: 'Methodology', desc: 'How We Work', color: '#7ccfb8', tag: 'hlamt:M' },
-  { key: 'T', letter: 'T/', name: 'Training', desc: "What We're Learning", color: '#e8927c', tag: 'hlamt:T' },
-]
-
 function timeAgo(date: string) {
   const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
   if (s < 60) return `${s}s ago`
@@ -39,6 +31,9 @@ function timeAgo(date: string) {
 }
 
 export function Explore() {
+  const { convergence } = useConvergence()
+  const DIMENSIONS = convergence.dimensions
+
   // Garden state
   const [artifacts, setArtifacts] = useState<Artifact[]>([])
   const [loading, setLoading] = useState(true)
