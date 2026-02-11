@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState, Event } from '../lib/supabase'
-import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, Search } from 'lucide-react'
+import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch } from 'lucide-react'
 
 const TYPES: ArtifactType[] = ['idea', 'proposal', 'commitment', 'pattern', 'synthesis', 'question', 'reflection']
 

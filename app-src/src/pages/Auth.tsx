@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useNavigate, Link } from 'react-router-dom'
-import { Mail, Sparkles } from 'lucide-react'
+import { Mail } from 'lucide-react'
 
 const FEATURES = [
   { letter: 'e/', color: '#4a8c6f', text: 'Ground ideas in place and ecology' },

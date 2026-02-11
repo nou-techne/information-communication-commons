@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { Zap, Check, Plus, Compass, ArrowRight, AlertCircle } from 'lucide-react'
+import { Zap, Check } from 'lucide-react'
 
 type ProcessingState = 'idle' | 'submitting' | 'extracting' | 'done' | 'error'
 
