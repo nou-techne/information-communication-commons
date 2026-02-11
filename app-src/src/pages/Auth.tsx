@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useNavigate, Link } from 'react-router-dom'
+import { Mail, Sparkles } from 'lucide-react'
 
 const FEATURES = [
   { letter: 'e/', color: '#4a8c6f', text: 'Ground ideas in place and ecology' },
@@ -37,9 +38,7 @@ export function Auth() {
     return (
       <div className="max-w-lg mx-auto text-center py-16">
         <div className="w-20 h-20 rounded-full bg-[#c3fd50] flex items-center justify-center mx-auto mb-6">
-          <svg className="w-10 h-10 text-[#0f0f0f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
+          <Mail className="w-10 h-10 text-[#0f0f0f]" />
         </div>
         <h2 className="text-2xl font-bold mb-3">Check your inbox</h2>
         <p className="text-gray-400 mb-2">

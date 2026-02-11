@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState, Event } from '../lib/supabase'
+import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, Search } from 'lucide-react'
 
 const TYPES: ArtifactType[] = ['idea', 'proposal', 'commitment', 'pattern', 'synthesis', 'question', 'reflection']
 
@@ -147,39 +148,36 @@ export function Explore() {
           className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#262626] transition-colors"
         >
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-[#c3fd50]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Info className="w-5 h-5 text-[#c3fd50]" />
             <span className="text-sm font-medium text-white">How it works</span>
           </div>
-          <svg
-            className={`w-5 h-5 text-gray-400 transition-transform ${showHowItWorks ? 'rotate-180' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showHowItWorks ? 'rotate-180' : ''}`} />
         </button>
         
         {showHowItWorks && (
           <div className="px-4 pb-4 text-sm space-y-3 border-t border-[#262626] pt-4">
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center text-xs font-bold">1</span>
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center">
+                <PenLine className="w-4 h-4" />
+              </span>
               <div>
                 <div className="text-white font-medium mb-1">Contribute observations</div>
                 <div className="text-gray-400">Share what you noticed at ETHBoulder — session notes, ideas, commitments, questions. Write naturally.</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center text-xs font-bold">2</span>
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center">
+                <Sparkles className="w-4 h-4" />
+              </span>
               <div>
                 <div className="text-white font-medium mb-1">AI extracts knowledge</div>
                 <div className="text-gray-400">Each contribution is analyzed, broken into artifacts (resources, events, agents), and tagged by dimension.</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center text-xs font-bold">3</span>
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center">
+                <GitBranch className="w-4 h-4" />
+              </span>
               <div>
                 <div className="text-white font-medium mb-1">The graph grows</div>
                 <div className="text-gray-400">Artifacts connect to each other. Patterns emerge. The collective knowledge becomes navigable by dimension, type, and relationship.</div>
@@ -261,9 +259,7 @@ export function Explore() {
             <div className="text-center py-16">
               <div className="max-w-md mx-auto">
                 <div className="w-20 h-20 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                  </svg>
+                  <Inbox className="w-10 h-10 text-gray-600" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">
                   {searchResults ? 'No matching artifacts' : 'The knowledge graph is empty'}

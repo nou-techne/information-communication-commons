@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS } from '../lib/supabase'
 import type { Artifact, Commitment } from '../lib/supabase'
 import type { Session } from '@supabase/supabase-js'
+import { Plus } from 'lucide-react'
 
 interface Contribution {
   id: string
@@ -96,8 +97,8 @@ export function MyThread() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">My Thread</h1>
-        <Link to="/contribute" className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-4 py-2 rounded-lg text-sm transition-colors">
-          + Contribute
+        <Link to="/contribute" className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-4 py-2 rounded-lg text-sm transition-colors inline-flex items-center gap-1.5">
+          <Plus className="w-4 h-4" /> Contribute
         </Link>
       </div>
 

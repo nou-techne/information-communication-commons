@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { Zap, Check, Plus, Compass, ArrowRight, AlertCircle } from 'lucide-react'
 
 type ProcessingState = 'idle' | 'submitting' | 'extracting' | 'done' | 'error'
 
@@ -143,7 +144,7 @@ export function Contribute() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center py-16">
           <div className="w-16 h-16 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-6 animate-pulse">
-            <span className="text-[#c3fd50] text-2xl font-bold">⚡</span>
+            <Zap className="w-8 h-8 text-[#c3fd50]" />
           </div>
           <h2 className="text-xl font-bold mb-3">Extracting knowledge...</h2>
           <p className="text-gray-400 max-w-md mx-auto">
@@ -164,7 +165,7 @@ export function Contribute() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center py-16">
           <div className="w-16 h-16 rounded-full bg-[#c3fd50] flex items-center justify-center mx-auto mb-6">
-            <span className="text-[#0f0f0f] text-2xl font-bold">✓</span>
+            <Check className="w-8 h-8 text-[#0f0f0f]" strokeWidth={3} />
           </div>
           <h2 className="text-xl font-bold mb-3">Done! {artifactCount} {artifactCount === 1 ? 'artifact' : 'artifacts'} created</h2>
           <p className="text-gray-400 mb-6 max-w-md mx-auto">
