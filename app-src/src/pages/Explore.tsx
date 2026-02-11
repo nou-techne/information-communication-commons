@@ -139,7 +139,7 @@ export function Explore() {
       </div>
 
       {/* Dimensions */}
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-6">
         {DIMENSIONS.map(d => {
           const count = dimCounts[d.tag] ?? 0
           return (
