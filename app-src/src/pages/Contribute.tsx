@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { Zap, Check } from 'lucide-react'
+
+interface Session {
+  id: string
+  title: string
+  time_start: string | null
+}
 
 type ProcessingState = 'idle' | 'submitting' | 'extracting' | 'done' | 'error'
 
@@ -24,12 +30,34 @@ const CONVERGENCE_ID = '00000000-0000-0000-0000-000000000100'
 
 export function Contribute() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [text, setText] = useState('')
   const [state, setState] = useState<ProcessingState>('idle')
   const [error, setError] = useState('')
   const [contributionId, setContributionId] = useState<string | null>(null)
   const [artifactCount, setArtifactCount] = useState(0)
   const [createdArtifacts, setCreatedArtifacts] = useState<CreatedArtifact[]>([])
+  const [sessions, setSessions] = useState<Session[]>([])
+  const [sessionId, setSessionId] = useState<string>('')
+
+  // Load sessions and pre-select from query param
+  useEffect(() => {
+    loadSessions()
+    const preselectedSession = searchParams.get('session')
+    if (preselectedSession) {
+      setSessionId(preselectedSession)
+    }
+  }, [searchParams])
+
+  async function loadSessions() {
+    const { data } = await supabase
+      .from('sessions')
+      .select('id, title, time_start')
+      .eq('convergence_id', CONVERGENCE_ID)
+      .order('time_start', { ascending: true, nullsFirst: false })
+    
+    if (data) setSessions(data)
+  }
 
   // Real-time subscription to contribution status
   useEffect(() => {
@@ -116,13 +144,14 @@ export function Contribute() {
         }
       }
 
-      // Insert contribution with optional participant_id
+      // Insert contribution with optional participant_id and session_id
       const { data: newContribution, error: insertError } = await supabase
         .from('contributions')
         .insert({
           content: text,
           convergence_id: CONVERGENCE_ID,
           participant_id: participantId,
+          session_id: sessionId || null,
           status: 'pending',
         })
         .select('id')
@@ -219,6 +248,28 @@ export function Contribute() {
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {sessions.length > 0 && (
+          <div>
+            <label htmlFor="session-select" className="block text-sm font-medium text-gray-300 mb-2">
+              Session (optional)
+            </label>
+            <select
+              id="session-select"
+              value={sessionId}
+              onChange={e => setSessionId(e.target.value)}
+              className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#c3fd50]"
+            >
+              <option value="">No session</option>
+              {sessions.map(s => (
+                <option key={s.id} value={s.id}>
+                  {s.title}
+                  {s.time_start && ` — ${new Date(s.time_start).toLocaleDateString()}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div>
           <label htmlFor="contribution-text" className="sr-only">Your contribution</label>
           <textarea
