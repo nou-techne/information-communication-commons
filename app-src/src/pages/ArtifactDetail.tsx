@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact } from '../lib/supabase'
 import { ChevronLeft, MessageSquare, Link2 } from 'lucide-react'
+import { CoordinateButton } from '../components/CoordinateButton'
 
 const HLAMT_LABELS: Record<string, { letter: string; name: string; color: string }> = {
   'hlamt:e': { letter: 'e/', name: 'Ecology', color: '#4a8c6f' },
@@ -32,10 +33,18 @@ export function ArtifactDetail() {
   const [steward, setSteward] = useState<string | null>(null)
   const [sourceContribution, setSourceContribution] = useState<{ id: string; content: string; created_at: string } | null>(null)
   const [loading, setLoading] = useState(true)
+  const [participantId, setParticipantId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
     loadArtifact()
+    // Load current user's participant ID
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (user) {
+        const { data: p } = await supabase.from('participants').select('id').eq('auth_user_id', user.id).maybeSingle()
+        if (p) setParticipantId(p.id)
+      }
+    })
   }, [id])
 
   async function loadArtifact() {
@@ -145,6 +154,11 @@ export function ArtifactDetail() {
         {/* Title + Summary */}
         <h1 className="text-2xl font-bold mb-3 leading-tight">{artifact.title}</h1>
         {artifact.summary && <p className="text-gray-300 mb-4 leading-relaxed">{artifact.summary}</p>}
+
+        {/* Coordination signal */}
+        <div className="mb-4">
+          <CoordinateButton artifactId={artifact.id} participantId={participantId} />
+        </div>
 
         {/* Body */}
         {artifact.body && (

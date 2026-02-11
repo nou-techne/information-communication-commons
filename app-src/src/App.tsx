@@ -13,6 +13,7 @@ import { NotFound } from './pages/NotFound'
 import { Profile } from './pages/Profile'
 import { Status } from './pages/Status'
 import { Graph } from './pages/Graph'
+import { Coordinate } from './pages/Coordinate'
 import type { Session } from '@supabase/supabase-js'
 
 function Nav() {
@@ -29,8 +30,8 @@ function Nav() {
   const links = [
     { to: '/', label: 'Explore' },
     { to: '/contribute', label: 'Contribute' },
+    { to: '/coordinate', label: 'Coordinate' },
     { to: '/me', label: 'My Thread' },
-    { to: '/profile', label: 'Profile' },
   ]
 
   return (
@@ -143,6 +144,7 @@ export default function App() {
             <Route path="/contribute" element={<Contribute />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/graph" element={<Graph />} />
+            <Route path="/coordinate" element={<Coordinate />} />
             <Route path="/status" element={<Status />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
