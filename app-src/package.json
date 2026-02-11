@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "types:generate": "supabase gen types typescript --project-id hvbdpgkdcdskhpbdeeim > src/lib/database.types.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",

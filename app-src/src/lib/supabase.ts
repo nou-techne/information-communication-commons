@@ -1,9 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
+import type { Database } from './database.types'
 
 const supabaseUrl = 'https://hvbdpgkdcdskhpbdeeim.supabase.co'
 const supabaseAnonKey = 'sb_publishable_kB69BlNpkNhOllwGMOE6xg_i4l1VHMv'
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Sprint 35: Typed Supabase client using generated database types
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
 // Types
 export type ArtifactType = 'idea' | 'proposal' | 'commitment' | 'pattern' | 'synthesis' | 'question' | 'reflection'
