@@ -146,13 +146,13 @@ export function Explore() {
             <Link
               key={d.key}
               to={`/d/${d.key}`}
-              className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:border-[#c3fd50] transition-colors text-center group"
+              className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 sm:p-4 hover:border-[#c3fd50] transition-colors text-center group"
             >
-              <div className="flex items-baseline justify-center gap-1.5">
-                <span className="font-mono text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
-                <span className="text-2xl font-bold text-white">{count}</span>
+              <div className="flex items-baseline justify-center gap-1 sm:gap-1.5">
+                <span className="font-mono text-xl sm:text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
+                <span className="text-xl sm:text-2xl font-bold text-white">{count}</span>
               </div>
-              <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{d.desc}</span>
+              <span className="text-xs text-gray-400 group-hover:text-white transition-colors block truncate">{d.desc}</span>
             </Link>
           )
         })}
@@ -171,15 +171,15 @@ export function Explore() {
                 placeholder="Search artifacts..."
                 className="flex-1 bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm"
               />
-              <button onClick={doSearch} className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-4 py-2 rounded-lg transition-colors text-sm">
+              <button onClick={doSearch} className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm whitespace-nowrap">
                 Search
               </button>
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap items-center">
               <select
                 value={typeFilter}
                 onChange={e => setTypeFilter(e.target.value as ArtifactType | '')}
-                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white"
+                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="">All types</option>
                 {TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
@@ -187,13 +187,13 @@ export function Explore() {
               <select
                 value={stateFilter}
                 onChange={e => setStateFilter(e.target.value as ArtifactState | '')}
-                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white"
+                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="">All states</option>
                 {Object.entries(STATE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
               {(typeFilter || stateFilter || searchResults) && (
-                <button onClick={() => { setTypeFilter(''); setStateFilter(''); setSearch(''); setSearchResults(null); }} className="text-xs text-gray-400 hover:text-white">
+                <button onClick={() => { setTypeFilter(''); setStateFilter(''); setSearch(''); setSearchResults(null); }} className="text-xs text-gray-400 hover:text-white flex-shrink-0">
                   Clear
                 </button>
               )}

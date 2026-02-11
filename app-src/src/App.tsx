@@ -14,6 +14,7 @@ import type { Session } from '@supabase/supabase-js'
 function Nav() {
   const location = useLocation()
   const [session, setSession] = useState<Session | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
@@ -29,33 +30,97 @@ function Nav() {
 
   return (
     <nav className="bg-[#0f0f0f] border-b border-[#262626] px-4 py-3">
-      <div className="max-w-6xl mx-auto flex items-center justify-between relative">
-        <Link to="/" className="text-xl font-bold text-white tracking-tight">
-          <span className="text-[#c3fd50]">.id</span> Commons
-          <span className="text-[#c3fd50] text-xs font-normal ml-2">· ETHBoulder 2026</span>
-        </Link>
-        <div className="absolute left-1/2 -translate-x-1/2 flex gap-1">
-          {links.map(l => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
-                  ? 'bg-[#262626] text-white'
-                  : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
+      <div className="max-w-6xl mx-auto">
+        {/* Desktop nav */}
+        <div className="hidden md:flex items-center justify-between relative">
+          <Link to="/" className="text-xl font-bold text-white tracking-tight">
+            <span className="text-[#c3fd50]">.id</span> Commons
+            <span className="text-[#c3fd50] text-xs font-normal ml-2">· ETHBoulder 2026</span>
+          </Link>
+          <div className="absolute left-1/2 -translate-x-1/2 flex gap-1">
+            {links.map(l => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                  (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
+                    ? 'bg-[#262626] text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                }`}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+          <div className="text-sm">
+            {session ? (
+              <button onClick={() => supabase.auth.signOut()} className="text-gray-400 hover:text-white">
+                Sign out
+              </button>
+            ) : (
+              <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link>
+            )}
+          </div>
         </div>
-        <div className="text-sm">
-          {session ? (
-            <button onClick={() => supabase.auth.signOut()} className="text-gray-400 hover:text-white">
-              Sign out
+
+        {/* Mobile nav */}
+        <div className="md:hidden">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="text-lg font-bold text-white tracking-tight">
+              <span className="text-[#c3fd50]">.id</span> Commons
+            </Link>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="text-gray-400 hover:text-white p-2"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
             </button>
-          ) : (
-            <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link>
+          </div>
+          
+          {mobileMenuOpen && (
+            <div className="mt-3 pt-3 border-t border-[#262626] space-y-1">
+              {links.map(l => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
+                    location.pathname === l.to
+                      ? 'bg-[#262626] text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
+              <div className="pt-2 border-t border-[#262626]">
+                {session ? (
+                  <button
+                    onClick={() => { supabase.auth.signOut(); setMobileMenuOpen(false); }}
+                    className="block w-full text-left px-3 py-2 text-sm text-gray-400 hover:text-white"
+                  >
+                    Sign out
+                  </button>
+                ) : (
+                  <Link
+                    to="/auth"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 text-sm text-[#c3fd50] hover:text-white"
+                  >
+                    Sign in
+                  </Link>
+                )}
+              </div>
+            </div>
           )}
         </div>
       </div>

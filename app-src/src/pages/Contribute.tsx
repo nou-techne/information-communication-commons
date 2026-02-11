@@ -191,7 +191,7 @@ export function Contribute() {
             </div>
           )}
 
-          <div className="flex gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => { setState('idle'); setText(''); setContributionId(null); setCreatedArtifacts([]); setArtifactCount(0); }}
               className="px-6 py-2.5 bg-[#262626] text-white rounded-lg hover:bg-[#333333] transition-colors text-sm"
@@ -225,9 +225,9 @@ export function Contribute() {
             placeholder="What's on your mind? Session notes, an idea, a commitment, a reflection — just write. The AI will identify what kind of contribution this is, extract the key concepts, classify by e/H-LAM/T dimension, and connect it to the knowledge graph."
             rows={12}
             required
-            className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] resize-y leading-relaxed"
+            className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] resize-y leading-relaxed text-base"
           />
-          <div className="flex justify-between mt-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2 mt-2">
             <span className="text-xs text-gray-600">
               AI classifies contribution type, extracts artifacts, and records relationships automatically.
             </span>
