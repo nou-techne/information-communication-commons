@@ -40,7 +40,15 @@ IMPORTANT: "dimension" must be one of EXACTLY: "temporal", "social", "thematic",
 
 ## Output Schema
 
-{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "type": "idea|proposal|commitment|question|pattern|reflection", "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value"}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
+{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "type": "idea|proposal|commitment|question|pattern|reflection", "confidence": 0.0-1.0, "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value"}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
+
+## Confidence Scoring
+Rate each artifact 0.0-1.0 for extraction confidence:
+- 1.0: Explicitly stated, unambiguous
+- 0.7-0.9: Clearly implied, minor inference
+- 0.4-0.6: Moderate inference required
+- 0.1-0.3: Speculative, loosely derived
+Only extract artifacts with confidence >= 0.4. Quality over quantity.
 
 ## Guidance
 
@@ -187,6 +195,52 @@ serve(async (req) => {
       await logError(supabase, contributionId, 'json_parse', `Invalid JSON: ${String(error)}. Raw: ${extractionText.substring(0, 200)}`)
       throw new Error(`JSON parse failed: ${error}`)
     }
+
+    // Validate extraction structure
+    const validTypes = ['idea', 'proposal', 'commitment', 'question', 'pattern', 'reflection']
+    const validReaRoles = ['resource', 'event', 'agent']
+    const validAgentTypes = ['human', 'non-human']
+    const validRelTypes = ['builds_on', 'extends', 'contradicts', 'related_to']
+
+    if (extraction.artifacts && Array.isArray(extraction.artifacts)) {
+      extraction.artifacts = extraction.artifacts.filter((a: any) => {
+        // Must have title and summary
+        if (!a.title || !a.summary) return false
+        // Validate type
+        if (a.type && !validTypes.includes(a.type)) a.type = 'idea'
+        // Validate rea_role
+        if (a.rea_role && !validReaRoles.includes(a.rea_role)) a.rea_role = 'resource'
+        // Validate agent_type
+        if (a.agent_type && !validAgentTypes.includes(a.agent_type)) delete a.agent_type
+        // Filter low confidence if present
+        if (typeof a.confidence === 'number' && a.confidence < 0.4) return false
+        // Ensure tags is an array
+        if (!Array.isArray(a.tags)) a.tags = []
+        // Ensure at least one hlamt tag
+        const hasHlamt = a.tags.some((t: string) => t.startsWith('hlamt:'))
+        if (!hasHlamt) a.tags.push('hlamt:A')
+        return true
+      })
+    }
+
+    if (extraction.relationships && Array.isArray(extraction.relationships)) {
+      extraction.relationships = extraction.relationships.filter((r: any) => {
+        if (!r.from_title || !r.to_title) return false
+        if (r.type && !validRelTypes.includes(r.type)) r.type = 'related_to'
+        return true
+      })
+    }
+
+    // Log validation stats
+    const stats = {
+      artifacts: extraction.artifacts?.length ?? 0,
+      relationships: extraction.relationships?.length ?? 0,
+      commitments: extraction.commitments?.length ?? 0,
+      avgConfidence: extraction.artifacts?.length > 0
+        ? (extraction.artifacts.reduce((sum: number, a: any) => sum + (a.confidence || 0.7), 0) / extraction.artifacts.length).toFixed(2)
+        : 'N/A'
+    }
+    console.log(`Extraction validated: ${JSON.stringify(stats)}`)
 
     // Call ingest_extraction RPC
     let data, error
