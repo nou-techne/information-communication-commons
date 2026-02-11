@@ -6,6 +6,64 @@ Format: [Semantic Versioning](https://semver.org/). Each entry includes sprint r
 
 ---
 
+## [0.14.0] — 2026-02-11
+
+### Cycle 5 Complete + Cycle 6 Ebb Start (Sprints 42-51)
+
+**Sprint 42: Accessibility Baseline** (Frontend & DevOps Engineer)
+- ARIA labels on search link, mobile menu
+- Form labels with sr-only class (contribution textarea, search input)
+- `docs/ACCESSIBILITY_AUDIT.md` with comprehensive remediation guidance
+
+**Sprint 43: Integration Test Suite (DEFERRED)** (QA & Test Engineer)
+- Comprehensive test plan in `docs/INTEGRATION_TESTS.md`
+- 10+ Playwright tests specified, CI integration guide
+- Implementation deferred to post-ETHBoulder (Feb 17+)
+
+**Sprint 44: Error Boundary & Logging** (Frontend & DevOps Engineer)
+- React ErrorBoundary wrapping all routes
+- `client_errors` table with RLS, error logging with stack traces
+- Recovery UI with reload/home options
+
+**Sprint 45: Session Model** (Schema Architect)
+- Enhanced sessions table (track, speakers, session_type, tags)
+- `session_stats` view, `get_session_detail()` RPC function
+- Contributions and artifacts can be tagged to sessions
+
+**Sprint 46: Session-Scoped Contributions** (Frontend & DevOps Engineer)
+- SessionDetail page (`/session/:id`)
+- Contribute form with optional session selector
+- "Contribute to this session" button with query param pre-fill
+
+**Sprint 47: Analytics Dashboard (DEFERRED)** (Product Engineer)
+- Comprehensive plan in `docs/ANALYTICS_DASHBOARD.md`
+- 4+ chart types, SQL queries, real-time updates specified
+- Implementation deferred to post-ETHBoulder (Feb 17+)
+
+**Sprint 48: Public Stats Page** (Frontend & DevOps Engineer)
+- `/stats` route with real-time convergence statistics
+- 5 core metrics, top dimensions and types with bar charts
+- Loads <2s, updates via Supabase real-time
+
+**Sprint 49: Full-Text Search Index (ALREADY IMPLEMENTED)** (Backend Engineer)
+- Documentation in `docs/SEARCH_IMPLEMENTATION.md`
+- PostgreSQL tsvector with GIN indexes (predates sprint)
+- `search_content()` RPC, ts_rank scoring, ts_headline snippets
+
+**Sprint 50: Search UI Enhancement (DEFERRED)** (Frontend & DevOps Engineer)
+- Comprehensive plan in `docs/SEARCH_UI_ENHANCEMENTS.md`
+- Autocomplete, recent searches, faceted filters specified
+- Implementation deferred to post-ETHBoulder (Feb 17+)
+
+**Sprint 51: Keyboard Navigation (DEFERRED)** (Frontend & DevOps Engineer)
+- Comprehensive plan in `docs/KEYBOARD_NAVIGATION.md`
+- Global shortcuts, focus indicators, skip links specified
+- Implementation deferred to post-ETHBoulder (Feb 17+)
+
+**Strategic Deferrals:** 4 sprints (43, 47, 50, 51) deferred with comprehensive implementation plans for post-event completion based on real usage patterns
+
+---
+
 ## [0.13.0] — 2026-02-11
 
 ### Cycle 4 Complete (Sprints 32-41)
