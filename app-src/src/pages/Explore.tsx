@@ -226,6 +226,7 @@ export function Explore() {
       </div>
 
       {/* Dimensions */}
+      <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Graph Dimensions</h2>
       <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-6">
         {DIMENSIONS.map(d => {
           const count = dimCounts[d.tag] ?? 0
