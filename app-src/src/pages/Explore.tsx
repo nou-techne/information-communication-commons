@@ -205,6 +205,7 @@ export function Explore() {
               to={`/d/${d.key}`}
               className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 sm:p-4 hover:border-[#c3fd50] transition-colors text-center group"
             >
+              <div className="text-xs font-medium mb-1 truncate" style={{ color: d.color }}>{d.name}</div>
               <div className="flex items-baseline justify-center gap-1 sm:gap-1.5">
                 <span className="font-mono text-xl sm:text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
                 <span className="text-xl sm:text-2xl font-bold text-white">{count}</span>
