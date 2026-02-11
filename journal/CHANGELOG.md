@@ -6,6 +6,58 @@ Format: [Semantic Versioning](https://semver.org/). Each entry includes sprint r
 
 ---
 
+## [0.13.0] — 2026-02-11
+
+### Cycle 4 Complete (Sprints 32-41)
+
+**Sprint 32: Convergence Templates** (Schema Architect)
+- `convergence_templates` table with 4 seed templates
+- `create_convergence_from_template()` function
+
+**Sprint 33: CI/CD Pipeline** (Frontend & DevOps Engineer)
+- GitHub Actions workflows for lint/typecheck/build/test on PR
+- Preview deploys on branch push
+- Status: Disabled Feb 11, moved to `workflows-disabled/`
+
+**Sprint 34: Testing Framework** (Frontend & DevOps Engineer)
+- Vitest setup with 27 unit tests (extraction, dimensions)
+- All tests passing in CI
+
+**Sprint 35: TypeScript Strict Mode** (Schema Architect)
+- Generated Supabase database types (`database.types.ts`)
+- `npm run types:generate` script
+- Decision: Reverted to untyped client, progressive adoption planned
+
+**Sprint 36: API Route Documentation** (Product Owner)
+- Comprehensive `docs/API.md` for Edge Functions and RPC functions
+
+**Sprint 37: Graph Data Model Refinement** (Schema Architect)
+- Added `supports` and `implements` relationship types
+- Edge weights (0-1) on artifact_relationships
+- Updated `get_graph_data()` function
+
+**Sprint 38: Interactive Graph Explorer** (Frontend & DevOps Engineer)
+- Increased node limit to 200 artifacts / 400 relationships
+- Full-page graph with zoom, pan, selection, tooltips
+- Fix: White screen resolved (querying correct hlamt tags)
+
+**Sprint 39: Graph Clustering** (Event Systems Engineer)
+- Community detection via connected components
+- Cluster coloring (HSL hue from cluster_id hash)
+- Keyword labeling, legend with top 8 clusters
+- `get_graph_clusters()` RPC + `artifact_clusters` view
+
+**Sprint 40: Graph Filters & Legend** (Frontend & DevOps Engineer)
+- Collapsible filter panel (type + dimension multi-select)
+- Clear all button, filter state persistence
+
+**Sprint 41: Lighthouse Performance Audit** (Frontend & DevOps Engineer)
+- Route-based code splitting for Graph (73kB), Dashboard (6kB), Status (8kB)
+- Main bundle reduced 500+kB → 498kB
+- `docs/LIGHTHOUSE_AUDIT.md` with full recommendations
+
+---
+
 ## [0.11.0] — 2026-02-11
 
 ### Cycle 2 Complete (Sprints 23-31)
