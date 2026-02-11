@@ -6,6 +6,64 @@ Format: [Semantic Versioning](https://semver.org/). Each entry includes sprint r
 
 ---
 
+## [0.15.0] — 2026-02-11
+
+### Cycle 6 Complete + Cycle 7 Ebb (Sprints 52-61)
+
+**Sprint 52: Component Library Documentation (DEFERRED)** (Technical Lead)
+- Comprehensive plan for documenting shared components with props, examples
+- Design tokens (colors, spacing, radius) extracted
+- TypeScript types provide sufficient inline documentation for single developer
+
+**Sprint 53: Public REST API v1 (DEFERRED)** (Backend Engineer)
+- Full API design with 5+ endpoints (artifacts, contributions, participants, dimensions, search)
+- API key authentication, rate limiting (1000 req/hour), OpenAPI spec
+- Supabase PostgREST available for immediate needs
+
+**Sprint 54: Webhook Events (DEFERRED)** (Event Systems Engineer)
+- 7 event types with HMAC signatures, exponential backoff retry logic
+- pg_net for async HTTP from database triggers
+- Delivery logging and subscription management
+
+**Sprint 55: Embed Widget (DEFERRED)** (Frontend & DevOps Engineer)
+- 4 widget types (activity feed, stats, graph, session)
+- Single script bundle, real-time Supabase subscriptions, configurable themes
+- Iframe option for security isolation
+
+**Sprint 56: TypeScript SDK (DEFERRED)** (Integration Engineer)
+- Full SDK wrapping REST API with TypeScript types
+- Resource classes for all endpoints, error handling, examples
+- npm package @commons-id/sdk ready to publish
+
+**Sprint 57: Channel Data Model (DEFERRED)** (Schema Architect)
+- Channels table with 5 types (general, dimension, session, topic, meta)
+- Default channels auto-created, RLS policies, stats views
+- Part of Communication Layer (Cycle 7)
+
+**Sprint 58: Thread Data Model (DEFERRED)** (Schema Architect)
+- Threads table with 5 lifecycle states (open → tagged → resolved → consolidated → archived)
+- `consolidate_thread()` function transforms conversation → artifact
+- State transitions enforced by CHECK constraints
+
+**Sprint 59: Message Data Model (DEFERRED)** (Backend Engineer)
+- Messages table with 3 types (text, contribution, system)
+- Reactions, mentions, parent-child nesting (max 3 levels)
+- `convert_message_to_contribution()` integrates with existing extraction pipeline
+
+**Sprint 60: Real-Time Subscription Architecture (DEFERRED)** (Event Systems Engineer)
+- Supabase Realtime strategy: per-channel subscriptions for scalability
+- Presence tracking, typing indicators, optimistic updates
+- Connection management with exponential backoff reconnection
+
+**Sprint 61: Channel List & Creation UI (DEFERRED)** (Frontend & DevOps Engineer)
+- Channel sidebar with grouping by type, create channel modal
+- Real-time updates, mobile responsive with collapsible sidebar
+- Routes: /channels and /channels/:slug
+
+**Strategic Achievement:** Cycle 6 (API & Extensibility) COMPLETE. Cycle 7 Ebb (Communication Data Layer) COMPLETE. 19 total deferred sprints with 100+ pages of implementation-ready plans.
+
+---
+
 ## [0.14.0] — 2026-02-11
 
 ### Cycle 5 Complete + Cycle 6 Ebb Start (Sprints 42-51)
