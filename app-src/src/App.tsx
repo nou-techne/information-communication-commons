@@ -18,6 +18,7 @@ import { Search } from './pages/Search'
 import { ContributionDetail } from './pages/ContributionDetail'
 import { ParticipantProfile } from './pages/ParticipantProfile'
 import { SessionDetail } from './pages/SessionDetail'
+import { Stats } from './pages/Stats'
 import type { Session } from '@supabase/supabase-js'
 
 // Sprint 41: Lazy load heavy pages for code splitting
@@ -178,6 +179,7 @@ export default function App() {
               <Route path="/search" element={<Search />} />
               <Route path="/p/:id" element={<ParticipantProfile />} />
               <Route path="/session/:id" element={<SessionDetail />} />
+              <Route path="/stats" element={<Stats />} />
               <Route path="/status" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Status /></Suspense>} />
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />
