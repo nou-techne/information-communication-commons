@@ -16,6 +16,7 @@ import { Graph } from './pages/Graph'
 import { Coordinate } from './pages/Coordinate'
 import Dashboard from './pages/Dashboard'
 import { Search } from './pages/Search'
+import { ContributionDetail } from './pages/ContributionDetail'
 import type { Session } from '@supabase/supabase-js'
 
 function Nav() {
@@ -159,6 +160,7 @@ export default function App() {
             <Route path="/me" element={<MyThread />} />
             <Route path="/contribute" element={<Contribute />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/contribution/:id" element={<ContributionDetail />} />
             <Route path="/graph" element={<Graph />} />
             <Route path="/coordinate" element={<Coordinate />} />
             <Route path="/dashboard" element={<Dashboard />} />

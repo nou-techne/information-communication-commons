@@ -1,0 +1,274 @@
+import { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { supabase, ARTIFACT_COLORS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
+import type { Artifact } from '../lib/supabase'
+import { ArrowLeft, Clock, User, Loader2 } from 'lucide-react'
+
+interface Contribution {
+  id: string
+  content: string
+  status: string
+  participant_id: string | null
+  extraction: any
+  created_at: string
+  processed_at: string | null
+  errors: any
+}
+
+const DIMENSIONS = [
+  { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f', tag: 'hlamt:E' },
+  { key: 'H', letter: 'H/', name: 'Human', desc: "Who's Here", color: '#c4956a', tag: 'hlamt:H' },
+  { key: 'L', letter: 'L/', name: 'Language', desc: 'How We Talk', color: '#c3fd50', tag: 'hlamt:L' },
+  { key: 'A', letter: 'A/', name: 'Artifacts', desc: "What We're Building", color: '#8bbfff', tag: 'hlamt:A' },
+  { key: 'M', letter: 'M/', name: 'Methodology', desc: 'How We Work', color: '#7ccfb8', tag: 'hlamt:M' },
+  { key: 'T', letter: 'T/', name: 'Training', desc: "What We're Learning", color: '#e8927c', tag: 'hlamt:T' },
+]
+
+function timeAgo(date: string) {
+  const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
+  if (s < 60) return `${s}s ago`
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
+  return `${Math.floor(s / 86400)}d ago`
+}
+
+export function ContributionDetail() {
+  const { id } = useParams<{ id: string }>()
+  const [contribution, setContribution] = useState<Contribution | null>(null)
+  const [artifacts, setArtifacts] = useState<Artifact[]>([])
+  const [dimCounts, setDimCounts] = useState<Record<string, number>>({})
+  const [loading, setLoading] = useState(true)
+  const [participantName, setParticipantName] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (id) loadContribution(id)
+  }, [id])
+
+  async function loadContribution(contribId: string) {
+    setLoading(true)
+
+    // Fetch contribution
+    const { data: contrib } = await supabase
+      .from('contributions')
+      .select('*')
+      .eq('id', contribId)
+      .single()
+
+    if (!contrib) {
+      setLoading(false)
+      return
+    }
+
+    setContribution(contrib as Contribution)
+
+    // Fetch participant name
+    if (contrib.participant_id) {
+      const { data: participant } = await supabase
+        .from('participants')
+        .select('name')
+        .eq('id', contrib.participant_id)
+        .single()
+      if (participant) setParticipantName(participant.name)
+    }
+
+    // Find artifacts extracted from this contribution
+    // Match by titles in extraction JSON and creation time near processed_at
+    const extractedArtifacts: Artifact[] = []
+    if (contrib.extraction?.artifacts && contrib.processed_at) {
+      const titles = (contrib.extraction.artifacts as any[]).map((a: any) => a.title).filter(Boolean)
+      if (titles.length > 0) {
+        const { data: arts } = await supabase
+          .from('artifacts')
+          .select('*')
+          .in('title', titles)
+          .order('created_at', { ascending: false })
+        if (arts) extractedArtifacts.push(...(arts as Artifact[]))
+      }
+    }
+
+    setArtifacts(extractedArtifacts)
+
+    // Count dimensions from extracted artifacts' tags
+    if (extractedArtifacts.length > 0) {
+      const artifactIds = extractedArtifacts.map(a => a.id)
+      const { data: tags } = await supabase
+        .from('artifact_tags')
+        .select('tag_id, tags(name)')
+        .in('artifact_id', artifactIds)
+
+      const counts: Record<string, number> = {}
+      if (tags) {
+        for (const t of tags) {
+          const tagName = (t as any).tags?.name
+          if (tagName?.startsWith('hlamt:')) {
+            counts[tagName] = (counts[tagName] || 0) + 1
+          }
+        }
+      }
+
+      // Also count agents for H/ dimension
+      const agentCount = extractedArtifacts.filter(a => a.rea_role === 'agent').length
+      if (agentCount > 0) {
+        counts['hlamt:H'] = (counts['hlamt:H'] || 0) + agentCount
+      }
+
+      setDimCounts(counts)
+    }
+
+    setLoading(false)
+  }
+
+  if (loading) {
+    return (
+      <div className="text-center py-12">
+        <Loader2 className="w-8 h-8 text-gray-500 mx-auto animate-spin" />
+      </div>
+    )
+  }
+
+  if (!contribution) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-400">Contribution not found</p>
+        <Link to="/" className="text-[#c3fd50] hover:text-white text-sm mt-2 inline-block">Back to Explore</Link>
+      </div>
+    )
+  }
+
+  const hasExtractions = artifacts.length > 0
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      {/* Back link */}
+      <Link to="/" className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white text-sm mb-6">
+        <ArrowLeft className="w-4 h-4" />
+        Back to Explore
+      </Link>
+
+      {/* Contribution header */}
+      <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <span className={`w-2.5 h-2.5 rounded-full ${
+            contribution.status === 'complete' ? 'bg-[#c3fd50]' :
+            contribution.status === 'processing' ? 'bg-blue-400 animate-pulse' :
+            contribution.status === 'error' ? 'bg-red-400' : 'bg-yellow-400'
+          }`} />
+          <span className="text-sm text-gray-400 capitalize">{contribution.status}</span>
+          <span className="text-gray-600">|</span>
+          <Clock className="w-3.5 h-3.5 text-gray-500" />
+          <span className="text-sm text-gray-400">{timeAgo(contribution.created_at)}</span>
+          {participantName && (
+            <>
+              <span className="text-gray-600">|</span>
+              <User className="w-3.5 h-3.5 text-gray-500" />
+              <span className="text-sm text-gray-400">{participantName}</span>
+            </>
+          )}
+        </div>
+        <div className="text-gray-200 whitespace-pre-wrap leading-relaxed">
+          {contribution.content}
+        </div>
+      </div>
+
+      {/* Dimension cards for this contribution */}
+      {hasExtractions && (
+        <>
+          <h2 className="text-lg font-semibold mb-3">Observation Dimensions</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-6">
+            {DIMENSIONS.map(d => {
+              const count = dimCounts[d.tag] ?? 0
+              return (
+                <div
+                  key={d.key}
+                  className={`rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 sm:p-4 text-center ${
+                    count > 0 ? 'border-opacity-100' : 'opacity-40'
+                  }`}
+                  style={count > 0 ? { borderColor: d.color + '40' } : undefined}
+                >
+                  <div className="text-xs font-medium mb-1 truncate" style={{ color: d.color }}>{d.name}</div>
+                  <div className="flex items-baseline justify-center gap-1 sm:gap-1.5">
+                    <span className="font-mono text-xl sm:text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
+                    <span className="text-xl sm:text-2xl font-bold text-white">{count}</span>
+                  </div>
+                  <span className="text-xs text-gray-400 block truncate">{d.desc}</span>
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )}
+
+      {/* Extracted artifacts */}
+      {hasExtractions && (
+        <>
+          <h2 className="text-lg font-semibold mb-3">Extracted Artifacts</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+            {artifacts.map(a => (
+              <Link
+                key={a.id}
+                to={`/artifact/${a.id}`}
+                className="block bg-[#1a1a1a] border border-[#262626] rounded-xl p-4 hover:border-[#c3fd50] transition-colors group"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span
+                    className="inline-block w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: ARTIFACT_COLORS[a.type] }}
+                  />
+                  <span className="text-xs uppercase tracking-wider text-gray-400">{a.type}</span>
+                  {a.rea_role && (
+                    <span
+                      className="text-xs px-1.5 py-0.5 rounded border"
+                      style={{ color: REA_COLORS[a.rea_role], borderColor: REA_COLORS[a.rea_role] + '40' }}
+                    >
+                      {REA_LABELS[a.rea_role]}
+                    </span>
+                  )}
+                  {a.agent_type && (
+                    <span
+                      className="text-xs px-1.5 py-0.5 rounded border"
+                      style={{ color: AGENT_TYPE_COLORS[a.agent_type], borderColor: AGENT_TYPE_COLORS[a.agent_type] + '40' }}
+                    >
+                      {AGENT_TYPE_LABELS[a.agent_type]}
+                    </span>
+                  )}
+                </div>
+                <h3 className="font-semibold text-white group-hover:text-[#c3fd50] transition-colors mb-1 text-sm">
+                  {a.title}
+                </h3>
+                {a.summary && (
+                  <p className="text-xs text-gray-400 line-clamp-2">{a.summary}</p>
+                )}
+              </Link>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Processing state */}
+      {contribution.status === 'processing' && (
+        <div className="bg-[#1a1a1a] border border-blue-500/20 rounded-lg p-6 text-center">
+          <Loader2 className="w-8 h-8 text-blue-400 mx-auto mb-3 animate-spin" />
+          <p className="text-gray-300">Extracting knowledge from this contribution...</p>
+          <p className="text-sm text-gray-500 mt-1">Artifacts will appear here when processing completes.</p>
+        </div>
+      )}
+
+      {/* Error state */}
+      {contribution.status === 'error' && (
+        <div className="bg-[#1a1a1a] border border-red-500/20 rounded-lg p-6">
+          <p className="text-red-400 mb-2">Extraction failed</p>
+          {contribution.errors && (
+            <pre className="text-xs text-gray-500 overflow-x-auto">{JSON.stringify(contribution.errors, null, 2)}</pre>
+          )}
+        </div>
+      )}
+
+      {/* Pending state */}
+      {contribution.status === 'pending' && (
+        <div className="bg-[#1a1a1a] border border-yellow-500/20 rounded-lg p-6 text-center">
+          <p className="text-yellow-400">Waiting to be processed...</p>
+        </div>
+      )}
+    </div>
+  )
+}

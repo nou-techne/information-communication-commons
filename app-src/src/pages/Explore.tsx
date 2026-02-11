@@ -336,7 +336,7 @@ export function Explore() {
           ) : (
             <div className="space-y-1.5">
               {feedItems.map(item => (
-                <div key={item.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-3">
+                <Link to={`/contribution/${item.id}`} key={item.id} className="block bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className={`w-1.5 h-1.5 rounded-full ${
                       item.status === 'complete' ? 'bg-[#c3fd50]' : 
@@ -367,7 +367,7 @@ export function Explore() {
                   {item.status === 'error' && (
                     <span className="text-xs text-red-400">Extraction failed</span>
                   )}
-                </div>
+                </Link>
               ))}
             </div>
           )}
