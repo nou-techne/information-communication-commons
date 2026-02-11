@@ -71,8 +71,8 @@ export function Graph() {
   useEffect(() => {
     async function loadGraph() {
       const [{ data: artifacts }, { data: relationships }, { data: artifactDimensions }] = await Promise.all([
-        supabase.from('artifacts').select('id, title, type, rea_role').order('created_at', { ascending: false }).limit(100),
-        supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(200),
+        supabase.from('artifacts').select('id, title, type, rea_role').order('created_at', { ascending: false }).limit(200),
+        supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(400),
         supabase.from('artifact_dimensions').select('artifact_id, dimension, key, weight'),
       ])
 
