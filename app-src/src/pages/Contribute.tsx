@@ -243,8 +243,11 @@ export function Contribute() {
   return (
     <div className="max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-2">Contribute</h1>
-      <p className="text-gray-400 text-sm mb-6">
-        Share what you observed, learned, built, or committed to. Write naturally — AI will figure out the rest.
+      <p className="text-gray-400 text-sm mb-2">
+        Share what you observed, learned, or committed to. Write naturally — AI extracts the structure.
+      </p>
+      <p className="text-gray-500 text-xs mb-6">
+        First time? <a href="/app/welcome" className="text-[#c3fd50] hover:underline">See how it works</a>
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -276,7 +279,7 @@ export function Contribute() {
             id="contribution-text"
             value={text}
             onChange={e => setText(e.target.value)}
-            placeholder="What's on your mind? Session notes, an idea, a commitment, a reflection — just write. The AI will identify what kind of contribution this is, extract the key concepts, classify by e/H-LAM/T dimension, and connect it to the knowledge graph."
+            placeholder="What happened? What did you learn? What are you going to do about it?&#10;&#10;Write about a session you just attended, an idea someone sparked, a commitment you're making, or a pattern you're noticing across conversations.&#10;&#10;A paragraph or two is ideal. Name people and projects when you can — it helps build the graph."
             rows={12}
             required
             className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] resize-y leading-relaxed text-base"
