@@ -1,8 +1,23 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
-import type { Artifact, ArtifactType, ArtifactState, Event } from '../lib/supabase'
-import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch } from 'lucide-react'
+import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
+import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, GitCommit } from 'lucide-react'
+
+interface ContributionFeedItem {
+  id: string
+  content: string
+  status: string
+  participant_id: string | null
+  participant_name: string | null
+  created_at: string
+  processed_at: string | null
+  edge_count: number
+  artifact_count: number
+  relationship_count: number
+  commitment_count: number
+  preview: string
+}
 
 const TYPES: ArtifactType[] = ['idea', 'proposal', 'commitment', 'pattern', 'synthesis', 'question', 'reflection']
 
@@ -33,7 +48,7 @@ export function Explore() {
   const [searchResults, setSearchResults] = useState<Artifact[] | null>(null)
 
   // Pulse state
-  const [events, setEvents] = useState<Event[]>([])
+  const [feedItems, setFeedItems] = useState<ContributionFeedItem[]>([])
 
   // Dimension counts
   const [dimCounts, setDimCounts] = useState<Record<string, number>>({})
@@ -50,34 +65,16 @@ export function Explore() {
       })
       .subscribe()
 
-    const eventSub = supabase.channel('explore-events')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'events' }, payload => {
-        setEvents(prev => [payload.new as Event, ...prev].slice(0, 30))
-      })
-
-      .subscribe()
-
-    const commitmentSub = supabase.channel('explore-commitments')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'commitments' }, payload => {
-        const e: Event = {
-          id: crypto.randomUUID(),
-          type: 'committed',
-          entity_type: 'commitment',
-          entity_id: (payload.new as any).id,
-          actor_type: 'human',
-          actor_id: (payload.new as any).participant_id,
-          data: { description: (payload.new as any).description },
-          convergence_id: null,
-          created_at: new Date().toISOString(),
-        }
-        setEvents(prev => [e, ...prev].slice(0, 30))
+    const contributionSub = supabase.channel('explore-contributions')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'contributions' }, () => {
+        // Reload feed on any contribution change (insert or update when processed)
+        loadFeed()
       })
       .subscribe()
 
     return () => {
       supabase.removeChannel(artifactSub)
-      supabase.removeChannel(eventSub)
-      supabase.removeChannel(commitmentSub)
+      supabase.removeChannel(contributionSub)
     }
   }, [])
 
@@ -102,14 +99,20 @@ export function Explore() {
     setDimCounts(c)
   }
 
+  async function loadFeed() {
+    const { data: feed } = await supabase
+      .from('contribution_feed')
+      .select('*')
+      .limit(30)
+    setFeedItems((feed as ContributionFeedItem[]) || [])
+  }
+
   async function loadData() {
-    const [{ data: arts }, { data: evts }] = await Promise.all([
+    const [{ data: arts }] = await Promise.all([
       supabase.from('artifacts').select('*').order('created_at', { ascending: false }).limit(50),
-      supabase.from('events').select('*').order('created_at', { ascending: false }).limit(20),
     ])
     setArtifacts(arts || [])
-    setEvents(evts || [])
-    await refreshDimCounts()
+    await Promise.all([loadFeed(), refreshDimCounts()])
     setLoading(false)
   }
 
@@ -324,24 +327,44 @@ export function Explore() {
           )}
         </div>
 
-        {/* Right: Activity Feed (Pulse) */}
+        {/* Right: Contribution Feed */}
         <div>
           <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Live Activity</h2>
-          {events.length === 0 ? (
-            <div className="text-gray-500 text-center py-8 text-sm">No activity yet</div>
+          {feedItems.length === 0 ? (
+            <div className="text-gray-500 text-center py-8 text-sm">No contributions yet</div>
           ) : (
             <div className="space-y-1.5">
-              {events.map(e => (
-                <div key={e.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-2.5">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#c3fd50]" />
-                    <span className="text-xs font-medium text-white capitalize">{e.type}</span>
-                    <span className="text-xs text-gray-600 ml-auto">{timeAgo(e.created_at)}</span>
+              {feedItems.map(item => (
+                <div key={item.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${
+                      item.status === 'complete' ? 'bg-[#c3fd50]' : 
+                      item.status === 'processing' ? 'bg-blue-400 animate-pulse' : 
+                      item.status === 'error' ? 'bg-red-400' : 'bg-yellow-400'
+                    }`} />
+                    {item.participant_name && (
+                      <span className="text-xs font-medium text-gray-300 truncate">{item.participant_name}</span>
+                    )}
+                    <span className="text-xs text-gray-600 ml-auto flex-shrink-0">{timeAgo(item.created_at)}</span>
                   </div>
-                  {e.data && (typeof e.data === 'object') && (
-                    <p className="text-xs text-gray-400 truncate pl-3.5">
-                      {(e.data as any).title || (e.data as any).description || (e.data as any).summary || ''}
-                    </p>
+                  <p className="text-xs text-gray-400 line-clamp-2 mb-1.5">{item.preview}</p>
+                  {item.status === 'complete' && item.edge_count > 0 && (
+                    <div className="flex items-center gap-1.5">
+                      <GitCommit className="w-3 h-3 text-[#c3fd50]" />
+                      <span className="text-xs font-mono text-[#c3fd50]">{item.edge_count}</span>
+                      <span className="text-xs text-gray-600">
+                        {item.edge_count === 1 ? 'edge' : 'edges'}
+                      </span>
+                      <span className="text-xs text-gray-700 ml-1">
+                        ({item.artifact_count}a {item.relationship_count}r {item.commitment_count}c)
+                      </span>
+                    </div>
+                  )}
+                  {item.status === 'processing' && (
+                    <span className="text-xs text-blue-400">Extracting...</span>
+                  )}
+                  {item.status === 'error' && (
+                    <span className="text-xs text-red-400">Extraction failed</span>
                   )}
                 </div>
               ))}
