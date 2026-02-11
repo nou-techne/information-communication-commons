@@ -3,6 +3,7 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import { supabase } from './lib/supabase'
 import { Menu, X, Search as SearchIcon } from 'lucide-react'
 import { ConvergenceProvider, useConvergence } from './contexts/ConvergenceContext'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { Explore } from './pages/Explore'
 import { ArtifactDetail } from './pages/ArtifactDetail'
 import { MyThread } from './pages/MyThread'
@@ -160,24 +161,26 @@ export default function App() {
         <div className="min-h-screen bg-[#0f0f0f] text-white">
           <Nav />
           <main className="max-w-6xl mx-auto px-4 py-6">
-          <Routes>
-            <Route path="/" element={<Explore />} />
-            <Route path="/dimensions" element={<Dimensions />} />
-            <Route path="/d/:dimension" element={<DimensionView />} />
-            <Route path="/artifact/:id" element={<ArtifactDetail />} />
-            <Route path="/me" element={<MyThread />} />
-            <Route path="/contribute" element={<Contribute />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/contribution/:id" element={<ContributionDetail />} />
-            <Route path="/graph" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Graph /></Suspense>} />
-            <Route path="/coordinate" element={<Coordinate />} />
-            <Route path="/dashboard" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Dashboard /></Suspense>} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/p/:id" element={<ParticipantProfile />} />
-            <Route path="/status" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Status /></Suspense>} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<Explore />} />
+              <Route path="/dimensions" element={<Dimensions />} />
+              <Route path="/d/:dimension" element={<DimensionView />} />
+              <Route path="/artifact/:id" element={<ArtifactDetail />} />
+              <Route path="/me" element={<MyThread />} />
+              <Route path="/contribute" element={<Contribute />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/contribution/:id" element={<ContributionDetail />} />
+              <Route path="/graph" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Graph /></Suspense>} />
+              <Route path="/coordinate" element={<Coordinate />} />
+              <Route path="/dashboard" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Dashboard /></Suspense>} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/p/:id" element={<ParticipantProfile />} />
+              <Route path="/status" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Status /></Suspense>} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ErrorBoundary>
         </main>
       </div>
       </ConvergenceProvider>
