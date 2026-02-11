@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase, ARTIFACT_COLORS, STATE_LABELS } from '../lib/supabase'
+import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState, Event } from '../lib/supabase'
 
 const TYPES: ArtifactType[] = ['idea', 'proposal', 'commitment', 'pattern', 'synthesis', 'question', 'reflection']
@@ -217,6 +217,14 @@ export function Explore() {
                       style={{ backgroundColor: ARTIFACT_COLORS[a.type] }}
                     />
                     <span className="text-xs uppercase tracking-wider text-gray-400">{a.type}</span>
+                    {a.rea_role && (
+                      <span
+                        className="text-xs px-1.5 py-0.5 rounded border"
+                        style={{ color: REA_COLORS[a.rea_role], borderColor: REA_COLORS[a.rea_role] + '40' }}
+                      >
+                        {REA_LABELS[a.rea_role]}
+                      </span>
+                    )}
                     <span className="ml-auto text-xs text-gray-500">{STATE_LABELS[a.state]}</span>
                   </div>
                   <h3 className="font-semibold text-white group-hover:text-[#c3fd50] transition-colors mb-1 text-sm">

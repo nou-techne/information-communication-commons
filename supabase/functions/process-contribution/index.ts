@@ -5,14 +5,51 @@ const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!
 const SUPABASE_URL = Deno.env.get('SB_URL') || Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SB_SERVICE_KEY') || Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 
-const EXTRACTION_PROMPT = `Extract structured knowledge from this convergence event text.
+const EXTRACTION_PROMPT = `You are extracting structured knowledge from a convergence event observation.
 Return ONLY valid JSON, no code fences.
+
+## The Grammar: REA (Resource, Event, Agent)
+
+Every observation decomposes into three entity types:
+
+**Resource** — a stock of organizational capacity at a point in time. Resources come in seven forms of capital: financial, human, temporal, social, produced, natural, cultural. A resource observation captures what exists, in what form, and at what level of vitality.
+
+**Event** — a transformation that changes resource stocks. Classify events as:
+- "extractive" (reducing capacity without replenishment)
+- "regenerative" (enhancing future value creation)  
+- "reciprocal" (balanced exchange)
+
+**Agent** — an individual, team, or organization with capacity for action. Agency distributes through structure rather than concentrating at the top.
+
+## Classification Layers
+
+Each artifact gets THREE orthogonal classifications:
+
+1. **rea_role** (grammatical role): "resource" | "event" | "agent"
+2. **type** (observation pattern): "idea" | "proposal" | "commitment" | "question" | "pattern" | "reflection"
+3. **e/H-LAM/T tags** (dimensional lens — which domain of capacity):
+   - hlamt:e — ecology, place, watershed, environmental context, natural capital
+   - hlamt:H — human capability, relationships, social capital, lived experience
+   - hlamt:L — language, shared vocabulary, frameworks, cultural capital, definitions
+   - hlamt:A — artifacts, tools, infrastructure, produced/financial capital
+   - hlamt:M — methodology, processes, workflows, coordination patterns
+   - hlamt:T — training, learning, skill development, transformation
+
+## Dimension Details
 IMPORTANT: "dimension" must be one of EXACTLY: "temporal", "social", "thematic", "energetic", "spatial". No other values.
 
-Schema:
-{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "type": "idea|proposal|commitment|question|pattern|reflection", "tags": ["tag1", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value"}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
+## Output Schema
 
-Tag each artifact with hlamt:e (ecology), hlamt:H (human), hlamt:L (language), hlamt:A (artifacts), hlamt:M (methodology), or hlamt:T (training).
+{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "type": "idea|proposal|commitment|question|pattern|reflection", "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value"}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
+
+## Guidance
+
+- When someone describes a skill, tool, funding source, or available capacity → rea_role: "resource"
+- When someone describes something that happened, a session, a decision, an action → rea_role: "event"
+- When someone is identified as a participant, speaker, organizer, team → rea_role: "agent"
+- One observation often contains all three: "Maria (agent) presented (event) a regenerative finance framework (resource)"
+- Tag EVERY artifact with at least one hlamt: tag. Most artifacts touch 1-2 dimensions.
+- Prefer specificity: a person teaching a workshop is H/ (human) + T/ (training), not just H/
 
 Text:
 `

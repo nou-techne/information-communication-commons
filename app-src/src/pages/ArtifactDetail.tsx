@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { supabase, ARTIFACT_COLORS, STATE_LABELS } from '../lib/supabase'
+import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactRelationship } from '../lib/supabase'
 
 export function ArtifactDetail() {
@@ -56,9 +56,17 @@ export function ArtifactDetail() {
       <Link to="/" className="text-sm text-gray-400 hover:text-white mb-4 inline-block">← Back to Garden</Link>
 
       <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
           <span className="w-4 h-4 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[artifact.type] }} />
           <span className="text-sm uppercase tracking-wider" style={{ color: ARTIFACT_COLORS[artifact.type] }}>{artifact.type}</span>
+          {artifact.rea_role && (
+            <span
+              className="text-xs px-2 py-0.5 rounded border"
+              style={{ color: REA_COLORS[artifact.rea_role], borderColor: REA_COLORS[artifact.rea_role] + '40' }}
+            >
+              {REA_LABELS[artifact.rea_role]}
+            </span>
+          )}
           <span className="text-sm text-gray-500">{STATE_LABELS[artifact.state]}</span>
           {artifact.created_by_agent && <span className="text-xs bg-[#262626] text-gray-400 px-2 py-0.5 rounded">Agent-created</span>}
         </div>
