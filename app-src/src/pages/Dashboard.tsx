@@ -11,7 +11,7 @@ interface Stats {
 
 interface RecentArtifact {
   id: string;
-  name: string;
+  title: string;
   created_at: string;
   rea_role: 'resource' | 'event' | 'agent';
 }
@@ -53,7 +53,7 @@ export default function Dashboard() {
 
     // Total relationships
     const { count: relationshipCount } = await supabase
-      .from('relationships')
+      .from('artifact_relationships')
       .select('*', { count: 'exact', head: true });
 
     // Recent contributions (last hour)
@@ -74,7 +74,7 @@ export default function Dashboard() {
   const loadRecentArtifacts = async () => {
     const { data } = await supabase
       .from('artifacts')
-      .select('id, name, created_at, rea_role')
+      .select('id, title, created_at, rea_role')
       .order('created_at', { ascending: false })
       .limit(8);
 
@@ -207,7 +207,7 @@ export default function Dashboard() {
               <div key={artifact.id} className="flex items-start gap-3 p-3 bg-[#0f0f0f] rounded border border-gray-800">
                 <div className={`w-2 h-2 rounded-full mt-2 ${REA_COLORS[artifact.rea_role]}`}></div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-gray-200 truncate">{artifact.name}</div>
+                  <div className="font-medium text-gray-200 truncate">{artifact.title}</div>
                   <div className="text-sm text-gray-500">{timeAgo(artifact.created_at)} ago</div>
                 </div>
               </div>
