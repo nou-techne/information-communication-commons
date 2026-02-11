@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Search as SearchIcon } from 'lucide-react'
 import { Explore } from './pages/Explore'
 import { ArtifactDetail } from './pages/ArtifactDetail'
 import { MyThread } from './pages/MyThread'
@@ -15,6 +15,7 @@ import { Status } from './pages/Status'
 import { Graph } from './pages/Graph'
 import { Coordinate } from './pages/Coordinate'
 import Dashboard from './pages/Dashboard'
+import { Search } from './pages/Search'
 import type { Session } from '@supabase/supabase-js'
 
 function Nav() {
@@ -58,7 +59,10 @@ function Nav() {
               </Link>
             ))}
           </div>
-          <div className="text-sm">
+          <div className="flex items-center gap-4 text-sm">
+            <Link to="/search" className="text-gray-400 hover:text-white">
+              <SearchIcon className="w-5 h-5" />
+            </Link>
             {session ? (
               <button onClick={() => supabase.auth.signOut()} className="text-gray-400 hover:text-white">
                 Sign out
@@ -104,6 +108,17 @@ function Nav() {
                   {l.label}
                 </Link>
               ))}
+              <Link
+                to="/search"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
+                  location.pathname === '/search'
+                    ? 'bg-[#262626] text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                }`}
+              >
+                Search
+              </Link>
               <div className="pt-2 border-t border-[#262626]">
                 {session ? (
                   <button
@@ -147,6 +162,7 @@ export default function App() {
             <Route path="/graph" element={<Graph />} />
             <Route path="/coordinate" element={<Coordinate />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/status" element={<Status />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
