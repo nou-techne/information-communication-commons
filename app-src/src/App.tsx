@@ -12,6 +12,7 @@ import { DimensionView } from './pages/DimensionView'
 import { NotFound } from './pages/NotFound'
 import { Profile } from './pages/Profile'
 import { Status } from './pages/Status'
+import { Graph } from './pages/Graph'
 import type { Session } from '@supabase/supabase-js'
 
 function Nav() {
@@ -141,6 +142,7 @@ export default function App() {
             <Route path="/me" element={<MyThread />} />
             <Route path="/contribute" element={<Contribute />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/graph" element={<Graph />} />
             <Route path="/status" element={<Status />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
