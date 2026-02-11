@@ -33,9 +33,8 @@ function Nav() {
       <div className="max-w-6xl mx-auto">
         {/* Desktop nav */}
         <div className="hidden md:flex items-center justify-between relative">
-          <Link to="/" className="text-xl font-bold text-white tracking-tight">
-            <span className="text-[#c3fd50]">.id</span> Commons
-            <span className="text-[#c3fd50] text-xs font-normal ml-2">· ETHBoulder 2026</span>
+          <Link to="/" className="text-xl font-bold tracking-tight">
+            <span className="text-[#c3fd50]">eth</span><span className="text-gray-500">.commons.id</span>
           </Link>
           <div className="absolute left-1/2 -translate-x-1/2 flex gap-1">
             {links.map(l => (
@@ -66,8 +65,8 @@ function Nav() {
         {/* Mobile nav */}
         <div className="md:hidden">
           <div className="flex items-center justify-between">
-            <Link to="/" className="text-lg font-bold text-white tracking-tight">
-              <span className="text-[#c3fd50]">.id</span> Commons
+            <Link to="/" className="text-lg font-bold tracking-tight">
+              <span className="text-[#c3fd50]">eth</span><span className="text-gray-500">.commons.id</span>
             </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
