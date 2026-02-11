@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact } from '../lib/supabase'
-import { ChevronRight, Clock, User, Loader2 } from 'lucide-react'
+import { ChevronRight, Clock, User, Loader2, MessageCircle, Send } from 'lucide-react'
 
 interface Contribution {
   id: string
@@ -40,9 +40,19 @@ export function ContributionDetail() {
   const [loading, setLoading] = useState(true)
   const [participantName, setParticipantName] = useState<string | null>(null)
   const [expanded, setExpanded] = useState(false)
+  const [thread, setThread] = useState<any[]>([])
+  const [showReplyForm, setShowReplyForm] = useState(false)
+  const [replyContent, setReplyContent] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [session, setSession] = useState<any>(null)
 
   useEffect(() => {
     if (id) loadContribution(id)
+    
+    // Check auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
   }, [id])
 
   async function loadContribution(contribId: string) {
@@ -116,7 +126,48 @@ export function ContributionDetail() {
       setDimCounts(counts)
     }
 
+    // Load thread (replies)
+    const { data: threadData } = await supabase.rpc('get_contribution_thread', { p_contribution_id: contribId })
+    if (threadData && threadData.length > 1) {
+      setThread(threadData.slice(1)) // Skip root contribution
+    }
+
     setLoading(false)
+  }
+
+  async function submitReply(e: React.FormEvent) {
+    e.preventDefault()
+    if (!replyContent.trim() || !session) return
+
+    setSubmitting(true)
+    try {
+      const { data: participant } = await supabase
+        .from('participants')
+        .select('id')
+        .eq('auth_user_id', session.user.id)
+        .single()
+
+      const { error } = await supabase.from('contributions').insert({
+        content: replyContent.trim(),
+        participant_id: participant?.id,
+        parent_contribution_id: id,
+        convergence_id: contribution?.extraction?.convergence_id || null,
+        status: 'pending'
+      })
+
+      if (error) throw error
+
+      setReplyContent('')
+      setShowReplyForm(false)
+      
+      // Reload contribution to show new reply
+      if (id) await loadContribution(id)
+    } catch (err) {
+      console.error('Reply submit error:', err)
+      alert('Failed to submit reply. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (loading) {
@@ -295,6 +346,76 @@ export function ContributionDetail() {
           <p className="text-yellow-400">Waiting to be processed...</p>
         </div>
       )}
+
+      {/* Thread (Replies) */}
+      {thread.length > 0 && (
+        <div className="mt-6 border-t border-[#262626] pt-6">
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <MessageCircle className="w-5 h-5 text-[#c3fd50]" />
+            {thread.length} {thread.length === 1 ? 'Reply' : 'Replies'}
+          </h2>
+          <div className="space-y-3">
+            {thread.map((reply: any) => (
+              <div key={reply.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4" style={{ marginLeft: `${reply.depth * 20}px` }}>
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <User className="w-4 h-4" />
+                    <span>{reply.participant_name || 'Anonymous'}</span>
+                    <span className="text-gray-600">·</span>
+                    <span>{timeAgo(reply.created_at)}</span>
+                  </div>
+                  {reply.status === 'processing' && (
+                    <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
+                  )}
+                </div>
+                <p className="text-gray-300 text-sm whitespace-pre-wrap">{reply.content}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Reply Form */}
+      <div className="mt-6 border-t border-[#262626] pt-6">
+        {!showReplyForm ? (
+          <button
+            onClick={() => setShowReplyForm(true)}
+            disabled={!session}
+            className="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] border border-[#262626] rounded-lg hover:border-[#c3fd50] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <MessageCircle className="w-4 h-4" />
+            {session ? 'Reply to this contribution' : 'Sign in to reply'}
+          </button>
+        ) : (
+          <form onSubmit={submitReply} className="space-y-3">
+            <textarea
+              value={replyContent}
+              onChange={e => setReplyContent(e.target.value)}
+              placeholder="Share your thoughts, questions, or build on this contribution..."
+              rows={4}
+              autoFocus
+              className="w-full bg-[#0f0f0f] border border-[#333333] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#c3fd50] transition-colors resize-none"
+            />
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={!replyContent.trim() || submitting}
+                className="flex items-center gap-2 px-4 py-2 bg-[#c3fd50] text-[#0f0f0f] font-medium rounded-lg hover:bg-[#d4fe80] transition-colors disabled:opacity-50 text-sm"
+              >
+                {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                {submitting ? 'Submitting...' : 'Submit Reply'}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setShowReplyForm(false); setReplyContent('') }}
+                className="px-4 py-2 bg-[#262626] text-white rounded-lg hover:bg-[#333333] transition-colors text-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   )
 }
