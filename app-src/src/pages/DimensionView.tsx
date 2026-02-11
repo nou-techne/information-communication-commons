@@ -42,6 +42,7 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
   )
 }
 
+// @ts-ignore - unused component, reserved for future use
 function EcologyView({ artifacts }: { artifacts: Artifact[] }) {
   return (
     <div className="space-y-6">
@@ -137,6 +138,7 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
   )
 }
 
+// @ts-ignore - unused component, reserved for future use
 function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
   const [tagCounts, setTagCounts] = useState<{ name: string; count: number }[]>([])
 

@@ -26,40 +26,55 @@ export function MyThread() {
   const [artifacts, setArtifacts] = useState<Artifact[]>([])
   const [commitments, setCommitments] = useState<Commitment[]>([])
   const [contributions, setContributions] = useState<Contribution[]>([])
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Load contributions for everyone (no auth required)
-    loadContributions()
-
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session)
-      if (!data.session) { setLoading(false); return }
+      if (!data.session) {
+        // Not authenticated: show all contributions
+        loadContributions(null)
+        return
+      }
       loadParticipant(data.session.user.id)
     })
 
     // Real-time subscription for contribution status updates
     const contribSub = supabase.channel('my-contributions')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'contributions' }, () => {
-        loadContributions()
+        // Reload with current participantId filter
+        loadContributions(participantId)
       })
       .subscribe()
 
     return () => { supabase.removeChannel(contribSub) }
   }, [])
 
-  async function loadContributions() {
-    const { data } = await supabase
+  // Reload contributions when participantId changes
+  useEffect(() => {
+    if (participantId !== null) {
+      loadContributions(participantId)
+    }
+  }, [participantId])
+
+  async function loadContributions(filterParticipantId: string | null) {
+    let query = supabase
       .from('contributions')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(20)
+    
+    // Filter by participant_id if authenticated
+    if (filterParticipantId) {
+      query = query.eq('participant_id', filterParticipantId)
+    }
+    
+    const { data } = await query
     setContributions(data || [])
   }
 
   async function loadParticipant(authId: string) {
     const { data: p } = await supabase.from('participants').select('id').eq('auth_user_id', authId).single()
-    if (!p) { setLoading(false); return }
+    if (!p) return
     setParticipantId(p.id)
 
     const [{ data: arts }, { data: comms }] = await Promise.all([
@@ -68,7 +83,6 @@ export function MyThread() {
     ])
     setArtifacts(arts || [])
     setCommitments(comms || [])
-    setLoading(false)
   }
 
   const statusColors: Record<string, string> = {
@@ -89,7 +103,15 @@ export function MyThread() {
 
       {/* Contributions */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold mb-3 text-gray-300">Contributions</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-gray-300">Contributions</h2>
+          {participantId && (
+            <span className="text-xs text-gray-500">Showing your contributions only</span>
+          )}
+          {!session && (
+            <span className="text-xs text-gray-500">Showing all contributions · <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link></span>
+          )}
+        </div>
         {contributions.length === 0 ? (
           <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 text-center">
             <p className="text-gray-400">No contributions yet.</p>

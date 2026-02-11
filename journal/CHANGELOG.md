@@ -45,3 +45,32 @@ Format: [Semantic Versioning](https://semver.org/). Each entry includes sprint r
 
 ### ETHBoulder Readiness Roadmap (Sprints 1-16)
 - See ROADMAP_ETHBOULDER_2026-02-11.md
+
+---
+
+## [0.9.1] — 2026-02-11
+
+### Block 1: Reliability (Sprints 1-4) ✅ COMPLETE
+
+**Sprint 1: Edge Function Error Handling** (QA)
+- Retry logic on Claude timeout/5xx (exponential backoff)
+- Structured error logging (`contributions.errors` JSONB)
+- Enhanced code fence stripping
+- Stage-level error diagnostics (claude_api, json_parse, ingest_rpc)
+
+**Sprint 2: End-to-End Smoke Test** (QA)
+- 5/5 diverse test cases passed (100% success)
+- 15 artifacts, 3 commitments, 8 relationships extracted
+- Zero orphaned data (all foreign keys valid)
+- Dimension distribution: A/5, e/3, H/3, M/4
+
+**Sprint 3: Extraction Quality Tuning** (QA)
+- 7/7 edge cases passed: short input, emoji, URLs, Spanish, Japanese+English, code, special chars
+- Duplicate submissions create separate artifacts (expected behavior, no deduplication needed)
+- Claude prompt validated (JSON-only, dimension enum, e/H-LAM/T)
+
+**Sprint 4: Contribution-to-User Linking** (Backend)
+- Contributions linked to authenticated users via `participant_id`
+- Auto-create participant on first contribution (from auth email)
+- My Thread filtered by user when authenticated (fallback to all when not)
+- Anonymous contribution flow preserved

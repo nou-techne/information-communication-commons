@@ -29,10 +29,45 @@ export function Contribute() {
     setError('')
 
     try {
-      // Insert directly into contributions table
+      // Get current authenticated user
+      const { data: { user } } = await supabase.auth.getUser()
+      let participantId = null
+
+      // If user is authenticated, link contribution to their participant record
+      if (user) {
+        // Look up participant by auth_user_id
+        const { data: participant, error: lookupError } = await supabase
+          .from('participants')
+          .select('id')
+          .eq('auth_user_id', user.id)
+          .maybeSingle()
+
+        if (lookupError) throw lookupError
+
+        if (participant) {
+          participantId = participant.id
+        } else {
+          // Create participant record if it doesn't exist
+          const { data: newParticipant, error: createError } = await supabase
+            .from('participants')
+            .insert({
+              auth_user_id: user.id,
+              name: user.email?.split('@')[0] || 'Anonymous',
+              email: user.email,
+            })
+            .select('id')
+            .single()
+
+          if (createError) throw createError
+          participantId = newParticipant.id
+        }
+      }
+
+      // Insert contribution with optional participant_id
       const { error: insertError } = await supabase.from('contributions').insert({
         content: text,
         convergence_id: CONVERGENCE_ID,
+        participant_id: participantId,
         status: 'pending',
       })
 
