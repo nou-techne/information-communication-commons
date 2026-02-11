@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact } from '../lib/supabase'
-import { ArrowLeft, Clock, User, Loader2 } from 'lucide-react'
+import { ChevronRight, Clock, User, Loader2 } from 'lucide-react'
 
 interface Contribution {
   id: string
@@ -140,11 +140,14 @@ export function ContributionDetail() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Back link */}
-      <Link to="/" className="inline-flex items-center gap-1.5 text-gray-400 hover:text-white text-sm mb-6">
-        <ArrowLeft className="w-4 h-4" />
-        Back to Explore
-      </Link>
+      {/* Breadcrumbs */}
+      <nav className="flex items-center gap-1.5 text-sm mb-6">
+        <Link to="/" className="text-gray-400 hover:text-white transition-colors">Explore</Link>
+        <ChevronRight className="w-3.5 h-3.5 text-gray-600" />
+        <span className="text-gray-400">Live Activity</span>
+        <ChevronRight className="w-3.5 h-3.5 text-gray-600" />
+        <span className="text-white">Contribution</span>
+      </nav>
 
       {/* Contribution header */}
       <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">

@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import type { Artifact, Participant } from '../lib/supabase'
 import { ARTIFACT_COLORS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
-import { Users } from 'lucide-react'
+import { Users, ChevronRight } from 'lucide-react'
 
 function timeAgo(date: string) {
   const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
@@ -416,7 +416,13 @@ export function DimensionView() {
   return (
     <div>
       <div className="mb-6">
-        <Link to="/dimensions" className="text-xs text-gray-500 hover:text-gray-300 mb-2 inline-block">Dimensions</Link>
+        <nav className="flex items-center gap-1.5 text-sm mb-3">
+          <Link to="/" className="text-gray-400 hover:text-white transition-colors">Explore</Link>
+          <ChevronRight className="w-3.5 h-3.5 text-gray-600" />
+          <span className="text-gray-400">Graph Dimensions</span>
+          <ChevronRight className="w-3.5 h-3.5 text-gray-600" />
+          <span style={{ color: dim.color }}>{dim.letter} {dim.name}</span>
+        </nav>
         <div className="flex items-baseline gap-3">
           <span className="font-mono text-3xl font-bold" style={{ color: dim.color }}>{dim.letter}</span>
           <div>
