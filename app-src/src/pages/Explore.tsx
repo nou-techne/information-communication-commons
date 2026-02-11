@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
-import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, GitCommit } from 'lucide-react'
+import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, GitCommit, Handshake } from 'lucide-react'
 
 interface ContributionFeedItem {
   id: string
@@ -46,6 +46,8 @@ export function Explore() {
   const [dimFilter, setDimFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState<ArtifactType | ''>('')
   const [stateFilter, setStateFilter] = useState<ArtifactState | ''>('')
+  const [sortBy, setSortBy] = useState<'recent' | 'coordination'>('recent')
+  const [coordCounts, setCoordCounts] = useState<Record<string, number>>({})
   const [searchResults, setSearchResults] = useState<Artifact[] | null>(null)
 
   // Pulse state
@@ -81,7 +83,7 @@ export function Explore() {
 
   useEffect(() => {
     loadArtifacts()
-  }, [dimFilter, typeFilter, stateFilter])
+  }, [dimFilter, typeFilter, stateFilter, sortBy])
 
   async function refreshDimCounts() {
     const [{ data: tagData }, { count: participantCount }] = await Promise.all([
@@ -108,12 +110,26 @@ export function Explore() {
     setFeedItems((feed as ContributionFeedItem[]) || [])
   }
 
+  async function refreshCoordCounts() {
+    const { data } = await supabase
+      .from('coordination_interests')
+      .select('artifact_id')
+    const counts: Record<string, number> = {}
+    if (data) {
+      for (const row of data) {
+        counts[row.artifact_id] = (counts[row.artifact_id] || 0) + 1
+      }
+    }
+    setCoordCounts(counts)
+    return counts
+  }
+
   async function loadData() {
     const [{ data: arts }] = await Promise.all([
       supabase.from('artifacts').select('*').order('created_at', { ascending: false }).limit(50),
     ])
     setArtifacts(arts || [])
-    await Promise.all([loadFeed(), refreshDimCounts()])
+    await Promise.all([loadFeed(), refreshDimCounts(), refreshCoordCounts()])
     setLoading(false)
   }
 
@@ -163,7 +179,10 @@ export function Explore() {
 
   const [showHowItWorks, setShowHowItWorks] = useState(false)
 
-  const display = searchResults ?? artifacts
+  const sorted = sortBy === 'coordination'
+    ? [...artifacts].sort((a, b) => (coordCounts[b.id] || 0) - (coordCounts[a.id] || 0))
+    : artifacts
+  const display = searchResults ?? sorted
 
   if (loading) return <div className="text-center text-gray-500 py-12">Loading...</div>
 
@@ -290,8 +309,16 @@ export function Explore() {
                 <option value="">All states</option>
                 {Object.entries(STATE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
+              <select
+                value={sortBy}
+                onChange={e => setSortBy(e.target.value as 'recent' | 'coordination')}
+                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
+              >
+                <option value="recent">Sort: Recent</option>
+                <option value="coordination">Sort: Coordination</option>
+              </select>
               {(dimFilter || typeFilter || stateFilter || searchResults) && (
-                <button onClick={() => { setDimFilter(''); setTypeFilter(''); setStateFilter(''); setSearch(''); setSearchResults(null); }} className="text-xs text-gray-400 hover:text-white flex-shrink-0">
+                <button onClick={() => { setDimFilter(''); setTypeFilter(''); setStateFilter(''); setSearch(''); setSearchResults(null); setSortBy('recent'); }} className="text-xs text-gray-400 hover:text-white flex-shrink-0">
                   Clear
                 </button>
               )}
@@ -359,8 +386,14 @@ export function Explore() {
                   {a.summary && (
                     <p className="text-xs text-gray-400 line-clamp-2">{a.summary}</p>
                   )}
-                  <div className="mt-2 text-xs text-gray-600">
-                    {timeAgo(a.created_at)}
+                  <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
+                    <span>{timeAgo(a.created_at)}</span>
+                    {(coordCounts[a.id] || 0) > 0 && (
+                      <span className="flex items-center gap-1 text-[#c3fd50]">
+                        <Handshake className="w-3 h-3" />
+                        {coordCounts[a.id]}
+                      </span>
+                    )}
                   </div>
                 </Link>
               ))}
