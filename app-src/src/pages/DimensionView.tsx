@@ -2,7 +2,15 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import type { Artifact, Participant } from '../lib/supabase'
-import { ARTIFACT_COLORS } from '../lib/supabase'
+import { ARTIFACT_COLORS, REA_COLORS, REA_LABELS } from '../lib/supabase'
+
+function timeAgo(date: string) {
+  const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
+  if (s < 60) return `${s}s ago`
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
+  return `${Math.floor(s / 86400)}d ago`
+}
 
 interface DimensionConfig {
   letter: string
@@ -25,7 +33,7 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
   return (
     <Link
       to={`/artifact/${artifact.id}`}
-      className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:bg-[#1a1a1a] transition-colors"
+      className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:border-[#c3fd50] transition-colors group"
     >
       <div className="flex items-center gap-2 mb-1">
         <span
@@ -33,8 +41,17 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
           style={{ backgroundColor: ARTIFACT_COLORS[artifact.type] }}
         />
         <span className="text-xs text-gray-500 uppercase">{artifact.type}</span>
+        {artifact.rea_role && (
+          <span
+            className="text-xs px-1.5 py-0.5 rounded border"
+            style={{ color: REA_COLORS[artifact.rea_role], borderColor: REA_COLORS[artifact.rea_role] + '40' }}
+          >
+            {REA_LABELS[artifact.rea_role]}
+          </span>
+        )}
+        <span className="ml-auto text-xs text-gray-600">{timeAgo(artifact.created_at)}</span>
       </div>
-      <h3 className="font-medium text-white mb-1">{artifact.title}</h3>
+      <h3 className="font-medium text-white group-hover:text-[#c3fd50] transition-colors mb-1">{artifact.title}</h3>
       {artifact.summary && (
         <p className="text-sm text-gray-400 line-clamp-2">{artifact.summary}</p>
       )}
