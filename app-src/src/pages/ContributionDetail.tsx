@@ -39,6 +39,7 @@ export function ContributionDetail() {
   const [dimCounts, setDimCounts] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
   const [participantName, setParticipantName] = useState<string | null>(null)
+  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     if (id) loadContribution(id)
@@ -166,7 +167,29 @@ export function ContributionDetail() {
           )}
         </div>
         <div className="text-gray-200 whitespace-pre-wrap leading-relaxed">
-          {contribution.content}
+          {contribution.content.length > 300 && !expanded ? (
+            <>
+              {contribution.content.slice(0, 300).trimEnd()}...
+              <button
+                onClick={() => setExpanded(true)}
+                className="ml-2 text-[#c3fd50] hover:text-white text-sm font-medium"
+              >
+                View more
+              </button>
+            </>
+          ) : (
+            <>
+              {contribution.content}
+              {contribution.content.length > 300 && (
+                <button
+                  onClick={() => setExpanded(false)}
+                  className="ml-2 text-[#c3fd50] hover:text-white text-sm font-medium"
+                >
+                  Show less
+                </button>
+              )}
+            </>
+          )}
         </div>
       </div>
 
