@@ -17,13 +17,103 @@ Tag each artifact with hlamt:e (ecology), hlamt:H (human), hlamt:L (language), h
 Text:
 `
 
+interface ErrorLog {
+  timestamp: string
+  stage: string
+  message: string
+  retry?: number
+}
+
+async function callClaudeWithRetry(content: string, maxRetries = 1): Promise<any> {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4096,
+          messages: [{ role: 'user', content: EXTRACTION_PROMPT + content }],
+        }),
+      })
+
+      if (!claudeResponse.ok) {
+        const err = await claudeResponse.text()
+        const status = claudeResponse.status
+        
+        // Retry on timeout (408) or server errors (5xx)
+        if ((status === 408 || status >= 500) && attempt < maxRetries) {
+          console.log(`Claude API ${status}, retrying (${attempt + 1}/${maxRetries})...`)
+          await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1))) // exponential backoff
+          continue
+        }
+        
+        throw new Error(`Claude API error: ${status} ${err}`)
+      }
+
+      return await claudeResponse.json()
+    } catch (error) {
+      if (attempt < maxRetries && (error instanceof TypeError || error.message.includes('timeout'))) {
+        console.log(`Network error, retrying (${attempt + 1}/${maxRetries})...`)
+        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)))
+        continue
+      }
+      throw error
+    }
+  }
+}
+
+function stripCodeFences(text: string): string {
+  // Handle various code fence formats
+  text = text.trim()
+  
+  // ```json ... ``` or ``` ... ```
+  if (text.startsWith('```')) {
+    const lines = text.split('\n')
+    lines.shift() // remove first ```json or ```
+    const withoutEnd = lines.join('\n').replace(/```\s*$/m, '').trim()
+    return withoutEnd
+  }
+  
+  return text
+}
+
+async function logError(supabase: any, contributionId: string, stage: string, message: string, retry?: number) {
+  const errorEntry: ErrorLog = {
+    timestamp: new Date().toISOString(),
+    stage,
+    message,
+    ...(retry !== undefined && { retry })
+  }
+  
+  // Append to errors array
+  await supabase.rpc('jsonb_array_append', {
+    table_name: 'contributions',
+    column_name: 'errors',
+    row_id: contributionId,
+    new_value: JSON.stringify(errorEntry)
+  }).catch(() => {
+    // Fallback: set errors directly if function doesn't exist
+    supabase.from('contributions')
+      .update({ errors: [errorEntry] })
+      .eq('id', contributionId)
+  })
+}
+
 serve(async (req) => {
+  let contributionId: string | undefined
+  let supabase: any
+  
   try {
     const payload = await req.json()
 
     // Support both direct calls and database webhook triggers
     const record = payload.record ?? payload
-    const contributionId = record.id
+    contributionId = record.id
     const content = record.content
     const convergenceId = record.convergence_id
 
@@ -31,7 +121,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'No content' }), { status: 400 })
     }
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+    supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
     // Mark as processing
     await supabase
@@ -39,44 +129,46 @@ serve(async (req) => {
       .update({ status: 'processing' })
       .eq('id', contributionId)
 
-    // Call Claude
-    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
-        messages: [{ role: 'user', content: EXTRACTION_PROMPT + content }],
-      }),
-    })
-
-    if (!claudeResponse.ok) {
-      const err = await claudeResponse.text()
-      throw new Error(`Claude API error: ${claudeResponse.status} ${err}`)
+    // Call Claude with retry
+    let claudeResult
+    try {
+      claudeResult = await callClaudeWithRetry(content)
+    } catch (error) {
+      await logError(supabase, contributionId, 'claude_api', String(error))
+      throw error
     }
 
-    const claudeResult = await claudeResponse.json()
     let extractionText = claudeResult.content[0].text
+    extractionText = stripCodeFences(extractionText)
 
-    // Strip code fences if present
-    if (extractionText.startsWith('```')) {
-      extractionText = extractionText.split('\n').slice(1).join('\n').replace(/```\s*$/, '').trim()
+    // Parse extraction
+    let extraction
+    try {
+      extraction = JSON.parse(extractionText)
+    } catch (error) {
+      await logError(supabase, contributionId, 'json_parse', `Invalid JSON: ${String(error)}. Raw: ${extractionText.substring(0, 200)}`)
+      throw new Error(`JSON parse failed: ${error}`)
     }
-
-    const extraction = JSON.parse(extractionText)
 
     // Call ingest_extraction RPC
-    const { data, error } = await supabase.rpc('ingest_extraction', {
-      p_convergence_id: convergenceId,
-      p_session_title: 'App contribution',
-      p_extraction: extraction,
-    })
+    let data, error
+    try {
+      const result = await supabase.rpc('ingest_extraction', {
+        p_convergence_id: convergenceId,
+        p_session_title: 'App contribution',
+        p_extraction: extraction,
+      })
+      data = result.data
+      error = result.error
+    } catch (err) {
+      await logError(supabase, contributionId, 'ingest_rpc', String(err))
+      throw err
+    }
 
-    if (error) throw new Error(`Ingest error: ${error.message}`)
+    if (error) {
+      await logError(supabase, contributionId, 'ingest_rpc', `RPC error: ${error.message}`)
+      throw new Error(`Ingest error: ${error.message}`)
+    }
 
     // Mark as complete
     await supabase
@@ -94,18 +186,20 @@ serve(async (req) => {
   } catch (err) {
     console.error('Processing error:', err)
 
-    // Try to mark as error if we have the ID
-    try {
-      const payload = await req.clone().json().catch(() => ({}))
-      const id = payload?.record?.id ?? payload?.id
-      if (id) {
-        const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+    // Ensure status is marked as error
+    if (contributionId && supabase) {
+      try {
         await supabase
           .from('contributions')
-          .update({ status: 'error' })
-          .eq('id', id)
+          .update({ 
+            status: 'error',
+            processed_at: new Date().toISOString()
+          })
+          .eq('id', contributionId)
+      } catch (updateErr) {
+        console.error('Failed to mark contribution as error:', updateErr)
       }
-    } catch {}
+    }
 
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
