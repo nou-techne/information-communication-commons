@@ -342,6 +342,7 @@ export function Explore() {
                 )}
               </div>
               {isFullscreen && <div className="p-4 pt-0"><ChainStatus /></div>}
+              {!isFullscreen && <div className="mt-2"><ChainStatus /></div>}
             </div>
           ) : (<>
           {/* Search + Filters */}
@@ -498,11 +499,8 @@ export function Explore() {
           </>)}
         </div>
 
-        {/* Right: Chain Status + Contribution Feed */}
+        {/* Right: Contribution Feed */}
         <div className="min-w-0">
-          <div className="mb-4">
-            <ChainStatus />
-          </div>
           <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Live Activity</h2>
           {feedItems.length === 0 ? (
             <div className="text-gray-500 text-center py-8 text-sm">No contributions yet</div>
