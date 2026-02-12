@@ -12,6 +12,7 @@ export interface ConvergenceConfig {
   logo_accent: string
   tagline: string | null
   dimensions: DimensionConfig[]
+  opens_at: string | null
 }
 
 export interface DimensionConfig {
@@ -35,6 +36,7 @@ const DEFAULT_CONFIG: ConvergenceConfig = {
   logo_text: 'EthBoulder',
   logo_accent: '.commons.id',
   tagline: 'Knowledge Graph · Live',
+  opens_at: '2026-02-13T16:00:00Z',
   dimensions: [
     { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f', tag: 'hlamt:e' },
     { key: 'H', letter: 'H/', name: 'Human', desc: "Who's Here", color: '#c4956a', tag: 'hlamt:H' },

@@ -201,14 +201,12 @@ export default function Live() {
             <div className={`${isFullscreen ? 'p-4' : 'mt-2'}`}>
               {chainMaxSeq > 0 && <ReplaySlider maxSeq={chainMaxSeq} onSeqChange={seq => setReplaySeq(seq)} />}
             </div>
-            {isFullscreen && <div className="p-4 pt-0"><ChainStatus /></div>}
+            {isFullscreen && <div className="p-4 pt-0"><ChainStatus compact /></div>}
           </div>
         </div>
 
         {/* Right: Chain + Feed + Recent */}
         <div className="min-w-0">
-          <div className="mb-4"><ChainStatus /></div>
-
           <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Live Activity</h2>
           {feedItems.length === 0 ? (
             <div className="text-gray-500 text-center py-8 text-sm">No contributions yet. <Link to="/contribute" className="text-[#a6ed2a]">Be the first.</Link></div>
@@ -278,11 +276,6 @@ export default function Live() {
         </div>
       </div>
 
-      {/* Live indicator */}
-      <div className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#0a101d] border border-gray-800 rounded-full px-4 py-2">
-        <div className="w-2 h-2 rounded-full bg-[#a6ed2a] animate-pulse" />
-        <span className="text-sm text-gray-400">LIVE</span>
-      </div>
     </div>
   )
 }

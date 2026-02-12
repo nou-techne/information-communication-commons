@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { Zap, Check } from 'lucide-react'
+import { Zap, Check, Clock } from 'lucide-react'
 import { ExtractionProgress } from '../components/ExtractionProgress'
+import { useConvergence } from '../contexts/ConvergenceContext'
 
 interface Session {
   id: string
@@ -32,6 +33,27 @@ const CONVERGENCE_ID = '00000000-0000-0000-0000-000000000100'
 export function Contribute() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { convergence } = useConvergence()
+  
+  // Gate: check if convergence is open
+  const opensAt = convergence.opens_at ? new Date(convergence.opens_at).getTime() : 0
+  const [isOpen, setIsOpen] = useState(opensAt <= Date.now())
+  const [countdown, setCountdown] = useState('')
+  
+  useEffect(() => {
+    if (!convergence.opens_at) { setIsOpen(true); return }
+    function tick() {
+      const diff = opensAt - Date.now()
+      if (diff <= 0) { setIsOpen(true); setCountdown(''); return }
+      const h = Math.floor(diff / 3600000)
+      const m = Math.floor((diff % 3600000) / 60000)
+      const s = Math.floor((diff % 60000) / 1000)
+      setCountdown(`${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`)
+    }
+    tick()
+    const interval = setInterval(tick, 1000)
+    return () => clearInterval(interval)
+  }, [convergence.opens_at])
   const [text, setText] = useState('')
   const [state, setState] = useState<ProcessingState>('idle')
   const [extractionStartedAt, setExtractionStartedAt] = useState<number>(Date.now())
@@ -238,6 +260,25 @@ export function Contribute() {
             </button>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  if (!isOpen) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-16">
+        <Clock className="w-16 h-16 text-blue-500 mx-auto mb-6" />
+        <h1 className="text-3xl font-bold mb-3">Knowledge Graph Opening Soon</h1>
+        <p className="text-gray-400 mb-6">
+          The {convergence.name} knowledge graph opens when the convergence begins.
+          Contributions will be accepted once the chain is live.
+        </p>
+        <div className="inline-flex items-center gap-2 bg-[#0a101d] border border-blue-500/30 rounded-xl px-8 py-4">
+          <div className="text-3xl font-mono font-bold text-white">{countdown}</div>
+        </div>
+        <p className="text-gray-600 text-xs mt-6">
+          {convergence.opens_at && new Date(convergence.opens_at).toLocaleString(undefined, { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
+        </p>
       </div>
     )
   }

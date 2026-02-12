@@ -342,7 +342,6 @@ export function Explore() {
                 )}
               </div>
               {isFullscreen && <div className="p-4 pt-0"><ChainStatus /></div>}
-              {!isFullscreen && <div className="mt-2"><ChainStatus /></div>}
             </div>
           ) : (<>
           {/* Search + Filters */}
