@@ -121,8 +121,8 @@ export function Coordinate() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className={`text-xs ${REA_COLORS[h.rea_role] || 'text-gray-400'}`}>{h.rea_role}</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-[#262626] text-gray-400">{h.type}</span>
+                        <span className={`text-xs ${REA_COLORS[h.rea_role] || 'text-gray-400'}`}>{h.rea_role.charAt(0).toUpperCase() + h.rea_role.slice(1)}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-[#262626] text-gray-400">{h.type.charAt(0).toUpperCase() + h.type.slice(1)}</span>
                       </div>
                       <h3 className="font-medium text-sm mb-1">{h.title}</h3>
                       {h.summary && <p className="text-xs text-gray-500 line-clamp-2">{h.summary}</p>}

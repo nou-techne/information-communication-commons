@@ -250,7 +250,11 @@ export function Contribute() {
         First time? <a href="/app/welcome" className="text-[#c3fd50] hover:underline">See how it works</a>
       </p>
 
-      <details className="mb-6 bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden" open>
+      <details
+        className="mb-6 bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden"
+        open={typeof window !== 'undefined' ? localStorage.getItem('hlamt-open') !== 'false' : true}
+        onToggle={(e: any) => localStorage.setItem('hlamt-open', String(e.target.open))}
+      >
         <summary className="px-4 py-3 text-base font-medium text-white cursor-pointer hover:bg-[#262626] transition-colors flex items-center justify-between">
           <span>What is e/H-LAM/T?</span>
           <span className="text-xs text-gray-500 ml-2">AI classifies every contribution across these six dimensions</span>

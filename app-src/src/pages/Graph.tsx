@@ -166,6 +166,14 @@ export function Graph() {
     }
 
     loadGraph()
+
+    // Real-time: reload graph when new artifacts arrive
+    const sub = supabase.channel('graph-realtime')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => loadGraph())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_relationships' }, () => loadGraph())
+      .subscribe()
+
+    return () => { supabase.removeChannel(sub) }
   }, [])
 
   const simulationRef = useRef<d3.Simulation<any, any> | null>(null)
@@ -452,15 +460,21 @@ export function Graph() {
           </p>
         </div>
         <div className="flex gap-2">
-          {(['rea', 'type', 'dimension', 'cluster'] as const).map(mode => (
+          {([
+            { mode: 'rea' as const, label: 'REA', tip: 'Color by economic role: Resources (things), Events (actions), Agents (people/orgs)' },
+            { mode: 'type' as const, label: 'Type', tip: 'Color by artifact type: ideas, proposals, commitments, patterns, questions, etc.' },
+            { mode: 'dimension' as const, label: 'Dimension', tip: 'Color by e/H-LAM/T dimension: which lens of analysis the artifact belongs to' },
+            { mode: 'cluster' as const, label: 'Cluster', tip: 'Color by topic cluster: groups of related artifacts detected by the graph algorithm' },
+          ]).map(({ mode, label, tip }) => (
             <button
               key={mode}
               onClick={() => setColorBy(mode)}
+              title={tip}
               className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                 colorBy === mode ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-300 hover:bg-[#333]'
               }`}
             >
-              {mode === 'rea' ? 'REA' : mode === 'type' ? 'Type' : mode === 'dimension' ? 'Dimension' : 'Cluster'}
+              {label}
             </button>
           ))}
           <button
@@ -484,6 +498,14 @@ export function Graph() {
           </button>
         </div>
       </div>
+
+      <p className="text-xs text-gray-500 -mt-2 mb-2">
+        {colorBy === 'rea' && 'Nodes colored by REA role: Resources (stocks of value), Events (transformations), Agents (participants). The fundamental grammar of economic activity.'}
+        {colorBy === 'type' && 'Nodes colored by artifact type: ideas, proposals, commitments, patterns, questions, reflections. What kind of knowledge each node represents.'}
+        {colorBy === 'dimension' && 'Nodes colored by their strongest e/H-LAM/T dimension. The six large nodes are dimension anchors — artifacts cluster around the dimensions they relate to.'}
+        {colorBy === 'cluster' && 'Nodes colored by topic cluster. The graph algorithm detects groups of closely related artifacts based on their connections. Clusters reveal emergent themes.'}
+        {' '}The graph updates in real-time as new contributions are processed.
+      </p>
 
       {showFilters && (
         <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">

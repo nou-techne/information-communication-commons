@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
-import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, GitCommit, Handshake } from 'lucide-react'
+import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, Handshake } from 'lucide-react'
 import { useConvergence } from '../contexts/ConvergenceContext'
 
 const Graph = lazy(() => import('./Graph').then(m => ({ default: m.Graph })))
@@ -462,16 +462,23 @@ export function Explore() {
                     <span className="text-xs text-gray-600 ml-auto flex-shrink-0">{timeAgo(item.created_at)}</span>
                   </div>
                   <p className="text-xs text-gray-400 line-clamp-2 mb-1.5">{item.preview}</p>
-                  {item.status === 'complete' && item.edge_count > 0 && (
-                    <div className="flex items-center gap-1.5">
-                      <GitCommit className="w-3 h-3 text-[#c3fd50]" />
-                      <span className="text-xs font-mono text-[#c3fd50]">{item.edge_count}</span>
-                      <span className="text-xs text-gray-600">
-                        {item.edge_count === 1 ? 'edge' : 'edges'}
-                      </span>
-                      <span className="text-xs text-gray-700 ml-1">
-                        ({item.artifact_count}a {item.relationship_count}r {item.commitment_count}c)
-                      </span>
+                  {item.status === 'complete' && (item.artifact_count > 0 || item.relationship_count > 0) && (
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                      {item.artifact_count > 0 && (
+                        <span className="text-xs text-gray-400">
+                          <span className="font-mono text-[#c3fd50] font-medium">{item.artifact_count}</span> {item.artifact_count === 1 ? 'node' : 'nodes'}
+                        </span>
+                      )}
+                      {item.relationship_count > 0 && (
+                        <span className="text-xs text-gray-400">
+                          <span className="font-mono text-[#c3fd50] font-medium">{item.relationship_count}</span> {item.relationship_count === 1 ? 'edge' : 'edges'}
+                        </span>
+                      )}
+                      {item.commitment_count > 0 && (
+                        <span className="text-xs text-gray-400">
+                          <span className="font-mono text-amber-400 font-medium">{item.commitment_count}</span> {item.commitment_count === 1 ? 'commitment' : 'commitments'}
+                        </span>
+                      )}
                     </div>
                   )}
                   {item.status === 'processing' && (
