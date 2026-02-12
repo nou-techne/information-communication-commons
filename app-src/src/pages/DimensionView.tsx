@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import type { Artifact, Participant } from '../lib/supabase'
 import { ARTIFACT_COLORS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import { Users, ChevronRight } from 'lucide-react'
+import { useConvergence } from '../contexts/ConvergenceContext'
 
 function timeAgo(date: string) {
   const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
@@ -324,8 +325,16 @@ export function DimensionView() {
   const { dimension } = useParams<{ dimension: string }>()
   const [artifacts, setArtifacts] = useState<Artifact[]>([])
   const [loading, setLoading] = useState(true)
+  const { convergence } = useConvergence()
 
-  const dim = dimension ? DIMENSION_MAP[dimension] : null
+  // Try hardcoded map first, fall back to convergence config for dynamic dimensions
+  let dim = dimension ? DIMENSION_MAP[dimension] : null
+  if (!dim && dimension && convergence.dimensions) {
+    const cfgDim = convergence.dimensions.find(d => d.key === dimension)
+    if (cfgDim) {
+      dim = { letter: cfgDim.letter, name: cfgDim.name, subtitle: cfgDim.desc, tagName: cfgDim.tag, color: cfgDim.color }
+    }
+  }
 
   useEffect(() => {
     if (!dim) return
