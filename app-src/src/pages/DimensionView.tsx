@@ -96,23 +96,95 @@ function EcologyView({ artifacts }: { artifacts: Artifact[] }) {
   )
 }
 
+interface Participant {
+  id: string
+  display_name: string | null
+  email: string | null
+  bio: string | null
+  organization: string | null
+  avatar_url: string | null
+  skills: string[] | null
+  interests: string[] | null
+  social_links: Record<string, string> | null
+}
+
+function profileCompleteness(p: Participant): number {
+  let score = 0
+  if (p.display_name) score += 2
+  if (p.bio) score += 2
+  if (p.organization) score += 1
+  if (p.avatar_url) score += 1
+  if (p.skills && p.skills.length > 0) score += 1
+  if (p.interests && p.interests.length > 0) score += 1
+  if (p.social_links && Object.keys(p.social_links).length > 0) score += 1
+  if (p.email) score += 1
+  return score // max 10
+}
+
 function HumanView({ artifacts }: { artifacts: Artifact[] }) {
-  const [participantCount, setParticipantCount] = useState(0)
+  const [participants, setParticipants] = useState<Participant[]>([])
+  const [showDirectory, setShowDirectory] = useState(false)
 
   useEffect(() => {
-    supabase.from('participants').select('*', { count: 'exact', head: true }).then(({ count }) => {
-      setParticipantCount(count ?? 0)
+    supabase.from('participants').select('id, display_name, email, bio, organization, avatar_url, skills, interests, social_links').then(({ data }) => {
+      if (data) {
+        const sorted = (data as Participant[]).sort((a, b) => profileCompleteness(b) - profileCompleteness(a))
+        setParticipants(sorted)
+      }
     })
   }, [])
 
   return (
     <div className="space-y-6">
-      {participantCount > 0 && (
-        <div className="rounded-lg border border-[#1d2839] bg-[#0a101d] p-4">
-          <p className="text-gray-400 text-sm">
-            <span className="text-2xl font-bold mr-2" style={{ color: '#c4956a' }}>{participantCount}</span>
-            participants registered. Browse the <Link to="/" className="text-[#a6ed2a] hover:text-white transition-colors">activity feed</Link> to see their contributions.
-          </p>
+      {participants.length > 0 && (
+        <div
+          className="rounded-lg border border-[#1d2839] bg-[#0a101d] p-4 cursor-pointer hover:border-[#a6ed2a] transition-colors"
+          onClick={() => setShowDirectory(!showDirectory)}
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-gray-400 text-sm">
+              <span className="text-2xl font-bold mr-2" style={{ color: '#c4956a' }}>{participants.length}</span>
+              participants registered
+            </p>
+            <span className="text-gray-500 text-xs">{showDirectory ? '▲ Hide' : '▼ Show Directory'}</span>
+          </div>
+        </div>
+      )}
+
+      {showDirectory && participants.length > 0 && (
+        <div className="grid gap-2">
+          {participants.map(p => {
+            const completeness = profileCompleteness(p)
+            return (
+              <Link
+                key={p.id}
+                to={`/p/${encodeURIComponent(p.display_name || p.id)}`}
+                className="flex items-center gap-3 p-3 rounded-lg border border-[#1d2839] bg-[#0a101d] hover:border-[#a6ed2a] transition-colors"
+              >
+                {p.avatar_url ? (
+                  <img src={p.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+                ) : (
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style={{ backgroundColor: '#c4956a30', color: '#c4956a' }}>
+                    {(p.display_name || '?')[0].toUpperCase()}
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="text-white font-medium text-sm truncate">{p.display_name || 'Anonymous'}</div>
+                  {p.organization && <div className="text-gray-500 text-xs truncate">{p.organization}</div>}
+                  {p.bio && <div className="text-gray-400 text-xs truncate mt-0.5">{p.bio}</div>}
+                </div>
+                <div className="flex gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-1.5 h-4 rounded-sm"
+                      style={{ backgroundColor: i < Math.ceil(completeness / 2) ? '#a6ed2a' : '#1d2839' }}
+                    />
+                  ))}
+                </div>
+              </Link>
+            )
+          })}
         </div>
       )}
       {artifacts.length > 0 ? (
