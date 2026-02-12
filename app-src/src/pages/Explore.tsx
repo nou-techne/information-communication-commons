@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
@@ -49,6 +49,16 @@ export function Explore() {
 
   // View mode
   const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d')
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const graphContainerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function onFullscreenChange() {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
+  }, [])
 
   // Pulse state
   const [feedItems, setFeedItems] = useState<ContributionFeedItem[]>([])
@@ -298,11 +308,25 @@ export function Explore() {
             </div>
           </div>
           {viewMode === '3d' ? (
-            <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
-              <div className="h-[500px]">
-                <Graph />
-              </div>
-            </Suspense>
+            <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#0f0f0f]' : ''}`}>
+              <button
+                onClick={() => {
+                  if (isFullscreen) {
+                    document.exitFullscreen()
+                  } else {
+                    graphContainerRef.current?.requestFullscreen()
+                  }
+                }}
+                className="absolute top-2 right-2 z-10 px-3 py-1.5 text-xs bg-[#262626] text-gray-300 rounded-lg hover:bg-[#333] transition-colors"
+              >
+                {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+              </button>
+              <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
+                <div className={isFullscreen ? 'h-screen' : 'h-[500px]'}>
+                  <Graph />
+                </div>
+              </Suspense>
+            </div>
           ) : (<>
           {/* Search + Filters */}
           <div className="mb-4">
