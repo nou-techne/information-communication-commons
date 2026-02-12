@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Activity, Users, Link2, TrendingUp } from 'lucide-react';
+import { Card, CardBody } from '../components/ui/Card';
 
 interface Stats {
   totalArtifacts: number;
@@ -166,44 +167,53 @@ export default function Dashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6 text-center">
-          <div className="flex justify-center mb-3">
-            <Activity className="w-8 h-8 text-[#c3fd50]" />
-          </div>
-          <div className="text-4xl font-bold mb-1">{stats.totalArtifacts}</div>
-          <div className="text-gray-500 text-sm uppercase tracking-wide">Artifacts</div>
-        </div>
+        <Card>
+          <CardBody className="text-center">
+            <div className="flex justify-center mb-3">
+              <Activity className="w-8 h-8 text-[#c3fd50]" />
+            </div>
+            <div className="text-4xl font-bold mb-1">{stats.totalArtifacts}</div>
+            <div className="text-gray-500 text-sm uppercase tracking-wide">Artifacts</div>
+          </CardBody>
+        </Card>
 
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6 text-center">
-          <div className="flex justify-center mb-3">
-            <Users className="w-8 h-8 text-violet-500" />
-          </div>
-          <div className="text-4xl font-bold mb-1">{stats.totalParticipants}</div>
-          <div className="text-gray-500 text-sm uppercase tracking-wide">Participants</div>
-        </div>
+        <Card>
+          <CardBody className="text-center">
+            <div className="flex justify-center mb-3">
+              <Users className="w-8 h-8 text-violet-500" />
+            </div>
+            <div className="text-4xl font-bold mb-1">{stats.totalParticipants}</div>
+            <div className="text-gray-500 text-sm uppercase tracking-wide">Participants</div>
+          </CardBody>
+        </Card>
 
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6 text-center">
-          <div className="flex justify-center mb-3">
-            <Link2 className="w-8 h-8 text-cyan-500" />
-          </div>
-          <div className="text-4xl font-bold mb-1">{stats.totalRelationships}</div>
-          <div className="text-gray-500 text-sm uppercase tracking-wide">Relationships</div>
-        </div>
+        <Card>
+          <CardBody className="text-center">
+            <div className="flex justify-center mb-3">
+              <Link2 className="w-8 h-8 text-cyan-500" />
+            </div>
+            <div className="text-4xl font-bold mb-1">{stats.totalRelationships}</div>
+            <div className="text-gray-500 text-sm uppercase tracking-wide">Relationships</div>
+          </CardBody>
+        </Card>
 
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6 text-center">
-          <div className="flex justify-center mb-3">
-            <TrendingUp className="w-8 h-8 text-[#c3fd50]" />
-          </div>
-          <div className="text-4xl font-bold mb-1">{stats.recentContributions}</div>
-          <div className="text-gray-500 text-sm uppercase tracking-wide">Last Hour</div>
-        </div>
+        <Card>
+          <CardBody className="text-center">
+            <div className="flex justify-center mb-3">
+              <TrendingUp className="w-8 h-8 text-[#c3fd50]" />
+            </div>
+            <div className="text-4xl font-bold mb-1">{stats.recentContributions}</div>
+            <div className="text-gray-500 text-sm uppercase tracking-wide">Last Hour</div>
+          </CardBody>
+        </Card>
       </div>
 
       {/* Two Column Layout */}
       <div className="grid grid-cols-2 gap-8">
         {/* Recent Artifacts */}
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-300">Recent Artifacts</h2>
+        <Card>
+          <CardBody>
+            <h2 className="text-xl font-semibold mb-4 text-gray-300">Recent Artifacts</h2>
           <div className="space-y-3">
             {recentArtifacts.map((artifact) => (
               <div key={artifact.id} className="flex items-start gap-3 p-3 bg-[#0f0f0f] rounded border border-gray-800">
@@ -215,11 +225,13 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-        </div>
+          </CardBody>
+        </Card>
 
         {/* Dimension Distribution */}
-        <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-300">Dimension Distribution</h2>
+        <Card>
+          <CardBody>
+            <h2 className="text-xl font-semibold mb-4 text-gray-300">Dimension Distribution</h2>
           <div className="space-y-4">
             {dimensions.map((dim) => {
               const maxCount = dimensions[0]?.count || 1;
@@ -244,7 +256,8 @@ export default function Dashboard() {
               );
             })}
           </div>
-        </div>
+          </CardBody>
+        </Card>
       </div>
 
       {/* Live Indicator */}
