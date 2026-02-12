@@ -240,7 +240,7 @@ export default function Dashboard() {
               
               const dimKey = dim.dimension === 'E' ? 'e' : dim.dimension;
               return (
-                <Link key={dim.dimension} to={`/dimension/${dimKey}`} className="block hover:bg-[#262626] rounded-lg p-2 -m-2 transition-colors">
+                <Link key={dim.dimension} to={`/d/${dimKey}`} className="block hover:bg-[#262626] rounded-lg p-2 -m-2 transition-colors">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <div className={`w-3 h-3 rounded ${dim.color}`}></div>

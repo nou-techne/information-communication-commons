@@ -8,6 +8,7 @@ import { ToastContainer } from './components/ui/Toast'
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { PageLoader } from './components/ui/PageLoader'
+import { Footer } from './components/Footer'
 // Lazy load all page components for code splitting
 const Explore = lazy(() => import('./pages/Explore').then(m => ({ default: m.Explore })))
 const ArtifactDetail = lazy(() => import('./pages/ArtifactDetail').then(m => ({ default: m.ArtifactDetail })))
@@ -193,9 +194,9 @@ export default function App() {
     <BrowserRouter basename="/app">
       <ToastProvider>
       <ConvergenceProvider>
-        <div className="min-h-screen bg-[#0f0f0f] text-white">
+        <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col">
           <Nav />
-          <main className="max-w-6xl mx-auto px-4 py-6">
+          <main className="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
           <ErrorBoundary>
             <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -231,6 +232,7 @@ export default function App() {
             </Suspense>
           </ErrorBoundary>
         </main>
+          <Footer />
       </div>
       </ConvergenceProvider>
       <ToastContainer />

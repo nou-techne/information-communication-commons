@@ -255,7 +255,7 @@ export function ContributionDetail() {
             {DIMENSIONS.map(d => {
               const count = dimCounts[d.tag] ?? 0
               const Wrapper = count > 0 ? Link : 'div' as any
-              const wrapperProps = count > 0 ? { to: `/dimension/${d.key}` } : {}
+              const wrapperProps = count > 0 ? { to: `/d/${d.key}` } : {}
               return (
                 <Wrapper
                   key={d.key}
