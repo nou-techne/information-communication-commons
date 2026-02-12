@@ -50,7 +50,9 @@ export function Explore() {
   const [searchResults, setSearchResults] = useState<Artifact[] | null>(null)
 
   // View mode
-  const [viewMode, setViewMode] = useState<'2d' | '3d'>('3d')
+  const [viewMode, setViewMode] = useState<'2d' | '3d'>(() =>
+    window.matchMedia('(max-width: 768px)').matches ? '2d' : '3d'
+  )
   const [isFullscreen, setIsFullscreen] = useState(false)
   const graphContainerRef = useRef<HTMLDivElement>(null)
 
