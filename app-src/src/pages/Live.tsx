@@ -76,7 +76,6 @@ export default function Live() {
         c[tag.name] = arr?.[0]?.count ?? 0
       }
     }
-    c['hlamt:H'] = pc ?? 0
     if (wordData) c['hlamt:L'] = wordData.length
     setDimCounts(c)
 

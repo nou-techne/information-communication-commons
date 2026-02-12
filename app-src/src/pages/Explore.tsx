@@ -126,8 +126,6 @@ export function Explore() {
         c[tag.name] = arr?.[0]?.count ?? 0
       }
     }
-    // H/ counts participants, not artifacts
-    c['hlamt:H'] = participantCount ?? 0
     // L/ counts total unique words from word frequency analysis
     if (wordData) {
       c['hlamt:L'] = wordData.length
