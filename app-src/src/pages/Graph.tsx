@@ -85,6 +85,9 @@ export function Graph({ replaySeq }: GraphProps = {}) {
     const sub = supabase.channel('graph-realtime')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => loadData())
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_relationships' }, () => loadData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_tags' }, () => loadData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'contributions' }, () => loadData())
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'contributions' }, () => loadData())
       .subscribe()
     return () => { supabase.removeChannel(sub) }
   }, [loadData])
