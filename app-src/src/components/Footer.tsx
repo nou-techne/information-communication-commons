@@ -46,7 +46,7 @@ export function Footer() {
               Privacy
             </a>
             <a
-              href="https://github.com/nou-techne/information-communication-commons/blob/main/LICENSE"
+              href="https://github.com/nou-techne/information-communication-commons/blob/main/LICENSE.md"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-300 transition-colors"
