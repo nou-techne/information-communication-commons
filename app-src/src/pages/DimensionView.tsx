@@ -346,12 +346,27 @@ export function DimensionView() {
 
         if (atags && atags.length > 0) {
           const ids = atags.map(at => at.artifact_id)
-          const { data: arts } = await supabase
-            .from('artifacts')
-            .select('*')
-            .in('id', ids)
-            .order('created_at', { ascending: false })
-          if (arts) setArtifacts(arts)
+          const [{ data: arts }, { data: coordData }] = await Promise.all([
+            supabase.from('artifacts').select('*').in('id', ids),
+            supabase.from('coordination_interests').select('artifact_id').in('artifact_id', ids),
+          ])
+          if (arts) {
+            // Count coordinate signals per artifact
+            const coordCounts: Record<string, number> = {}
+            if (coordData) {
+              for (const row of coordData) {
+                coordCounts[row.artifact_id] = (coordCounts[row.artifact_id] || 0) + 1
+              }
+            }
+            // Sort by coordinate signal count (desc), then by created_at (desc)
+            arts.sort((a, b) => {
+              const ca = coordCounts[a.id] || 0
+              const cb = coordCounts[b.id] || 0
+              if (cb !== ca) return cb - ca
+              return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            })
+            setArtifacts(arts)
+          }
         }
       }
       setLoading(false)
