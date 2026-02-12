@@ -318,19 +318,23 @@ export function Explore() {
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
                 <div className={`relative w-full overflow-hidden ${isFullscreen ? 'h-full' : 'h-[600px]'}`}>
                   <Graph />
-                  <button
-                    onClick={() => {
-                      if (isFullscreen) {
-                        document.exitFullscreen()
-                      } else {
-                        graphContainerRef.current?.requestFullscreen()
-                      }
-                    }}
-                    className="absolute top-3 left-3 z-50 px-3 py-1.5 text-xs bg-[#1d2839]/90 text-gray-300 rounded-lg hover:bg-[#333] transition-colors backdrop-blur-sm border border-[#333]"
-                  >
-                    {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-                  </button>
+                  {isFullscreen && (
+                    <button
+                      onClick={() => document.exitFullscreen()}
+                      className="absolute top-3 left-3 z-50 px-3 py-1.5 text-xs bg-[#1d2839]/90 text-gray-300 rounded-lg hover:bg-[#283347] transition-colors backdrop-blur-sm border border-[#283347]"
+                    >
+                      Exit Fullscreen
+                    </button>
+                  )}
                 </div>
+                {!isFullscreen && (
+                  <button
+                    onClick={() => graphContainerRef.current?.requestFullscreen()}
+                    className="mt-3 px-4 py-2 text-sm bg-[#0a101d] border border-[#1d2839] text-gray-300 rounded-lg hover:border-[#a6ed2a] transition-colors"
+                  >
+                    Fullscreen
+                  </button>
+                )}
               </Suspense>
             </div>
           ) : (<>
