@@ -187,17 +187,20 @@ function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
   const maxCollective = collectiveWords[0]?.count ?? 1
 
   return (
-    <div className="space-y-6">
-      <WordFrequencyChart words={collectiveWords} maxCount={maxCollective} label="Emergent Vocabulary" />
-
-      {artifacts.length > 0 && (
-        <div>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Language Knowledge Nodes ({artifacts.length})</h2>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div>
+        <WordFrequencyChart words={collectiveWords} maxCount={maxCollective} label="Emergent Vocabulary" />
+      </div>
+      <div>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Language Knowledge Nodes ({artifacts.length})</h2>
+        {artifacts.length > 0 ? (
           <div className="grid gap-3">
             {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
           </div>
-        </div>
-      )}
+        ) : (
+          <p className="text-gray-500 text-sm">No language-tagged artifacts yet.</p>
+        )}
+      </div>
     </div>
   )
 }
