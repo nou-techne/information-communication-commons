@@ -523,12 +523,25 @@ export function Graph({ replaySeq }: GraphProps = {}) {
           <p className="text-sm text-gray-400">{artCount} artifacts{viewMode === 'chain' ? `, ${currentNodes.filter(n => n.kind === 'contribution').length} contributions` : viewMode === 'social' ? `, ${currentNodes.filter(n => n.kind === 'participant').length} participants` : ''}</p>
         </div>
         <div className="flex gap-2">
-          {(['chain', 'social', 'semantic'] as ViewMode[]).map(m => (
-            <button key={m} onClick={() => { setViewMode(m); setSelectedNode(null) }}
-              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${viewMode === m ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'}`}>
-              {m === 'chain' ? 'Chain' : m === 'social' ? 'Social' : 'Semantic'}
-            </button>
-          ))}
+          {(['chain', 'social', 'semantic'] as ViewMode[]).map(m => {
+            const tooltips: Record<string, string> = {
+              chain: 'Convergence Chain — Contributions in the order they were added, linked by hash. Shows how the commons grew over time. Each node is a contribution; edges trace the append-only chain.',
+              social: 'Social Graph — People and what they contributed. Shows who is connected through shared artifacts, revealing collaboration patterns and participant clusters.',
+              semantic: 'Semantic Graph — Artifacts clustered by meaning and dimension. Shows how ideas, proposals, and commitments relate to each other across the e/H-LAM/T/S framework.',
+            }
+            return (
+              <div key={m} className="relative group">
+                <button onClick={() => { setViewMode(m); setSelectedNode(null) }}
+                  className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${viewMode === m ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'}`}>
+                  {m === 'chain' ? 'Chain' : m === 'social' ? 'Social' : 'Semantic'}
+                </button>
+                <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-[#0a101d] border border-[#1d2839] rounded-lg text-xs text-gray-300 leading-relaxed opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity shadow-lg">
+                  {tooltips[m]}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0a101d] border-r border-b border-[#1d2839] rotate-45 -mt-1" />
+                </div>
+              </div>
+            )
+          })}
           <button onClick={() => setDimOverlay(!dimOverlay)}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${dimOverlay ? 'bg-[#c4956a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'}`}
             title="Toggle H-LAM/T dimension color overlay">
