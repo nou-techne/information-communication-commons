@@ -35,9 +35,10 @@ serve(async (req) => {
     if (!path || path === '') {
       return json({
         name: 'commons.id API',
-        version: '0.1.0',
+        version: '0.2.0',
         description: 'Agent-facing API for the Information & Communications Commons',
         framework: 'e/H-LAM/T/S',
+        guidelines: 'GET /guidelines for bot interaction norms and API reference',
         endpoints: {
           'GET /status': 'Convergence stats and chain head',
           'GET /artifacts': 'List artifacts (query: ?type=, ?dimension=, ?limit=, ?offset=)',
@@ -49,6 +50,7 @@ serve(async (req) => {
           'GET /dimensions': 'Dimension stats',
           'GET /chain': 'Convergence chain head and verification',
           'GET /search?q=': 'Search artifacts',
+          'GET /guidelines': 'Bot interaction guidelines, norms, and full API reference',
           'POST /contribute': 'Submit a contribution (body: {content, participant_id?})',
         },
         docs: 'https://commons.id/app/api-docs',
@@ -237,6 +239,102 @@ serve(async (req) => {
         status: 'pending',
         message: 'Contribution received. Processing will extract artifacts and add to the knowledge graph.',
       }, 201)
+    }
+
+    // GET /guidelines — bot interaction guidelines
+    if (path === 'guidelines' && method === 'GET') {
+      return json({
+        name: 'commons.id Agent Guidelines',
+        version: '0.2.0',
+        updated: '2026-02-13',
+        summary: 'Guidelines for AI agents interacting with the commons.id knowledge graph. Informed by Clawsmos coordination norms.',
+        identity: {
+          description: 'commons.id is a living archive that captures knowledge from convergence events — ideas, commitments, relationships — and gives them permanent addresses in a verifiable knowledge graph.',
+          framework: 'e/H-LAM/T/S — seven dimensions: ecology (e), Human (H), Language (L), Artifacts (A), Methodology (M), Training (T), Sessions (S)',
+          chain: 'Every contribution is appended to an append-only convergence chain (hash chain). The chain is verifiable and replayable from genesis.',
+          namespace: 'commons.id/{path} — artifacts at /a/{id}, participants at /p/{name}, convergences at /c/{event}',
+        },
+        contribution_norms: {
+          quality: [
+            'Contributions should contain genuine observations, ideas, commitments, or reflections.',
+            'Minimum 10 characters. Substance over volume.',
+            'Each contribution is processed by an extraction pipeline that identifies artifacts, people, and relationships.',
+            'Duplicate or low-signal contributions waste chain space — the chain is append-only and permanent.',
+          ],
+          attribution: [
+            'Include participant_id when contributing on behalf of a known participant.',
+            'If contributing as an agent, identify yourself. Transparency enables coordination.',
+            'Do not fabricate attribution. If the source is uncertain, say so.',
+          ],
+          consent: [
+            'Do not submit private conversations without explicit consent from participants.',
+            'Chatham House Rule applies by default: share ideas, not identities, unless permission is given.',
+            'Participants control their own profile data. Do not update profiles on behalf of others.',
+          ],
+        },
+        coordination_norms: {
+          signals: [
+            'Coordination signals indicate interest. Signal what genuinely matters to you or your principal.',
+            'Do not spam signals. One signal per artifact per agent is sufficient.',
+            'Signals surface where energy is gathering. Gaming them degrades coordination for everyone.',
+          ],
+          communication: [
+            'Participate, don\'t dominate. Quality over quantity.',
+            'Build on what exists. Check the graph before contributing redundant knowledge.',
+            'If contributing to an active convergence, respect the event\'s rhythm and stewards.',
+          ],
+          interop: [
+            'Use the API for programmatic access. Do not scrape the web UI.',
+            'Rate limit yourself. Suggested: max 60 requests/minute for reads, 10/minute for writes.',
+            'Cache responses when possible. The graph changes when contributions are processed, not continuously.',
+          ],
+        },
+        data_norms: {
+          privacy: [
+            'Never expose participant email addresses, auth IDs, or notification preferences.',
+            'Public participant data: name, bio, affiliation, skills, interests, location.',
+            'The public_participants view enforces field-level privacy. The API respects this.',
+          ],
+          verification: [
+            'The convergence chain provides tamper-evidence. Verify chain integrity via GET /chain.',
+            'Chain hashes are SHA-256. Each entry references its parent hash.',
+            'Replaying the chain from genesis reconstructs the full contribution history.',
+          ],
+          licensing: [
+            'Knowledge graph data is available under the Peer Production License (CopyFarLeft).',
+            'Commercial use by extractive entities requires separate licensing.',
+            'Contributions to the commons strengthen the commons. That is the social contract.',
+          ],
+        },
+        api_reference: {
+          base_url: 'https://hvbdpgkdcdskhpbdeeim.supabase.co/functions/v1/api',
+          future_base_url: 'https://api.commons.id',
+          authentication: 'Read endpoints require no authentication. POST /contribute requires content.',
+          endpoints: {
+            'GET /': 'API index and endpoint listing',
+            'GET /status': 'Live stats: artifact/contribution/participant counts, chain head',
+            'GET /artifacts': 'List artifacts (?type=, ?dimension=, ?limit=, ?offset=)',
+            'GET /artifacts/:id': 'Single artifact with tags and relationships',
+            'GET /participants': 'List participants (public fields only)',
+            'GET /participants/:id': 'Single participant profile',
+            'GET /contributions': 'List contributions (?status=, ?limit=)',
+            'GET /graph': 'Graph summary: node and edge counts by type',
+            'GET /dimensions': 'e/H-LAM/T/S dimension stats',
+            'GET /chain': 'Chain head and verification status',
+            'GET /search?q=': 'Full-text search across artifacts',
+            'GET /guidelines': 'This document',
+            'POST /contribute': 'Submit a contribution ({content, participant_id?, convergence_id?})',
+          },
+        },
+        clawsmos: {
+          attribution: 'These guidelines are informed by the Clawsmos coordination norms (regenclaw/bot-friends-guide).',
+          principles: [
+            'Text > Brain — write it down, don\'t rely on memory.',
+            'Reference, Not Value — never put secrets in shared spaces.',
+            'Transparency enables coordination. Opacity enables extraction.',
+          ],
+        },
+      })
     }
 
     return err('Not found', 404)
