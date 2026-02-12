@@ -20,6 +20,9 @@ import { ParticipantProfile } from './pages/ParticipantProfile'
 import { SessionDetail } from './pages/SessionDetail'
 import { Stats } from './pages/Stats'
 import { Onboard } from './pages/Onboard'
+import { Channels } from './pages/Channels'
+import { ChannelView } from './pages/ChannelView'
+import { ThreadView } from './pages/ThreadView'
 import type { Session } from '@supabase/supabase-js'
 
 // Sprint 41: Lazy load heavy pages for code splitting
@@ -43,6 +46,7 @@ function Nav() {
     { to: '/', label: 'Explore' },
     { to: '/contribute', label: 'Contribute' },
     { to: '/coordinate', label: 'Coordinate' },
+    { to: '/channels', label: 'Channels' },
     { to: '/me', label: 'My Activity' },
   ]
 
@@ -197,6 +201,9 @@ export default function App() {
               <Route path="/p/:id" element={<ParticipantProfile />} />
               <Route path="/session/:id" element={<SessionDetail />} />
               <Route path="/stats" element={<Stats />} />
+              <Route path="/channels" element={<Channels />} />
+              <Route path="/channels/:slug" element={<ChannelView />} />
+              <Route path="/channels/:slug/:threadId" element={<ThreadView />} />
               <Route path="/welcome" element={<Onboard />} />
               <Route path="/status" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Status /></Suspense>} />
               <Route path="/auth" element={<Auth />} />
