@@ -1,511 +1,494 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { Network } from 'lucide-react'
 import * as d3 from 'd3'
 import { EmptyState } from '../components/ui/EmptyState'
-import { ReplaySlider } from '../components/ReplaySlider'
-import { ChainStatus } from '../components/ChainStatus'
 
-interface Node {
-  id: string
-  title: string
-  type: string
-  rea_role: string
-  isDimension?: boolean
-  dimensionLabel?: string
-  dimensionColor?: string
-  dimensionDegree?: number
-  cluster_id?: string
-  cluster_label?: string
-}
-
-interface Link {
-  source: string
-  target: string
-  type: string
-  weight?: number
-}
-
-interface GraphData {
-  nodes: Node[]
-  links: Link[]
-}
-
-const REA_COLORS: Record<string, string> = {
-  resource: '#10b981',
-  event: '#f59e0b',
-  agent: '#3b82f6',
-}
-
-const TYPE_COLORS: Record<string, string> = {
-  idea: '#8b5cf6',
-  proposal: '#ec4899',
-  commitment: '#ef4444',
-  question: '#06b6d4',
-  pattern: '#14b8a6',
-  reflection: '#6366f1',
-}
-
+/* ── colour maps ── */
 const DIMENSION_COLORS: Record<string, string> = {
-  e: '#4a8c6f',
-  H: '#c4956a',
-  L: '#a6ed2a',
-  A: '#8bbfff',
-  M: '#7ccfb8',
-  T: '#e8927c',
+  e: '#4a8c6f', H: '#c4956a', L: '#a6ed2a', A: '#8bbfff', M: '#7ccfb8', T: '#e8927c',
 }
-
 const DIMENSION_LABELS: Record<string, string> = {
-  e: 'e/ Environment',
-  H: 'H/ Human',
-  L: 'L/ Language',
-  A: 'A/ Artifacts',
-  M: 'M/ Methodology',
-  T: 'T/ Training',
+  e: 'e/ Environment', H: 'H/ Human', L: 'L/ Language', A: 'A/ Artifacts', M: 'M/ Methodology', T: 'T/ Training',
 }
 
-const DIMENSION_KEYS = ['e', 'H', 'L', 'A', 'M', 'T']
-
-interface GraphProps {
-  replaySeq?: number | null
+const REA_COLORS: Record<string, string> = { resource: '#10b981', event: '#f59e0b', agent: '#3b82f6' }
+const TYPE_COLORS: Record<string, string> = {
+  idea: '#8b5cf6', proposal: '#ec4899', commitment: '#ef4444',
+  question: '#06b6d4', pattern: '#14b8a6', reflection: '#6366f1',
 }
+
+/* ── types ── */
+type ViewMode = 'chain' | 'social' | 'semantic'
+
+interface Artifact { id: string; title: string; type: string; rea_role: string; created_by: string | null; steward_id: string | null }
+interface Contribution { id: string; content: string; created_at: string; seq: number; chain_hash: string; extraction: any; participant_id: string | null }
+interface Relationship { from_artifact_id: string; to_artifact_id: string; type: string }
+interface TagEntry { artifact_id: string; tags: { name: string } }
+interface Participant { id: string; name: string }
+
+interface GNode {
+  id: string; label: string; kind: 'artifact' | 'contribution' | 'participant'
+  r: number; color: string; dashed?: boolean
+  type?: string; rea_role?: string; seq?: number
+  participantName?: string; tagCount?: number; clusterId?: number; clusterLabel?: string
+  dimColor?: string | null
+  x?: number; y?: number; fx?: number | null; fy?: number | null
+}
+interface GLink { source: string; target: string; dashed?: boolean; weight?: number; label?: string }
+
+interface GraphProps { replaySeq?: number | null }
 
 export function Graph({ replaySeq }: GraphProps = {}) {
-  const [data, setData] = useState<GraphData | null>(null)
-  const [fullData, setFullData] = useState<GraphData | null>(null)
+  const [viewMode, setViewMode] = useState<ViewMode>('chain')
+  const [dimOverlay, setDimOverlay] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [colorBy, setColorBy] = useState<'rea' | 'type' | 'dimension' | 'cluster'>('rea')
+  const [selectedNode, setSelectedNode] = useState<GNode | null>(null)
+
+  // raw data
+  const [artifacts, setArtifacts] = useState<Artifact[]>([])
+  const [contributions, setContributions] = useState<Contribution[]>([])
+  const [relationships, setRelationships] = useState<Relationship[]>([])
+  const [tagEntries, setTagEntries] = useState<TagEntry[]>([])
+  const [participants, setParticipants] = useState<Participant[]>([])
+  const [chainMaxSeq, setChainMaxSeq] = useState(0)
+
   const svgRef = useRef<SVGSVGElement>(null)
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null)
-  const [clusters, setClusters] = useState<any[]>([])
-  const [filters, setFilters] = useState({
-    types: [] as string[],
-    dimensions: [] as string[],
-    dateRange: 'all' as 'week' | 'month' | 'all',
-    participant: '',
-  })
-  const [showFilters, setShowFilters] = useState(false)
+  const graphContainerRef = useRef<HTMLDivElement>(null)
+  const simulationRef = useRef<d3.Simulation<any, any> | null>(null)
+  const zoomRef = useRef<any>(null)
+
+  /* ── load data ── */
+  const loadData = useCallback(async () => {
+    const [aRes, cRes, rRes, tRes, pRes, hRes] = await Promise.all([
+      supabase.from('artifacts').select('id, title, type, rea_role, created_by, steward_id').limit(300),
+      supabase.from('contributions').select('id, content, created_at, seq, chain_hash, extraction, participant_id').order('seq'),
+      supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(500),
+      supabase.from('artifact_tags').select('artifact_id, tags!inner(name)'),
+      supabase.from('participants').select('id, name'),
+      supabase.rpc('chain_head'),
+    ])
+    if (aRes.data) setArtifacts(aRes.data as Artifact[])
+    if (cRes.data) setContributions(cRes.data as Contribution[])
+    if (rRes.data) setRelationships(rRes.data as Relationship[])
+    if (tRes.data) setTagEntries(tRes.data as TagEntry[])
+    if (pRes.data) setParticipants(pRes.data as Participant[])
+    if (hRes.data && Array.isArray(hRes.data) && hRes.data.length > 0) {
+      setChainMaxSeq((hRes.data as any)[0]?.head_seq ?? 0)
+    }
+    setLoading(false)
+  }, [])
 
   useEffect(() => {
-    async function loadGraph() {
-      const [{ data: artifacts }, { data: relationships }, { data: tagData }, { data: clusterData }] = await Promise.all([
-        supabase.from('artifacts').select('id, title, type, rea_role').order('created_at', { ascending: false }).limit(200),
-        supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(400),
-        supabase.from('artifact_tags').select('artifact_id, tags!inner(name)'),
-        supabase.rpc('get_graph_clusters', { p_convergence_id: '00000000-0000-0000-0000-000000000100' }),
-      ])
+    loadData()
+    const sub = supabase.channel('graph-realtime')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => loadData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_relationships' }, () => loadData())
+      .subscribe()
+    return () => { supabase.removeChannel(sub) }
+  }, [loadData])
 
-      // Extract hlamt dimension links from tags
-      const artifactDimensions = (tagData || [])
-        .filter((t: any) => t.tags?.name?.startsWith('hlamt:'))
-        .map((t: any) => ({
-          artifact_id: t.artifact_id,
-          dimension: t.tags.name.replace('hlamt:', ''),
-          weight: 1.0,
-        }))
-
-      if (!artifacts) {
-        setLoading(false)
-        return
+  /* ── helpers ── */
+  const artifactDimMap = useCallback((): Map<string, string> => {
+    const m = new Map<string, string>()
+    for (const t of tagEntries) {
+      if (t.tags?.name?.startsWith('hlamt:')) {
+        const dim = t.tags.name.replace('hlamt:', '')
+        if (!m.has(t.artifact_id)) m.set(t.artifact_id, dim)
       }
+    }
+    return m
+  }, [tagEntries])
 
-      // Count dimension connections per artifact
-      const degreeCounts: Record<string, number> = {}
-      for (const ad of (artifactDimensions || [])) {
-        degreeCounts[ad.artifact_id] = (degreeCounts[ad.artifact_id] || 0) + 1
-      }
+  const artifactTagsMap = useCallback((): Map<string, string[]> => {
+    const m = new Map<string, string[]>()
+    for (const t of tagEntries) {
+      const list = m.get(t.artifact_id) || []
+      list.push(t.tags?.name || '')
+      m.set(t.artifact_id, list)
+    }
+    return m
+  }, [tagEntries])
 
-      // Build cluster map
-      const clusterMap: Record<string, { cluster_id: string; label: string }> = {}
-      const parsedClusters = (clusterData as any) || []
-      setClusters(parsedClusters)
-      for (const cluster of parsedClusters) {
-        for (const nodeId of cluster.node_ids || []) {
-          clusterMap[nodeId] = { cluster_id: cluster.cluster_id, label: cluster.label }
+  // Replay filter: which contributions are visible
+  const visibleContributions = useCallback((): Contribution[] => {
+    if (replaySeq == null || replaySeq <= 0) return contributions
+    return contributions.filter(c => c.seq <= replaySeq)
+  }, [contributions, replaySeq])
+
+  // Which artifact titles are visible based on visible contributions' extraction
+  const visibleArtifactIds = useCallback((): Set<string> => {
+    if (replaySeq == null || replaySeq <= 0) return new Set(artifacts.map(a => a.id))
+    const visCont = visibleContributions()
+    const titles = new Set<string>()
+    for (const c of visCont) {
+      const ext = c.extraction as any
+      if (ext?.artifacts) {
+        for (const ea of ext.artifacts) {
+          if (ea.title) titles.add(ea.title)
         }
       }
+    }
+    return new Set(artifacts.filter(a => titles.has(a.title)).map(a => a.id))
+  }, [artifacts, replaySeq, visibleContributions])
 
-      const nodes: Node[] = artifacts.map(a => ({
-        id: a.id,
-        title: a.title,
-        type: a.type,
-        rea_role: a.rea_role || 'resource',
-        dimensionDegree: degreeCounts[a.id] || 0,
-        cluster_id: clusterMap[a.id]?.cluster_id,
-        cluster_label: clusterMap[a.id]?.label,
-      }))
+  /* ── build graph per view ── */
+  const buildGraph = useCallback((): { nodes: GNode[]; links: GLink[] } => {
+    const visIds = visibleArtifactIds()
+    const visArts = artifacts.filter(a => visIds.has(a.id))
+    const dimMap = artifactDimMap()
+    const tagsMap = artifactTagsMap()
 
-      // Add dimension nodes
-      for (const key of DIMENSION_KEYS) {
+    if (replaySeq === 0) return { nodes: [], links: [] }
+
+    if (viewMode === 'chain') {
+      const visCont = visibleContributions()
+      const nodes: GNode[] = []
+      const links: GLink[] = []
+      const artIdSet = new Set(visArts.map(a => a.id))
+
+      // contribution nodes
+      for (const c of visCont) {
+        const dim = null
         nodes.push({
-          id: `dim-${key}`,
-          title: DIMENSION_LABELS[key],
-          type: 'dimension',
-          rea_role: 'dimension',
-          isDimension: true,
-          dimensionLabel: key,
-          dimensionColor: DIMENSION_COLORS[key],
+          id: `c-${c.id}`, label: c.content?.slice(0, 40) || `Contribution #${c.seq}`,
+          kind: 'contribution', r: 16, color: '#a6ed2a', dashed: true,
+          seq: c.seq, dimColor: null,
         })
       }
 
-      const nodeIds = new Set(nodes.map(n => n.id))
-      const links: Link[] = (relationships || [])
-        .filter(r => nodeIds.has(r.from_artifact_id) && nodeIds.has(r.to_artifact_id))
-        .map(r => ({
-          source: r.from_artifact_id,
-          target: r.to_artifact_id,
-          type: r.type,
-        }))
+      // artifact nodes
+      for (const a of visArts) {
+        const dc = dimOverlay ? (DIMENSION_COLORS[dimMap.get(a.id) || ''] || null) : null
+        nodes.push({
+          id: a.id, label: a.title, kind: 'artifact', r: 8,
+          color: dc || REA_COLORS[a.rea_role] || '#999',
+          type: a.type, rea_role: a.rea_role, dimColor: dc,
+        })
+      }
 
-      // Add dimension edges
-      for (const ad of (artifactDimensions || [])) {
-        if (nodeIds.has(ad.artifact_id)) {
-          links.push({
-            source: ad.artifact_id,
-            target: `dim-${ad.dimension}`,
-            type: 'dimension_link',
-            weight: ad.weight || 0.5,
-          })
+      // contribution→artifact edges (match extraction titles)
+      for (const c of visCont) {
+        const ext = c.extraction as any
+        if (ext?.artifacts) {
+          for (const ea of ext.artifacts) {
+            const match = visArts.find(a => a.title === ea.title)
+            if (match) {
+              links.push({ source: `c-${c.id}`, target: match.id, dashed: true, label: 'extracted' })
+            }
+          }
         }
       }
 
-      setFullData({ nodes, links })
-      setData({ nodes, links })
-      setLoading(false)
+      // artifact→artifact
+      for (const r of relationships) {
+        if (artIdSet.has(r.from_artifact_id) && artIdSet.has(r.to_artifact_id)) {
+          links.push({ source: r.from_artifact_id, target: r.to_artifact_id })
+        }
+      }
+
+      return { nodes, links }
     }
 
-    loadGraph()
+    if (viewMode === 'social') {
+      const nodes: GNode[] = []
+      const links: GLink[] = []
+      const artIdSet = new Set(visArts.map(a => a.id))
+      const participantIds = new Set<string>()
 
-    // Real-time: reload graph when new artifacts arrive
-    const sub = supabase.channel('graph-realtime')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => loadGraph())
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_relationships' }, () => loadGraph())
-      .subscribe()
+      // figure out which participants appear
+      for (const a of visArts) {
+        if (a.created_by) participantIds.add(a.created_by)
+        if (a.steward_id) participantIds.add(a.steward_id)
+      }
+      // also from visible contributions
+      for (const c of visibleContributions()) {
+        if (c.participant_id) participantIds.add(c.participant_id)
+      }
 
-    return () => { supabase.removeChannel(sub) }
-  }, [])
+      const visParticipants = participants.filter(p => participantIds.has(p.id))
 
-  // Replay filtering: when replaySeq changes, filter graph to only show artifacts at that chain state
+      for (const p of visParticipants) {
+        const initials = p.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase()
+        nodes.push({
+          id: `p-${p.id}`, label: p.name, kind: 'participant', r: 18,
+          color: '#c4956a', participantName: initials,
+        })
+      }
+
+      for (const a of visArts) {
+        const dc = dimOverlay ? (DIMENSION_COLORS[dimMap.get(a.id) || ''] || null) : null
+        nodes.push({
+          id: a.id, label: a.title, kind: 'artifact', r: 7,
+          color: dc || REA_COLORS[a.rea_role] || '#999',
+          type: a.type, rea_role: a.rea_role, dimColor: dc,
+        })
+        // participant→artifact edges
+        if (a.created_by && participantIds.has(a.created_by)) {
+          links.push({ source: `p-${a.created_by}`, target: a.id })
+        }
+        if (a.steward_id && a.steward_id !== a.created_by && participantIds.has(a.steward_id)) {
+          links.push({ source: `p-${a.steward_id}`, target: a.id })
+        }
+      }
+
+      // participant↔participant weighted by shared tags
+      const pArr = visParticipants
+      for (let i = 0; i < pArr.length; i++) {
+        for (let j = i + 1; j < pArr.length; j++) {
+          const tagsA = new Set<string>()
+          const tagsB = new Set<string>()
+          for (const a of visArts) {
+            if (a.created_by === pArr[i].id || a.steward_id === pArr[i].id) {
+              for (const t of (tagsMap.get(a.id) || [])) tagsA.add(t)
+            }
+            if (a.created_by === pArr[j].id || a.steward_id === pArr[j].id) {
+              for (const t of (tagsMap.get(a.id) || [])) tagsB.add(t)
+            }
+          }
+          let shared = 0
+          for (const t of tagsA) if (tagsB.has(t)) shared++
+          if (shared > 0) {
+            links.push({ source: `p-${pArr[i].id}`, target: `p-${pArr[j].id}`, weight: shared })
+          }
+        }
+      }
+
+      return { nodes, links }
+    }
+
+    // semantic
+    const nodes: GNode[] = []
+    const links: GLink[] = []
+    const tagsMap2 = tagsMap
+
+    for (const a of visArts) {
+      const tags = tagsMap2.get(a.id) || []
+      const dc = dimOverlay ? (DIMENSION_COLORS[dimMap.get(a.id) || ''] || null) : null
+      nodes.push({
+        id: a.id, label: a.title, kind: 'artifact',
+        r: Math.max(5, Math.min(18, 5 + tags.length * 2)),
+        color: dc || TYPE_COLORS[a.type] || '#999',
+        type: a.type, rea_role: a.rea_role, tagCount: tags.length, dimColor: dc,
+      })
+    }
+
+    // tag co-occurrence edges
+    const tagToArts = new Map<string, string[]>()
+    for (const a of visArts) {
+      for (const t of (tagsMap2.get(a.id) || [])) {
+        const list = tagToArts.get(t) || []
+        list.push(a.id)
+        tagToArts.set(t, list)
+      }
+    }
+    const edgeWeights = new Map<string, number>()
+    for (const [, artIds] of tagToArts) {
+      for (let i = 0; i < artIds.length; i++) {
+        for (let j = i + 1; j < artIds.length; j++) {
+          const key = artIds[i] < artIds[j] ? `${artIds[i]}|${artIds[j]}` : `${artIds[j]}|${artIds[i]}`
+          edgeWeights.set(key, (edgeWeights.get(key) || 0) + 1)
+        }
+      }
+    }
+    for (const [key, w] of edgeWeights) {
+      const [a, b] = key.split('|')
+      links.push({ source: a, target: b, weight: w })
+    }
+
+    return { nodes, links }
+  }, [artifacts, contributions, relationships, tagEntries, participants, viewMode, dimOverlay, replaySeq, visibleArtifactIds, visibleContributions, artifactDimMap, artifactTagsMap])
+
+  /* ── D3 rendering ── */
   useEffect(() => {
-    if (!fullData) return
-    if (replaySeq == null || replaySeq <= 0) {
-      setData(fullData)
+    if (loading || !svgRef.current) return
+
+    const { nodes, links } = buildGraph()
+    if (nodes.length === 0) {
+      if (simulationRef.current) { simulationRef.current.stop(); simulationRef.current = null }
+      d3.select(svgRef.current).selectAll('*').remove()
       return
     }
-    // Fetch artifact titles at this seq from graph_at_seq
-    supabase.rpc('graph_at_seq', { p_seq: replaySeq }).then(({ data: seqData }) => {
-      if (!seqData) { setData(fullData); return }
-      const replayTitles = new Set(seqData.map((r: any) => r.artifact_title))
-      // Filter nodes: keep dimension nodes + artifacts whose title matches
-      const filteredNodes = fullData.nodes.filter(n => n.isDimension || replayTitles.has(n.title))
-      const filteredNodeIds = new Set(filteredNodes.map(n => n.id))
-      const filteredLinks = fullData.links.filter(l => {
-        const src = typeof l.source === 'string' ? l.source : (l.source as any).id
-        const tgt = typeof l.target === 'string' ? l.target : (l.target as any).id
-        return filteredNodeIds.has(src) && filteredNodeIds.has(tgt)
-      })
-      setData({ nodes: filteredNodes, links: filteredLinks })
-    })
-  }, [replaySeq, fullData])
 
-  useEffect(() => {
-    supabase.rpc('chain_head').then(({ data: chainData }) => {
-      if (chainData && chainData.length > 0 && chainData[0].head_seq) {
-        setChainMaxSeq(chainData[0].head_seq)
-      }
-    })
-  }, [])
-
-  const simulationRef = useRef<d3.Simulation<any, any> | null>(null)
-  const zoomRef = useRef<any>(null)
-  const graphContainerRef = useRef<HTMLDivElement>(null)
-
-  function resetGraph() {
-    // Force full re-render by stopping old sim and clearing
-    if (simulationRef.current) {
-      simulationRef.current.stop()
-      simulationRef.current = null
-    }
-    if (svgRef.current) {
-      d3.select(svgRef.current).selectAll('*').remove()
-    }
-    // Trigger re-render by toggling a key
-    setRenderKey(k => k + 1)
-  }
-
-  const [renderKey, setRenderKey] = useState(0)
-  const [chainMaxSeq, setChainMaxSeq] = useState(0)
-
-  useEffect(() => {
-    if (!data || !svgRef.current) return
-
-    // Stop any existing simulation
-    if (simulationRef.current) {
-      simulationRef.current.stop()
-      simulationRef.current = null
-    }
+    if (simulationRef.current) { simulationRef.current.stop(); simulationRef.current = null }
 
     const svg = d3.select(svgRef.current)
-    const width = svgRef.current.clientWidth
-    const height = svgRef.current.clientHeight
-
     svg.selectAll('*').remove()
-
-    // Deep-copy nodes and links to prevent D3 mutation of source data
-    const allNodes = data.nodes.map(n => ({ ...n }))
-    const allLinks = data.links.map(l => ({ ...l }))
-
-    // Helper to get ID from source/target (always use original string IDs)
-    const getId = (ref: any): string => typeof ref === 'string' ? ref : ref.id
-
-    // Apply filters
-    let filteredNodes = allNodes
-    let filteredLinks = allLinks
-
-    if (filters.types.length > 0) {
-      // First, keep only artifact nodes matching the type filter
-      const matchingArtifactIds = new Set(
-        filteredNodes.filter(n => !n.isDimension && filters.types.includes(n.type)).map(n => n.id)
-      )
-      // Then include dimension nodes only if they connect to a surviving artifact
-      const connectedDimIds = new Set<string>()
-      for (const link of filteredLinks) {
-        const srcId = getId(link.source)
-        const tgtId = getId(link.target)
-        if (link.type === 'dimension_link') {
-          if (matchingArtifactIds.has(srcId)) connectedDimIds.add(tgtId)
-          if (matchingArtifactIds.has(tgtId)) connectedDimIds.add(srcId)
-        }
-      }
-      const keepIds = new Set([...matchingArtifactIds, ...connectedDimIds])
-      filteredNodes = filteredNodes.filter(n => keepIds.has(n.id))
-      filteredLinks = filteredLinks.filter(l => keepIds.has(getId(l.source)) && keepIds.has(getId(l.target)))
-    }
-
-    if (filters.dimensions.length > 0) {
-      const dimNodeIds = new Set(filters.dimensions.map(d => `dim-${d}`))
-      // Find all artifacts connected to the selected dimensions
-      const connectedIds = new Set(dimNodeIds)
-      for (const link of filteredLinks) {
-        const srcId = getId(link.source)
-        const tgtId = getId(link.target)
-        if (dimNodeIds.has(srcId)) connectedIds.add(tgtId)
-        if (dimNodeIds.has(tgtId)) connectedIds.add(srcId)
-      }
-      filteredNodes = filteredNodes.filter(n => connectedIds.has(n.id))
-      filteredLinks = filteredLinks.filter(l => connectedIds.has(getId(l.source)) && connectedIds.has(getId(l.target)))
-    }
+    const width = svgRef.current.clientWidth || 800
+    const height = svgRef.current.clientHeight || 600
+    const cx = width / 2, cy = height / 2
 
     const g = svg.append('g')
 
-    svg.append('defs').selectAll('marker')
-      .data(['end'])
-      .enter().append('marker')
-      .attr('id', 'arrowhead')
-      .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 20)
-      .attr('refY', 0)
-      .attr('markerWidth', 6)
-      .attr('markerHeight', 6)
-      .attr('orient', 'auto')
-      .append('path')
-      .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#666')
+    // arrow marker
+    svg.append('defs').append('marker')
+      .attr('id', 'arrowhead').attr('viewBox', '0 -5 10 10')
+      .attr('refX', 20).attr('refY', 0).attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
+      .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#666')
 
-    const cx = width / 2
-    const cy = height / 2
-    const ringRadius = Math.min(width, height) * 0.4
+    const simNodes = nodes.map(n => ({ ...n })) as any[]
+    const simLinks = links.map(l => ({ ...l })) as any[]
 
-    // Count edges per dimension node for dynamic sizing
-    const dimEdgeCounts: Record<string, number> = {}
-    // Count "coordinate" signals (commitment-type artifacts) per dimension
-    const dimCoordinateCounts: Record<string, number> = {}
-    for (const key of DIMENSION_KEYS) {
-      const dimId = `dim-${key}`
-      dimEdgeCounts[dimId] = filteredLinks.filter(l => {
-        const src = getId(l.source), tgt = getId(l.target)
-        return src === dimId || tgt === dimId
-      }).length
-      // Count coordinate signals: artifacts of type 'commitment' connected to this dimension
-      const connectedArtifactIds = new Set(
-        filteredLinks
-          .filter(l => {
-            const src = getId(l.source), tgt = getId(l.target)
-            return (src === dimId || tgt === dimId) && l.type === 'dimension_link'
-          })
-          .map(l => { const src = getId(l.source), tgt = getId(l.target); return src === dimId ? tgt : src })
-      )
-      dimCoordinateCounts[dimId] = filteredNodes.filter(n => connectedArtifactIds.has(n.id) && n.type === 'commitment').length
-    }
-    const maxDimEdges = Math.max(1, ...Object.values(dimEdgeCounts))
-
-    // Pre-position dimension nodes in hexagonal layout (initial positions, not fixed)
-    const simNodes = filteredNodes.map((n, _i) => {
-      const copy = { ...n } as any
-      if (n.isDimension) {
-        const dimIdx = DIMENSION_KEYS.indexOf(n.dimensionLabel!)
-        const angle = (dimIdx / 6) * Math.PI * 2 - Math.PI / 2
-        copy.x = cx + ringRadius * Math.cos(angle)
-        copy.y = cy + ringRadius * Math.sin(angle)
-        copy.dimEdges = dimEdgeCounts[n.id] || 0
-        copy.dimCoordinate = dimCoordinateCounts[n.id] || 0
-      }
-      return copy
-    })
-
-    // Store dimension target positions for radial pull
-    const dimTargets: Record<string, { x: number; y: number }> = {}
-    for (const key of DIMENSION_KEYS) {
-      const dimIdx = DIMENSION_KEYS.indexOf(key)
-      const angle = (dimIdx / 6) * Math.PI * 2 - Math.PI / 2
-      dimTargets[`dim-${key}`] = {
-        x: cx + ringRadius * Math.cos(angle),
-        y: cy + ringRadius * Math.sin(angle),
-      }
+    // position contributions along x by seq in chain view
+    if (viewMode === 'chain') {
+      const contribs = simNodes.filter((n: any) => n.kind === 'contribution')
+      contribs.sort((a: any, b: any) => (a.seq || 0) - (b.seq || 0))
+      contribs.forEach((n: any, i: number) => {
+        n.x = 100 + (i / Math.max(1, contribs.length - 1)) * (width - 200)
+        n.y = cy
+      })
     }
 
     const simulation = d3.forceSimulation(simNodes)
-      .force('link', d3.forceLink(filteredLinks as any).id((d: any) => d.id).distance((d: any) => d.type === 'dimension_link' ? 160 : 80))
-      .force('charge', d3.forceManyBody().strength((d: any) => d.isDimension ? -1200 : -200))
-      .force('center', d3.forceCenter(cx, cy).strength(0.03))
-      .force('collision', d3.forceCollide().radius((d: any) => {
-        if (d.isDimension) {
-          const edges = d.dimEdges || 0
-          return 18 + (edges / maxDimEdges) * 30
-        }
-        return 12
+      .force('link', d3.forceLink(simLinks).id((d: any) => d.id).distance((d: any) => {
+        if (d.dashed) return 60
+        return 80 + (1 / (1 + (d.weight || 0))) * 40
       }))
-      // Gentle pull toward ring positions instead of pinning
-      .force('dimX', d3.forceX((d: any) => dimTargets[d.id]?.x ?? cx).strength((d: any) => d.isDimension ? 0.3 : 0))
-      .force('dimY', d3.forceY((d: any) => dimTargets[d.id]?.y ?? cy).strength((d: any) => d.isDimension ? 0.3 : 0))
+      .force('charge', d3.forceManyBody().strength((d: any) => {
+        if (d.kind === 'participant') return -600
+        if (d.kind === 'contribution') return -400
+        return -120
+      }))
+      .force('center', d3.forceCenter(cx, cy).strength(0.04))
+      .force('collision', d3.forceCollide().radius((d: any) => (d.r || 8) + 4))
+
+    if (viewMode === 'chain') {
+      simulation.force('contribY', d3.forceY(cy).strength((d: any) => d.kind === 'contribution' ? 0.15 : 0))
+    }
 
     simulationRef.current = simulation
 
     // Draw links
-    const link = g.append('g')
-      .selectAll('line')
-      .data(filteredLinks)
-      .enter().append('line')
-      .attr('stroke', (d: any) => {
-        if (d.type === 'dimension_link') {
-          const targetId = typeof d.target === 'string' ? d.target : (d.target as any).id
-          const dimKey = targetId.replace('dim-', '')
-          return DIMENSION_COLORS[dimKey] || '#666'
-        }
-        return '#666'
-      })
-      .attr('stroke-opacity', (d: any) => d.type === 'dimension_link' ? 0.25 : 0.3)
-      .attr('stroke-width', (d: any) => d.type === 'dimension_link' ? (d.weight || 0.5) * 3 + 1 : 1)
-      .attr('marker-end', (d: any) => d.type === 'dimension_link' ? null : 'url(#arrowhead)')
+    const linkSel = g.append('g').selectAll('line').data(simLinks).enter().append('line')
+      .attr('stroke', '#666').attr('stroke-opacity', 0.3)
+      .attr('stroke-width', (d: any) => Math.min(4, 1 + (d.weight || 0) * 0.5))
+      .attr('stroke-dasharray', (d: any) => d.dashed ? '5,3' : null)
+      .attr('marker-end', (d: any) => d.dashed ? null : 'url(#arrowhead)')
+
+    // Semantic clusters: convex hulls
+    let hullSel: any = null
+    if (viewMode === 'semantic') {
+      hullSel = g.append('g').attr('class', 'hulls')
+    }
 
     // Draw nodes
-    const node = g.append('g')
-      .selectAll('circle')
-      .data(simNodes)
-      .enter().append('circle')
-      .attr('r', (d: any) => {
-        if (d.isDimension) {
-          const edges = d.dimEdges || 0
-          const coordBonus = (d.dimCoordinate || 0) * 3
-          return Math.max(18, 18 + ((edges + coordBonus) / maxDimEdges) * 28)
-        }
-        const degree = d.dimensionDegree || 0
-        return Math.min(14, Math.max(6, 6 + degree * 1.5))
-      })
-      .attr('fill', (d: any) => {
-        if (d.isDimension) return d.dimensionColor
-        if (colorBy === 'rea') return REA_COLORS[d.rea_role] || '#999'
-        if (colorBy === 'type') return TYPE_COLORS[d.type] || '#999'
-        if (colorBy === 'cluster') {
-          if (!d.cluster_id) return '#444'  // Unclustered nodes
-          // Generate consistent color from cluster_id hash
-          const hash = d.cluster_id.split('').reduce((a: number, b: string) => ((a << 5) - a) + b.charCodeAt(0), 0)
-          const hue = Math.abs(hash % 360)
-          return `hsl(${hue}, 65%, 55%)`
-        }
-        // dimension mode: color artifacts by their strongest dimension
-        const artifactLinks = filteredLinks.filter(l => {
-          const src = typeof l.source === 'string' ? l.source : (l.source as any).id
-          return src === d.id && l.type === 'dimension_link'
-        })
-        if (artifactLinks.length > 0) {
-          const strongest = artifactLinks.reduce((a, b) => (b.weight || 0) > (a.weight || 0) ? b : a)
-          const dimKey = (typeof strongest.target === 'string' ? strongest.target : (strongest.target as any).id).replace('dim-', '')
-          return DIMENSION_COLORS[dimKey] || '#999'
-        }
-        return '#555'
-      })
-      .attr('stroke', (d: any) => d.isDimension ? '#fff' : '#000')
-      .attr('stroke-width', (d: any) => d.isDimension ? 2 : 1.5)
-      .attr('stroke-opacity', (d: any) => d.isDimension ? 0.3 : 1)
+    const nodeSel = g.append('g').selectAll('g').data(simNodes).enter().append('g')
       .style('cursor', 'pointer')
-      .on('click', (_event, d: any) => {
-        if (!d.isDimension) setSelectedNode(d)
-      })
+      .on('click', (_event: any, d: any) => setSelectedNode(d))
       .call(d3.drag<any, any>()
-        .on('start', (event, d: any) => {
-          if (!event.active) simulation.alphaTarget(0.3).restart()
-          if (!d.isDimension) { d.fx = d.x; d.fy = d.y }
-        })
-        .on('drag', (event, d: any) => {
-          if (!d.isDimension) { d.fx = event.x; d.fy = event.y }
-        })
-        .on('end', (event, d: any) => {
-          if (!event.active) simulation.alphaTarget(0)
-          if (!d.isDimension) { d.fx = null; d.fy = null }
-        }) as any
+        .on('start', (event: any, d: any) => { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y })
+        .on('drag', (event: any, d: any) => { d.fx = event.x; d.fy = event.y })
+        .on('end', (event: any, d: any) => { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null })
       )
 
-    node.append('title').text((d: any) => d.title)
+    nodeSel.append('circle')
+      .attr('r', (d: any) => d.r)
+      .attr('fill', (d: any) => d.color)
+      .attr('stroke', (d: any) => d.dashed ? '#a6ed2a' : '#000')
+      .attr('stroke-width', (d: any) => d.kind === 'artifact' ? 1.5 : 2)
+      .attr('stroke-dasharray', (d: any) => d.dashed ? '4,2' : null)
 
-    // Persistent labels on dimension nodes
-    const dimLabels = g.append('g')
-      .selectAll('text')
-      .data(simNodes.filter((d: any) => d.isDimension))
-      .enter().append('text')
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'central')
-      .attr('fill', '#080c16')
-      .attr('font-size', (d: any) => {
-        const edges = d.dimEdges || 0
-        return `${Math.max(11, 11 + (edges / maxDimEdges) * 6)}px`
-      })
-      .attr('font-weight', 'bold')
+    // Labels for contribution/participant nodes
+    nodeSel.filter((d: any) => d.kind === 'participant' || d.kind === 'contribution')
+      .append('text')
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+      .attr('fill', '#080c16').attr('font-size', '10px').attr('font-weight', 'bold')
       .attr('pointer-events', 'none')
-      .text((d: any) => `${d.dimensionLabel}/`)
+      .text((d: any) => d.kind === 'participant' ? (d.participantName || '') : `#${d.seq ?? ''}`)
+
+    nodeSel.append('title').text((d: any) => d.label)
+
+    // Cluster detection for semantic view
+    function computeHulls() {
+      if (viewMode !== 'semantic' || !hullSel) return
+      hullSel.selectAll('*').remove()
+
+      // simple proximity clusters via tag co-occurrence: use connected components of strong edges
+      const nodeMap = new Map(simNodes.map((n: any) => [n.id, n]))
+      const parent = new Map<string, string>()
+      function find(x: string): string {
+        if (!parent.has(x)) parent.set(x, x)
+        if (parent.get(x) !== x) parent.set(x, find(parent.get(x)!))
+        return parent.get(x)!
+      }
+      function union(a: string, b: string) { parent.set(find(a), find(b)) }
+
+      for (const l of simLinks) {
+        const sId = typeof l.source === 'string' ? l.source : l.source.id
+        const tId = typeof l.target === 'string' ? l.target : l.target.id
+        if ((l.weight || 0) >= 2) union(sId, tId)
+      }
+
+      const groups = new Map<string, any[]>()
+      for (const n of simNodes) {
+        const root = find(n.id)
+        const list = groups.get(root) || []
+        list.push(n)
+        groups.set(root, list)
+      }
+
+      const tagsMap = artifactTagsMap()
+      for (const [, members] of groups) {
+        if (members.length < 3) continue
+        const points: [number, number][] = members.map((n: any) => [n.x as number, n.y as number])
+        const hull = d3.polygonHull(points)
+        if (!hull) continue
+
+        // find most common tag in cluster
+        const tagCounts = new Map<string, number>()
+        for (const m of members) {
+          for (const t of (tagsMap.get(m.id) || [])) {
+            tagCounts.set(t, (tagCounts.get(t) || 0) + 1)
+          }
+        }
+        let bestTag = ''
+        let bestCount = 0
+        for (const [t, c] of tagCounts) {
+          if (c > bestCount) { bestTag = t; bestCount = c }
+        }
+
+        // Expand hull slightly
+        const centroid = d3.polygonCentroid(hull)
+        const expanded = hull.map(([x, y]) => {
+          const dx = x - centroid[0], dy = y - centroid[1]
+          const len = Math.sqrt(dx * dx + dy * dy)
+          return [x + (dx / len) * 20, y + (dy / len) * 20] as [number, number]
+        })
+
+        hullSel.append('path')
+          .attr('d', `M${expanded.map(p => p.join(',')).join('L')}Z`)
+          .attr('fill', 'rgba(166,237,42,0.08)')
+          .attr('stroke', 'rgba(166,237,42,0.25)')
+          .attr('stroke-width', 1)
+
+        hullSel.append('text')
+          .attr('x', centroid[0]).attr('y', centroid[1] - members.length * 2 - 10)
+          .attr('text-anchor', 'middle').attr('fill', 'rgba(166,237,42,0.6)')
+          .attr('font-size', '10px').text(bestTag)
+
+        // tag cluster id on nodes
+        for (const m of members) {
+          m.clusterLabel = bestTag
+        }
+      }
+    }
 
     simulation.on('tick', () => {
-      link
-        .attr('x1', (d: any) => d.source.x)
-        .attr('y1', (d: any) => d.source.y)
-        .attr('x2', (d: any) => d.target.x)
-        .attr('y2', (d: any) => d.target.y)
-
-      node
-        .attr('cx', (d: any) => d.x)
-        .attr('cy', (d: any) => d.y)
-
-      dimLabels
-        .attr('x', (d: any) => d.x)
-        .attr('y', (d: any) => d.y)
+      linkSel
+        .attr('x1', (d: any) => d.source.x).attr('y1', (d: any) => d.source.y)
+        .attr('x2', (d: any) => d.target.x).attr('y2', (d: any) => d.target.y)
+      nodeSel.attr('transform', (d: any) => `translate(${d.x},${d.y})`)
+      computeHulls()
     })
 
-    const zoom = d3.zoom()
-      .scaleExtent([0.1, 4])
-      .on('zoom', (event) => {
-        g.attr('transform', event.transform)
-      })
-
+    const zoom = d3.zoom().scaleExtent([0.1, 4]).on('zoom', (event: any) => g.attr('transform', event.transform))
     svg.call(zoom as any)
     zoomRef.current = zoom
 
-    return () => {
-      if (simulationRef.current) {
-        simulationRef.current.stop()
-      }
-    }
-  }, [data, colorBy, filters, renderKey])
+    return () => { if (simulationRef.current) simulationRef.current.stop() }
+  }, [loading, buildGraph, viewMode, artifactTagsMap])
 
+  /* ── render ── */
   if (loading) {
     return (
       <div className="h-[600px] flex items-center justify-center">
@@ -517,285 +500,107 @@ export function Graph({ replaySeq }: GraphProps = {}) {
     )
   }
 
-  if (!data || data.nodes.length === 0) {
+  const { nodes: currentNodes } = buildGraph()
+  if (currentNodes.length === 0 && replaySeq !== 0) {
     return (
       <div className="h-[600px] flex items-center justify-center">
         <EmptyState
           icon={<Network className="w-12 h-12" />}
           title="No artifacts yet"
-          description="Submit a contribution to start building the knowledge graph."
+          description="Submit your first contribution to seed the knowledge graph."
         />
       </div>
     )
   }
 
-  const artifactCount = data.nodes.filter(n => !n.isDimension).length
-  const relCount = data.links.filter(l => l.type !== 'dimension_link').length
-  const dimLinkCount = data.links.filter(l => l.type === 'dimension_link').length
+  const artCount = currentNodes.filter(n => n.kind === 'artifact').length
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Knowledge Graph</h1>
-          <p className="text-sm text-gray-400">
-            {artifactCount} artifacts, {relCount} relationships, {dimLinkCount} dimension links
-          </p>
+          <p className="text-sm text-gray-400">{artCount} artifacts{viewMode === 'chain' ? `, ${currentNodes.filter(n => n.kind === 'contribution').length} contributions` : viewMode === 'social' ? `, ${currentNodes.filter(n => n.kind === 'participant').length} participants` : ''}</p>
         </div>
         <div className="flex gap-2">
-          {([
-            { mode: 'rea' as const, label: 'REA', tip: 'Color by economic role: Resources (things), Events (actions), Agents (people/orgs)' },
-            { mode: 'type' as const, label: 'Type', tip: 'Color by artifact type: ideas, proposals, commitments, patterns, questions, etc.' },
-            { mode: 'dimension' as const, label: 'Dimension', tip: 'Color by e/H-LAM/T dimension: which lens of analysis the artifact belongs to' },
-            { mode: 'cluster' as const, label: 'Cluster', tip: 'Color by topic cluster: groups of related artifacts detected by the graph algorithm' },
-          ]).map(({ mode, label, tip }) => (
-            <button
-              key={mode}
-              onClick={() => setColorBy(mode)}
-              title={tip}
-              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                colorBy === mode ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'
-              }`}
-            >
-              {label}
+          {(['chain', 'social', 'semantic'] as ViewMode[]).map(m => (
+            <button key={m} onClick={() => { setViewMode(m); setSelectedNode(null) }}
+              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${viewMode === m ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'}`}>
+              {m === 'chain' ? 'Chain' : m === 'social' ? 'Social' : 'Semantic'}
             </button>
           ))}
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-              showFilters ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'
-            }`}
-          >
-            Filters
-          </button>
-          <button
-            onClick={() => {
-              setFilters({ types: [], dimensions: [], dateRange: 'all', participant: '' })
-              setSelectedNode(null)
-              resetGraph()
-            }}
-            className="px-3 py-1.5 text-sm rounded-lg transition-colors bg-[#1d2839] text-gray-300 hover:bg-[#333]"
-            title="Reset graph to default state"
-          >
-            Reset
+          <button onClick={() => setDimOverlay(!dimOverlay)}
+            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${dimOverlay ? 'bg-[#c4956a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'}`}
+            title="Toggle H-LAM/T dimension color overlay">
+            Dim Colors
           </button>
         </div>
       </div>
-
-      <p className="text-xs text-gray-500 -mt-2 mb-2">
-        {colorBy === 'rea' && 'Nodes colored by REA role: Resources (stocks of value), Events (transformations), Agents (participants). The fundamental grammar of economic activity.'}
-        {colorBy === 'type' && 'Nodes colored by artifact type: ideas, proposals, commitments, patterns, questions, reflections. What kind of knowledge each node represents.'}
-        {colorBy === 'dimension' && 'Nodes colored by their strongest e/H-LAM/T dimension. The six large nodes are dimension anchors — artifacts cluster around the dimensions they relate to.'}
-        {colorBy === 'cluster' && 'Nodes colored by topic cluster. The graph algorithm detects groups of closely related artifacts based on their connections. Clusters reveal emergent themes.'}
-        {' '}The graph updates in real-time as new contributions are processed.
-      </p>
-
-      {showFilters && (
-        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">Artifact Types</label>
-              <div className="flex flex-wrap gap-2">
-                {Object.keys(TYPE_COLORS).map(type => (
-                  <button
-                    key={type}
-                    onClick={() => {
-                      setFilters(prev => ({
-                        ...prev,
-                        types: prev.types.includes(type)
-                          ? prev.types.filter(t => t !== type)
-                          : [...prev.types, type]
-                      }))
-                    }}
-                    className={`px-2 py-1 text-xs rounded ${
-                      filters.types.includes(type)
-                        ? 'bg-[#a6ed2a] text-[#080c16]'
-                        : 'bg-[#1d2839] text-gray-400 hover:bg-[#333]'
-                    }`}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">Dimensions</label>
-              <div className="flex flex-wrap gap-2">
-                {DIMENSION_KEYS.map(dim => (
-                  <button
-                    key={dim}
-                    onClick={() => {
-                      setFilters(prev => ({
-                        ...prev,
-                        dimensions: prev.dimensions.includes(dim)
-                          ? prev.dimensions.filter(d => d !== dim)
-                          : [...prev.dimensions, dim]
-                      }))
-                    }}
-                    className={`px-2 py-1 text-xs rounded ${
-                      filters.dimensions.includes(dim)
-                        ? 'bg-[#a6ed2a] text-[#080c16]'
-                        : 'bg-[#1d2839] text-gray-400 hover:bg-[#333]'
-                    }`}
-                  >
-                    {dim}/
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {(filters.types.length > 0 || filters.dimensions.length > 0) && (
-            <button
-              onClick={() => setFilters({ types: [], dimensions: [], dateRange: 'all', participant: '' })}
-              className="mt-4 px-3 py-1.5 text-xs bg-[#1d2839] text-gray-400 hover:bg-[#333] rounded"
-            >
-              Clear all filters
-            </button>
-          )}
-        </div>
-      )}
 
       <div className="flex gap-4">
         <div ref={graphContainerRef} className="flex-1 bg-[#060a14] border border-[#1d2839] rounded-lg overflow-hidden relative">
           <svg ref={svgRef} className="w-full h-full min-h-[400px]" style={{ maxHeight: '700px' }} />
+
+          {/* zoom / fullscreen controls */}
           <div className="absolute bottom-3 right-3 flex flex-col gap-1">
-            <button
-              onClick={() => {
-                if (svgRef.current && zoomRef.current) {
-                  d3.select(svgRef.current).transition().duration(200).call(zoomRef.current.scaleBy, 1.4)
-                }
-              }}
-              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center text-lg font-bold backdrop-blur-sm"
-              aria-label="Zoom in"
-            >
-              +
-            </button>
-            <button
-              onClick={() => {
-                if (svgRef.current && zoomRef.current) {
-                  d3.select(svgRef.current).transition().duration(200).call(zoomRef.current.scaleBy, 0.7)
-                }
-              }}
-              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center text-lg font-bold backdrop-blur-sm"
-              aria-label="Zoom out"
-            >
-              −
-            </button>
-            <button
-              onClick={() => {
-                const el = graphContainerRef.current
-                if (!el) return
-                if (document.fullscreenElement) {
-                  document.exitFullscreen()
-                } else {
-                  el.requestFullscreen()
-                }
-              }}
-              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center backdrop-blur-sm"
-              aria-label="Toggle fullscreen"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
-              </svg>
+            <button onClick={() => { if (svgRef.current && zoomRef.current) d3.select(svgRef.current).transition().duration(200).call(zoomRef.current.scaleBy, 1.4) }}
+              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center text-lg font-bold backdrop-blur-sm" aria-label="Zoom in">+</button>
+            <button onClick={() => { if (svgRef.current && zoomRef.current) d3.select(svgRef.current).transition().duration(200).call(zoomRef.current.scaleBy, 0.7) }}
+              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center text-lg font-bold backdrop-blur-sm" aria-label="Zoom out">−</button>
+            <button onClick={() => { const el = graphContainerRef.current; if (!el) return; document.fullscreenElement ? document.exitFullscreen() : el.requestFullscreen() }}
+              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center backdrop-blur-sm" aria-label="Toggle fullscreen">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
             </button>
           </div>
 
+          {/* detail panel */}
           {selectedNode && (
             <div className="w-64 bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 absolute top-4 right-4 z-50 max-h-[80vh] overflow-y-auto shadow-xl">
-            <div className="flex items-start justify-between mb-2">
-              <h3 className="font-bold flex-1">{selectedNode.title}</h3>
-              <button
-                onClick={() => setSelectedNode(null)}
-                className="ml-2 p-1 text-gray-500 hover:text-white hover:bg-[#1d2839] rounded transition-colors flex-shrink-0"
-                aria-label="Close"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-            </div>
-            <div className="space-y-2 text-sm">
-              <div>
-                <span className="text-gray-500">Type:</span>
-                <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.type}</span>
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="font-bold flex-1 text-sm">{selectedNode.label}</h3>
+                <button onClick={() => setSelectedNode(null)} className="ml-2 p-1 text-gray-500 hover:text-white hover:bg-[#1d2839] rounded transition-colors flex-shrink-0" aria-label="Close">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
               </div>
-              <div>
-                <span className="text-gray-500">REA Role:</span>
-                <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.rea_role}</span>
+              <div className="space-y-2 text-sm">
+                {selectedNode.kind === 'artifact' && <>
+                  <div><span className="text-gray-500">Type:</span><span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.type}</span></div>
+                  <div><span className="text-gray-500">REA:</span><span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.rea_role}</span></div>
+                  {selectedNode.tagCount != null && <div><span className="text-gray-500">Tags:</span><span className="ml-2 text-xs">{selectedNode.tagCount}</span></div>}
+                  {selectedNode.clusterLabel && <div><span className="text-gray-500">Cluster:</span><span className="ml-2 text-xs">{selectedNode.clusterLabel}</span></div>}
+                  <button onClick={() => window.location.href = `/app/artifact/${selectedNode.id}`} className="w-full mt-4 px-3 py-2 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] text-sm">View details</button>
+                </>}
+                {selectedNode.kind === 'contribution' && <>
+                  <div><span className="text-gray-500">Seq:</span><span className="ml-2 text-xs">#{selectedNode.seq}</span></div>
+                  <div className="text-gray-400 text-xs mt-2">{selectedNode.label}</div>
+                </>}
+                {selectedNode.kind === 'participant' && <>
+                  <div><span className="text-gray-500">Name:</span><span className="ml-2 text-xs">{selectedNode.label}</span></div>
+                </>}
               </div>
-              {(selectedNode.dimensionDegree || 0) > 0 && (
-                <div>
-                  <span className="text-gray-500">Dimensions:</span>
-                  <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.dimensionDegree}</span>
-                </div>
-              )}
-              {selectedNode.cluster_label && (
-                <div>
-                  <span className="text-gray-500">Cluster:</span>
-                  <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.cluster_label}</span>
-                </div>
-              )}
-              <button
-                onClick={() => window.location.href = `/app/artifact/${selectedNode.id}`}
-                className="w-full mt-4 px-3 py-2 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] text-sm"
-              >
-                View details
-              </button>
             </div>
-          </div>
           )}
         </div>
       </div>
 
+      {/* Legend */}
       <div className="flex gap-4 text-xs flex-wrap">
-        {colorBy === 'rea' && (
-          <div className="flex gap-4">
-            {Object.entries(REA_COLORS).map(([key, color]) => (
-              <div key={key} className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-                <span className="text-gray-400 capitalize">{key}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {colorBy === 'type' && (
-          <div className="flex gap-4">
-            {Object.entries(TYPE_COLORS).map(([key, color]) => (
-              <div key={key} className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-                <span className="text-gray-400 capitalize">{key}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {colorBy === 'dimension' && (
-          <div className="flex gap-4">
-            {Object.entries(DIMENSION_COLORS).map(([key, color]) => (
-              <div key={key} className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-                <span className="text-gray-400">{DIMENSION_LABELS[key]}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {colorBy === 'cluster' && clusters.length > 0 && (
-          <div className="flex gap-4 flex-wrap">
-            {clusters.slice(0, 8).map((cluster: any) => {
-              const hash = cluster.cluster_id.split('').reduce((a: number, b: string) => ((a << 5) - a) + b.charCodeAt(0), 0)
-              const hue = Math.abs(hash % 360)
-              const color = `hsl(${hue}, 65%, 55%)`
-              return (
-                <div key={cluster.cluster_id} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-                  <span className="text-gray-400 text-xs">{cluster.label} ({cluster.size})</span>
-                </div>
-              )
-            })}
-            {clusters.length > 8 && <span className="text-gray-500 text-xs">+{clusters.length - 8} more</span>}
-          </div>
-        )}
+        {viewMode === 'chain' && <>
+          <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#a6ed2a] border border-dashed border-[#a6ed2a]" /><span className="text-gray-400">Contribution</span></div>
+          {Object.entries(REA_COLORS).map(([k, c]) => <div key={k} className="flex items-center gap-2"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: c }} /><span className="text-gray-400 capitalize">{k}</span></div>)}
+        </>}
+        {viewMode === 'social' && <>
+          <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#c4956a]" /><span className="text-gray-400">Participant</span></div>
+          {Object.entries(REA_COLORS).map(([k, c]) => <div key={k} className="flex items-center gap-2"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: c }} /><span className="text-gray-400 capitalize">{k}</span></div>)}
+        </>}
+        {viewMode === 'semantic' && <>
+          {Object.entries(TYPE_COLORS).map(([k, c]) => <div key={k} className="flex items-center gap-2"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: c }} /><span className="text-gray-400 capitalize">{k}</span></div>)}
+        </>}
+        {dimOverlay && <>
+          <span className="text-gray-600 mx-1">|</span>
+          {Object.entries(DIMENSION_COLORS).map(([k, c]) => <div key={k} className="flex items-center gap-2"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: c }} /><span className="text-gray-400">{DIMENSION_LABELS[k]}</span></div>)}
+        </>}
       </div>
-
     </div>
   )
 }
