@@ -277,7 +277,16 @@ function CountdownBanner() {
   return (
     <div className="bg-gradient-to-r from-[#0a101d] via-[#111b2e] to-[#0a101d] border-b border-blue-500/20">
       <div className="max-w-6xl mx-auto px-4 py-4 text-center">
-        <div className="text-xs uppercase tracking-widest text-blue-400 mb-2">Knowledge Graph Opens In</div>
+        <div className="text-xs uppercase tracking-widest text-blue-400 mb-2 flex items-center justify-center gap-2">
+          <span>Convergence Chain Opens In</span>
+          <span className="relative group">
+            <svg className="w-3.5 h-3.5 text-blue-500 cursor-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-3 bg-[#0a101d] border border-[#1d2839] rounded-lg text-left text-xs text-gray-300 leading-relaxed opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-50 shadow-xl">
+              <span className="font-semibold text-white block mb-1">What is the Convergence Chain?</span>
+              Every contribution to the knowledge graph is appended to an immutable hash chain — each entry linked to the last by a cryptographic hash. This creates a verifiable, tamper-evident record of how collective knowledge emerged over time. The chain starts when the convergence opens.
+            </span>
+          </span>
+        </div>
         <div className="flex items-center justify-center gap-3 sm:gap-5">
           {remaining.d > 0 && (
             <div className="flex flex-col items-center">

@@ -44,7 +44,7 @@ export function ChainStatus({ compact = false }: { compact?: boolean }) {
     <div className="rounded-lg border border-[#1d2839] bg-[#0a101d] p-4">
       <div className="flex items-center gap-2 mb-3">
         <Link2 className="w-4 h-4 text-[#a6ed2a]" />
-        <h3 className="text-sm font-semibold text-white">Merkle Chain</h3>
+        <h3 className="text-sm font-semibold text-white">Convergence Chain</h3>
         {head.chain_intact ? (
           <span className="ml-auto flex items-center gap-1 text-xs text-emerald-400">
             <ShieldCheck className="w-3.5 h-3.5" /> Intact

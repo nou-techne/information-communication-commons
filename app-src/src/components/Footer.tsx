@@ -137,7 +137,7 @@ export function Footer() {
                 ? 'border-emerald-800/50 bg-emerald-900/20 text-emerald-400' 
                 : 'border-red-800/50 bg-red-900/20 text-red-400'
             }`}>
-              {head.chain_intact ? 'Chain Intact' : 'Chain Broken'}
+              {head.chain_intact ? 'Convergence Chain Intact' : 'Convergence Chain Broken'}
             </div>
           )}
         </div>
