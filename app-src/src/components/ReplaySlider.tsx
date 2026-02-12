@@ -89,9 +89,10 @@ export function ReplaySlider({ maxSeq, onSeqChange }: ReplaySliderProps) {
       {/* Controls */}
       <div className="flex items-center justify-center gap-3 mb-3">
         <button
-          onClick={() => { setPlaying(false); setCurrentSeq(1) }}
-          className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#1d2839] transition-colors"
-          aria-label="Reset to start"
+          onClick={() => { setPlaying(false); setCurrentSeq(Math.max(1, currentSeq - 1)) }}
+          className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#1d2839] transition-colors disabled:opacity-30"
+          disabled={currentSeq <= 1}
+          aria-label="Previous step"
         >
           <SkipBack className="w-4 h-4" />
         </button>
@@ -103,9 +104,10 @@ export function ReplaySlider({ maxSeq, onSeqChange }: ReplaySliderProps) {
           {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </button>
         <button
-          onClick={() => { setPlaying(false); setCurrentSeq(maxSeq) }}
-          className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#1d2839] transition-colors"
-          aria-label="Skip to end"
+          onClick={() => { setPlaying(false); setCurrentSeq(Math.min(maxSeq, currentSeq + 1)) }}
+          className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#1d2839] transition-colors disabled:opacity-30"
+          disabled={currentSeq >= maxSeq}
+          aria-label="Next step"
         >
           <SkipForward className="w-4 h-4" />
         </button>
