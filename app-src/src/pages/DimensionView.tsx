@@ -25,26 +25,30 @@ const DIMENSION_MAP: Record<string, DimensionConfig> = {
   e: { letter: 'e/', name: 'Ecology', subtitle: 'Where We Are', tagName: 'hlamt:E', color: '#4a8c6f' },
   H: { letter: 'H/', name: 'Human', subtitle: 'Who\'s Here', tagName: 'hlamt:H', color: '#c4956a' },
   L: { letter: 'L/', name: 'Language', subtitle: 'How We Talk', tagName: 'hlamt:L', color: '#c3fd50' },
-  A: { letter: 'A/', name: 'Artifacts', subtitle: 'What We\'re Building', tagName: 'hlamt:A', color: '#8bbfff' },
+  A: { letter: 'A/', name: 'Tools & Infrastructure', subtitle: 'What We\'re Building', tagName: 'hlamt:A', color: '#8bbfff' },
   M: { letter: 'M/', name: 'Methodology', subtitle: 'How We Work', tagName: 'hlamt:M', color: '#7ccfb8' },
   T: { letter: 'T/', name: 'Training', subtitle: 'What We\'re Learning', tagName: 'hlamt:T', color: '#e8927c' },
 }
 
 function ArtifactCard({ artifact }: { artifact: Artifact }) {
+  const reaColor = artifact.rea_role ? REA_COLORS[artifact.rea_role] : '#333'
   return (
     <Link
       to={`/artifact/${artifact.id}`}
       className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:border-[#c3fd50] transition-colors group"
+      style={{ borderLeftWidth: '3px', borderLeftColor: reaColor }}
     >
       <div className="flex items-center gap-2 mb-1">
         <span
-          className="w-2 h-2 rounded-full inline-block"
+          className="w-2 h-2 rounded-full inline-block flex-shrink-0"
           style={{ backgroundColor: ARTIFACT_COLORS[artifact.type] }}
         />
-        <span className="text-xs text-gray-500 uppercase">{artifact.type}</span>
+        <span className="text-xs font-medium uppercase" style={{ color: ARTIFACT_COLORS[artifact.type] }}>
+          {artifact.type}
+        </span>
         {artifact.rea_role && (
           <span
-            className="text-xs px-1.5 py-0.5 rounded border"
+            className="text-xs px-1.5 py-0.5 rounded border font-medium"
             style={{ color: REA_COLORS[artifact.rea_role], borderColor: REA_COLORS[artifact.rea_role] + '40' }}
           >
             {REA_LABELS[artifact.rea_role]}
@@ -82,7 +86,7 @@ function EcologyView({ artifacts }: { artifacts: Artifact[] }) {
         </div>
       </div>
       <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Ecology Artifacts</h2>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Ecology Knowledge Nodes</h2>
         <div className="grid gap-3">
           {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
           {artifacts.length === 0 && <p className="text-gray-500 text-sm">No artifacts tagged yet.</p>}
@@ -170,7 +174,7 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
       </div>
       {artifacts.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Human-tagged Artifacts</h2>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Human-tagged Knowledge Nodes</h2>
           <div className="grid gap-3">
             {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
           </div>
@@ -312,7 +316,7 @@ function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
       {/* Language artifacts below */}
       {artifacts.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Language Artifacts ({artifacts.length})</h2>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Language Knowledge Nodes ({artifacts.length})</h2>
           <div className="grid gap-3">
             {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
           </div>
@@ -338,7 +342,7 @@ function GenericDimensionView({ artifacts, dim }: { artifacts: Artifact[]; dim: 
   return (
     <div>
       <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-        {dim.name} Artifacts ({artifacts.length})
+        Knowledge Nodes ({artifacts.length})
       </h2>
       {artifacts.length === 0 ? (
         <div className="text-center py-12 bg-[#1a1a1a] border border-[#262626] rounded-lg">
@@ -346,7 +350,7 @@ function GenericDimensionView({ artifacts, dim }: { artifacts: Artifact[]; dim: 
             <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: dim.color + '20' }}>
               <span className="text-3xl font-mono font-bold" style={{ color: dim.color }}>{dim.letter}</span>
             </div>
-            <h3 className="text-white font-semibold mb-2">No {dim.name.toLowerCase()} artifacts yet</h3>
+            <h3 className="text-white font-semibold mb-2">No {dim.name.toLowerCase()} nodes yet</h3>
             <p className="text-gray-400 text-sm mb-4">{prompt}</p>
             <Link
               to="/contribute"
