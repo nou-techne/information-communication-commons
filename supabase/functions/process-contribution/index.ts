@@ -90,7 +90,7 @@ async function callClaudeWithRetry(content: string, maxRetries = 1): Promise<any
           'content-type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'claude-3-5-sonnet-latest',
+          model: 'claude-sonnet-4-20250514',
           max_tokens: 4096,
           messages: [{ role: 'user', content: EXTRACTION_PROMPT + content }],
         }),
