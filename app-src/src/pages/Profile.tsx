@@ -33,15 +33,6 @@ function TagList({ items, color = 'bg-[#262626] text-gray-300' }: { items: strin
   )
 }
 
-function ProfileSection({ label, children }: { label: string, children: React.ReactNode }) {
-  return (
-    <div className="mb-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1.5">{label}</div>
-      {children}
-    </div>
-  )
-}
-
 function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfile, extracted?: any, label?: string }) {
   // Generate initials for avatar
   const initials = profile.name
