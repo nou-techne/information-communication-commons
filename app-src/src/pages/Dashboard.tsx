@@ -86,13 +86,15 @@ export default function Dashboard() {
   const loadDimensions = async () => {
     const { data } = await supabase
       .from('artifact_tags')
-      .select('tag')
-      .like('tag', 'hlamt:%');
+      .select('tag_id, tags(name)')
+      .not('tags', 'is', null);
 
     if (data) {
       const counts: Record<string, number> = {};
-      data.forEach((row) => {
-        const dim = row.tag.split(':')[1];
+      data.forEach((row: any) => {
+        const tagName = row.tags?.name;
+        if (!tagName || !tagName.startsWith('hlamt:')) return;
+        const dim = tagName.split(':')[1];
         counts[dim] = (counts[dim] || 0) + 1;
       });
 
@@ -133,7 +135,7 @@ export default function Dashboard() {
       .channel('dashboard-updates')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'artifacts' }, loadStats)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'contributions' }, loadStats)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'relationships' }, loadStats)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'artifact_relationships' }, loadStats)
       .subscribe();
 
     return () => {
