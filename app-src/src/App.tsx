@@ -70,7 +70,6 @@ function Nav() {
   const authedLinks = [
     { to: '/contribute', label: 'Contribute' },
     { to: '/coordinate', label: 'Coordinate' },
-    { to: '/channels', label: 'Channels' },
     { to: '/me', label: 'My Activity' },
   ]
   const links = session ? [...publicLinks, ...authedLinks] : publicLinks
