@@ -53,7 +53,17 @@ export async function getConvergenceConfig(): Promise<ConvergenceConfig> {
   try {
     const { data } = await supabase.rpc('get_active_convergence')
     if (data && data.length > 0) {
-      cachedConfig = data[0] as ConvergenceConfig
+      const raw = data[0]
+      // Transform dimensions from DB object format to array format
+      if (raw.dimensions && !Array.isArray(raw.dimensions)) {
+        const dimMap = raw.dimensions as Record<string, { tag: string; label: string }>
+        const dimDefaults = DEFAULT_CONFIG.dimensions
+        raw.dimensions = dimDefaults.map(d => {
+          const db = dimMap[d.key]
+          return db ? { ...d, tag: db.tag, name: db.label || d.name } : d
+        })
+      }
+      cachedConfig = raw as ConvergenceConfig
       return cachedConfig
     }
   } catch (e) {
