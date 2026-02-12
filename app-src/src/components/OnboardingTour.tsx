@@ -23,7 +23,7 @@ const TOUR_STEPS: TourStep[] = [
   {
     id: 'contribute',
     title: 'Make Contributions',
-    description: 'Share your insights across the five H-LAM/T dimensions: Human, Language, Artifact, Methodology, and Training.',
+    description: 'Share your insights across seven dimensions: Ecology, Human, Language, Artifact, Methodology, Training, and Sessions.',
     targetSelector: '[data-tour="contribute"]',
     position: 'bottom',
   },

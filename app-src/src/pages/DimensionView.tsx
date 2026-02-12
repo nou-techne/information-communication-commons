@@ -29,6 +29,7 @@ const DIMENSION_MAP: Record<string, DimensionConfig> = {
   A: { letter: 'A/', name: 'Tools & Infrastructure', subtitle: 'What We\'re Building', tagName: 'hlamt:A', color: '#8bbfff' },
   M: { letter: 'M/', name: 'Methodology', subtitle: 'How We Work', tagName: 'hlamt:M', color: '#7ccfb8' },
   T: { letter: 'T/', name: 'Training', subtitle: 'What We\'re Learning', tagName: 'hlamt:T', color: '#e8927c' },
+  S: { letter: 'S/', name: 'Sessions', subtitle: 'Where Convergence Happens', tagName: 'hlamt:S', color: '#c084fc' },
 }
 
 function ArtifactCard({ artifact }: { artifact: Artifact }) {
@@ -366,6 +367,7 @@ const DIMENSION_PROMPTS: Record<string, string> = {
   A: 'Document tools, code, designs, or infrastructure being built.',
   M: 'Describe processes, workflows, or coordination patterns.',
   T: 'Share learnings, skill development, or transformative experiences.',
+  S: 'Document unconference sessions, topics proposed, or how sessions emerged from participant interests.',
 }
 
 function GenericDimensionView({ artifacts, dim }: { artifacts: Artifact[]; dim: DimensionConfig }) {

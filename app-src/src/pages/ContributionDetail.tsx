@@ -22,6 +22,7 @@ const DIMENSIONS = [
   { key: 'A', letter: 'A/', name: 'Artifacts', desc: "What We're Building", color: '#8bbfff', tag: 'hlamt:A' },
   { key: 'M', letter: 'M/', name: 'Methodology', desc: 'How We Work', color: '#7ccfb8', tag: 'hlamt:M' },
   { key: 'T', letter: 'T/', name: 'Training', desc: "What We're Learning", color: '#e8927c', tag: 'hlamt:T' },
+  { key: 'S', letter: 'S/', name: 'Sessions', desc: "Where Convergence Happens", color: '#c084fc', tag: 'hlamt:S' },
 ]
 
 function timeAgo(date: string) {

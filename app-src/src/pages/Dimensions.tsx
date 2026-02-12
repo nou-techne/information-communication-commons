@@ -18,6 +18,7 @@ const DIMENSIONS: DimensionDef[] = [
   { key: 'A', letter: 'A/', name: 'Artifacts', tagName: 'hlamt:A', description: 'What We\'re Building — tools, documents, infrastructure', color: '#8bbfff' },
   { key: 'M', letter: 'M/', name: 'Methodology', tagName: 'hlamt:M', description: 'How We Work — processes, governance, coordination', color: '#7ccfb8' },
   { key: 'T', letter: 'T/', name: 'Training', tagName: 'hlamt:T', description: 'What We\'re Learning — skills, transformation, practice', color: '#e8927c' },
+  { key: 'S', letter: 'S/', name: 'Sessions', tagName: 'hlamt:S', description: 'Where Convergence Happens — unconference sessions emerging from attendee interests', color: '#c084fc' },
 ]
 
 export function Dimensions() {
@@ -45,8 +46,8 @@ export function Dimensions() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-2">e/H-LAM/T</h1>
-        <p className="text-gray-400">Six dimensions of the knowledge graph. Each is a lens into the commons.</p>
+        <h1 className="text-2xl font-bold mb-2">e/H-LAM/T/S</h1>
+        <p className="text-gray-400">Seven dimensions of the knowledge graph. Each is a lens into the commons.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -73,10 +73,17 @@ const DIMENSION_INFO: Record<string, { letter: string; name: string; desc: strin
     color: '#e8927c',
     explain: 'The transformation of practitioners through practice. Skills developed, insights gained, and capacity built during the convergence.',
   },
+  S: {
+    letter: 'S/',
+    name: 'Sessions',
+    desc: 'Where Convergence Happens',
+    color: '#c084fc',
+    explain: 'The unconference sessions planned during the event by attendees. These emerge from participant interests and become the structural backbone other dimensions attach to.',
+  },
 };
 
 // Fixed order for dimensions
-const DIMENSION_ORDER = ['E', 'H', 'L', 'A', 'M', 'T'];
+const DIMENSION_ORDER = ['E', 'H', 'L', 'A', 'M', 'T', 'S'];
 
 export default function Dashboard() {
   const [stats, setStats] = useState<Stats>({
@@ -212,7 +219,7 @@ export default function Dashboard() {
                 through relationships — building a collective map of what happened, who was involved, and what emerged.
               </p>
               <p className="text-gray-400 text-sm leading-relaxed">
-                Knowledge is organized across <strong className="text-gray-300">six observation dimensions</strong> from
+                Knowledge is organized across <strong className="text-gray-300">seven observation dimensions</strong> from
                 the <a href="https://the-habitat.org/thesis" target="_blank" rel="noopener noreferrer" className="text-[#a6ed2a] hover:text-white transition-colors">H-LAM/T framework</a> — a
                 model for understanding how humans, language, artifacts, and methodology combine to augment collective intelligence.
                 Each dimension reveals a different facet of the convergence.
@@ -277,7 +284,7 @@ export default function Dashboard() {
             <h2 className="text-xl font-semibold text-gray-200">Observation Dimensions</h2>
           </div>
           <p className="text-gray-500 text-sm mb-5">
-            The e/H-LAM/T framework observes convergences through six lenses. Click any dimension to explore its artifacts.
+            The e/H-LAM/T/S framework observes convergences through seven lenses. Click any dimension to explore its artifacts.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {dimensions.map((dim) => {

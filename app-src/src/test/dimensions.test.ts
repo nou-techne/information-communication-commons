@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 
 describe('Dimension Mapping', () => {
   const validDimensions = ['e', 'H', 'L', 'A', 'M', 'T']
-  const dimensionTags = ['hlamt:e', 'hlamt:H', 'hlamt:L', 'hlamt:A', 'hlamt:M', 'hlamt:T']
+  const dimensionTags = ['hlamt:e', 'hlamt:H', 'hlamt:L', 'hlamt:A', 'hlamt:M', 'hlamt:T', 'hlamt:S']
 
   describe('Dimension Key Validation', () => {
     it('should accept valid dimension keys', () => {

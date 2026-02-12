@@ -13,6 +13,7 @@ const HLAMT_LABELS: Record<string, { letter: string; name: string; color: string
   'hlamt:A': { letter: 'A/', name: 'Artifacts', color: '#8bbfff' },
   'hlamt:M': { letter: 'M/', name: 'Methodology', color: '#7ccfb8' },
   'hlamt:T': { letter: 'T/', name: 'Training', color: '#e8927c' },
+  'hlamt:S': { letter: 'S/', name: 'Sessions', color: '#c084fc' },
 }
 
 function timeAgo(date: string) {

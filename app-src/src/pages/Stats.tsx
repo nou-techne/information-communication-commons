@@ -29,6 +29,7 @@ const DIMENSION_LABELS: Record<string, string> = {
   'hlamt:A': 'A/ Artifacts',
   'hlamt:M': 'M/ Methodology',
   'hlamt:T': 'T/ Training',
+  'hlamt:S': 'S/ Sessions',
 }
 
 export function Stats() {
