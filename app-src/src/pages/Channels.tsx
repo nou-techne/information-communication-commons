@@ -46,6 +46,7 @@ export function Channels() {
   const [newDesc, setNewDesc] = useState('')
   const [newType, setNewType] = useState<Channel['type']>('general')
   const [creating, setCreating] = useState(false)
+  const [unreadChannels, setUnreadChannels] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
@@ -63,7 +64,22 @@ export function Channels() {
       .select('*')
       .order('position', { ascending: true })
       .order('created_at', { ascending: true })
-    setChannels((data as Channel[]) || [])
+    const loadedChannels = (data as Channel[]) || []
+    setChannels(loadedChannels)
+    
+    // Check unread status per channel
+    const lastRead: Record<string, string> = JSON.parse(localStorage.getItem('channel_last_read') || '{}')
+    const unread = new Set<string>()
+    for (const ch of loadedChannels) {
+      const lr = lastRead[ch.slug]
+      if (lr && new Date(ch.updated_at) > new Date(lr)) {
+        unread.add(ch.slug)
+      } else if (!lr) {
+        unread.add(ch.slug)
+      }
+    }
+    setUnreadChannels(unread)
+    
     setLoading(false)
   }
 
@@ -196,8 +212,11 @@ export function Channels() {
                         <p className="text-xs text-gray-500 truncate">{ch.description}</p>
                       )}
                     </div>
-                    <div className="flex-shrink-0 text-xs text-gray-600">
-                      {timeAgo(ch.updated_at)}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {unreadChannels.has(ch.slug) && (
+                        <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />
+                      )}
+                      <span className="text-xs text-gray-600">{timeAgo(ch.updated_at)}</span>
                     </div>
                   </Link>
                 ))}

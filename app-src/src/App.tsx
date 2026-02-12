@@ -23,6 +23,7 @@ import { Onboard } from './pages/Onboard'
 import { Channels } from './pages/Channels'
 import { ChannelView } from './pages/ChannelView'
 import { ThreadView } from './pages/ThreadView'
+import { MessageSearch } from './pages/MessageSearch'
 import type { Session } from '@supabase/supabase-js'
 
 // Sprint 41: Lazy load heavy pages for code splitting
@@ -202,6 +203,7 @@ export default function App() {
               <Route path="/session/:id" element={<SessionDetail />} />
               <Route path="/stats" element={<Stats />} />
               <Route path="/channels" element={<Channels />} />
+              <Route path="/channels/search" element={<MessageSearch />} />
               <Route path="/channels/:slug" element={<ChannelView />} />
               <Route path="/channels/:slug/:threadId" element={<ThreadView />} />
               <Route path="/welcome" element={<Onboard />} />

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check } from 'lucide-react'
+import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import type { Session } from '@supabase/supabase-js'
 
 interface Thread {
@@ -223,7 +224,7 @@ export function ThreadView() {
                         </button>
                       )}
                     </div>
-                    <p className="text-sm text-gray-300 whitespace-pre-wrap">{msg.content}</p>
+                    <MarkdownRenderer content={msg.content} />
 
                     {/* Reaction counts */}
                     {Object.keys(reactionCounts).length > 0 && (

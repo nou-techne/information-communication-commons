@@ -24,7 +24,7 @@ interface Thread {
 }
 
 const STATUS_COLORS: Record<Thread['status'], string> = {
-  open: '#4ade80',
+  open: '#c3fd50',
   tagged: '#60a5fa',
   resolved: '#a78bfa',
   consolidated: '#fb923c',
@@ -57,6 +57,7 @@ export function ChannelView() {
   const [newTitle, setNewTitle] = useState('')
   const [newMessage, setNewMessage] = useState('')
   const [creating, setCreating] = useState(false)
+  const [statusFilter, setStatusFilter] = useState<'all' | Thread['status']>('all')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
@@ -103,6 +104,14 @@ export function ChannelView() {
     }
     
     setThreads(threadData)
+    
+    // Mark channel as read
+    if (slug) {
+      const lastRead = JSON.parse(localStorage.getItem('channel_last_read') || '{}')
+      lastRead[slug] = new Date().toISOString()
+      localStorage.setItem('channel_last_read', JSON.stringify(lastRead))
+    }
+    
     setLoading(false)
   }
 
@@ -163,6 +172,25 @@ export function ChannelView() {
         )}
       </div>
 
+      {/* Filter tabs */}
+      <div className="flex gap-1 mb-4 overflow-x-auto pb-1">
+        {(['all', 'open', 'tagged', 'resolved', 'archived'] as const).map(filter => {
+          const count = filter === 'all' ? threads.length : threads.filter(t => t.status === filter).length
+          const isActive = statusFilter === filter
+          return (
+            <button
+              key={filter}
+              onClick={() => setStatusFilter(filter)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                isActive ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#1a1a1a] text-gray-400 hover:text-white border border-[#262626]'
+              }`}
+            >
+              {filter === 'all' ? 'All' : STATUS_LABELS[filter]} ({count})
+            </button>
+          )
+        })}
+      </div>
+
       {/* Create modal */}
       {showCreate && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setShowCreate(false)}>
@@ -204,7 +232,9 @@ export function ChannelView() {
       )}
 
       {/* Thread list */}
-      {threads.length === 0 ? (
+      {(() => {
+        const filtered = statusFilter === 'all' ? threads : threads.filter(t => t.status === statusFilter)
+        return filtered.length === 0 ? (
         <div className="text-center py-16">
           <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-white mb-2">No threads yet</h3>
@@ -212,7 +242,7 @@ export function ChannelView() {
         </div>
       ) : (
         <div className="space-y-2">
-          {threads.map(thread => (
+          {filtered.map(thread => (
             <Link
               key={thread.id}
               to={`/channels/${slug}/${thread.id}`}
@@ -239,7 +269,7 @@ export function ChannelView() {
             </Link>
           ))}
         </div>
-      )}
+      )})()}
     </div>
   )
 }
