@@ -81,7 +81,7 @@ export function ReplaySlider({ maxSeq, onSeqChange }: ReplaySliderProps) {
           }}
           className="w-full h-2 rounded-lg appearance-none cursor-pointer"
           style={{
-            background: `linear-gradient(to right, #a6ed2a 0%, #a6ed2a ${(currentSeq / maxSeq) * 100}%, #1d2839 ${(currentSeq / maxSeq) * 100}%, #1d2839 100%)`
+            background: '#1d2839'
           }}
         />
       </div>
