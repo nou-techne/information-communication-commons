@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X, CheckCircle, Archive } from 'lucide-react'
+import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X, CheckCircle, Archive, Flag, EyeOff } from 'lucide-react'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import type { Session } from '@supabase/supabase-js'
 
@@ -38,6 +38,7 @@ interface Message {
   type: 'text' | 'contribution' | 'system'
   created_at: string
   updated_at: string
+  hidden?: boolean
 }
 
 interface Reaction {
@@ -223,6 +224,28 @@ export function ThreadView() {
     } else if (error) {
       alert(`Error: ${error.message}`)
     }
+  }
+
+  async function reportMessage(messageId: string) {
+    if (!session) return
+    const reason = prompt('Reason for reporting:')
+    if (!reason) return
+    await supabase.rpc('report_message', {
+      p_message_id: messageId,
+      p_reporter_id: session.user.id,
+      p_reason: reason
+    })
+    alert('Message reported')
+  }
+
+  async function hideMessage(messageId: string) {
+    if (!session) return
+    await supabase.rpc('moderate_hide_message', {
+      p_message_id: messageId,
+      p_moderator_id: session.user.id,
+      p_reason: 'Hidden by moderator'
+    })
+    setMessages(prev => prev.map(m => m.id === messageId ? { ...m, hidden: true } : m))
   }
 
   async function loadReactions() {
@@ -425,6 +448,10 @@ export function ThreadView() {
                   <div className="inline-block bg-[#262626] rounded-lg px-4 py-2 text-xs text-gray-400 italic">
                     {msg.content}
                   </div>
+                ) : msg.hidden ? (
+                  <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2 opacity-50">
+                    <span className="text-xs text-gray-500 italic">Message hidden by moderator</span>
+                  </div>
                 ) : (
                   <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3">
                     <div className="flex items-center gap-2 mb-1">
@@ -432,14 +459,30 @@ export function ThreadView() {
                         {msg.author_id ? msg.author_id.slice(0, 8) : 'Anonymous'}
                       </span>
                       <span className="text-xs text-gray-600">{timeAgo(msg.created_at)}</span>
-                      {/* Reaction trigger */}
+                      {/* Message actions */}
                       {session && (
-                        <button
-                          onClick={() => setActiveReactionMsg(activeReactionMsg === msg.id ? null : msg.id)}
-                          className="ml-auto text-gray-600 hover:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs"
-                        >
-                          +
-                        </button>
+                        <div className="ml-auto flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => setActiveReactionMsg(activeReactionMsg === msg.id ? null : msg.id)}
+                            className="text-gray-600 hover:text-gray-400 text-xs"
+                          >
+                            +
+                          </button>
+                          <button
+                            onClick={() => reportMessage(msg.id)}
+                            className="text-gray-600 hover:text-red-400 text-xs"
+                            title="Report"
+                          >
+                            <Flag className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={() => hideMessage(msg.id)}
+                            className="text-gray-600 hover:text-yellow-400 text-xs"
+                            title="Hide"
+                          >
+                            <EyeOff className="w-3 h-3" />
+                          </button>
+                        </div>
                       )}
                     </div>
                     <MarkdownRenderer content={msg.content} />
