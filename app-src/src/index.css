@@ -124,6 +124,33 @@ html, body {
 
   /* ── Nav and footer ── */
   & nav, & footer { background-color: #edf0f5 !important; }
+
+  /* ── Countdown banner ── */
+  & .countdown-banner {
+    background: linear-gradient(to right, #eff6ff, #dbeafe, #eff6ff) !important;
+    border-bottom-color: #93c5fd !important;
+  }
+  & .countdown-banner span[class*="font-mono"] {
+    color: #111827 !important;
+  }
+  & .countdown-banner span[class*="text-blue-400"] {
+    color: #2563eb !important;
+  }
+  & .countdown-banner span[class*="text-gray-500"] {
+    color: #6b7280 !important;
+  }
+  & .countdown-banner span[class*="text-gray-600"] {
+    color: #9ca3af !important;
+  }
+  & .countdown-banner .group-hover\:opacity-100,
+  & .countdown-banner [class*="bg-\[#0a101d\]"] {
+    background-color: #ffffff !important;
+    border-color: #93c5fd !important;
+    color: #374151 !important;
+  }
+  & .countdown-banner [class*="text-blue-400"] {
+    color: #2563eb !important;
+  }
 }
 
 /* Theme toggle styling */

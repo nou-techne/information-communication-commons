@@ -275,7 +275,7 @@ function CountdownBanner() {
   if (!remaining) return null
 
   return (
-    <div className="bg-gradient-to-r from-[#0a101d] via-[#111b2e] to-[#0a101d] border-b border-blue-500/20">
+    <div className="countdown-banner bg-gradient-to-r from-[#0a101d] via-[#111b2e] to-[#0a101d] border-b border-blue-500/20">
       <div className="max-w-6xl mx-auto px-4 py-4 text-center">
         <div className="text-xs uppercase tracking-widest text-blue-400 mb-2 flex items-center justify-center gap-2">
           <span>Convergence Chain Opens In</span>
