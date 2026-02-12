@@ -3,6 +3,8 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import { supabase } from './lib/supabase'
 import { Menu, X, Search as SearchIcon } from 'lucide-react'
 import { ConvergenceProvider, useConvergence } from './contexts/ConvergenceContext'
+import { ToastProvider } from './contexts/ToastContext'
+import { ToastContainer } from './components/ui/Toast'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { Explore } from './pages/Explore'
 import { ArtifactDetail } from './pages/ArtifactDetail'
@@ -181,6 +183,7 @@ function Nav() {
 export default function App() {
   return (
     <BrowserRouter basename="/app">
+      <ToastProvider>
       <ConvergenceProvider>
         <div className="min-h-screen bg-[#0f0f0f] text-white">
           <Nav />
@@ -215,6 +218,8 @@ export default function App() {
         </main>
       </div>
       </ConvergenceProvider>
+      <ToastContainer />
+      </ToastProvider>
     </BrowserRouter>
   )
 }
