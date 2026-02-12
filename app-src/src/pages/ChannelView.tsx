@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { Hash, Plus, X, ArrowLeft, MessageSquare, Merge, Check } from 'lucide-react'
+import { EmptyState } from '../components/ui/EmptyState'
 import type { Session } from '@supabase/supabase-js'
 
 interface Channel {
@@ -319,11 +320,12 @@ export function ChannelView() {
       {(() => {
         const filtered = statusFilter === 'all' ? threads.filter(t => t.status !== 'archived') : threads.filter(t => t.status === statusFilter)
         return filtered.length === 0 ? (
-        <div className="text-center py-16">
-          <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-white mb-2">No threads yet</h3>
-          <p className="text-gray-400 text-sm">Start a thread to begin the conversation.</p>
-        </div>
+        <EmptyState
+          icon={<MessageSquare className="w-12 h-12" />}
+          title="No threads yet"
+          description="Start a thread to begin the conversation."
+          action={session ? { label: 'Create Thread', onClick: () => setShowCreate(true) } : undefined}
+        />
       ) : (
         <div className="space-y-2">
           {filtered.map(thread => (

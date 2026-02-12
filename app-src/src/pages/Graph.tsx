@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import { Network } from 'lucide-react'
 import * as d3 from 'd3'
+import { EmptyState } from '../components/ui/EmptyState'
 
 interface Node {
   id: string
@@ -438,10 +439,11 @@ export function Graph() {
   if (!data || data.nodes.length === 0) {
     return (
       <div className="h-[600px] flex items-center justify-center">
-        <div className="text-center">
-          <Network className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-          <p className="text-gray-400">No artifacts in the graph yet</p>
-        </div>
+        <EmptyState
+          icon={<Network className="w-12 h-12" />}
+          title="No artifacts yet"
+          description="Submit a contribution to start building the knowledge graph."
+        />
       </div>
     )
   }
