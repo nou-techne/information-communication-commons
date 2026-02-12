@@ -168,8 +168,31 @@ export function Graph() {
     loadGraph()
   }, [])
 
+  const simulationRef = useRef<d3.Simulation<any, any> | null>(null)
+
+  function resetGraph() {
+    // Force full re-render by stopping old sim and clearing
+    if (simulationRef.current) {
+      simulationRef.current.stop()
+      simulationRef.current = null
+    }
+    if (svgRef.current) {
+      d3.select(svgRef.current).selectAll('*').remove()
+    }
+    // Trigger re-render by toggling a key
+    setRenderKey(k => k + 1)
+  }
+
+  const [renderKey, setRenderKey] = useState(0)
+
   useEffect(() => {
     if (!data || !svgRef.current) return
+
+    // Stop any existing simulation
+    if (simulationRef.current) {
+      simulationRef.current.stop()
+      simulationRef.current = null
+    }
 
     const svg = d3.select(svgRef.current)
     const width = svgRef.current.clientWidth
@@ -177,47 +200,49 @@ export function Graph() {
 
     svg.selectAll('*').remove()
 
+    // Deep-copy nodes and links to prevent D3 mutation of source data
+    const allNodes = data.nodes.map(n => ({ ...n }))
+    const allLinks = data.links.map(l => ({ ...l }))
+
+    // Helper to get ID from source/target (always use original string IDs)
+    const getId = (ref: any): string => typeof ref === 'string' ? ref : ref.id
+
     // Apply filters
-    let filteredNodes = data.nodes
-    let filteredLinks = data.links
+    let filteredNodes = allNodes
+    let filteredLinks = allLinks
 
     if (filters.types.length > 0) {
-      const nodeIds = new Set(filteredNodes.filter(n => n.isDimension || filters.types.includes(n.type)).map(n => n.id))
-      filteredNodes = filteredNodes.filter(n => nodeIds.has(n.id))
-      filteredLinks = filteredLinks.filter(l => {
-        const srcId = typeof l.source === 'string' ? l.source : (l.source as any).id
-        const tgtId = typeof l.target === 'string' ? l.target : (l.target as any).id
-        return nodeIds.has(srcId) && nodeIds.has(tgtId)
-      })
+      // First, keep only artifact nodes matching the type filter
+      const matchingArtifactIds = new Set(
+        filteredNodes.filter(n => !n.isDimension && filters.types.includes(n.type)).map(n => n.id)
+      )
+      // Then include dimension nodes only if they connect to a surviving artifact
+      const connectedDimIds = new Set<string>()
+      for (const link of filteredLinks) {
+        const srcId = getId(link.source)
+        const tgtId = getId(link.target)
+        if (link.type === 'dimension_link') {
+          if (matchingArtifactIds.has(srcId)) connectedDimIds.add(tgtId)
+          if (matchingArtifactIds.has(tgtId)) connectedDimIds.add(srcId)
+        }
+      }
+      const keepIds = new Set([...matchingArtifactIds, ...connectedDimIds])
+      filteredNodes = filteredNodes.filter(n => keepIds.has(n.id))
+      filteredLinks = filteredLinks.filter(l => keepIds.has(getId(l.source)) && keepIds.has(getId(l.target)))
     }
 
     if (filters.dimensions.length > 0) {
-      const dimNodeIds = filters.dimensions.map(d => `dim-${d}`)
+      const dimNodeIds = new Set(filters.dimensions.map(d => `dim-${d}`))
+      // Find all artifacts connected to the selected dimensions
       const connectedIds = new Set(dimNodeIds)
       for (const link of filteredLinks) {
-        const srcId = typeof link.source === 'string' ? link.source : (link.source as any).id
-        const tgtId = typeof link.target === 'string' ? link.target : (link.target as any).id
-        if (dimNodeIds.includes(srcId) || dimNodeIds.includes(tgtId)) {
-          connectedIds.add(srcId)
-          connectedIds.add(tgtId)
-        }
+        const srcId = getId(link.source)
+        const tgtId = getId(link.target)
+        if (dimNodeIds.has(srcId)) connectedIds.add(tgtId)
+        if (dimNodeIds.has(tgtId)) connectedIds.add(srcId)
       }
       filteredNodes = filteredNodes.filter(n => connectedIds.has(n.id))
-      filteredLinks = filteredLinks.filter(l => {
-        const srcId = typeof l.source === 'string' ? l.source : (l.source as any).id
-        const tgtId = typeof l.target === 'string' ? l.target : (l.target as any).id
-        return connectedIds.has(srcId) && connectedIds.has(tgtId)
-      })
-    }
-
-    if (filters.participant) {
-      // Filter would require participant data per artifact - skipping for now
-      // This would need additional data loaded from DB
-    }
-
-    if (filters.dateRange !== 'all') {
-      // Date filtering would require created_at timestamps on nodes
-      // Skipping for now as artifact data doesn't include dates in current query
+      filteredLinks = filteredLinks.filter(l => connectedIds.has(getId(l.source)) && connectedIds.has(getId(l.target)))
     }
 
     const g = svg.append('g')
@@ -271,6 +296,8 @@ export function Graph() {
       // Gentle pull toward ring positions instead of pinning
       .force('dimX', d3.forceX((d: any) => dimTargets[d.id]?.x ?? cx).strength((d: any) => d.isDimension ? 0.3 : 0))
       .force('dimY', d3.forceY((d: any) => dimTargets[d.id]?.y ?? cy).strength((d: any) => d.isDimension ? 0.3 : 0))
+
+    simulationRef.current = simulation
 
     // Draw links
     const link = g.append('g')
@@ -382,7 +409,12 @@ export function Graph() {
 
     svg.call(zoom as any)
 
-  }, [data, colorBy, filters])
+    return () => {
+      if (simulationRef.current) {
+        simulationRef.current.stop()
+      }
+    }
+  }, [data, colorBy, filters, renderKey])
 
   if (loading) {
     return (
@@ -438,6 +470,17 @@ export function Graph() {
             }`}
           >
             Filters
+          </button>
+          <button
+            onClick={() => {
+              setFilters({ types: [], dimensions: [], dateRange: 'all', participant: '' })
+              setSelectedNode(null)
+              resetGraph()
+            }}
+            className="px-3 py-1.5 text-sm rounded-lg transition-colors bg-[#262626] text-gray-300 hover:bg-[#333]"
+            title="Reset graph to default state"
+          >
+            Reset
           </button>
         </div>
       </div>
