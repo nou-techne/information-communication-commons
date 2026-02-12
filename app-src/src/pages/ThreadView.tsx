@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X, CheckCircle, Archive, Flag, EyeOff } from 'lucide-react'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
+import { ResolveThreadDialog } from '../components/ResolveThreadDialog'
 import type { Session } from '@supabase/supabase-js'
 
 interface Thread {
@@ -81,6 +82,7 @@ export function ThreadView() {
   const [suggestedTags, setSuggestedTags] = useState<SuggestedTag[]>([])
   const [newTagValue, setNewTagValue] = useState('')
   const [newTagType, setNewTagType] = useState<ThreadTag['tag_type']>('custom')
+  const [showResolveDialog, setShowResolveDialog] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -192,17 +194,29 @@ export function ThreadView() {
     if (!error) await loadThread()
   }
 
-  async function resolveThread() {
+  async function resolveThread(data?: { reason: string; summary: string }) {
     if (!threadId || !session || !thread) return
     if (thread.status !== 'tagged') {
       alert('Thread must be tagged before resolving')
       return
     }
+    // Post resolution summary as system message
+    if (data?.summary) {
+      await supabase.from('messages').insert({
+        thread_id: threadId,
+        author_id: session.user.id,
+        content: `**Resolved:** ${data.reason}\n\n${data.summary}`,
+        type: 'system',
+      })
+    }
     const { error } = await supabase
       .from('threads')
       .update({ status: 'resolved' })
       .eq('id', threadId)
-    if (!error) await loadThread()
+    if (!error) {
+      setShowResolveDialog(false)
+      await loadThread()
+    }
   }
 
   async function archiveThread() {
@@ -340,7 +354,7 @@ export function ThreadView() {
             )}
             {thread.status === 'tagged' && (
               <button
-                onClick={resolveThread}
+                onClick={() => setShowResolveDialog(true)}
                 className="text-gray-400 hover:text-[#a78bfa] transition-colors"
                 title="Resolve thread"
               >
@@ -558,6 +572,14 @@ export function ThreadView() {
         <div className="text-center py-3 text-sm text-gray-500">
           <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link> to send messages
         </div>
+      )}
+      {/* Resolve Dialog */}
+      {showResolveDialog && thread && (
+        <ResolveThreadDialog
+          threadTitle={thread.title}
+          onResolve={resolveThread}
+          onClose={() => setShowResolveDialog(false)}
+        />
       )}
     </div>
   )
