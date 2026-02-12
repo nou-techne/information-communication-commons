@@ -92,7 +92,7 @@ serve(async (req) => {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1024,
         messages: [{ role: 'user', content: PROFILE_EXTRACTION_PROMPT + content }],
       }),
@@ -191,11 +191,17 @@ serve(async (req) => {
           .single()
 
         if (artifact) {
-          const tags = profile.hlamt_tags.map((tag: string) => ({
-            artifact_id: artifact.id,
-            tag,
-          }))
-          await supabase.from('artifact_tags').insert(tags)
+          for (const tagName of profile.hlamt_tags) {
+            // Find or create the tag
+            let { data: tag } = await supabase.from('tags').select('id').eq('name', tagName).maybeSingle()
+            if (!tag) {
+              const { data: newTag } = await supabase.from('tags').insert({ name: tagName }).select('id').single()
+              tag = newTag
+            }
+            if (tag) {
+              await supabase.from('artifact_tags').upsert({ artifact_id: artifact.id, tag_id: tag.id }, { onConflict: 'artifact_id,tag_id' })
+            }
+          }
         }
       }
     }
