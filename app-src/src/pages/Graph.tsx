@@ -240,23 +240,37 @@ export function Graph() {
     const cy = height / 2
     const ringRadius = Math.min(width, height) * 0.3
 
-    // Pre-position dimension nodes in hexagonal layout
+    // Pre-position dimension nodes in hexagonal layout (initial positions, not fixed)
     const simNodes = filteredNodes.map((n, _i) => {
       const copy = { ...n } as any
       if (n.isDimension) {
         const dimIdx = DIMENSION_KEYS.indexOf(n.dimensionLabel!)
         const angle = (dimIdx / 6) * Math.PI * 2 - Math.PI / 2
-        copy.fx = cx + ringRadius * Math.cos(angle)
-        copy.fy = cy + ringRadius * Math.sin(angle)
+        copy.x = cx + ringRadius * Math.cos(angle)
+        copy.y = cy + ringRadius * Math.sin(angle)
       }
       return copy
     })
+
+    // Store dimension target positions for radial pull
+    const dimTargets: Record<string, { x: number; y: number }> = {}
+    for (const key of DIMENSION_KEYS) {
+      const dimIdx = DIMENSION_KEYS.indexOf(key)
+      const angle = (dimIdx / 6) * Math.PI * 2 - Math.PI / 2
+      dimTargets[`dim-${key}`] = {
+        x: cx + ringRadius * Math.cos(angle),
+        y: cy + ringRadius * Math.sin(angle),
+      }
+    }
 
     const simulation = d3.forceSimulation(simNodes)
       .force('link', d3.forceLink(filteredLinks as any).id((d: any) => d.id).distance((d: any) => d.type === 'dimension_link' ? 120 : 80))
       .force('charge', d3.forceManyBody().strength((d: any) => d.isDimension ? -600 : -200))
       .force('center', d3.forceCenter(cx, cy).strength(0.05))
       .force('collision', d3.forceCollide().radius((d: any) => d.isDimension ? 30 : 12))
+      // Gentle pull toward ring positions instead of pinning
+      .force('dimX', d3.forceX((d: any) => dimTargets[d.id]?.x ?? cx).strength((d: any) => d.isDimension ? 0.3 : 0))
+      .force('dimY', d3.forceY((d: any) => dimTargets[d.id]?.y ?? cy).strength((d: any) => d.isDimension ? 0.3 : 0))
 
     // Draw links
     const link = g.append('g')
