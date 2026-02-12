@@ -176,6 +176,12 @@ export function Graph({ replaySeq }: GraphProps = {}) {
 
     loadGraph()
 
+    // Real-time: reload graph when new artifacts arrive
+    const sub = supabase.channel('graph-realtime')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => loadGraph())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_relationships' }, () => loadGraph())
+      .subscribe()
+
     return () => { supabase.removeChannel(sub) }
   }, [])
 

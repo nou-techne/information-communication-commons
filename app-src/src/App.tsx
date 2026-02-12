@@ -40,7 +40,8 @@ const FederationPage = lazy(() => import('./pages/FederationPage'))
 import type { Session } from '@supabase/supabase-js'
 import { Navigate } from 'react-router-dom'
 
-function RequireAuth({ children, session }: { children: React.ReactNode; session: Session | null }) {
+function RequireAuth({ children, session, loading }: { children: React.ReactNode; session: Session | null; loading: boolean }) {
+  if (loading) return <PageLoader />
   if (!session) return <Navigate to="/auth" replace />
   return <>{children}</>
 }
@@ -207,9 +208,10 @@ function Nav() {
 
 function AuthGuardedRoutes() {
   const [session, setSession] = useState<Session | null>(null)
+  const [authLoading, setAuthLoading] = useState(true)
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
+    supabase.auth.getSession().then(({ data }) => { setSession(data.session); setAuthLoading(false) })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => { setSession(s); setAuthLoading(false) })
     return () => subscription.unsubscribe()
   }, [])
 
@@ -219,21 +221,21 @@ function AuthGuardedRoutes() {
       <Route path="/dimensions" element={<Dimensions />} />
       <Route path="/d/:dimension" element={<DimensionView />} />
       <Route path="/artifact/:id" element={<ArtifactDetail />} />
-      <Route path="/me" element={<RequireAuth session={session}><MyThread /></RequireAuth>} />
-      <Route path="/contribute" element={<RequireAuth session={session}><Contribute /></RequireAuth>} />
-      <Route path="/profile" element={<RequireAuth session={session}><Profile /></RequireAuth>} />
+      <Route path="/me" element={<RequireAuth session={session} loading={authLoading}><MyThread /></RequireAuth>} />
+      <Route path="/contribute" element={<RequireAuth session={session} loading={authLoading}><Contribute /></RequireAuth>} />
+      <Route path="/profile" element={<RequireAuth session={session} loading={authLoading}><Profile /></RequireAuth>} />
       <Route path="/contribution/:id" element={<ContributionDetail />} />
       <Route path="/graph" element={<Graph />} />
-      <Route path="/coordinate" element={<RequireAuth session={session}><Coordinate /></RequireAuth>} />
+      <Route path="/coordinate" element={<RequireAuth session={session} loading={authLoading}><Coordinate /></RequireAuth>} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/search" element={<Search />} />
       <Route path="/p/:id" element={<ParticipantProfile />} />
       <Route path="/session/:id" element={<SessionDetail />} />
       <Route path="/stats" element={<Stats />} />
-      <Route path="/channels" element={<RequireAuth session={session}><Channels /></RequireAuth>} />
-      <Route path="/channels/search" element={<RequireAuth session={session}><MessageSearch /></RequireAuth>} />
-      <Route path="/channels/:slug" element={<RequireAuth session={session}><ChannelView /></RequireAuth>} />
-      <Route path="/channels/:slug/:threadId" element={<RequireAuth session={session}><ThreadView /></RequireAuth>} />
+      <Route path="/channels" element={<RequireAuth session={session} loading={authLoading}><Channels /></RequireAuth>} />
+      <Route path="/channels/search" element={<RequireAuth session={session} loading={authLoading}><MessageSearch /></RequireAuth>} />
+      <Route path="/channels/:slug" element={<RequireAuth session={session} loading={authLoading}><ChannelView /></RequireAuth>} />
+      <Route path="/channels/:slug/:threadId" element={<RequireAuth session={session} loading={authLoading}><ThreadView /></RequireAuth>} />
       <Route path="/welcome" element={<Onboard />} />
       <Route path="/status" element={<Status />} />
       <Route path="/api-docs" element={<ApiDocsPage />} />
