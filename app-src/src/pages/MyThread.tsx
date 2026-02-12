@@ -88,10 +88,19 @@ export function MyThread() {
   async function loadArtifactsForContribution(contribId: string) {
     if (contribArtifacts[contribId]) return // already loaded
     
+    // Artifacts don't have a direct FK to contributions — find via extraction JSON titles
+    const contrib = contributions.find(c => c.id === contribId)
+    const extractedTitles = contrib?.extraction?.artifacts?.map((a: any) => a.title).filter(Boolean) || []
+    
+    if (extractedTitles.length === 0) {
+      setContribArtifacts(prev => ({ ...prev, [contribId]: [] }))
+      return
+    }
+    
     const { data } = await supabase
       .from('artifacts')
       .select('*')
-      .eq('contribution_id', contribId)
+      .in('title', extractedTitles)
       .order('created_at', { ascending: true })
     
     setContribArtifacts(prev => ({ ...prev, [contribId]: data || [] }))
@@ -221,7 +230,7 @@ export function MyThread() {
               
               return (
                 <div key={c.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden">
-                  <button
+                  <div
                     onClick={() => c.status === 'complete' ? toggleContrib(c.id) : undefined}
                     className={`w-full text-left p-4 ${c.status === 'complete' ? 'cursor-pointer hover:bg-[#222]' : ''} transition-colors`}
                   >
@@ -255,7 +264,12 @@ export function MyThread() {
                       <p className="text-sm font-medium text-white mb-1">{c.title}</p>
                     )}
                     <p className={`text-xs text-gray-400 ${isExpanded ? '' : 'line-clamp-2'}`}>{c.content}</p>
-                  </button>
+                    {c.status === 'complete' && (
+                      <Link to={`/contribution/${c.id}`} className="text-xs text-[#c3fd50] hover:text-white mt-2 inline-block" onClick={e => e.stopPropagation()}>
+                        View full detail
+                      </Link>
+                    )}
+                  </div>
 
                   {/* Expanded: show extracted artifacts */}
                   {isExpanded && c.status === 'complete' && (
