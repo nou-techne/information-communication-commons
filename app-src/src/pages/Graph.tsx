@@ -265,7 +265,8 @@ export function Graph() {
       .enter().append('line')
       .attr('stroke', (d: any) => {
         if (d.type === 'dimension_link') {
-          const dimKey = (d.target as string).replace('dim-', '')
+          const targetId = typeof d.target === 'string' ? d.target : (d.target as any).id
+          const dimKey = targetId.replace('dim-', '')
           return DIMENSION_COLORS[dimKey] || '#666'
         }
         return '#666'
