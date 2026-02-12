@@ -580,7 +580,7 @@ export function Graph() {
 
       <div className="flex gap-4">
         <div className="flex-1 bg-[#060a14] border border-[#1d2839] rounded-lg overflow-hidden relative">
-          <svg ref={svgRef} className="w-full h-[600px]" />
+          <svg ref={svgRef} className="w-full h-full min-h-[400px]" style={{ maxHeight: '700px' }} />
           <div className="absolute bottom-3 right-3 flex flex-col gap-1">
             <button
               onClick={() => {
