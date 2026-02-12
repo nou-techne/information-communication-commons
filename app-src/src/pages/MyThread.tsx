@@ -27,6 +27,7 @@ export function MyThread() {
   const [session, setSession] = useState<Session | null>(null)
   const [participantId, setParticipantId] = useState<string | null>(null)
   const [artifacts, setArtifacts] = useState<Artifact[]>([])
+  const [edgeCount, setEdgeCount] = useState(0)
   const [commitments, setCommitments] = useState<Commitment[]>([])
   const [contributions, setContributions] = useState<Contribution[]>([])
   const [expandedContrib, setExpandedContrib] = useState<string | null>(null)
@@ -83,6 +84,14 @@ export function MyThread() {
     ])
     setArtifacts(arts || [])
     setCommitments(comms || [])
+
+    // Count edges connected to this participant's artifacts
+    if (arts && arts.length > 0) {
+      const artIds = arts.map(a => a.id)
+      const { count } = await supabase.from('artifact_relationships').select('*', { count: 'exact', head: true })
+        .or(artIds.map(id => `from_artifact_id.eq.${id}`).concat(artIds.map(id => `to_artifact_id.eq.${id}`)).join(','))
+      setEdgeCount(count || 0)
+    }
   }
 
   async function loadArtifactsForContribution(contribId: string) {
@@ -144,22 +153,30 @@ export function MyThread() {
       </div>
 
       {/* Summary stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-6">
         <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-white">{totalContributions}</div>
           <div className="text-xs text-gray-500 mt-1">Contributions</div>
         </div>
         <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-blue-400">{completedContributions}</div>
+          <div className="text-xs text-gray-500 mt-1">Processed</div>
+        </div>
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-[#a6ed2a]">{totalArtifacts}</div>
-          <div className="text-xs text-gray-500 mt-1">Artifacts Created</div>
+          <div className="text-xs text-gray-500 mt-1">Nodes</div>
+        </div>
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-purple-400">{edgeCount}</div>
+          <div className="text-xs text-gray-500 mt-1">Edges</div>
         </div>
         <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-amber-400">{totalCommitments}</div>
           <div className="text-xs text-gray-500 mt-1">Commitments</div>
         </div>
         <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-blue-400">{completedContributions}</div>
-          <div className="text-xs text-gray-500 mt-1">Processed</div>
+          <div className="text-2xl font-bold text-cyan-400">{totalArtifacts + edgeCount}</div>
+          <div className="text-xs text-gray-500 mt-1">Graph Total</div>
         </div>
       </div>
 
