@@ -4,6 +4,7 @@ import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
 import { Info, ChevronDown, ChevronLeft, ChevronRight, Inbox, PenLine, Sparkles, GitBranch, Handshake } from 'lucide-react'
 import { ExtractionProgress } from '../components/ExtractionProgress'
+import { ChainStatus } from '../components/ChainStatus'
 import { useConvergence } from '../contexts/ConvergenceContext'
 
 const Graph = lazy(() => import('./Graph').then(m => ({ default: m.Graph })))
@@ -478,7 +479,8 @@ export function Explore() {
 
         {/* Right: Contribution Feed */}
         <div>
-          <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Live Activity</h2>
+          <ChainStatus />
+          <h2 className="text-sm font-semibold text-gray-300 mb-3 mt-4 uppercase tracking-wider">Live Activity</h2>
           {feedItems.length === 0 ? (
             <div className="text-gray-500 text-center py-8 text-sm">No contributions yet</div>
           ) : (

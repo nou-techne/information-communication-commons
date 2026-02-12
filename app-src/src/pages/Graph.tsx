@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase'
 import { Network } from 'lucide-react'
 import * as d3 from 'd3'
 import { EmptyState } from '../components/ui/EmptyState'
+import { ReplaySlider } from '../components/ReplaySlider'
+import { ChainStatus } from '../components/ChainStatus'
 
 interface Node {
   id: string
@@ -168,6 +170,13 @@ export function Graph() {
 
     loadGraph()
 
+    // Load chain HEAD for replay slider
+    supabase.rpc('chain_head').then(({ data: chainData }) => {
+      if (chainData && chainData.length > 0 && chainData[0].head_seq) {
+        setChainMaxSeq(chainData[0].head_seq)
+      }
+    })
+
     // Real-time: reload graph when new artifacts arrive
     const sub = supabase.channel('graph-realtime')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => loadGraph())
@@ -194,6 +203,7 @@ export function Graph() {
   }
 
   const [renderKey, setRenderKey] = useState(0)
+  const [chainMaxSeq, setChainMaxSeq] = useState(0)
 
   useEffect(() => {
     if (!data || !svgRef.current) return
@@ -736,6 +746,21 @@ export function Graph() {
             {clusters.length > 8 && <span className="text-gray-500 text-xs">+{clusters.length - 8} more</span>}
           </div>
         )}
+      </div>
+
+      {/* Merkle Chain & Replay */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+        <div className="lg:col-span-1">
+          <ChainStatus />
+        </div>
+        <div className="lg:col-span-2">
+          {chainMaxSeq > 0 && (
+            <ReplaySlider
+              maxSeq={chainMaxSeq}
+              onSeqChange={() => {}}
+            />
+          )}
+        </div>
       </div>
     </div>
   )
