@@ -1,13 +1,16 @@
 // Typed API Client for commons.id
 
 export class ApiError extends Error {
-  constructor(
-    public status: number,
-    public statusText: string,
-    public body?: unknown
-  ) {
+  status: number
+  statusText: string
+  body?: unknown
+
+  constructor(status: number, statusText: string, body?: unknown) {
     super(`API Error ${status}: ${statusText}`)
     this.name = 'ApiError'
+    this.status = status
+    this.statusText = statusText
+    this.body = body
   }
 }
 
@@ -17,7 +20,11 @@ interface RequestOptions {
 }
 
 class ApiClient {
-  constructor(private baseUrl: string = '') {}
+  private baseUrl: string
+
+  constructor(baseUrl: string = '') {
+    this.baseUrl = baseUrl
+  }
 
   private async request<T>(
     method: string,
