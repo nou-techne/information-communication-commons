@@ -314,7 +314,7 @@ export function Explore() {
           {viewMode === '3d' ? (
             <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#080c16] w-screen h-screen' : ''}`}>
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
-                <div className={`relative w-full ${isFullscreen ? 'h-full' : 'h-[500px]'}`}>
+                <div className={`relative w-full overflow-hidden ${isFullscreen ? 'h-full' : 'h-[600px]'}`}>
                   <Graph />
                   <button
                     onClick={() => {
