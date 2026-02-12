@@ -259,7 +259,7 @@ export function ChannelView() {
       {/* Filter tabs */}
       <div className="flex gap-1 mb-4 overflow-x-auto pb-1">
         {(['all', 'open', 'tagged', 'resolved', 'archived'] as const).map(filter => {
-          const count = filter === 'all' ? threads.length : threads.filter(t => t.status === filter).length
+          const count = filter === 'all' ? threads.filter(t => t.status !== 'archived').length : threads.filter(t => t.status === filter).length
           const isActive = statusFilter === filter
           return (
             <button
@@ -317,7 +317,7 @@ export function ChannelView() {
 
       {/* Thread list */}
       {(() => {
-        const filtered = statusFilter === 'all' ? threads : threads.filter(t => t.status === statusFilter)
+        const filtered = statusFilter === 'all' ? threads.filter(t => t.status !== 'archived') : threads.filter(t => t.status === statusFilter)
         return filtered.length === 0 ? (
         <div className="text-center py-16">
           <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />

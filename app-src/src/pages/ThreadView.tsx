@@ -204,6 +204,12 @@ export function ThreadView() {
     if (!error) await loadThread()
   }
 
+  async function archiveThread() {
+    if (!threadId || !session) return
+    const { error } = await supabase.rpc('archive_thread', { p_thread_id: threadId })
+    if (!error) await loadThread()
+  }
+
   async function consolidateThread() {
     if (!threadId || !session || !thread) return
     if (thread.status !== 'resolved') {
@@ -325,6 +331,15 @@ export function ThreadView() {
                 title="Consolidate into artifact"
               >
                 <Archive className="w-5 h-5" />
+              </button>
+            )}
+            {thread.status !== 'archived' && (
+              <button
+                onClick={archiveThread}
+                className="text-gray-400 hover:text-gray-500 transition-colors"
+                title="Archive thread"
+              >
+                <Archive className="w-4 h-4" />
               </button>
             )}
           </div>
