@@ -159,3 +159,8 @@ html, body {
   white-space: nowrap;
   border-width: 0;
 }
+
+/* Chevron rotation for details/summary */
+details[open] .hlamt-chevron {
+  transform: rotate(90deg);
+}

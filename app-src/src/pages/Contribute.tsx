@@ -257,8 +257,11 @@ export function Contribute() {
         open={typeof window !== 'undefined' ? localStorage.getItem('hlamt-open') !== 'false' : true}
         onToggle={(e: any) => localStorage.setItem('hlamt-open', String(e.target.open))}
       >
-        <summary className="px-4 py-3 text-base font-medium text-white cursor-pointer hover:bg-[#1d2839] transition-colors flex items-center justify-between">
-          <span>What is e/H-LAM/T?</span>
+        <summary className="px-4 py-3 text-base font-medium text-white cursor-pointer hover:bg-[#1d2839] transition-colors flex items-center justify-between list-none [&::-webkit-details-marker]:hidden">
+          <div className="flex items-center gap-2">
+            <svg className="w-4 h-4 text-gray-400 transition-transform duration-200 hlamt-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <span>What is e/H-LAM/T?</span>
+          </div>
           <span className="text-xs text-gray-500 ml-2">AI classifies every contribution across these six dimensions</span>
         </summary>
         <div className="px-4 pb-4 pt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
