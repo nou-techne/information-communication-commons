@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, BookMarked, X, Edit2, Trash2 } from 'lucide-react'
+import { Plus, BookMarked, Edit2, Trash2 } from 'lucide-react'
 import { collectionStore } from '../stores/collection-store'
 import type { Collection } from '../types/collection'
 import { CuratedCollection } from '../components/CuratedCollection'

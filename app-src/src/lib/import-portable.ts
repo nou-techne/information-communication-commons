@@ -212,7 +212,7 @@ export async function importSingleContribution(
  */
 export async function batchImport(
   portableItems: PortableContribution[],
-  existingContributions: Array<{ id: string; contentHash: string }>,
+  _existingContributions: Array<{ id: string; contentHash: string }>,
   options: ImportOptions & {
     onProgress?: (completed: number, total: number) => void
   } = {}

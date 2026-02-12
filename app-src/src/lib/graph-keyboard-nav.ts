@@ -42,7 +42,7 @@ export function handleGraphKeyboard(
   
   // Prevent default for handled keys
   const handledKeys = Object.values(GRAPH_KEYBOARD_SHORTCUTS)
-  if (handledKeys.includes(event.key)) {
+  if (handledKeys.includes(event.key as any)) {
     event.preventDefault()
   }
   

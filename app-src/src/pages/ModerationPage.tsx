@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Flag, Check, X, Trash2 } from 'lucide-react'
+import { Flag, Check, X } from 'lucide-react'
 import { moderationStore } from '../stores/moderation-store'
 import type { ContentFlag, FlagReason } from '../types/moderation'
 import { FLAG_REASON_METADATA } from '../types/moderation'

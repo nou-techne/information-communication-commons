@@ -211,3 +211,6 @@ export interface SuggestTagsResponse {
     confidence: number
   }>
 }
+
+export type HLAMTDimension = 'e' | 'H' | 'L' | 'A' | 'M' | 'T' | 'ecology' | 'human' | 'language' | 'artifact' | 'methodology' | 'training'
+

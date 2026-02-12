@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Download, ChevronRight, ChevronLeft, FileText, Calendar, Filter } from 'lucide-react'
+import { Download, ChevronRight, ChevronLeft, FileText, Filter } from 'lucide-react'
 import { Button } from '../components/Button'
 import { Card } from '../components/ui/Card'
 import { Input } from '../components/ui/Input'
@@ -57,7 +57,11 @@ export default function ExportPage() {
 
     const formatHandler = EXPORT_FORMATS[format]
     const content = formatHandler.serializer(mockData, { pretty: true })
-    setPreviewContent(content)
+    if (content instanceof Promise) {
+      content.then(setPreviewContent)
+    } else {
+      setPreviewContent(content)
+    }
   }
 
   function handleNext() {

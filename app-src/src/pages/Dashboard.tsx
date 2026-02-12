@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Activity, Users, Link2, TrendingUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Card, CardBody } from '../components/ui/Card';
 
 interface Stats {
@@ -237,8 +238,9 @@ export default function Dashboard() {
               const maxCount = dimensions[0]?.count || 1;
               const widthPercent = (dim.count / maxCount) * 100;
               
+              const dimKey = dim.dimension === 'E' ? 'e' : dim.dimension;
               return (
-                <div key={dim.dimension}>
+                <Link key={dim.dimension} to={`/dimension/${dimKey}`} className="block hover:bg-[#262626] rounded-lg p-2 -m-2 transition-colors">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <div className={`w-3 h-3 rounded ${dim.color}`}></div>
@@ -252,7 +254,7 @@ export default function Dashboard() {
                       style={{ width: `${widthPercent}%` }}
                     ></div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

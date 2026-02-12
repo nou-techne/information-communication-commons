@@ -254,11 +254,14 @@ export function ContributionDetail() {
           <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-6">
             {DIMENSIONS.map(d => {
               const count = dimCounts[d.tag] ?? 0
+              const Wrapper = count > 0 ? Link : 'div' as any
+              const wrapperProps = count > 0 ? { to: `/dimension/${d.key}` } : {}
               return (
-                <div
+                <Wrapper
                   key={d.key}
-                  className={`rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 sm:p-4 text-center ${
-                    count > 0 ? 'border-opacity-100' : 'opacity-40'
+                  {...wrapperProps}
+                  className={`rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 sm:p-4 text-center block transition-all ${
+                    count > 0 ? 'border-opacity-100 hover:scale-105 hover:shadow-lg cursor-pointer' : 'opacity-40'
                   }`}
                   style={count > 0 ? { borderColor: d.color + '40' } : undefined}
                 >
@@ -268,7 +271,7 @@ export function ContributionDetail() {
                     <span className="text-xl sm:text-2xl font-bold text-white">{count}</span>
                   </div>
                   <span className="text-xs text-gray-400 block truncate">{d.desc}</span>
-                </div>
+                </Wrapper>
               )
             })}
           </div>
