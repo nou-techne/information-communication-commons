@@ -370,13 +370,19 @@ export function Explore() {
                   <Graph replaySeq={replaySeq} />
                 </div>
               </Suspense>
-              {/* Replay slider — under graph (also in fullscreen) */}
-              <div className={`${isFullscreen ? 'p-4' : 'mt-2'}`}>
+              {/* Replay slider — under graph */}
+              <div className={`${isFullscreen ? 'p-4' : 'mt-4'}`}>
                 {chainMaxSeq > 0 && (
-                  <ReplaySlider
-                    maxSeq={chainMaxSeq}
-                    onSeqChange={(seq) => setReplaySeq(seq)}
-                  />
+                  <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
+                    <div className="mb-3">
+                      <h3 className="text-sm font-semibold text-gray-300 mb-1">Graph Replay</h3>
+                      <p className="text-xs text-gray-500">Drag to replay the knowledge graph as it grew. Each step adds a contribution and its extracted artifacts to the constellation.</p>
+                    </div>
+                    <ReplaySlider
+                      maxSeq={chainMaxSeq}
+                      onSeqChange={(seq) => setReplaySeq(seq)}
+                    />
+                  </div>
                 )}
               </div>
               {isFullscreen && <div className="p-4 pt-0"><ChainStatus /></div>}
