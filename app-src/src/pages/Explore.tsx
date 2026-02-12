@@ -328,26 +328,26 @@ export function Explore() {
             </div>
           </div>
           {viewMode === '3d' ? (
-            <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#080c16] w-screen h-screen' : ''}`}>
+            <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#080c16] w-screen h-screen flex flex-col' : ''}`}>
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
-                <div className="relative w-full h-[400px] sm:h-[500px] md:h-[700px] overflow-hidden rounded-lg">
+                <div className={`relative w-full overflow-hidden rounded-lg ${isFullscreen ? 'flex-1' : 'h-[400px] sm:h-[500px] md:h-[700px]'}`}>
                   <Graph replaySeq={replaySeq} />
                 </div>
               </Suspense>
+              {/* Merkle Chain & Replay — inside fullscreen container */}
+              <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 ${isFullscreen ? 'p-4' : 'mt-4'}`}>
+                <div className="sm:col-span-1">
+                  <ChainStatus />
+                </div>
+                <div className="sm:col-span-2">
+                  {chainMaxSeq > 0 && (
+                    <ReplaySlider
+                      maxSeq={chainMaxSeq}
+                      onSeqChange={(seq) => setReplaySeq(seq)}
+                    />
+                  )}
+              </div>
             </div>
-            {/* Merkle Chain & Replay — directly under 3D graph */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
-              <div className="sm:col-span-1">
-                <ChainStatus />
-              </div>
-              <div className="sm:col-span-2">
-                {chainMaxSeq > 0 && (
-                  <ReplaySlider
-                    maxSeq={chainMaxSeq}
-                    onSeqChange={(seq) => setReplaySeq(seq)}
-                  />
-                )}
-              </div>
             </div>
           ) : (<>
           {/* Search + Filters */}
