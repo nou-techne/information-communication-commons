@@ -5,6 +5,7 @@ import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
 import { Info, ChevronDown, ChevronLeft, ChevronRight, Inbox, PenLine, Sparkles, GitBranch, Handshake } from 'lucide-react'
 import { ExtractionProgress } from '../components/ExtractionProgress'
 import { ChainStatus } from '../components/ChainStatus'
+import { ReplaySlider } from '../components/ReplaySlider'
 import { useConvergence } from '../contexts/ConvergenceContext'
 
 const Graph = lazy(() => import('./Graph').then(m => ({ default: m.Graph })))
@@ -49,6 +50,18 @@ export function Explore() {
   const [sortBy, setSortBy] = useState<'recent' | 'coordination'>('coordination')
   const [coordCounts, setCoordCounts] = useState<Record<string, number>>({})
   const [searchResults, setSearchResults] = useState<Artifact[] | null>(null)
+
+  // Replay
+  const [replaySeq, setReplaySeq] = useState<number | null>(null)
+  const [chainMaxSeq, setChainMaxSeq] = useState(0)
+
+  useEffect(() => {
+    supabase.rpc('chain_head').then(({ data: chainData }) => {
+      if (chainData && chainData.length > 0 && chainData[0].head_seq) {
+        setChainMaxSeq(chainData[0].head_seq)
+      }
+    })
+  }, [])
 
   // View mode
   const [viewMode, setViewMode] = useState<'2d' | '3d'>(() =>
@@ -318,7 +331,7 @@ export function Explore() {
             <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#080c16] w-screen h-screen' : ''}`}>
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
                 <div className="relative w-full h-[400px] sm:h-[500px] md:h-[700px] overflow-hidden rounded-lg">
-                  <Graph />
+                  <Graph replaySeq={replaySeq} />
                 </div>
               </Suspense>
             </div>
@@ -480,6 +493,14 @@ export function Explore() {
         {/* Right: Contribution Feed */}
         <div>
           <ChainStatus />
+          {chainMaxSeq > 0 && (
+            <div className="mt-3">
+              <ReplaySlider
+                maxSeq={chainMaxSeq}
+                onSeqChange={(seq) => setReplaySeq(seq)}
+              />
+            </div>
+          )}
           <h2 className="text-sm font-semibold text-gray-300 mb-3 mt-4 uppercase tracking-wider">Live Activity</h2>
           {feedItems.length === 0 ? (
             <div className="text-gray-500 text-center py-8 text-sm">No contributions yet</div>

@@ -66,8 +66,13 @@ const DIMENSION_LABELS: Record<string, string> = {
 
 const DIMENSION_KEYS = ['e', 'H', 'L', 'A', 'M', 'T']
 
-export function Graph() {
+interface GraphProps {
+  replaySeq?: number | null
+}
+
+export function Graph({ replaySeq }: GraphProps = {}) {
   const [data, setData] = useState<GraphData | null>(null)
+  const [fullData, setFullData] = useState<GraphData | null>(null)
   const [loading, setLoading] = useState(true)
   const [colorBy, setColorBy] = useState<'rea' | 'type' | 'dimension' | 'cluster'>('rea')
   const svgRef = useRef<SVGSVGElement>(null)
@@ -164,26 +169,45 @@ export function Graph() {
         }
       }
 
+      setFullData({ nodes, links })
       setData({ nodes, links })
       setLoading(false)
     }
 
     loadGraph()
 
-    // Load chain HEAD for replay slider
+    return () => { supabase.removeChannel(sub) }
+  }, [])
+
+  // Replay filtering: when replaySeq changes, filter graph to only show artifacts at that chain state
+  useEffect(() => {
+    if (!fullData) return
+    if (replaySeq == null || replaySeq <= 0) {
+      setData(fullData)
+      return
+    }
+    // Fetch artifact titles at this seq from graph_at_seq
+    supabase.rpc('graph_at_seq', { p_seq: replaySeq }).then(({ data: seqData }) => {
+      if (!seqData) { setData(fullData); return }
+      const replayTitles = new Set(seqData.map((r: any) => r.artifact_title))
+      // Filter nodes: keep dimension nodes + artifacts whose title matches
+      const filteredNodes = fullData.nodes.filter(n => n.isDimension || replayTitles.has(n.title))
+      const filteredNodeIds = new Set(filteredNodes.map(n => n.id))
+      const filteredLinks = fullData.links.filter(l => {
+        const src = typeof l.source === 'string' ? l.source : (l.source as any).id
+        const tgt = typeof l.target === 'string' ? l.target : (l.target as any).id
+        return filteredNodeIds.has(src) && filteredNodeIds.has(tgt)
+      })
+      setData({ nodes: filteredNodes, links: filteredLinks })
+    })
+  }, [replaySeq, fullData])
+
+  useEffect(() => {
     supabase.rpc('chain_head').then(({ data: chainData }) => {
       if (chainData && chainData.length > 0 && chainData[0].head_seq) {
         setChainMaxSeq(chainData[0].head_seq)
       }
     })
-
-    // Real-time: reload graph when new artifacts arrive
-    const sub = supabase.channel('graph-realtime')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => loadGraph())
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_relationships' }, () => loadGraph())
-      .subscribe()
-
-    return () => { supabase.removeChannel(sub) }
   }, [])
 
   const simulationRef = useRef<d3.Simulation<any, any> | null>(null)
