@@ -62,10 +62,20 @@ export async function getConvergenceConfig(): Promise<ConvergenceConfig> {
       if (raw.dimensions && !Array.isArray(raw.dimensions)) {
         const dimMap = raw.dimensions as Record<string, { tag: string; label: string }>
         const dimDefaults = DEFAULT_CONFIG.dimensions
-        raw.dimensions = dimDefaults.map(d => {
+        const knownKeys = new Set(dimDefaults.map(d => d.key))
+        const mapped = dimDefaults.map(d => {
           const db = dimMap[d.key]
           return db ? { ...d, tag: db.tag, name: db.label || d.name } : d
         })
+        // Add any DB dimensions not in defaults
+        const extraColors = ['#c084fc', '#fb923c', '#38bdf8', '#f472b6']
+        let ci = 0
+        for (const [k, v] of Object.entries(dimMap)) {
+          if (!knownKeys.has(k)) {
+            mapped.push({ key: k, letter: `${k}/`, name: v.label, desc: v.label, color: extraColors[ci++ % extraColors.length], tag: v.tag })
+          }
+        }
+        raw.dimensions = mapped
       }
       cachedConfig = raw as ConvergenceConfig
       return cachedConfig
