@@ -35,7 +35,7 @@ export function ExtractionProgress({ startedAt, compact = false }: ExtractionPro
   if (compact) {
     return (
       <div className="w-full">
-        <div className="h-1 bg-[#262626] rounded-full overflow-hidden">
+        <div className="h-1 bg-[#1d2839] rounded-full overflow-hidden">
           <div
             className="h-full bg-blue-400 rounded-full transition-all duration-200 ease-linear"
             style={{ width: `${progress}%` }}
@@ -51,9 +51,9 @@ export function ExtractionProgress({ startedAt, compact = false }: ExtractionPro
         <span className="text-xs text-gray-500">Extracting knowledge...</span>
         <span className="text-xs font-mono text-gray-400">{Math.round(progress)}%</span>
       </div>
-      <div className="h-2 bg-[#262626] rounded-full overflow-hidden">
+      <div className="h-2 bg-[#1d2839] rounded-full overflow-hidden">
         <div
-          className="h-full bg-[#c3fd50] rounded-full transition-all duration-200 ease-linear"
+          className="h-full bg-[#a6ed2a] rounded-full transition-all duration-200 ease-linear"
           style={{ width: `${progress}%` }}
         />
       </div>

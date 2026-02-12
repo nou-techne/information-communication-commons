@@ -92,7 +92,7 @@ export function ConvergenceComparison({ convergenceA, convergenceB }: Convergenc
         <CardBody>
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#262626]">
+              <tr className="border-b border-[#1d2839]">
                 <th className="text-left py-2 text-gray-400 font-medium">Metric</th>
                 <th className="text-right py-2 text-gray-400 font-medium">{convergenceA.name}</th>
                 <th className="text-right py-2 text-gray-400 font-medium">{convergenceB.name}</th>
@@ -100,7 +100,7 @@ export function ConvergenceComparison({ convergenceA, convergenceB }: Convergenc
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-[#262626]">
+              <tr className="border-b border-[#1d2839]">
                 <td className="py-3 flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-gray-500" />
                   <span>Contributions</span>
@@ -111,7 +111,7 @@ export function ConvergenceComparison({ convergenceA, convergenceB }: Convergenc
                   +{metricsA.contributions - metricsB.contributions}
                 </td>
               </tr>
-              <tr className="border-b border-[#262626]">
+              <tr className="border-b border-[#1d2839]">
                 <td className="py-3 flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-gray-500" />
                   <span>Active Threads</span>
@@ -122,7 +122,7 @@ export function ConvergenceComparison({ convergenceA, convergenceB }: Convergenc
                   +{metricsA.threads - metricsB.threads}
                 </td>
               </tr>
-              <tr className="border-b border-[#262626]">
+              <tr className="border-b border-[#1d2839]">
                 <td className="py-3 flex items-center gap-2">
                   <FileText className="w-4 h-4 text-gray-500" />
                   <span>Artifacts</span>
@@ -170,7 +170,7 @@ export function ConvergenceComparison({ convergenceA, convergenceB }: Convergenc
                 <DimensionRadar
                   data={metricsA.dimensions}
                   size={280}
-                  color="#c3fd50"
+                  color="#a6ed2a"
                   showLabels={true}
                   showGrid={false}
                 />
@@ -178,7 +178,7 @@ export function ConvergenceComparison({ convergenceA, convergenceB }: Convergenc
             </div>
             <div className="flex justify-center gap-4 mt-4 text-xs">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#c3fd50]" />
+                <div className="w-3 h-3 rounded-full bg-[#a6ed2a]" />
                 <span className="text-gray-400">{convergenceA.name}</span>
               </div>
               <div className="flex items-center gap-2">
@@ -198,7 +198,7 @@ export function ConvergenceComparison({ convergenceA, convergenceB }: Convergenc
             <div className="flex items-center justify-center h-64">
               <svg width="300" height="200" className="participant-venn">
                 {/* Left circle (A) */}
-                <circle cx="100" cy="100" r="60" fill="#c3fd50" fillOpacity="0.3" stroke="#c3fd50" strokeWidth="2" />
+                <circle cx="100" cy="100" r="60" fill="#a6ed2a" fillOpacity="0.3" stroke="#a6ed2a" strokeWidth="2" />
                 {/* Right circle (B) */}
                 <circle cx="200" cy="100" r="60" fill="#6366f1" fillOpacity="0.3" stroke="#6366f1" strokeWidth="2" />
                 

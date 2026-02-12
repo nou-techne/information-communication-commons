@@ -29,7 +29,7 @@ export function ResolveThreadDialog({ threadTitle, onResolve, onClose }: Resolve
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
+      <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <CheckCircle className="w-5 h-5 text-[#a78bfa]" />
@@ -46,7 +46,7 @@ export function ResolveThreadDialog({ threadTitle, onResolve, onClose }: Resolve
             <select
               value={reason}
               onChange={e => setReason(e.target.value)}
-              className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#a78bfa]"
+              className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#a78bfa]"
             >
               {REASONS.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
@@ -58,7 +58,7 @@ export function ResolveThreadDialog({ threadTitle, onResolve, onClose }: Resolve
               onChange={e => setSummary(e.target.value)}
               placeholder="Summarize the resolution or key takeaways..."
               rows={4}
-              className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#a78bfa] text-sm resize-none"
+              className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#a78bfa] text-sm resize-none"
             />
           </div>
           <button

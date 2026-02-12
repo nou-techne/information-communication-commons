@@ -92,7 +92,7 @@ export function MobileNav({ isOpen, onClose, children }: MobileNavProps) {
       {/* Drawer */}
       <div
         ref={drawerRef}
-        className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-[#0a0a0a] border-r border-[#262626] z-50 transition-transform overflow-y-auto"
+        className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-[#060a14] border-r border-[#1d2839] z-50 transition-transform overflow-y-auto"
         style={{
           transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
         }}
@@ -101,11 +101,11 @@ export function MobileNav({ isOpen, onClose, children }: MobileNavProps) {
         onTouchEnd={handleTouchEnd}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#262626]">
+        <div className="flex items-center justify-between p-4 border-b border-[#1d2839]">
           <h2 className="text-lg font-bold">Menu</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-[#1a1a1a] rounded transition-colors"
+            className="p-2 hover:bg-[#0a101d] rounded transition-colors"
             aria-label="Close menu"
           >
             <X className="w-5 h-5" />

@@ -100,11 +100,11 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#262626]">
+        <div className="flex items-center justify-between p-6 border-b border-[#1d2839]">
           <h2 className="text-2xl font-bold">Import Data</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-[#1a1a1a] rounded transition-colors"
+            className="p-2 hover:bg-[#0a101d] rounded transition-colors"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -115,7 +115,7 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
           {/* Step: Upload */}
           {step === 'upload' && (
             <div>
-              <div className="border-2 border-dashed border-[#262626] rounded-lg p-12 text-center hover:border-[#3a3a3a] transition-colors">
+              <div className="border-2 border-dashed border-[#1d2839] rounded-lg p-12 text-center hover:border-[#3a3a3a] transition-colors">
                 <Upload className="w-16 h-16 mx-auto mb-4 text-gray-500" />
                 <h3 className="text-lg font-bold mb-2">Upload File</h3>
                 <p className="text-gray-400 mb-4">
@@ -162,10 +162,10 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
 
               <div className="mb-4">
                 <h3 className="font-bold mb-2">Preview (first 5 records)</h3>
-                <div className="bg-[#0a0a0a] border border-[#262626] rounded overflow-x-auto">
+                <div className="bg-[#060a14] border border-[#1d2839] rounded overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-[#262626]">
+                      <tr className="border-b border-[#1d2839]">
                         {previewData.length > 0 &&
                           Object.keys(previewData[0]).map(key => (
                             <th key={key} className="text-left p-3 text-gray-400 font-medium">
@@ -176,7 +176,7 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
                     </thead>
                     <tbody>
                       {previewData.map((row, i) => (
-                        <tr key={i} className="border-b border-[#262626] last:border-0">
+                        <tr key={i} className="border-b border-[#1d2839] last:border-0">
                           {Object.values(row).map((value: any, j) => (
                             <td key={j} className="p-3 text-gray-300">
                               {String(value).slice(0, 50)}
@@ -212,7 +212,7 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
               <div className="space-y-3 mb-6">
                 {Object.keys(fieldMapping).map(key => (
                   <div key={key} className="flex items-center gap-3">
-                    <div className="flex-1 font-mono text-sm bg-[#1a1a1a] p-2 rounded">
+                    <div className="flex-1 font-mono text-sm bg-[#0a101d] p-2 rounded">
                       {key}
                     </div>
                     <span className="text-gray-500">→</span>
@@ -222,7 +222,7 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
                       onChange={(e) =>
                         setFieldMapping({ ...fieldMapping, [key]: e.target.value })
                       }
-                      className="flex-1 bg-[#0a0a0a] border border-[#262626] rounded px-3 py-2 text-sm"
+                      className="flex-1 bg-[#060a14] border border-[#1d2839] rounded px-3 py-2 text-sm"
                       placeholder="Target field"
                     />
                   </div>
@@ -249,7 +249,7 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
               </p>
 
               <div className="space-y-3 mb-6">
-                <label className="flex items-start gap-3 p-4 border border-[#262626] rounded cursor-pointer hover:border-[#3a3a3a]">
+                <label className="flex items-start gap-3 p-4 border border-[#1d2839] rounded cursor-pointer hover:border-[#3a3a3a]">
                   <input
                     type="radio"
                     name="conflict"
@@ -266,7 +266,7 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
                   </div>
                 </label>
 
-                <label className="flex items-start gap-3 p-4 border border-[#262626] rounded cursor-pointer hover:border-[#3a3a3a]">
+                <label className="flex items-start gap-3 p-4 border border-[#1d2839] rounded cursor-pointer hover:border-[#3a3a3a]">
                   <input
                     type="radio"
                     name="conflict"
@@ -283,7 +283,7 @@ export function ImportWizard({ onImport, onClose }: ImportWizardProps) {
                   </div>
                 </label>
 
-                <label className="flex items-start gap-3 p-4 border border-[#262626] rounded cursor-pointer hover:border-[#3a3a3a]">
+                <label className="flex items-start gap-3 p-4 border border-[#1d2839] rounded cursor-pointer hover:border-[#3a3a3a]">
                   <input
                     type="radio"
                     name="conflict"

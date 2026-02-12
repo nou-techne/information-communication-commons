@@ -43,7 +43,7 @@ export function ResponsiveTable<T extends Record<string, any>>({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[#262626]">
+            <tr className="border-b border-[#1d2839]">
               {columns.map(col => (
                 <th
                   key={String(col.key)}
@@ -58,7 +58,7 @@ export function ResponsiveTable<T extends Record<string, any>>({
             {data.map(item => {
               const key = keyExtractor(item)
               return (
-                <tr key={key} className="border-b border-[#262626] hover:bg-[#1a1a1a]">
+                <tr key={key} className="border-b border-[#1d2839] hover:bg-[#0a101d]">
                   {columns.map(col => (
                     <td key={String(col.key)} className="py-3 px-4">
                       {col.render ? col.render(item) : item[col.key]}
@@ -91,7 +91,7 @@ export function ResponsiveTable<T extends Record<string, any>>({
         return (
           <div
             key={key}
-            className="bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden"
+            className="bg-[#0a101d] border border-[#1d2839] rounded-lg overflow-hidden"
           >
             {/* Priority columns */}
             <div className="p-4">
@@ -110,7 +110,7 @@ export function ResponsiveTable<T extends Record<string, any>>({
               <>
                 <button
                   onClick={() => toggleRow(key)}
-                  className="w-full flex items-center justify-between px-4 py-2 bg-[#0f0f0f] hover:bg-[#1a1a1a] transition-colors text-sm text-gray-400"
+                  className="w-full flex items-center justify-between px-4 py-2 bg-[#080c16] hover:bg-[#0a101d] transition-colors text-sm text-gray-400"
                 >
                   <span>
                     {isExpanded ? 'Show less' : `Show ${hiddenColumns.length} more`}
@@ -123,7 +123,7 @@ export function ResponsiveTable<T extends Record<string, any>>({
                 </button>
 
                 {isExpanded && (
-                  <div className="p-4 border-t border-[#262626] space-y-3">
+                  <div className="p-4 border-t border-[#1d2839] space-y-3">
                     {hiddenColumns.map(col => (
                       <div key={String(col.key)}>
                         <div className="text-xs text-gray-500 mb-1">{col.label}</div>

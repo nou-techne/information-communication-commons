@@ -14,7 +14,7 @@ interface DimensionDef {
 const DIMENSIONS: DimensionDef[] = [
   { key: 'e', letter: 'e/', name: 'Ecology', tagName: 'hlamt:E', description: 'Where We Are — place, environment, context', color: '#4a8c6f' },
   { key: 'H', letter: 'H/', name: 'Human', tagName: 'hlamt:H', description: 'Who\'s Here — people, participants, relationships', color: '#c4956a' },
-  { key: 'L', letter: 'L/', name: 'Language', tagName: 'hlamt:L', description: 'How We Talk — vocabulary, tags, shared concepts', color: '#c3fd50' },
+  { key: 'L', letter: 'L/', name: 'Language', tagName: 'hlamt:L', description: 'How We Talk — vocabulary, tags, shared concepts', color: '#a6ed2a' },
   { key: 'A', letter: 'A/', name: 'Artifacts', tagName: 'hlamt:A', description: 'What We\'re Building — tools, documents, infrastructure', color: '#8bbfff' },
   { key: 'M', letter: 'M/', name: 'Methodology', tagName: 'hlamt:M', description: 'How We Work — processes, governance, coordination', color: '#7ccfb8' },
   { key: 'T', letter: 'T/', name: 'Training', tagName: 'hlamt:T', description: 'What We\'re Learning — skills, transformation, practice', color: '#e8927c' },
@@ -54,7 +54,7 @@ export function Dimensions() {
           <Link
             key={d.key}
             to={`/d/${d.key}`}
-            className="block rounded-xl border border-[#262626] bg-[#1a1a1a] p-5 hover:bg-[#1a1a1a] transition-colors group"
+            className="block rounded-xl border border-[#1d2839] bg-[#0a101d] p-5 hover:bg-[#0a101d] transition-colors group"
           >
             <div className="flex items-baseline gap-3 mb-2">
               <span className="font-mono text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>

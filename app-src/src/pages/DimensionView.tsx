@@ -24,7 +24,7 @@ interface DimensionConfig {
 const DIMENSION_MAP: Record<string, DimensionConfig> = {
   e: { letter: 'e/', name: 'Ecology', subtitle: 'Where We Are', tagName: 'hlamt:E', color: '#4a8c6f' },
   H: { letter: 'H/', name: 'Human', subtitle: 'Who\'s Here', tagName: 'hlamt:H', color: '#c4956a' },
-  L: { letter: 'L/', name: 'Language', subtitle: 'How We Talk', tagName: 'hlamt:L', color: '#c3fd50' },
+  L: { letter: 'L/', name: 'Language', subtitle: 'How We Talk', tagName: 'hlamt:L', color: '#a6ed2a' },
   A: { letter: 'A/', name: 'Tools & Infrastructure', subtitle: 'What We\'re Building', tagName: 'hlamt:A', color: '#8bbfff' },
   M: { letter: 'M/', name: 'Methodology', subtitle: 'How We Work', tagName: 'hlamt:M', color: '#7ccfb8' },
   T: { letter: 'T/', name: 'Training', subtitle: 'What We\'re Learning', tagName: 'hlamt:T', color: '#e8927c' },
@@ -35,7 +35,7 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
   return (
     <Link
       to={`/artifact/${artifact.id}`}
-      className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:border-[#c3fd50] transition-colors group"
+      className="block rounded-lg border border-[#1d2839] bg-[#0a101d] p-4 hover:border-[#a6ed2a] transition-colors group"
       style={{ borderLeftWidth: '3px', borderLeftColor: reaColor }}
     >
       <div className="flex items-center gap-2 mb-1">
@@ -64,7 +64,7 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
         )}
         <span className="ml-auto text-xs text-gray-600">{timeAgo(artifact.created_at)}</span>
       </div>
-      <h3 className="font-medium text-white group-hover:text-[#c3fd50] transition-colors mb-1">{artifact.title}</h3>
+      <h3 className="font-medium text-white group-hover:text-[#a6ed2a] transition-colors mb-1">{artifact.title}</h3>
       {artifact.summary && (
         <p className="text-sm text-gray-400 line-clamp-2">{artifact.summary}</p>
       )}
@@ -76,7 +76,7 @@ function ArtifactCard({ artifact }: { artifact: Artifact }) {
 function EcologyView({ artifacts }: { artifacts: Artifact[] }) {
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-[#262626] bg-[#1a1a1a] p-6">
+      <div className="rounded-xl border border-[#1d2839] bg-[#0a101d] p-6">
         <h2 className="text-lg font-semibold mb-3" style={{ color: '#4a8c6f' }}>Place Context</h2>
         <div className="space-y-2 text-gray-300 text-sm">
           <p className="font-medium text-white">Boulder, Colorado</p>
@@ -108,10 +108,10 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
   return (
     <div className="space-y-6">
       {participantCount > 0 && (
-        <div className="rounded-lg border border-[#262626] bg-[#1a1a1a] p-4">
+        <div className="rounded-lg border border-[#1d2839] bg-[#0a101d] p-4">
           <p className="text-gray-400 text-sm">
             <span className="text-2xl font-bold mr-2" style={{ color: '#c4956a' }}>{participantCount}</span>
-            participants registered. Browse the <Link to="/" className="text-[#c3fd50] hover:text-white transition-colors">activity feed</Link> to see their contributions.
+            participants registered. Browse the <Link to="/" className="text-[#a6ed2a] hover:text-white transition-colors">activity feed</Link> to see their contributions.
           </p>
         </div>
       )}
@@ -123,7 +123,7 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
           </div>
         </div>
       ) : (
-        <div className="text-center py-12 bg-[#1a1a1a] border border-[#262626] rounded-lg">
+        <div className="text-center py-12 bg-[#0a101d] border border-[#1d2839] rounded-lg">
           <div className="max-w-sm mx-auto">
             <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#c4956a20' }}>
               <Users className="w-8 h-8" style={{ color: '#c4956a' }} />
@@ -132,7 +132,7 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
             <p className="text-gray-400 text-sm mb-4">Contribute session notes to populate the Human dimension.</p>
             <Link
               to="/contribute"
-              className="inline-block bg-[#c3fd50] text-[#0f0f0f] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#d4fe80] transition-colors"
+              className="inline-block bg-[#a6ed2a] text-[#080c16] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#b8f247] transition-colors"
             >
               Contribute
             </Link>
@@ -155,12 +155,12 @@ function WordFrequencyChart({ words, maxCount, label }: { words: WordFreq[]; max
         {words.map(w => (
           <div key={w.word} className="flex items-center gap-3">
             <span className="text-sm text-gray-300 w-32 sm:w-40 truncate font-mono">{w.word}</span>
-            <div className="flex-1 h-4 bg-[#1a1a1a] rounded overflow-hidden">
+            <div className="flex-1 h-4 bg-[#0a101d] rounded overflow-hidden">
               <div
                 className="h-full rounded"
                 style={{
                   width: `${(w.count / maxCount) * 100}%`,
-                  backgroundColor: '#c3fd50',
+                  backgroundColor: '#a6ed2a',
                   opacity: 0.6
                 }}
               />
@@ -221,7 +221,7 @@ function GenericDimensionView({ artifacts, dim }: { artifacts: Artifact[]; dim: 
         Knowledge Nodes ({artifacts.length})
       </h2>
       {artifacts.length === 0 ? (
-        <div className="text-center py-12 bg-[#1a1a1a] border border-[#262626] rounded-lg">
+        <div className="text-center py-12 bg-[#0a101d] border border-[#1d2839] rounded-lg">
           <div className="max-w-sm mx-auto">
             <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: dim.color + '20' }}>
               <span className="text-3xl font-mono font-bold" style={{ color: dim.color }}>{dim.letter}</span>
@@ -230,7 +230,7 @@ function GenericDimensionView({ artifacts, dim }: { artifacts: Artifact[]; dim: 
             <p className="text-gray-400 text-sm mb-4">{prompt}</p>
             <Link
               to="/contribute"
-              className="inline-block bg-[#c3fd50] text-[#0f0f0f] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#d4fe80] transition-colors"
+              className="inline-block bg-[#a6ed2a] text-[#080c16] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#b8f247] transition-colors"
             >
               Contribute
             </Link>
@@ -288,7 +288,7 @@ export function DimensionView() {
     return (
       <div className="text-center py-12">
         <p className="text-gray-400">Unknown dimension.</p>
-        <Link to="/dimensions" className="text-[#c3fd50] hover:text-white text-sm mt-2 inline-block">Back to Dimensions</Link>
+        <Link to="/dimensions" className="text-[#a6ed2a] hover:text-white text-sm mt-2 inline-block">Back to Dimensions</Link>
       </div>
     )
   }

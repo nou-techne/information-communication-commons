@@ -52,7 +52,7 @@ export function ConvergenceSwitcher({ onNewConvergence }: ConvergenceSwitcherPro
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded border border-[#262626] hover:border-[#c3fd50] bg-[#0f0f0f] hover:bg-[#1a1a1a] transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded border border-[#1d2839] hover:border-[#a6ed2a] bg-[#080c16] hover:bg-[#0a101d] transition-colors"
       >
         <span className="text-sm font-medium">
           {active ? active.name : 'Select Convergence'}
@@ -61,7 +61,7 @@ export function ConvergenceSwitcher({ onNewConvergence }: ConvergenceSwitcherPro
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 right-0 w-64 bg-[#0a0a0a] border border-[#262626] rounded-lg shadow-2xl overflow-hidden z-50">
+        <div className="absolute top-full mt-2 right-0 w-64 bg-[#060a14] border border-[#1d2839] rounded-lg shadow-2xl overflow-hidden z-50">
           <div className="max-h-96 overflow-y-auto">
             {convergences.length === 0 ? (
               <div className="p-4 text-center text-sm text-gray-500">
@@ -72,7 +72,7 @@ export function ConvergenceSwitcher({ onNewConvergence }: ConvergenceSwitcherPro
                 <button
                   key={conv.id}
                   onClick={() => selectConvergence(conv.id)}
-                  className="w-full text-left px-4 py-3 hover:bg-[#1a1a1a] transition-colors border-b border-[#262626] last:border-b-0"
+                  className="w-full text-left px-4 py-3 hover:bg-[#0a101d] transition-colors border-b border-[#1d2839] last:border-b-0"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
@@ -81,7 +81,7 @@ export function ConvergenceSwitcher({ onNewConvergence }: ConvergenceSwitcherPro
                           {conv.name}
                         </span>
                         {active?.id === conv.id && (
-                          <Check className="w-4 h-4 text-[#c3fd50] flex-shrink-0" />
+                          <Check className="w-4 h-4 text-[#a6ed2a] flex-shrink-0" />
                         )}
                       </div>
                       <div className="text-xs text-gray-400 truncate">
@@ -119,10 +119,10 @@ export function ConvergenceSwitcher({ onNewConvergence }: ConvergenceSwitcherPro
 
           <button
             onClick={handleNewConvergence}
-            className="w-full flex items-center gap-2 px-4 py-3 bg-[#1a1a1a] hover:bg-[#262626] transition-colors border-t border-[#262626]"
+            className="w-full flex items-center gap-2 px-4 py-3 bg-[#0a101d] hover:bg-[#1d2839] transition-colors border-t border-[#1d2839]"
           >
-            <Plus className="w-4 h-4 text-[#c3fd50]" />
-            <span className="text-sm font-medium text-[#c3fd50]">New Convergence</span>
+            <Plus className="w-4 h-4 text-[#a6ed2a]" />
+            <span className="text-sm font-medium text-[#a6ed2a]">New Convergence</span>
           </button>
         </div>
       )}

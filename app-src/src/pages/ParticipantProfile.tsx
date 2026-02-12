@@ -23,7 +23,7 @@ interface Contribution {
 const HLAMT_LABELS: Record<string, { letter: string; name: string; color: string }> = {
   'hlamt:E': { letter: 'e/', name: 'Ecology', color: '#4a8c6f' },
   'hlamt:H': { letter: 'H/', name: 'Human', color: '#c4956a' },
-  'hlamt:L': { letter: 'L/', name: 'Language', color: '#c3fd50' },
+  'hlamt:L': { letter: 'L/', name: 'Language', color: '#a6ed2a' },
   'hlamt:A': { letter: 'A/', name: 'Artifacts', color: '#8bbfff' },
   'hlamt:M': { letter: 'M/', name: 'Methodology', color: '#7ccfb8' },
   'hlamt:T': { letter: 'T/', name: 'Training', color: '#e8927c' },
@@ -125,9 +125,9 @@ export function ParticipantProfile() {
       </nav>
 
       {/* Profile card */}
-      <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 mb-6">
+      <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-full bg-[#262626] flex items-center justify-center flex-shrink-0">
+          <div className="w-14 h-14 rounded-full bg-[#1d2839] flex items-center justify-center flex-shrink-0">
             <User className="w-7 h-7 text-gray-500" />
           </div>
           <div className="flex-1 min-w-0">
@@ -141,7 +141,7 @@ export function ParticipantProfile() {
             {participant.interests && participant.interests.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-3">
                 {participant.interests.map(interest => (
-                  <span key={interest} className="bg-[#262626] text-gray-300 text-xs px-2 py-1 rounded flex items-center gap-1">
+                  <span key={interest} className="bg-[#1d2839] text-gray-300 text-xs px-2 py-1 rounded flex items-center gap-1">
                     <Tag className="w-3 h-3" />
                     {interest}
                   </span>
@@ -158,7 +158,7 @@ export function ParticipantProfile() {
 
       {/* Dimension Activity */}
       {sortedDimensions.length > 0 && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 mb-6">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 mb-6">
           <h2 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
             <Layers className="w-4 h-4" />
             Dimension Activity
@@ -187,7 +187,7 @@ export function ParticipantProfile() {
 
       {/* Artifacts */}
       {artifacts.length > 0 && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 mb-6">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 mb-6">
           <h2 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
             <Layers className="w-4 h-4" />
             Artifacts ({artifacts.length})
@@ -197,7 +197,7 @@ export function ParticipantProfile() {
               <Link
                 key={a.id}
                 to={`/artifact/${a.id}`}
-                className="block bg-[#0f0f0f] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors group"
+                className="block bg-[#080c16] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors group"
               >
                 <div className="flex items-center gap-2 mb-1">
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[a.type] }} />
@@ -212,7 +212,7 @@ export function ParticipantProfile() {
                   )}
                   <span className="ml-auto text-xs text-gray-500">{STATE_LABELS[a.state]}</span>
                 </div>
-                <div className="text-sm text-white group-hover:text-[#c3fd50] transition-colors font-medium">
+                <div className="text-sm text-white group-hover:text-[#a6ed2a] transition-colors font-medium">
                   {a.title}
                 </div>
                 {a.summary && (
@@ -227,7 +227,7 @@ export function ParticipantProfile() {
 
       {/* Contributions */}
       {contributions.length > 0 && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6">
           <h2 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
             Contributions ({contributions.length})
@@ -237,11 +237,11 @@ export function ParticipantProfile() {
               <Link
                 key={c.id}
                 to={`/contribution/${c.id}`}
-                className="block bg-[#0f0f0f] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors"
+                className="block bg-[#080c16] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors"
               >
                 <div className="flex items-center gap-2 mb-1">
                   <span className={`w-1.5 h-1.5 rounded-full ${
-                    c.status === 'complete' ? 'bg-[#c3fd50]' :
+                    c.status === 'complete' ? 'bg-[#a6ed2a]' :
                     c.status === 'processing' ? 'bg-blue-400 animate-pulse' :
                     c.status === 'error' ? 'bg-red-400' : 'bg-yellow-400'
                   }`} />

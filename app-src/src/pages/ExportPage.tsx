@@ -120,9 +120,9 @@ export default function ExportPage() {
             <div
               className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
                 step === s
-                  ? 'border-[#c3fd50] bg-[#c3fd50] text-black'
+                  ? 'border-[#a6ed2a] bg-[#a6ed2a] text-black'
                   : arr.indexOf(step) > i
-                  ? 'border-[#c3fd50] text-[#c3fd50]'
+                  ? 'border-[#a6ed2a] text-[#a6ed2a]'
                   : 'border-gray-600 text-gray-600'
               }`}
             >
@@ -131,7 +131,7 @@ export default function ExportPage() {
             {i < arr.length - 1 && (
               <div
                 className={`flex-1 h-0.5 mx-2 transition-colors ${
-                  arr.indexOf(step) > i ? 'bg-[#c3fd50]' : 'bg-gray-600'
+                  arr.indexOf(step) > i ? 'bg-[#a6ed2a]' : 'bg-gray-600'
                 }`}
               />
             )}
@@ -188,8 +188,8 @@ export default function ExportPage() {
                     onClick={() => toggleDimension(dim)}
                     className={`px-4 py-2 rounded transition-colors ${
                       scope.dimensions.includes(dim)
-                        ? 'bg-[#c3fd50] text-black'
-                        : 'bg-[#1a1a1a] text-gray-400 hover:bg-[#262626]'
+                        ? 'bg-[#a6ed2a] text-black'
+                        : 'bg-[#0a101d] text-gray-400 hover:bg-[#1d2839]'
                     }`}
                   >
                     {dim}
@@ -249,8 +249,8 @@ export default function ExportPage() {
                 key={fmt.id}
                 className={`flex items-start gap-3 p-4 rounded border transition-colors cursor-pointer ${
                   format === fmt.id
-                    ? 'border-[#c3fd50] bg-[#c3fd50]/10'
-                    : 'border-[#262626] hover:border-[#3a3a3a]'
+                    ? 'border-[#a6ed2a] bg-[#a6ed2a]/10'
+                    : 'border-[#1d2839] hover:border-[#3a3a3a]'
                 }`}
               >
                 <input
@@ -278,7 +278,7 @@ export default function ExportPage() {
       {step === 'preview' && (
         <Card className="p-6">
           <h2 className="text-xl font-bold mb-4">Preview</h2>
-          <div className="bg-[#0a0a0a] border border-[#262626] rounded p-4 overflow-x-auto">
+          <div className="bg-[#060a14] border border-[#1d2839] rounded p-4 overflow-x-auto">
             <pre className="text-sm text-gray-300">{previewContent.slice(0, 1000)}</pre>
             {previewContent.length > 1000 && (
               <p className="text-xs text-gray-500 mt-2">
@@ -292,7 +292,7 @@ export default function ExportPage() {
       {/* Step: Download */}
       {step === 'download' && (
         <Card className="p-6 text-center">
-          <Download className="w-16 h-16 mx-auto mb-4 text-[#c3fd50]" />
+          <Download className="w-16 h-16 mx-auto mb-4 text-[#a6ed2a]" />
           <h2 className="text-xl font-bold mb-2">Export Complete!</h2>
           <p className="text-gray-400 mb-6">Your export has been downloaded</p>
           <div className="flex justify-center gap-4">

@@ -74,7 +74,7 @@ export default function ConvergenceDashboardPage() {
         </div>
 
         {convergence.metadata?.theme && (
-          <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+          <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
             <div className="text-xs font-bold text-gray-500 uppercase mb-1">Theme</div>
             <div className="text-sm text-gray-300">{convergence.metadata.theme}</div>
           </div>
@@ -94,7 +94,7 @@ export default function ConvergenceDashboardPage() {
                   +12% from previous
                 </div>
               </div>
-              <MessageSquare className="w-8 h-8 text-[#c3fd50] opacity-50" />
+              <MessageSquare className="w-8 h-8 text-[#a6ed2a] opacity-50" />
             </div>
           </CardBody>
         </Card>
@@ -107,7 +107,7 @@ export default function ConvergenceDashboardPage() {
                 <div className="text-3xl font-bold">34</div>
                 <div className="text-xs text-gray-500 mt-1">23 resolved</div>
               </div>
-              <MessageSquare className="w-8 h-8 text-[#c3fd50] opacity-50" />
+              <MessageSquare className="w-8 h-8 text-[#a6ed2a] opacity-50" />
             </div>
           </CardBody>
         </Card>
@@ -120,7 +120,7 @@ export default function ConvergenceDashboardPage() {
                 <div className="text-3xl font-bold">89</div>
                 <div className="text-xs text-gray-500 mt-1">From 67 contributors</div>
               </div>
-              <FileText className="w-8 h-8 text-[#c3fd50] opacity-50" />
+              <FileText className="w-8 h-8 text-[#a6ed2a] opacity-50" />
             </div>
           </CardBody>
         </Card>
@@ -137,7 +137,7 @@ export default function ConvergenceDashboardPage() {
               {convergence.dimensionsFocus.map(dim => (
                 <div
                   key={dim}
-                  className="px-3 py-2 rounded-lg bg-[#1a1a1a] border border-[#262626] text-sm"
+                  className="px-3 py-2 rounded-lg bg-[#0a101d] border border-[#1d2839] text-sm"
                 >
                   <span className="font-medium capitalize">{dim}</span>
                 </div>
@@ -154,9 +154,9 @@ export default function ConvergenceDashboardPage() {
                       <span className="text-sm text-gray-300 capitalize">{dim}</span>
                       <span className="text-sm text-gray-500">{value}</span>
                     </div>
-                    <div className="w-full bg-[#0f0f0f] rounded-full h-2">
+                    <div className="w-full bg-[#080c16] rounded-full h-2">
                       <div
-                        className="bg-[#c3fd50] h-2 rounded-full"
+                        className="bg-[#a6ed2a] h-2 rounded-full"
                         style={{ width: `${(value / 45) * 100}%` }}
                       />
                     </div>
@@ -184,7 +184,7 @@ export default function ConvergenceDashboardPage() {
             ].map((activity, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 p-3 rounded bg-[#1a1a1a] hover:bg-[#262626] transition-colors"
+                className="flex items-start gap-3 p-3 rounded bg-[#0a101d] hover:bg-[#1d2839] transition-colors"
               >
                 <div
                   className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${

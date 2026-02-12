@@ -13,7 +13,7 @@ interface ThreadFilterBarProps {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'open', label: 'Open', color: '#c3fd50' },
+  { value: 'open', label: 'Open', color: '#a6ed2a' },
   { value: 'tagged', label: 'Tagged', color: '#60a5fa' },
   { value: 'resolved', label: 'Resolved', color: '#a78bfa' },
   { value: 'consolidated', label: 'Consolidated', color: '#fb923c' },
@@ -45,7 +45,7 @@ export function ThreadFilterBar({ onFilterChange, statusCounts = {}, dimensions 
           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors border ${
             filters.status === opt.value
               ? 'border-current'
-              : 'border-[#262626] text-gray-500 hover:text-gray-300'
+              : 'border-[#1d2839] text-gray-500 hover:text-gray-300'
           }`}
           style={filters.status === opt.value ? { color: opt.color, borderColor: opt.color } : undefined}
         >
@@ -57,7 +57,7 @@ export function ThreadFilterBar({ onFilterChange, statusCounts = {}, dimensions 
       ))}
 
       {/* Separator */}
-      {dimensions.length > 0 && <div className="w-px bg-[#262626] my-1" />}
+      {dimensions.length > 0 && <div className="w-px bg-[#1d2839] my-1" />}
 
       {/* Dimension chips */}
       {dimensions.map(dim => (
@@ -66,8 +66,8 @@ export function ThreadFilterBar({ onFilterChange, statusCounts = {}, dimensions 
           onClick={() => toggle('dimension', dim)}
           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors border ${
             filters.dimension === dim
-              ? 'border-[#c3fd50] text-[#c3fd50]'
-              : 'border-[#262626] text-gray-500 hover:text-gray-300'
+              ? 'border-[#a6ed2a] text-[#a6ed2a]'
+              : 'border-[#1d2839] text-gray-500 hover:text-gray-300'
           }`}
         >
           {dim}
@@ -81,8 +81,8 @@ export function ThreadFilterBar({ onFilterChange, statusCounts = {}, dimensions 
           onClick={() => toggle('minMessages', opt.value)}
           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors border ${
             filters.minMessages === opt.value
-              ? 'border-[#c3fd50] text-[#c3fd50]'
-              : 'border-[#262626] text-gray-500 hover:text-gray-300'
+              ? 'border-[#a6ed2a] text-[#a6ed2a]'
+              : 'border-[#1d2839] text-gray-500 hover:text-gray-300'
           }`}
         >
           {opt.label}

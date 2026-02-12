@@ -138,34 +138,34 @@ export function MyThread() {
               : 'All contributions across the commons.'}
           </p>
         </div>
-        <Link to="/contribute" className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-4 py-2 rounded-lg text-sm transition-colors inline-flex items-center gap-1.5">
+        <Link to="/contribute" className="bg-[#a6ed2a] text-[#080c16] hover:bg-[#b8f247] px-4 py-2 rounded-lg text-sm transition-colors inline-flex items-center gap-1.5">
           <Plus className="w-4 h-4" /> Contribute
         </Link>
       </div>
 
       {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4 text-center">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-white">{totalContributions}</div>
           <div className="text-xs text-gray-500 mt-1">Contributions</div>
         </div>
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-[#c3fd50]">{totalArtifacts}</div>
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-[#a6ed2a]">{totalArtifacts}</div>
           <div className="text-xs text-gray-500 mt-1">Artifacts Created</div>
         </div>
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4 text-center">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-amber-400">{totalCommitments}</div>
           <div className="text-xs text-gray-500 mt-1">Commitments</div>
         </div>
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4 text-center">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-blue-400">{completedContributions}</div>
           <div className="text-xs text-gray-500 mt-1">Processed</div>
         </div>
       </div>
 
       {!session && (
-        <div className="bg-[#1a1a1a] border border-[#c3fd50]/30 rounded-lg p-4 mb-6 text-sm text-gray-400">
-          <Link to="/auth" className="text-[#c3fd50] hover:text-white font-medium">Sign in</Link> to see only your activity and track your contributions over time.
+        <div className="bg-[#0a101d] border border-[#a6ed2a]/30 rounded-lg p-4 mb-6 text-sm text-gray-400">
+          <Link to="/auth" className="text-[#a6ed2a] hover:text-white font-medium">Sign in</Link> to see only your activity and track your contributions over time.
         </div>
       )}
 
@@ -178,7 +178,7 @@ export function MyThread() {
           </h2>
           <div className="space-y-2">
             {commitments.map(c => (
-              <div key={c.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+              <div key={c.id} className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <p className="font-medium text-white">{c.description}</p>
@@ -207,15 +207,15 @@ export function MyThread() {
       {/* Contributions timeline */}
       <section className="mb-8">
         <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider flex items-center gap-2">
-          <FileText className="w-4 h-4 text-[#c3fd50]" />
+          <FileText className="w-4 h-4 text-[#a6ed2a]" />
           Contributions
         </h2>
         {contributions.length === 0 ? (
-          <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-8 text-center">
+          <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-8 text-center">
             <FileText className="w-10 h-10 text-gray-600 mx-auto mb-3" />
             <p className="text-gray-400 font-medium">No contributions yet</p>
             <p className="text-sm text-gray-500 mt-1 mb-4">Share an observation, idea, or commitment and it will appear here.</p>
-            <Link to="/contribute" className="inline-block bg-[#c3fd50] text-[#0f0f0f] px-6 py-2 rounded-lg hover:bg-[#d4fe80] text-sm">
+            <Link to="/contribute" className="inline-block bg-[#a6ed2a] text-[#080c16] px-6 py-2 rounded-lg hover:bg-[#b8f247] text-sm">
               Make your first contribution
             </Link>
           </div>
@@ -229,7 +229,7 @@ export function MyThread() {
               const isExpanded = expandedContrib === c.id
               
               return (
-                <div key={c.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden">
+                <div key={c.id} className="bg-[#0a101d] border border-[#1d2839] rounded-lg overflow-hidden">
                   <div
                     onClick={() => c.status === 'complete' ? toggleContrib(c.id) : undefined}
                     className={`w-full text-left p-4 ${c.status === 'complete' ? 'cursor-pointer hover:bg-[#222]' : ''} transition-colors`}
@@ -237,7 +237,7 @@ export function MyThread() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                          c.status === 'complete' ? 'bg-[#c3fd50]' :
+                          c.status === 'complete' ? 'bg-[#a6ed2a]' :
                           c.status === 'processing' ? 'bg-blue-400 animate-pulse' :
                           c.status === 'error' ? 'bg-red-400' : 'bg-yellow-400'
                         }`} />
@@ -246,9 +246,9 @@ export function MyThread() {
                         </span>
                         {c.status === 'complete' && artifactCount > 0 && (
                           <span className="text-xs text-gray-500">
-                            <span className="text-[#c3fd50] font-mono font-medium">{artifactCount}</span> {artifactCount === 1 ? 'node' : 'nodes'}
+                            <span className="text-[#a6ed2a] font-mono font-medium">{artifactCount}</span> {artifactCount === 1 ? 'node' : 'nodes'}
                             {relationshipCount > 0 && (
-                              <> · <span className="text-[#c3fd50] font-mono font-medium">{relationshipCount}</span> {relationshipCount === 1 ? 'edge' : 'edges'}</>
+                              <> · <span className="text-[#a6ed2a] font-mono font-medium">{relationshipCount}</span> {relationshipCount === 1 ? 'edge' : 'edges'}</>
                             )}
                           </span>
                         )}
@@ -265,7 +265,7 @@ export function MyThread() {
                     )}
                     <p className={`text-xs text-gray-400 ${isExpanded ? '' : 'line-clamp-2'}`}>{c.content}</p>
                     {c.status === 'complete' && (
-                      <Link to={`/contribution/${c.id}`} className="text-xs text-[#c3fd50] hover:text-white mt-2 inline-block" onClick={e => e.stopPropagation()}>
+                      <Link to={`/contribution/${c.id}`} className="text-xs text-[#a6ed2a] hover:text-white mt-2 inline-block" onClick={e => e.stopPropagation()}>
                         View full detail
                       </Link>
                     )}
@@ -273,7 +273,7 @@ export function MyThread() {
 
                   {/* Expanded: show extracted artifacts */}
                   {isExpanded && c.status === 'complete' && (
-                    <div className="border-t border-[#262626] p-4 bg-[#151515]">
+                    <div className="border-t border-[#1d2839] p-4 bg-[#151515]">
                       <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Extracted Artifacts</div>
                       {contribArtifacts[c.id] ? (
                         contribArtifacts[c.id].length > 0 ? (
@@ -282,7 +282,7 @@ export function MyThread() {
                               <Link
                                 key={a.id}
                                 to={`/artifact/${a.id}`}
-                                className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] transition-colors"
+                                className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#0a101d] transition-colors"
                               >
                                 <span
                                   className="w-2.5 h-2.5 rounded-full flex-shrink-0"
@@ -315,11 +315,11 @@ export function MyThread() {
                       
                       {/* Show e/H-LAM/T tags if present */}
                       {extraction.hlamt_tags && extraction.hlamt_tags.length > 0 && (
-                        <div className="mt-3 pt-3 border-t border-[#262626]">
+                        <div className="mt-3 pt-3 border-t border-[#1d2839]">
                           <div className="text-xs text-gray-500 mb-1.5">Dimensions</div>
                           <div className="flex flex-wrap gap-1.5">
                             {extraction.hlamt_tags.map((tag: string, i: number) => (
-                              <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] font-mono">
+                              <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-[#a6ed2a]/10 text-[#a6ed2a] font-mono">
                                 {tag}
                               </span>
                             ))}
@@ -347,7 +347,7 @@ export function MyThread() {
               <Link
                 key={a.id}
                 to={`/artifact/${a.id}`}
-                className="flex items-center gap-3 bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors"
+                className="flex items-center gap-3 bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors"
               >
                 <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: ARTIFACT_COLORS[a.type] }} />
                 <div className="flex-1 min-w-0">

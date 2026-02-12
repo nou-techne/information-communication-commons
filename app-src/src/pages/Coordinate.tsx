@@ -77,13 +77,13 @@ export function Coordinate() {
       </div>
 
       {empty ? (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-8 text-center">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-8 text-center">
           <Handshake className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <h2 className="text-lg font-bold mb-2">No coordination signals yet</h2>
           <p className="text-gray-400 text-sm max-w-md mx-auto mb-4">
             Browse the Explore page and click the handshake icon on artifacts you want to coordinate around. When multiple participants signal interest in the same artifact, matches appear here.
           </p>
-          <Link to="/" className="inline-block px-6 py-2 bg-[#c3fd50] text-[#0f0f0f] rounded-lg hover:bg-[#d4fe80] text-sm">
+          <Link to="/" className="inline-block px-6 py-2 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] text-sm">
             Explore artifacts
           </Link>
         </div>
@@ -93,7 +93,7 @@ export function Coordinate() {
             <button
               onClick={() => setView('hotspots')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${
-                view === 'hotspots' ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-300 hover:bg-[#333]'
+                view === 'hotspots' ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'
               }`}
             >
               <Flame className="w-4 h-4" />
@@ -102,7 +102,7 @@ export function Coordinate() {
             <button
               onClick={() => setView('matches')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors ${
-                view === 'matches' ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-300 hover:bg-[#333]'
+                view === 'matches' ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -116,25 +116,25 @@ export function Coordinate() {
                 <Link
                   key={h.artifact_id}
                   to={`/artifact/${h.artifact_id}`}
-                  className="block bg-[#1a1a1a] border border-[#262626] rounded-lg p-4 hover:border-[#c3fd50]/30 transition-colors"
+                  className="block bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 hover:border-[#a6ed2a]/30 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`text-xs ${REA_COLORS[h.rea_role] || 'text-gray-400'}`}>{h.rea_role.charAt(0).toUpperCase() + h.rea_role.slice(1)}</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-[#262626] text-gray-400">{h.type.charAt(0).toUpperCase() + h.type.slice(1)}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-[#1d2839] text-gray-400">{h.type.charAt(0).toUpperCase() + h.type.slice(1)}</span>
                       </div>
                       <h3 className="font-medium text-sm mb-1">{h.title}</h3>
                       {h.summary && <p className="text-xs text-gray-500 line-clamp-2">{h.summary}</p>}
                       <div className="mt-2 flex flex-wrap gap-1">
                         {h.interested_participants.map((name, i) => (
-                          <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-[#c3fd50]/10 text-[#c3fd50]">
+                          <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-[#a6ed2a]/10 text-[#a6ed2a]">
                             {name}
                           </span>
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 text-[#c3fd50]">
+                    <div className="flex items-center gap-1 text-[#a6ed2a]">
                       <Handshake className="w-4 h-4" />
                       <span className="text-lg font-bold">{h.interest_count}</span>
                     </div>
@@ -147,11 +147,11 @@ export function Coordinate() {
           {view === 'matches' && (
             <div className="space-y-3">
               {matches.map((m, i) => (
-                <div key={i} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+                <div key={i} className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-sm font-medium text-[#c3fd50]">{m.participant_a}</span>
+                    <span className="text-sm font-medium text-[#a6ed2a]">{m.participant_a}</span>
                     <Handshake className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm font-medium text-[#c3fd50]">{m.participant_b}</span>
+                    <span className="text-sm font-medium text-[#a6ed2a]">{m.participant_b}</span>
                   </div>
                   <Link
                     to={`/artifact/${m.artifact_id}`}

@@ -102,13 +102,13 @@ export function MessageSearch() {
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && doSearch()}
             placeholder="Search message content..."
-            className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm"
+            className="w-full bg-[#0a101d] border border-[#1d2839] rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a] text-sm"
           />
         </div>
         <button
           onClick={doSearch}
           disabled={!query.trim() || loading}
-          className="bg-[#c3fd50] text-[#0f0f0f] px-5 py-2.5 rounded-lg hover:bg-[#d4fe80] transition-colors text-sm font-medium disabled:opacity-50"
+          className="bg-[#a6ed2a] text-[#080c16] px-5 py-2.5 rounded-lg hover:bg-[#b8f247] transition-colors text-sm font-medium disabled:opacity-50"
         >
           {loading ? 'Searching...' : 'Search'}
         </button>
@@ -128,10 +128,10 @@ export function MessageSearch() {
             <Link
               key={r.id}
               to={`/channels/${r.channel_slug}/${r.thread_id}`}
-              className="block bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 hover:border-[#c3fd50] transition-colors group"
+              className="block bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-3 hover:border-[#a6ed2a] transition-colors group"
             >
               <div className="flex items-center gap-2 mb-1 text-xs text-gray-500">
-                <span className="text-[#c3fd50]">#{r.channel_name}</span>
+                <span className="text-[#a6ed2a]">#{r.channel_name}</span>
                 <span>/</span>
                 <span className="text-gray-300 font-medium">{r.thread_title}</span>
                 <span className="ml-auto">{timeAgo(r.created_at)}</span>

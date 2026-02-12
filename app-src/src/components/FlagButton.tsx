@@ -54,8 +54,8 @@ export function FlagButton({ contentId, contentType, onFlagged }: FlagButtonProp
         onClick={() => setIsOpen(true)}
         className={`p-2 rounded transition-colors ${
           isFlagged
-            ? 'text-orange-500 hover:bg-[#1a1a1a]'
-            : 'text-gray-500 hover:text-gray-300 hover:bg-[#1a1a1a]'
+            ? 'text-orange-500 hover:bg-[#0a101d]'
+            : 'text-gray-500 hover:text-gray-300 hover:bg-[#0a101d]'
         }`}
         title={isFlagged ? 'Already flagged' : 'Report content'}
         aria-label="Flag content"
@@ -66,13 +66,13 @@ export function FlagButton({ contentId, contentType, onFlagged }: FlagButtonProp
       {/* Flag dialog */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0a0a0a] border border-[#262626] rounded-lg max-w-md w-full">
+          <div className="bg-[#060a14] border border-[#1d2839] rounded-lg max-w-md w-full">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-[#262626]">
+            <div className="flex items-center justify-between p-4 border-b border-[#1d2839]">
               <h3 className="text-lg font-bold">Report Content</h3>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-[#1a1a1a] rounded transition-colors"
+                className="p-2 hover:bg-[#0a101d] rounded transition-colors"
                 aria-label="Close"
               >
                 <X className="w-5 h-5" />
@@ -91,8 +91,8 @@ export function FlagButton({ contentId, contentType, onFlagged }: FlagButtonProp
                       key={reason}
                       className={`flex items-start gap-3 p-3 rounded border transition-colors cursor-pointer ${
                         selectedReason === reason
-                          ? 'border-[#c3fd50] bg-[#c3fd50]/10'
-                          : 'border-[#262626] hover:border-[#3a3a3a]'
+                          ? 'border-[#a6ed2a] bg-[#a6ed2a]/10'
+                          : 'border-[#1d2839] hover:border-[#3a3a3a]'
                       }`}
                     >
                       <input
@@ -131,7 +131,7 @@ export function FlagButton({ contentId, contentType, onFlagged }: FlagButtonProp
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-2 p-4 border-t border-[#262626]">
+            <div className="flex items-center justify-end gap-2 p-4 border-t border-[#1d2839]">
               <Button
                 variant="secondary"
                 onClick={() => setIsOpen(false)}

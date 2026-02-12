@@ -87,13 +87,13 @@ export function Pulse() {
           ) : (
             <div className="space-y-2">
               {events.map(e => (
-                <div key={e.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 flex items-start gap-3">
+                <div key={e.id} className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 flex items-start gap-3">
                   <span className="text-lg">{EVENT_ICONS[e.type] || '·'}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-white capitalize">{e.type}</span>
                       <span className="text-xs text-gray-500">{e.entity_type}</span>
-                      {e.actor_type === 'agent' && <span className="text-xs bg-[#262626] text-gray-400 px-1.5 py-0.5 rounded"></span>}
+                      {e.actor_type === 'agent' && <span className="text-xs bg-[#1d2839] text-gray-400 px-1.5 py-0.5 rounded"></span>}
                     </div>
                     {e.data && (typeof e.data === 'object') && (
                       <p className="text-sm text-gray-400 truncate mt-0.5">
@@ -113,9 +113,9 @@ export function Pulse() {
           <h2 className="text-lg font-semibold text-gray-300 mb-3">Recent Artifacts</h2>
           <div className="space-y-2">
             {recentArtifacts.map((a: any) => (
-              <Link key={a.id} to={`/artifact/${a.id}`} className="block bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors">
+              <Link key={a.id} to={`/artifact/${a.id}`} className="block bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[a.type as keyof typeof ARTIFACT_COLORS] || '#c3fd50' }} />
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[a.type as keyof typeof ARTIFACT_COLORS] || '#a6ed2a' }} />
                   <span className="text-xs text-gray-500 uppercase">{a.type}</span>
                 </div>
                 <div className="text-sm font-medium text-white truncate">{a.title}</div>

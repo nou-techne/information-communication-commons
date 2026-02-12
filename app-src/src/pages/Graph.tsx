@@ -47,7 +47,7 @@ const TYPE_COLORS: Record<string, string> = {
 const DIMENSION_COLORS: Record<string, string> = {
   e: '#4a8c6f',
   H: '#c4956a',
-  L: '#c3fd50',
+  L: '#a6ed2a',
   A: '#8bbfff',
   M: '#7ccfb8',
   T: '#e8927c',
@@ -388,7 +388,7 @@ export function Graph() {
       .enter().append('text')
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'central')
-      .attr('fill', '#0f0f0f')
+      .attr('fill', '#080c16')
       .attr('font-size', '12px')
       .attr('font-weight', 'bold')
       .attr('pointer-events', 'none')
@@ -473,7 +473,7 @@ export function Graph() {
               onClick={() => setColorBy(mode)}
               title={tip}
               className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                colorBy === mode ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-300 hover:bg-[#333]'
+                colorBy === mode ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'
               }`}
             >
               {label}
@@ -482,7 +482,7 @@ export function Graph() {
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-              showFilters ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-300 hover:bg-[#333]'
+              showFilters ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#1d2839] text-gray-300 hover:bg-[#333]'
             }`}
           >
             Filters
@@ -493,7 +493,7 @@ export function Graph() {
               setSelectedNode(null)
               resetGraph()
             }}
-            className="px-3 py-1.5 text-sm rounded-lg transition-colors bg-[#262626] text-gray-300 hover:bg-[#333]"
+            className="px-3 py-1.5 text-sm rounded-lg transition-colors bg-[#1d2839] text-gray-300 hover:bg-[#333]"
             title="Reset graph to default state"
           >
             Reset
@@ -510,7 +510,7 @@ export function Graph() {
       </p>
 
       {showFilters && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-gray-400 mb-2">Artifact Types</label>
@@ -528,8 +528,8 @@ export function Graph() {
                     }}
                     className={`px-2 py-1 text-xs rounded ${
                       filters.types.includes(type)
-                        ? 'bg-[#c3fd50] text-[#0f0f0f]'
-                        : 'bg-[#262626] text-gray-400 hover:bg-[#333]'
+                        ? 'bg-[#a6ed2a] text-[#080c16]'
+                        : 'bg-[#1d2839] text-gray-400 hover:bg-[#333]'
                     }`}
                   >
                     {type}
@@ -554,8 +554,8 @@ export function Graph() {
                     }}
                     className={`px-2 py-1 text-xs rounded ${
                       filters.dimensions.includes(dim)
-                        ? 'bg-[#c3fd50] text-[#0f0f0f]'
-                        : 'bg-[#262626] text-gray-400 hover:bg-[#333]'
+                        ? 'bg-[#a6ed2a] text-[#080c16]'
+                        : 'bg-[#1d2839] text-gray-400 hover:bg-[#333]'
                     }`}
                   >
                     {dim}/
@@ -568,7 +568,7 @@ export function Graph() {
           {(filters.types.length > 0 || filters.dimensions.length > 0) && (
             <button
               onClick={() => setFilters({ types: [], dimensions: [], dateRange: 'all', participant: '' })}
-              className="mt-4 px-3 py-1.5 text-xs bg-[#262626] text-gray-400 hover:bg-[#333] rounded"
+              className="mt-4 px-3 py-1.5 text-xs bg-[#1d2839] text-gray-400 hover:bg-[#333] rounded"
             >
               Clear all filters
             </button>
@@ -577,17 +577,17 @@ export function Graph() {
       )}
 
       <div className="flex gap-4">
-        <div className="flex-1 bg-[#0a0a0a] border border-[#262626] rounded-lg overflow-hidden">
+        <div className="flex-1 bg-[#060a14] border border-[#1d2839] rounded-lg overflow-hidden">
           <svg ref={svgRef} className="w-full h-[600px]" />
         </div>
 
         {selectedNode && (
-          <div className="w-64 bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+          <div className="w-64 bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
             <div className="flex items-start justify-between mb-2">
               <h3 className="font-bold flex-1">{selectedNode.title}</h3>
               <button
                 onClick={() => setSelectedNode(null)}
-                className="ml-2 p-1 text-gray-500 hover:text-white hover:bg-[#262626] rounded transition-colors flex-shrink-0"
+                className="ml-2 p-1 text-gray-500 hover:text-white hover:bg-[#1d2839] rounded transition-colors flex-shrink-0"
                 aria-label="Close"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -596,27 +596,27 @@ export function Graph() {
             <div className="space-y-2 text-sm">
               <div>
                 <span className="text-gray-500">Type:</span>
-                <span className="ml-2 px-2 py-0.5 rounded-full bg-[#262626] text-xs">{selectedNode.type}</span>
+                <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.type}</span>
               </div>
               <div>
                 <span className="text-gray-500">REA Role:</span>
-                <span className="ml-2 px-2 py-0.5 rounded-full bg-[#262626] text-xs">{selectedNode.rea_role}</span>
+                <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.rea_role}</span>
               </div>
               {(selectedNode.dimensionDegree || 0) > 0 && (
                 <div>
                   <span className="text-gray-500">Dimensions:</span>
-                  <span className="ml-2 px-2 py-0.5 rounded-full bg-[#262626] text-xs">{selectedNode.dimensionDegree}</span>
+                  <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.dimensionDegree}</span>
                 </div>
               )}
               {selectedNode.cluster_label && (
                 <div>
                   <span className="text-gray-500">Cluster:</span>
-                  <span className="ml-2 px-2 py-0.5 rounded-full bg-[#262626] text-xs">{selectedNode.cluster_label}</span>
+                  <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.cluster_label}</span>
                 </div>
               )}
               <button
                 onClick={() => window.location.href = `/app/artifact/${selectedNode.id}`}
-                className="w-full mt-4 px-3 py-2 bg-[#c3fd50] text-[#0f0f0f] rounded-lg hover:bg-[#d4fe80] text-sm"
+                className="w-full mt-4 px-3 py-2 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] text-sm"
               >
                 View details
               </button>

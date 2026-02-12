@@ -139,7 +139,7 @@ export function getNodeAriaLabel(node: {
  * Focus ring style for selected node
  */
 export const GRAPH_FOCUS_STYLE = {
-  stroke: '#c3fd50',
+  stroke: '#a6ed2a',
   strokeWidth: 3,
   strokeDasharray: '0',
   filter: 'drop-shadow(0 0 4px rgba(195, 253, 80, 0.6))',

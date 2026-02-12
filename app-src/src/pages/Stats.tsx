@@ -131,41 +131,41 @@ export function Stats() {
 
       {/* Main Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <FileText className="w-4 h-4 text-[#c3fd50]" />
+            <FileText className="w-4 h-4 text-[#a6ed2a]" />
             <span className="text-xs text-gray-500 uppercase tracking-wide">Contributions</span>
           </div>
           <div className="text-2xl font-bold">{stats.contributions.toLocaleString()}</div>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <GitBranch className="w-4 h-4 text-[#c3fd50]" />
+            <GitBranch className="w-4 h-4 text-[#a6ed2a]" />
             <span className="text-xs text-gray-500 uppercase tracking-wide">Artifacts</span>
           </div>
           <div className="text-2xl font-bold">{stats.artifacts.toLocaleString()}</div>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="w-4 h-4 text-[#c3fd50]" />
+            <Users className="w-4 h-4 text-[#a6ed2a]" />
             <span className="text-xs text-gray-500 uppercase tracking-wide">Participants</span>
           </div>
           <div className="text-2xl font-bold">{stats.participants.toLocaleString()}</div>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-[#c3fd50]" />
+            <TrendingUp className="w-4 h-4 text-[#a6ed2a]" />
             <span className="text-xs text-gray-500 uppercase tracking-wide">Relationships</span>
           </div>
           <div className="text-2xl font-bold">{stats.relationships.toLocaleString()}</div>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-[#c3fd50]" />
+            <Zap className="w-4 h-4 text-[#a6ed2a]" />
             <span className="text-xs text-gray-500 uppercase tracking-wide">Sessions</span>
           </div>
           <div className="text-2xl font-bold">{stats.sessions.toLocaleString()}</div>
@@ -174,16 +174,16 @@ export function Stats() {
 
       {/* Top Dimensions */}
       <div className="grid md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
           <h2 className="font-bold mb-3">Top Dimensions</h2>
           <div className="space-y-2">
             {topDimensions.map(d => (
               <div key={d.key} className="flex items-center justify-between">
                 <span className="text-sm">{d.label}</span>
                 <div className="flex items-center gap-2">
-                  <div className="w-24 h-2 bg-[#262626] rounded-full overflow-hidden">
+                  <div className="w-24 h-2 bg-[#1d2839] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#c3fd50]"
+                      className="h-full bg-[#a6ed2a]"
                       style={{ width: `${(d.count / (topDimensions[0]?.count || 1)) * 100}%` }}
                     />
                   </div>
@@ -194,16 +194,16 @@ export function Stats() {
           </div>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
           <h2 className="font-bold mb-3">Top Artifact Types</h2>
           <div className="space-y-2">
             {topTypes.map(t => (
               <div key={t.type} className="flex items-center justify-between">
                 <span className="text-sm capitalize">{t.type}</span>
                 <div className="flex items-center gap-2">
-                  <div className="w-24 h-2 bg-[#262626] rounded-full overflow-hidden">
+                  <div className="w-24 h-2 bg-[#1d2839] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#c3fd50]"
+                      className="h-full bg-[#a6ed2a]"
                       style={{ width: `${(t.count / (topTypes[0]?.count || 1)) * 100}%` }}
                     />
                   </div>

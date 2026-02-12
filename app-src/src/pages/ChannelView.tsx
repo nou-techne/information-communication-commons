@@ -32,7 +32,7 @@ interface ThreadTag {
 }
 
 const STATUS_COLORS: Record<Thread['status'], string> = {
-  open: '#c3fd50',
+  open: '#a6ed2a',
   tagged: '#60a5fa',
   resolved: '#a78bfa',
   consolidated: '#fb923c',
@@ -221,7 +221,7 @@ export function ChannelView() {
                 <button
                   onClick={consolidateThreads}
                   disabled={selectedThreads.size < 2 || consolidating}
-                  className="flex items-center gap-2 bg-[#fb923c] text-[#0f0f0f] font-medium px-4 py-2 rounded-lg hover:bg-[#fdba74] transition-colors text-sm disabled:opacity-50"
+                  className="flex items-center gap-2 bg-[#fb923c] text-[#080c16] font-medium px-4 py-2 rounded-lg hover:bg-[#fdba74] transition-colors text-sm disabled:opacity-50"
                 >
                   <Merge className="w-4 h-4" />
                   {consolidating ? 'Merging...' : `Merge ${selectedThreads.size} threads`}
@@ -238,7 +238,7 @@ export function ChannelView() {
                 {threads.some(t => t.status === 'resolved') && (
                   <button
                     onClick={() => setConsolidateMode(true)}
-                    className="flex items-center gap-2 bg-[#1a1a1a] border border-[#262626] text-gray-400 font-medium px-4 py-2 rounded-lg hover:text-white hover:border-[#fb923c] transition-colors text-sm"
+                    className="flex items-center gap-2 bg-[#0a101d] border border-[#1d2839] text-gray-400 font-medium px-4 py-2 rounded-lg hover:text-white hover:border-[#fb923c] transition-colors text-sm"
                   >
                     <Merge className="w-4 h-4" />
                     Consolidate
@@ -246,7 +246,7 @@ export function ChannelView() {
                 )}
                 <button
                   onClick={() => setShowCreate(true)}
-                  className="flex items-center gap-2 bg-[#c3fd50] text-[#0f0f0f] font-medium px-4 py-2 rounded-lg hover:bg-[#d4fe80] transition-colors text-sm"
+                  className="flex items-center gap-2 bg-[#a6ed2a] text-[#080c16] font-medium px-4 py-2 rounded-lg hover:bg-[#b8f247] transition-colors text-sm"
                 >
                   <Plus className="w-4 h-4" />
                   New Thread
@@ -267,7 +267,7 @@ export function ChannelView() {
               key={filter}
               onClick={() => setStatusFilter(filter)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                isActive ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#1a1a1a] text-gray-400 hover:text-white border border-[#262626]'
+                isActive ? 'bg-[#a6ed2a] text-[#080c16]' : 'bg-[#0a101d] text-gray-400 hover:text-white border border-[#1d2839]'
               }`}
             >
               {filter === 'all' ? 'All' : STATUS_LABELS[filter]} ({count})
@@ -279,7 +279,7 @@ export function ChannelView() {
       {/* Create modal */}
       {showCreate && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setShowCreate(false)}>
-          <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">New Thread</h2>
               <button onClick={() => setShowCreate(false)} className="text-gray-400 hover:text-white"><X className="w-5 h-5" /></button>
@@ -291,7 +291,7 @@ export function ChannelView() {
                   value={newTitle}
                   onChange={e => setNewTitle(e.target.value)}
                   placeholder="Thread title"
-                  className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm"
+                  className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a] text-sm"
                 />
               </div>
               <div>
@@ -301,13 +301,13 @@ export function ChannelView() {
                   onChange={e => setNewMessage(e.target.value)}
                   placeholder="Start the conversation..."
                   rows={3}
-                  className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm resize-none"
+                  className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a] text-sm resize-none"
                 />
               </div>
               <button
                 onClick={createThread}
                 disabled={!newTitle.trim() || creating}
-                className="w-full bg-[#c3fd50] text-[#0f0f0f] font-medium py-2 rounded-lg hover:bg-[#d4fe80] transition-colors text-sm disabled:opacity-50"
+                className="w-full bg-[#a6ed2a] text-[#080c16] font-medium py-2 rounded-lg hover:bg-[#b8f247] transition-colors text-sm disabled:opacity-50"
               >
                 {creating ? 'Creating...' : 'Create Thread'}
               </button>
@@ -336,22 +336,22 @@ export function ChannelView() {
                   className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
                     selectedThreads.has(thread.id)
                       ? 'bg-[#fb923c] border-[#fb923c]'
-                      : 'border-[#262626] hover:border-[#fb923c]'
+                      : 'border-[#1d2839] hover:border-[#fb923c]'
                   }`}
                 >
-                  {selectedThreads.has(thread.id) && <Check className="w-3 h-3 text-[#0f0f0f]" />}
+                  {selectedThreads.has(thread.id) && <Check className="w-3 h-3 text-[#080c16]" />}
                 </button>
               )}
             <Link
               to={consolidateMode ? '#' : `/channels/${slug}/${thread.id}`}
               onClick={consolidateMode ? (e: React.MouseEvent) => { e.preventDefault(); if (thread.status === 'resolved') toggleThreadSelection(thread.id) } : undefined}
-              className={`flex-1 flex items-center gap-3 bg-[#1a1a1a] border rounded-lg px-4 py-3 hover:border-[#c3fd50] transition-colors group ${
-                selectedThreads.has(thread.id) ? 'border-[#fb923c]' : 'border-[#262626]'
+              className={`flex-1 flex items-center gap-3 bg-[#0a101d] border rounded-lg px-4 py-3 hover:border-[#a6ed2a] transition-colors group ${
+                selectedThreads.has(thread.id) ? 'border-[#fb923c]' : 'border-[#1d2839]'
               }`}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium text-white text-sm group-hover:text-[#c3fd50] transition-colors">{thread.title}</span>
+                  <span className="font-medium text-white text-sm group-hover:text-[#a6ed2a] transition-colors">{thread.title}</span>
                   <span
                     className="text-xs px-2 py-0.5 rounded-full font-medium"
                     style={{ backgroundColor: STATUS_COLORS[thread.status] + '20', color: STATUS_COLORS[thread.status] }}
@@ -364,7 +364,7 @@ export function ChannelView() {
                     {thread.tags.slice(0, 4).map(tag => (
                       <span
                         key={tag.id}
-                        className="text-xs px-2 py-0.5 rounded-md bg-[#0f0f0f] text-gray-400 border border-[#262626]"
+                        className="text-xs px-2 py-0.5 rounded-md bg-[#080c16] text-gray-400 border border-[#1d2839]"
                       >
                         {tag.tag_value}
                       </span>

@@ -31,7 +31,7 @@ function MetricCard({ label, value, icon, trend, trendValue }: MetricCardProps) 
               </div>
             )}
           </div>
-          <div className="text-[#c3fd50] opacity-50">{icon}</div>
+          <div className="text-[#a6ed2a] opacity-50">{icon}</div>
         </div>
       </CardBody>
     </Card>
@@ -64,7 +64,7 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
-          <BarChart3 className="w-6 h-6 text-[#c3fd50]" />
+          <BarChart3 className="w-6 h-6 text-[#a6ed2a]" />
           <h1 className="text-2xl font-bold">Analytics</h1>
         </div>
         <p className="text-sm text-gray-400">
@@ -80,8 +80,8 @@ export default function AnalyticsPage() {
             onClick={() => setTimeRange(range)}
             className={`px-3 py-1.5 rounded text-sm transition-colors ${
               timeRange === range
-                ? 'bg-[#c3fd50] text-black font-medium'
-                : 'bg-[#1a1a1a] text-gray-400 hover:text-white border border-[#262626]'
+                ? 'bg-[#a6ed2a] text-black font-medium'
+                : 'bg-[#0a101d] text-gray-400 hover:text-white border border-[#1d2839]'
             }`}
           >
             {range === 'all' ? 'All Time' : range.toUpperCase()}
@@ -128,7 +128,7 @@ export default function AnalyticsPage() {
             <h3 className="font-bold">Contributions Over Time</h3>
           </CardHeader>
           <CardBody>
-            <div className="h-64 flex items-center justify-center border border-dashed border-[#262626] rounded">
+            <div className="h-64 flex items-center justify-center border border-dashed border-[#1d2839] rounded">
               <div className="text-center text-gray-500">
                 <Calendar className="w-12 h-12 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">Time series chart placeholder</p>
@@ -143,7 +143,7 @@ export default function AnalyticsPage() {
             <h3 className="font-bold">Thread Activity</h3>
           </CardHeader>
           <CardBody>
-            <div className="h-64 flex items-center justify-center border border-dashed border-[#262626] rounded">
+            <div className="h-64 flex items-center justify-center border border-dashed border-[#1d2839] rounded">
               <div className="text-center text-gray-500">
                 <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">Activity chart placeholder</p>
@@ -171,7 +171,7 @@ export default function AnalyticsPage() {
               ].map((contributor, i) => (
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-[#c3fd50]/10 flex items-center justify-center text-xs font-medium text-[#c3fd50]">
+                    <div className="w-8 h-8 rounded-full bg-[#a6ed2a]/10 flex items-center justify-center text-xs font-medium text-[#a6ed2a]">
                       {i + 1}
                     </div>
                     <span className="text-sm text-gray-300">{contributor.name}</span>
@@ -200,7 +200,7 @@ export default function AnalyticsPage() {
                     <span className="text-sm text-gray-300">{item.dimension}</span>
                     <span className="text-sm text-gray-500">{item.count}</span>
                   </div>
-                  <div className="w-full bg-[#0f0f0f] rounded-full h-2">
+                  <div className="w-full bg-[#080c16] rounded-full h-2">
                     <div
                       className="h-2 rounded-full"
                       style={{

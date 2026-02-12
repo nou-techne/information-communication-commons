@@ -59,14 +59,14 @@ export function TimelineSlider({ artifacts, onTimeChange, className = '' }: Time
   if (artifacts.length === 0) return null
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-2 bg-[#1a1a1a] border-t border-[#262626] ${className}`}>
+    <div className={`flex items-center gap-3 px-4 py-2 bg-[#0a101d] border-t border-[#1d2839] ${className}`}>
       {/* Play/Pause */}
       <button
         onClick={() => {
           if (value >= maxTime) setValue(minTime)
           setPlaying(p => !p)
         }}
-        className="p-1.5 rounded hover:bg-[#262626] text-[#c3fd50] transition-colors"
+        className="p-1.5 rounded hover:bg-[#1d2839] text-[#a6ed2a] transition-colors"
         aria-label={playing ? 'Pause' : 'Play'}
       >
         {playing ? <Pause size={16} /> : <Play size={16} />}
@@ -79,7 +79,7 @@ export function TimelineSlider({ artifacts, onTimeChange, className = '' }: Time
           onClick={() => setSpeed(s)}
           className={`text-xs px-1.5 py-0.5 rounded transition-colors ${
             speed === s
-              ? 'bg-[#c3fd50] text-[#0f0f0f] font-bold'
+              ? 'bg-[#a6ed2a] text-[#080c16] font-bold'
               : 'text-gray-400 hover:text-white'
           }`}
         >
@@ -94,12 +94,12 @@ export function TimelineSlider({ artifacts, onTimeChange, className = '' }: Time
         max={maxTime}
         value={value}
         onChange={handleSliderChange}
-        className="flex-1 h-1 appearance-none bg-[#262626] rounded-full cursor-pointer
+        className="flex-1 h-1 appearance-none bg-[#1d2839] rounded-full cursor-pointer
           [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
-          [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#c3fd50]
+          [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#a6ed2a]
           [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_6px_rgba(195,253,80,0.4)]
           [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full
-          [&::-moz-range-thumb]:bg-[#c3fd50] [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:cursor-pointer"
+          [&::-moz-range-thumb]:bg-[#a6ed2a] [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:cursor-pointer"
       />
 
       {/* Timestamp */}

@@ -21,9 +21,9 @@ function renderInline(text: string): string {
   // italic
   result = result.replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>')
   // links
-  result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-[#c3fd50] hover:underline">$1</a>')
+  result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-[#a6ed2a] hover:underline">$1</a>')
   // bare URLs
-  result = result.replace(/(^|[\s>])((https?:\/\/)[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer" class="text-[#c3fd50] hover:underline">$2</a>')
+  result = result.replace(/(^|[\s>])((https?:\/\/)[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer" class="text-[#a6ed2a] hover:underline">$2</a>')
   return result
 }
 
@@ -49,7 +49,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       {rendered.map((block, i) => {
         if (block.type === 'code') {
           return (
-            <pre key={i} className="bg-[#111] rounded-lg p-3 overflow-x-auto text-xs font-mono text-gray-200 border border-[#262626]">
+            <pre key={i} className="bg-[#111] rounded-lg p-3 overflow-x-auto text-xs font-mono text-gray-200 border border-[#1d2839]">
               <code>{block.content}</code>
             </pre>
           )

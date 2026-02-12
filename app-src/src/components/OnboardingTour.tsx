@@ -179,7 +179,7 @@ export function OnboardingTour({ autoStart = false }: OnboardingTourProps) {
       left: `${rect.left - padding}px`,
       width: `${rect.width + padding * 2}px`,
       height: `${rect.height + padding * 2}px`,
-      border: '2px solid #c3fd50',
+      border: '2px solid #a6ed2a',
       borderRadius: '8px',
       pointerEvents: 'none',
       zIndex: 9998,
@@ -202,7 +202,7 @@ export function OnboardingTour({ autoStart = false }: OnboardingTourProps) {
 
       {/* Tooltip */}
       <div
-        className="bg-[#1a1a1a] border border-[#c3fd50] rounded-lg shadow-2xl max-w-md"
+        className="bg-[#0a101d] border border-[#a6ed2a] rounded-lg shadow-2xl max-w-md"
         style={getTooltipStyle()}
       >
         <div className="p-6">
@@ -216,7 +216,7 @@ export function OnboardingTour({ autoStart = false }: OnboardingTourProps) {
             </div>
             <button
               onClick={handleSkip}
-              className="p-1 hover:bg-[#262626] rounded transition-colors"
+              className="p-1 hover:bg-[#1d2839] rounded transition-colors"
               aria-label="Skip tour"
             >
               <X className="w-5 h-5" />
@@ -233,9 +233,9 @@ export function OnboardingTour({ autoStart = false }: OnboardingTourProps) {
                 key={index}
                 className={`h-1.5 rounded-full transition-all ${
                   index === currentStep
-                    ? 'w-8 bg-[#c3fd50]'
+                    ? 'w-8 bg-[#a6ed2a]'
                     : index < currentStep
-                    ? 'w-1.5 bg-[#c3fd50]/50'
+                    ? 'w-1.5 bg-[#a6ed2a]/50'
                     : 'w-1.5 bg-gray-600'
                 }`}
               />

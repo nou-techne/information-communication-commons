@@ -101,7 +101,7 @@ export function PullToRefresh({
         >
           <RefreshCw
             className={`w-6 h-6 transition-colors ${
-              shouldTrigger || isRefreshing ? 'text-[#c3fd50]' : 'text-gray-500'
+              shouldTrigger || isRefreshing ? 'text-[#a6ed2a]' : 'text-gray-500'
             }`}
           />
         </div>

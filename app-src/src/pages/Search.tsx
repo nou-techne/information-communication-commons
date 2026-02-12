@@ -87,13 +87,13 @@ export function Search() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search artifacts and contributions..."
-            className="w-full px-4 py-3 pl-12 bg-[#1a1a1a] border border-[#262626] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50]"
+            className="w-full px-4 py-3 pl-12 bg-[#0a101d] border border-[#1d2839] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a]"
             autoFocus
           />
           <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           <button
             type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-[#c3fd50] text-[#0f0f0f] rounded-lg hover:bg-[#d4fe80] text-sm font-medium"
+            className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] text-sm font-medium"
           >
             Search
           </button>
@@ -127,12 +127,12 @@ export function Search() {
             {results.map((result) => (
               <div
                 key={`${result.result_type}-${result.id}`}
-                className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4 hover:border-[#333] transition-colors"
+                className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 hover:border-[#333] transition-colors"
               >
                 <div className="flex items-start gap-3">
                   <div className="mt-1">
                     {result.result_type === 'artifact' ? (
-                      <FileText className="w-5 h-5 text-[#c3fd50]" />
+                      <FileText className="w-5 h-5 text-[#a6ed2a]" />
                     ) : (
                       <MessageSquare className="w-5 h-5 text-cyan-500" />
                     )}
@@ -141,7 +141,7 @@ export function Search() {
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <Link
                         to={result.result_type === 'artifact' ? `/artifact/${result.id}` : '/me'}
-                        className="font-medium text-white hover:text-[#c3fd50] transition-colors"
+                        className="font-medium text-white hover:text-[#a6ed2a] transition-colors"
                       >
                         {result.title}
                       </Link>
@@ -154,7 +154,7 @@ export function Search() {
                       dangerouslySetInnerHTML={{ __html: result.snippet }}
                     />
                     <div className="mt-2 flex items-center gap-2">
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-[#262626] text-gray-400">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-[#1d2839] text-gray-400">
                         {result.result_type}
                       </span>
                     </div>

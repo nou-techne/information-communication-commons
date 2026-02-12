@@ -101,7 +101,7 @@ export default function ModerationPage() {
           <p className="text-gray-400">Review and action flagged content</p>
         </div>
         <div className="flex items-center gap-2">
-          <Flag className="w-5 h-5 text-[#c3fd50]" />
+          <Flag className="w-5 h-5 text-[#a6ed2a]" />
           <span className="text-2xl font-bold">{counts.pending}</span>
           <span className="text-gray-500">pending</span>
         </div>
@@ -115,8 +115,8 @@ export default function ModerationPage() {
             onClick={() => setFilter(status)}
             className={`px-4 py-2 rounded transition-colors ${
               filter === status
-                ? 'bg-[#c3fd50] text-black'
-                : 'bg-[#1a1a1a] text-gray-400 hover:bg-[#262626]'
+                ? 'bg-[#a6ed2a] text-black'
+                : 'bg-[#0a101d] text-gray-400 hover:bg-[#1d2839]'
             }`}
           >
             {status} {status !== 'all' && `(${counts[status] || 0})`}
@@ -126,7 +126,7 @@ export default function ModerationPage() {
 
       {/* Bulk actions */}
       {selectedIds.size > 0 && (
-        <div className="flex items-center gap-4 mb-4 p-4 bg-[#1a1a1a] border border-[#262626] rounded-lg">
+        <div className="flex items-center gap-4 mb-4 p-4 bg-[#0a101d] border border-[#1d2839] rounded-lg">
           <span className="text-sm text-gray-400">
             {selectedIds.size} selected
           </span>
@@ -157,7 +157,7 @@ export default function ModerationPage() {
         <div className="space-y-3">
           {/* Select all */}
           {flags.length > 1 && (
-            <div className="flex items-center gap-2 px-4 py-2 bg-[#0f0f0f] rounded">
+            <div className="flex items-center gap-2 px-4 py-2 bg-[#080c16] rounded">
               <input
                 type="checkbox"
                 checked={selectedIds.size === flags.length}

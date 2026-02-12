@@ -3,20 +3,20 @@
 
 export const colors = {
   // Primary
-  primary: '#c3fd50',
-  primaryHover: '#d4fe80',
-  primaryMuted: '#c3fd5020',
+  primary: '#a6ed2a',
+  primaryHover: '#b8f247',
+  primaryMuted: '#a6ed2a20',
 
   // Surfaces
-  bg: '#0f0f0f',
-  surface: '#1a1a1a',
+  bg: '#080c16',
+  surface: '#0a101d',
   surfaceHover: '#222222',
   overlay: '#000000cc',
 
   // Borders
-  border: '#262626',
+  border: '#1d2839',
   borderHover: '#404040',
-  borderActive: '#c3fd50',
+  borderActive: '#a6ed2a',
 
   // Text
   text: '#ffffff',
@@ -25,7 +25,7 @@ export const colors = {
   textPlaceholder: '#4b5563',
 
   // Status
-  open: '#c3fd50',
+  open: '#a6ed2a',
   tagged: '#60a5fa',
   resolved: '#a78bfa',
   consolidated: '#fb923c',
@@ -38,7 +38,7 @@ export const colors = {
   info: '#3b82f6',
 
   // Dimensions (H-LAM/T)
-  human: '#c3fd50',
+  human: '#a6ed2a',
   language: '#60a5fa',
   artifacts: '#a78bfa',
   methodology: '#fb923c',

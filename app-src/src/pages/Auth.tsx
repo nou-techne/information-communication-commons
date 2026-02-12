@@ -37,8 +37,8 @@ export function Auth() {
   if (sent) {
     return (
       <div className="max-w-lg mx-auto text-center py-16">
-        <div className="w-20 h-20 rounded-full bg-[#c3fd50] flex items-center justify-center mx-auto mb-6">
-          <Mail className="w-10 h-10 text-[#0f0f0f]" />
+        <div className="w-20 h-20 rounded-full bg-[#a6ed2a] flex items-center justify-center mx-auto mb-6">
+          <Mail className="w-10 h-10 text-[#080c16]" />
         </div>
         <h2 className="text-2xl font-bold mb-3">Check your inbox</h2>
         <p className="text-gray-400 mb-2">
@@ -50,13 +50,13 @@ export function Auth() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={() => { setSent(false); setEmail(''); }}
-            className="px-6 py-2.5 bg-[#262626] text-white rounded-lg hover:bg-[#333333] transition-colors text-sm"
+            className="px-6 py-2.5 bg-[#1d2839] text-white rounded-lg hover:bg-[#283347] transition-colors text-sm"
           >
             Try a different email
           </button>
           <button
             onClick={() => navigate('/')}
-            className="px-6 py-2.5 bg-[#c3fd50] text-[#0f0f0f] rounded-lg hover:bg-[#d4fe80] transition-colors text-sm"
+            className="px-6 py-2.5 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] transition-colors text-sm"
           >
             Explore while you wait
           </button>
@@ -70,7 +70,7 @@ export function Auth() {
       {/* Header */}
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold mb-3">
-          Join the <span className="text-[#c3fd50]">Commons</span>
+          Join the <span className="text-[#a6ed2a]">Commons</span>
         </h1>
         <p className="text-gray-400 max-w-sm mx-auto leading-relaxed">
           A living archive of what emerges when people converge. 
@@ -81,7 +81,7 @@ export function Auth() {
       {/* What you can do */}
       <div className="mb-10 space-y-3">
         {FEATURES.map(f => (
-          <div key={f.letter} className="flex items-start gap-3 bg-[#1a1a1a] border border-[#262626] rounded-lg p-3">
+          <div key={f.letter} className="flex items-start gap-3 bg-[#0a101d] border border-[#1d2839] rounded-lg p-3">
             <div className="flex-shrink-0 mt-0.5 min-w-[90px]">
               <span className="font-mono text-lg font-bold" style={{ color: f.color }}>{f.letter}</span>
               <span className="text-xs font-medium text-gray-400">{f.name}</span>
@@ -92,7 +92,7 @@ export function Auth() {
       </div>
 
       {/* Sign in form */}
-      <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6">
+      <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6">
         <h2 className="text-lg font-semibold mb-1">Sign in with email</h2>
         <p className="text-sm text-gray-500 mb-5">No password needed. We'll send you a magic link.</p>
 
@@ -105,7 +105,7 @@ export function Auth() {
               placeholder="you@example.com"
               required
               autoFocus
-              className="w-full bg-[#0f0f0f] border border-[#333333] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#c3fd50] transition-colors"
+              className="w-full bg-[#080c16] border border-[#283347] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#a6ed2a] transition-colors"
             />
           </div>
 
@@ -118,7 +118,7 @@ export function Auth() {
           <button
             type="submit"
             disabled={loading || !email.trim()}
-            className="w-full bg-[#c3fd50] text-[#0f0f0f] font-medium hover:bg-[#d4fe80] py-3 rounded-lg transition-colors disabled:opacity-50"
+            className="w-full bg-[#a6ed2a] text-[#080c16] font-medium hover:bg-[#b8f247] py-3 rounded-lg transition-colors disabled:opacity-50"
           >
             {loading ? 'Sending magic link...' : 'Continue with magic link'}
           </button>

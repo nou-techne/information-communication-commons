@@ -89,7 +89,7 @@ export default function WebhooksPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Webhook className="w-6 h-6 text-[#c3fd50]" />
+            <Webhook className="w-6 h-6 text-[#a6ed2a]" />
             <h1 className="text-2xl font-bold">Webhooks</h1>
           </div>
           <p className="text-sm text-gray-400">Receive real-time notifications when events occur</p>
@@ -126,7 +126,7 @@ export default function WebhooksPage() {
                       type="checkbox"
                       checked={formEvents.has(event)}
                       onChange={() => toggleEvent(event)}
-                      className="rounded border-[#262626] bg-[#0f0f0f] text-[#c3fd50]"
+                      className="rounded border-[#1d2839] bg-[#080c16] text-[#a6ed2a]"
                     />
                     <span className="text-gray-300">{event}</span>
                   </label>
@@ -176,7 +176,7 @@ export default function WebhooksPage() {
                       {webhook.events.slice(0, 5).map(event => (
                         <span
                           key={event}
-                          className="text-xs px-2 py-0.5 rounded bg-[#0f0f0f] text-gray-400 border border-[#262626]"
+                          className="text-xs px-2 py-0.5 rounded bg-[#080c16] text-gray-400 border border-[#1d2839]"
                         >
                           {event}
                         </span>

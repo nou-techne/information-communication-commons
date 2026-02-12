@@ -102,7 +102,7 @@ export function generateHTMLReport(data: ReportData): string {
     h2 {
       font-size: 1.75rem;
       margin-bottom: 1.5rem;
-      color: #1a1a1a;
+      color: #0a101d;
     }
     
     .stats-grid {
@@ -130,7 +130,7 @@ export function generateHTMLReport(data: ReportData): string {
     .stat-value {
       font-size: 2rem;
       font-weight: bold;
-      color: #1a1a1a;
+      color: #0a101d;
     }
     
     .contribution-card {
@@ -151,7 +151,7 @@ export function generateHTMLReport(data: ReportData): string {
     .contribution-title {
       font-size: 1.25rem;
       font-weight: 600;
-      color: #1a1a1a;
+      color: #0a101d;
     }
     
     .contribution-meta {

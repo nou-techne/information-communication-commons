@@ -143,9 +143,9 @@ export function Status() {
       </div>
 
       {/* Last hour metrics */}
-      <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">
+      <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-6 mb-6">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Clock className="w-5 h-5 text-[#c3fd50]" />
+          <Clock className="w-5 h-5 text-[#a6ed2a]" />
           Last Hour
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -167,7 +167,7 @@ export function Status() {
           </div>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-[#262626] grid grid-cols-2 gap-4">
+        <div className="mt-4 pt-4 border-t border-[#1d2839] grid grid-cols-2 gap-4">
           <div>
             <div className="text-lg font-bold">{metrics.success_rate_pct}%</div>
             <div className="text-xs text-gray-500">Success rate</div>
@@ -180,7 +180,7 @@ export function Status() {
       </div>
 
       {/* Last 24 hours */}
-      <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">
+      <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-6 mb-6">
         <h3 className="text-lg font-bold mb-4">Last 24 Hours</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
@@ -204,14 +204,14 @@ export function Status() {
 
       {/* Recent errors */}
       {errors.length > 0 && (
-        <div className="bg-[#1a1a1a] border border-red-800/30 rounded-lg p-6">
+        <div className="bg-[#0a101d] border border-red-800/30 rounded-lg p-6">
           <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
             <AlertCircle className="w-5 h-5 text-red-500" />
             Recent Errors ({errors.length})
           </h3>
           <div className="space-y-3">
             {errors.map(error => (
-              <div key={error.contribution_id} className="bg-[#0f0f0f] border border-[#262626] rounded-lg p-3">
+              <div key={error.contribution_id} className="bg-[#080c16] border border-[#1d2839] rounded-lg p-3">
                 <div className="text-xs text-gray-500 mb-1">
                   {new Date(error.created_at).toLocaleString()}
                 </div>
@@ -230,21 +230,21 @@ export function Status() {
       )}
 
       {!hasRecentActivity && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 text-center">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-6 text-center">
           <p className="text-gray-400">No contributions in the last hour</p>
         </div>
       )}
 
       {/* Error Recovery */}
       {failedContributions.length > 0 && (
-        <div className="bg-[#1a1a1a] border border-red-800/30 rounded-lg p-6 mt-6">
+        <div className="bg-[#0a101d] border border-red-800/30 rounded-lg p-6 mt-6">
           <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-red-400" />
             Error Recovery ({failedContributions.length})
           </h3>
           <div className="space-y-3">
             {failedContributions.map(contrib => (
-              <div key={contrib.id} className="bg-[#0f0f0f] border border-[#262626] rounded-lg p-4">
+              <div key={contrib.id} className="bg-[#080c16] border border-[#1d2839] rounded-lg p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="text-xs text-gray-500 mb-1">
@@ -268,7 +268,7 @@ export function Status() {
                     <button
                       onClick={() => handleRetry(contrib.id)}
                       disabled={retryingIds.has(contrib.id)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-[#c3fd50]/10 text-[#c3fd50] border border-[#c3fd50]/30 hover:bg-[#c3fd50]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium bg-[#a6ed2a]/10 text-[#a6ed2a] border border-[#a6ed2a]/30 hover:bg-[#a6ed2a]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                     >
                       <RefreshCw className={`w-3.5 h-3.5 ${retryingIds.has(contrib.id) ? 'animate-spin' : ''}`} />
                       Retry

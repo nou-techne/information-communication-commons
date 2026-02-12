@@ -18,7 +18,7 @@ interface Contribution {
 const DIMENSIONS = [
   { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f', tag: 'hlamt:E' },
   { key: 'H', letter: 'H/', name: 'Human', desc: "Who's Here", color: '#c4956a', tag: 'hlamt:H' },
-  { key: 'L', letter: 'L/', name: 'Language', desc: 'How We Talk', color: '#c3fd50', tag: 'hlamt:L' },
+  { key: 'L', letter: 'L/', name: 'Language', desc: 'How We Talk', color: '#a6ed2a', tag: 'hlamt:L' },
   { key: 'A', letter: 'A/', name: 'Artifacts', desc: "What We're Building", color: '#8bbfff', tag: 'hlamt:A' },
   { key: 'M', letter: 'M/', name: 'Methodology', desc: 'How We Work', color: '#7ccfb8', tag: 'hlamt:M' },
   { key: 'T', letter: 'T/', name: 'Training', desc: "What We're Learning", color: '#e8927c', tag: 'hlamt:T' },
@@ -182,7 +182,7 @@ export function ContributionDetail() {
     return (
       <div className="text-center py-12">
         <p className="text-gray-400">Contribution not found</p>
-        <Link to="/" className="text-[#c3fd50] hover:text-white text-sm mt-2 inline-block">Back to Explore</Link>
+        <Link to="/" className="text-[#a6ed2a] hover:text-white text-sm mt-2 inline-block">Back to Explore</Link>
       </div>
     )
   }
@@ -201,10 +201,10 @@ export function ContributionDetail() {
       </nav>
 
       {/* Contribution header */}
-      <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">
+      <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <span className={`w-2.5 h-2.5 rounded-full ${
-            contribution.status === 'complete' ? 'bg-[#c3fd50]' :
+            contribution.status === 'complete' ? 'bg-[#a6ed2a]' :
             contribution.status === 'processing' ? 'bg-blue-400 animate-pulse' :
             contribution.status === 'error' ? 'bg-red-400' : 'bg-yellow-400'
           }`} />
@@ -226,7 +226,7 @@ export function ContributionDetail() {
               {contribution.content.slice(0, 300).trimEnd()}...
               <button
                 onClick={() => setExpanded(true)}
-                className="ml-2 text-[#c3fd50] hover:text-white text-sm font-medium"
+                className="ml-2 text-[#a6ed2a] hover:text-white text-sm font-medium"
               >
                 View more
               </button>
@@ -237,7 +237,7 @@ export function ContributionDetail() {
               {contribution.content.length > 300 && (
                 <button
                   onClick={() => setExpanded(false)}
-                  className="ml-2 text-[#c3fd50] hover:text-white text-sm font-medium"
+                  className="ml-2 text-[#a6ed2a] hover:text-white text-sm font-medium"
                 >
                   Show less
                 </button>
@@ -260,7 +260,7 @@ export function ContributionDetail() {
                 <Wrapper
                   key={d.key}
                   {...wrapperProps}
-                  className={`rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 sm:p-4 text-center block transition-all ${
+                  className={`rounded-lg border border-[#1d2839] bg-[#0a101d] p-3 sm:p-4 text-center block transition-all ${
                     count > 0 ? 'border-opacity-100 hover:scale-105 hover:shadow-lg cursor-pointer' : 'opacity-40'
                   }`}
                   style={count > 0 ? { borderColor: d.color + '40' } : undefined}
@@ -287,7 +287,7 @@ export function ContributionDetail() {
               <Link
                 key={a.id}
                 to={`/artifact/${a.id}`}
-                className="block bg-[#1a1a1a] border border-[#262626] rounded-xl p-4 hover:border-[#c3fd50] transition-colors group"
+                className="block bg-[#0a101d] border border-[#1d2839] rounded-xl p-4 hover:border-[#a6ed2a] transition-colors group"
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span
@@ -312,7 +312,7 @@ export function ContributionDetail() {
                     </span>
                   )}
                 </div>
-                <h3 className="font-semibold text-white group-hover:text-[#c3fd50] transition-colors mb-1 text-sm">
+                <h3 className="font-semibold text-white group-hover:text-[#a6ed2a] transition-colors mb-1 text-sm">
                   {a.title}
                 </h3>
                 {a.summary && (
@@ -326,7 +326,7 @@ export function ContributionDetail() {
 
       {/* Processing state */}
       {contribution.status === 'processing' && (
-        <div className="bg-[#1a1a1a] border border-blue-500/20 rounded-lg p-6 text-center">
+        <div className="bg-[#0a101d] border border-blue-500/20 rounded-lg p-6 text-center">
           <Loader2 className="w-8 h-8 text-blue-400 mx-auto mb-3 animate-spin" />
           <p className="text-gray-300">Extracting knowledge from this contribution...</p>
           <p className="text-sm text-gray-500 mt-1">Artifacts will appear here when processing completes.</p>
@@ -335,7 +335,7 @@ export function ContributionDetail() {
 
       {/* Error state */}
       {contribution.status === 'error' && (
-        <div className="bg-[#1a1a1a] border border-red-500/20 rounded-lg p-6">
+        <div className="bg-[#0a101d] border border-red-500/20 rounded-lg p-6">
           <p className="text-red-400 mb-2">Extraction failed</p>
           {contribution.errors && (
             <pre className="text-xs text-gray-500 overflow-x-auto">{JSON.stringify(contribution.errors, null, 2)}</pre>
@@ -345,21 +345,21 @@ export function ContributionDetail() {
 
       {/* Pending state */}
       {contribution.status === 'pending' && (
-        <div className="bg-[#1a1a1a] border border-yellow-500/20 rounded-lg p-6 text-center">
+        <div className="bg-[#0a101d] border border-yellow-500/20 rounded-lg p-6 text-center">
           <p className="text-yellow-400">Waiting to be processed...</p>
         </div>
       )}
 
       {/* Thread (Replies) */}
       {thread.length > 0 && (
-        <div className="mt-6 border-t border-[#262626] pt-6">
+        <div className="mt-6 border-t border-[#1d2839] pt-6">
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-[#c3fd50]" />
+            <MessageCircle className="w-5 h-5 text-[#a6ed2a]" />
             {thread.length} {thread.length === 1 ? 'Reply' : 'Replies'}
           </h2>
           <div className="space-y-3">
             {thread.map((reply: any) => (
-              <div key={reply.id} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4" style={{ marginLeft: `${reply.depth * 20}px` }}>
+              <div key={reply.id} className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4" style={{ marginLeft: `${reply.depth * 20}px` }}>
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2 text-sm text-gray-400">
                     <User className="w-4 h-4" />
@@ -379,12 +379,12 @@ export function ContributionDetail() {
       )}
 
       {/* Reply Form */}
-      <div className="mt-6 border-t border-[#262626] pt-6">
+      <div className="mt-6 border-t border-[#1d2839] pt-6">
         {!showReplyForm ? (
           <button
             onClick={() => setShowReplyForm(true)}
             disabled={!session}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] border border-[#262626] rounded-lg hover:border-[#c3fd50] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 bg-[#0a101d] border border-[#1d2839] rounded-lg hover:border-[#a6ed2a] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <MessageCircle className="w-4 h-4" />
             {session ? 'Reply to this contribution' : 'Sign in to reply'}
@@ -397,13 +397,13 @@ export function ContributionDetail() {
               placeholder="Share your thoughts, questions, or build on this contribution..."
               rows={4}
               autoFocus
-              className="w-full bg-[#0f0f0f] border border-[#333333] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#c3fd50] transition-colors resize-none"
+              className="w-full bg-[#080c16] border border-[#283347] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#a6ed2a] transition-colors resize-none"
             />
             <div className="flex gap-2">
               <button
                 type="submit"
                 disabled={!replyContent.trim() || submitting}
-                className="flex items-center gap-2 px-4 py-2 bg-[#c3fd50] text-[#0f0f0f] font-medium rounded-lg hover:bg-[#d4fe80] transition-colors disabled:opacity-50 text-sm"
+                className="flex items-center gap-2 px-4 py-2 bg-[#a6ed2a] text-[#080c16] font-medium rounded-lg hover:bg-[#b8f247] transition-colors disabled:opacity-50 text-sm"
               >
                 {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 {submitting ? 'Submitting...' : 'Submit Reply'}
@@ -411,7 +411,7 @@ export function ContributionDetail() {
               <button
                 type="button"
                 onClick={() => { setShowReplyForm(false); setReplyContent('') }}
-                className="px-4 py-2 bg-[#262626] text-white rounded-lg hover:bg-[#333333] transition-colors text-sm"
+                className="px-4 py-2 bg-[#1d2839] text-white rounded-lg hover:bg-[#283347] transition-colors text-sm"
               >
                 Cancel
               </button>

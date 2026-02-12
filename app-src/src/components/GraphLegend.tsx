@@ -23,14 +23,14 @@ export function GraphLegend({ position = 'bottom-right', defaultExpanded = false
 
   return (
     <div className={`fixed ${positionClasses[position]} z-40`}>
-      <div className="bg-[#0a0a0a] border border-[#262626] rounded-lg shadow-2xl overflow-hidden max-w-xs">
+      <div className="bg-[#060a14] border border-[#1d2839] rounded-lg shadow-2xl overflow-hidden max-w-xs">
         {/* Header */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between p-3 hover:bg-[#1a1a1a] transition-colors"
+          className="w-full flex items-center justify-between p-3 hover:bg-[#0a101d] transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Info className="w-4 h-4 text-[#c3fd50]" />
+            <Info className="w-4 h-4 text-[#a6ed2a]" />
             <span className="text-sm font-medium">Graph Legend</span>
           </div>
           {isExpanded ? (
@@ -100,7 +100,7 @@ export function GraphLegend({ position = 'bottom-right', defaultExpanded = false
             </div>
 
             {/* Visual Key */}
-            <div className="pt-2 border-t border-[#262626]">
+            <div className="pt-2 border-t border-[#1d2839]">
               <div className="text-xs space-y-1">
                 <div className="flex items-center gap-2 text-gray-500">
                   <div className="w-3 h-0.5 bg-gray-500" />

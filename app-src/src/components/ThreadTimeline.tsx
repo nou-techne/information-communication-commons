@@ -14,7 +14,7 @@ interface ThreadTimelineProps {
 }
 
 const EVENT_CONFIG: Record<TimelineEvent['type'], { icon: typeof MessageSquare; color: string; label: string }> = {
-  message: { icon: MessageSquare, color: '#c3fd50', label: 'Message' },
+  message: { icon: MessageSquare, color: '#a6ed2a', label: 'Message' },
   status_change: { icon: Clock, color: '#60a5fa', label: 'Status' },
   resolution: { icon: CheckCircle, color: '#a78bfa', label: 'Resolved' },
   tag_added: { icon: Tag, color: '#fbbf24', label: 'Tagged' },
@@ -37,7 +37,7 @@ export function ThreadTimeline({ events }: ThreadTimelineProps) {
   return (
     <div className="relative pl-6">
       {/* Vertical line */}
-      <div className="absolute left-[11px] top-2 bottom-2 w-px bg-[#262626]" />
+      <div className="absolute left-[11px] top-2 bottom-2 w-px bg-[#1d2839]" />
 
       {events.map((event) => {
         const config = EVENT_CONFIG[event.type]
@@ -47,7 +47,7 @@ export function ThreadTimeline({ events }: ThreadTimelineProps) {
           <div key={event.id} className="relative flex gap-3 pb-4 last:pb-0">
             {/* Icon dot */}
             <div
-              className="absolute -left-6 w-6 h-6 rounded-full flex items-center justify-center bg-[#0f0f0f] border-2"
+              className="absolute -left-6 w-6 h-6 rounded-full flex items-center justify-center bg-[#080c16] border-2"
               style={{ borderColor: config.color }}
             >
               <Icon className="w-3 h-3" style={{ color: config.color }} />

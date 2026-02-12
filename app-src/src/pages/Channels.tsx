@@ -124,7 +124,7 @@ export function Channels() {
         {session && (
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 bg-[#c3fd50] text-[#0f0f0f] font-medium px-4 py-2 rounded-lg hover:bg-[#d4fe80] transition-colors text-sm"
+            className="flex items-center gap-2 bg-[#a6ed2a] text-[#080c16] font-medium px-4 py-2 rounded-lg hover:bg-[#b8f247] transition-colors text-sm"
           >
             <Plus className="w-4 h-4" />
             New Channel
@@ -135,7 +135,7 @@ export function Channels() {
       {/* Create modal */}
       {showCreate && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setShowCreate(false)}>
-          <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">New Channel</h2>
               <button onClick={() => setShowCreate(false)} className="text-gray-400 hover:text-white"><X className="w-5 h-5" /></button>
@@ -147,7 +147,7 @@ export function Channels() {
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
                   placeholder="channel-name"
-                  className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm"
+                  className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a] text-sm"
                 />
               </div>
               <div>
@@ -157,7 +157,7 @@ export function Channels() {
                   onChange={e => setNewDesc(e.target.value)}
                   placeholder="What's this channel about?"
                   rows={2}
-                  className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm resize-none"
+                  className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a] text-sm resize-none"
                 />
               </div>
               <div>
@@ -165,7 +165,7 @@ export function Channels() {
                 <select
                   value={newType}
                   onChange={e => setNewType(e.target.value as Channel['type'])}
-                  className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-white text-sm"
+                  className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white text-sm"
                 >
                   {TYPE_ORDER.map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}
                 </select>
@@ -173,7 +173,7 @@ export function Channels() {
               <button
                 onClick={createChannel}
                 disabled={!newName.trim() || creating}
-                className="w-full bg-[#c3fd50] text-[#0f0f0f] font-medium py-2 rounded-lg hover:bg-[#d4fe80] transition-colors text-sm disabled:opacity-50"
+                className="w-full bg-[#a6ed2a] text-[#080c16] font-medium py-2 rounded-lg hover:bg-[#b8f247] transition-colors text-sm disabled:opacity-50"
               >
                 {creating ? 'Creating...' : 'Create Channel'}
               </button>
@@ -199,14 +199,14 @@ export function Channels() {
                   <Link
                     key={ch.id}
                     to={`/channels/${ch.slug}`}
-                    className="flex items-center gap-3 bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 hover:border-[#c3fd50] transition-colors group"
+                    className="flex items-center gap-3 bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-3 hover:border-[#a6ed2a] transition-colors group"
                   >
-                    <div className="flex-shrink-0 text-gray-500 group-hover:text-[#c3fd50] transition-colors">
+                    <div className="flex-shrink-0 text-gray-500 group-hover:text-[#a6ed2a] transition-colors">
                       {ch.visibility === 'private' ? <Lock className="w-4 h-4" /> : <Hash className="w-4 h-4" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-white text-sm group-hover:text-[#c3fd50] transition-colors">{ch.name}</span>
+                        <span className="font-medium text-white text-sm group-hover:text-[#a6ed2a] transition-colors">{ch.name}</span>
                       </div>
                       {ch.description && (
                         <p className="text-xs text-gray-500 truncate">{ch.description}</p>

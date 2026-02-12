@@ -69,7 +69,7 @@ export function BottomSheet({
       {/* Bottom Sheet */}
       <div
         ref={sheetRef}
-        className="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-[#262626] rounded-t-2xl z-50 transition-transform"
+        className="fixed bottom-0 left-0 right-0 bg-[#060a14] border-t border-[#1d2839] rounded-t-2xl z-50 transition-transform"
         style={{
           maxHeight: '90vh',
           transform: isOpen ? 'translateY(0)' : 'translateY(100%)',
@@ -81,16 +81,16 @@ export function BottomSheet({
           className="flex justify-center py-3 cursor-grab active:cursor-grabbing"
           {...swipeHandlers}
         >
-          <div className="w-12 h-1 bg-[#262626] rounded-full" />
+          <div className="w-12 h-1 bg-[#1d2839] rounded-full" />
         </div>
 
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-4 pb-3 border-b border-[#262626]">
+          <div className="flex items-center justify-between px-4 pb-3 border-b border-[#1d2839]">
             <h3 className="text-lg font-bold">{title}</h3>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-[#1a1a1a] rounded transition-colors"
+              className="p-2 hover:bg-[#0a101d] rounded transition-colors"
               aria-label="Close"
             >
               <X className="w-5 h-5" />

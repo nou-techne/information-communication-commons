@@ -86,7 +86,7 @@ export function GraphFilterPanel({ config, onChange, availableDimensions = [] }:
   return (
     <Card className="w-80 h-full overflow-y-auto">
       <CardHeader className="flex items-center gap-2">
-        <Filter className="w-5 h-5 text-[#c3fd50]" />
+        <Filter className="w-5 h-5 text-[#a6ed2a]" />
         <h3 className="font-bold">Graph Filters</h3>
       </CardHeader>
       <CardBody className="space-y-4">
@@ -94,7 +94,7 @@ export function GraphFilterPanel({ config, onChange, availableDimensions = [] }:
         <div>
           <button
             onClick={() => toggleSection('nodes')}
-            className="flex items-center justify-between w-full text-sm font-medium mb-2 hover:text-[#c3fd50]"
+            className="flex items-center justify-between w-full text-sm font-medium mb-2 hover:text-[#a6ed2a]"
           >
             <span>Node Types</span>
             {expandedSections.has('nodes') ? (
@@ -127,7 +127,7 @@ export function GraphFilterPanel({ config, onChange, availableDimensions = [] }:
                       type="checkbox"
                       checked={config.nodeTypes.has(type)}
                       onChange={() => toggleNodeType(type)}
-                      className="rounded border-[#262626] bg-[#0f0f0f]"
+                      className="rounded border-[#1d2839] bg-[#080c16]"
                       style={{ accentColor: meta.color }}
                     />
                     <div
@@ -146,7 +146,7 @@ export function GraphFilterPanel({ config, onChange, availableDimensions = [] }:
         <div>
           <button
             onClick={() => toggleSection('edges')}
-            className="flex items-center justify-between w-full text-sm font-medium mb-2 hover:text-[#c3fd50]"
+            className="flex items-center justify-between w-full text-sm font-medium mb-2 hover:text-[#a6ed2a]"
           >
             <span>Edge Types</span>
             {expandedSections.has('edges') ? (
@@ -179,7 +179,7 @@ export function GraphFilterPanel({ config, onChange, availableDimensions = [] }:
                       type="checkbox"
                       checked={config.edgeTypes.has(type)}
                       onChange={() => toggleEdgeType(type)}
-                      className="rounded border-[#262626] bg-[#0f0f0f]"
+                      className="rounded border-[#1d2839] bg-[#080c16]"
                       style={{ accentColor: meta.color }}
                     />
                     <span className="text-gray-300 group-hover:text-white">{meta.label}</span>
@@ -198,7 +198,7 @@ export function GraphFilterPanel({ config, onChange, availableDimensions = [] }:
           <div>
             <button
               onClick={() => toggleSection('dimensions')}
-              className="flex items-center justify-between w-full text-sm font-medium mb-2 hover:text-[#c3fd50]"
+              className="flex items-center justify-between w-full text-sm font-medium mb-2 hover:text-[#a6ed2a]"
             >
               <span>Dimensions</span>
               {expandedSections.has('dimensions') ? (
@@ -215,7 +215,7 @@ export function GraphFilterPanel({ config, onChange, availableDimensions = [] }:
                       type="checkbox"
                       checked={config.dimensions.has(dim)}
                       onChange={() => toggleDimension(dim)}
-                      className="rounded border-[#262626] bg-[#0f0f0f] text-[#c3fd50]"
+                      className="rounded border-[#1d2839] bg-[#080c16] text-[#a6ed2a]"
                     />
                     <span className="text-gray-300 group-hover:text-white capitalize">{dim}</span>
                   </label>
@@ -229,7 +229,7 @@ export function GraphFilterPanel({ config, onChange, availableDimensions = [] }:
         <div>
           <button
             onClick={() => toggleSection('degree')}
-            className="flex items-center justify-between w-full text-sm font-medium mb-2 hover:text-[#c3fd50]"
+            className="flex items-center justify-between w-full text-sm font-medium mb-2 hover:text-[#a6ed2a]"
           >
             <span>Minimum Connections</span>
             {expandedSections.has('degree') ? (

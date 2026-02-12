@@ -49,8 +49,8 @@ export const RESPONSIVE_THREAD_STYLES = {
       left: '0',
       right: '0',
       padding: '1rem',
-      backgroundColor: '#0a0a0a',
-      borderTop: '1px solid #262626',
+      backgroundColor: '#060a14',
+      borderTop: '1px solid #1d2839',
       zIndex: 10,
     },
     desktop: {
@@ -112,7 +112,7 @@ export function shouldCollapseSidebar(width: number): boolean {
  * Message card responsive classes
  */
 export function getMessageCardClasses(isMobile: boolean): string {
-  const base = 'bg-[#1a1a1a] border border-[#262626] rounded-lg'
+  const base = 'bg-[#0a101d] border border-[#1d2839] rounded-lg'
   
   if (isMobile) {
     return `${base} w-full p-4 mb-2`
@@ -137,7 +137,7 @@ export function getActionButtonClasses(isMobile: boolean): string {
  */
 export function getThreadHeaderClasses(isMobile: boolean): string {
   if (isMobile) {
-    return 'sticky top-0 z-20 bg-[#0a0a0a] border-b border-[#262626] p-4'
+    return 'sticky top-0 z-20 bg-[#060a14] border-b border-[#1d2839] p-4'
   }
   
   return 'mb-6'

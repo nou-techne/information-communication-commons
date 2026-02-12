@@ -65,7 +65,7 @@ export default function FederationPage() {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
-          <Wifi className="w-6 h-6 text-[#c3fd50]" />
+          <Wifi className="w-6 h-6 text-[#a6ed2a]" />
           <h1 className="text-2xl font-bold">Federation</h1>
         </div>
         <p className="text-sm text-gray-400">
@@ -92,7 +92,7 @@ export default function FederationPage() {
         <Card>
           <CardBody>
             <div className="flex items-center gap-2">
-              <Upload className="w-4 h-4 text-[#c3fd50]" />
+              <Upload className="w-4 h-4 text-[#a6ed2a]" />
               <div>
                 <div className="text-sm text-gray-400">Pending Upload</div>
                 <div className="text-xl font-bold">{syncStats.pendingUp}</div>
@@ -117,7 +117,7 @@ export default function FederationPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader className="flex items-center gap-2">
-            <Share2 className="w-5 h-5 text-[#c3fd50]" />
+            <Share2 className="w-5 h-5 text-[#a6ed2a]" />
             <h3 className="font-bold">What to Share</h3>
           </CardHeader>
           <CardBody>
@@ -133,7 +133,7 @@ export default function FederationPage() {
                   <button
                     onClick={() => toggleSharing(key as keyof typeof sharingPreferences)}
                     className={`w-12 h-6 rounded-full transition-colors ${
-                      value ? 'bg-[#c3fd50]' : 'bg-[#262626]'
+                      value ? 'bg-[#a6ed2a]' : 'bg-[#1d2839]'
                     }`}
                   >
                     <div
@@ -145,7 +145,7 @@ export default function FederationPage() {
                 </label>
               ))}
             </div>
-            <div className="mt-4 pt-4 border-t border-[#262626] text-xs text-gray-500">
+            <div className="mt-4 pt-4 border-t border-[#1d2839] text-xs text-gray-500">
               Content types enabled for sharing will be sent to connected peers during sync
             </div>
           </CardBody>
@@ -169,7 +169,7 @@ export default function FederationPage() {
                   <button
                     onClick={() => toggleAccept(key as keyof typeof acceptPreferences)}
                     className={`w-12 h-6 rounded-full transition-colors ${
-                      value ? 'bg-blue-500' : 'bg-[#262626]'
+                      value ? 'bg-blue-500' : 'bg-[#1d2839]'
                     }`}
                   >
                     <div
@@ -181,7 +181,7 @@ export default function FederationPage() {
                 </label>
               ))}
             </div>
-            <div className="mt-4 pt-4 border-t border-[#262626] text-xs text-gray-500">
+            <div className="mt-4 pt-4 border-t border-[#1d2839] text-xs text-gray-500">
               Content types enabled for accepting will be received from connected peers during sync
             </div>
           </CardBody>

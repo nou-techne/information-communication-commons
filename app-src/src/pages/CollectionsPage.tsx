@@ -162,14 +162,14 @@ export default function CollectionsPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => startEdit(collection)}
-                    className="p-2 hover:bg-[#1a1a1a] rounded transition-colors"
+                    className="p-2 hover:bg-[#0a101d] rounded transition-colors"
                     aria-label="Edit collection"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(collection.id)}
-                    className="p-2 hover:bg-[#1a1a1a] rounded transition-colors text-red-500"
+                    className="p-2 hover:bg-[#0a101d] rounded transition-colors text-red-500"
                     aria-label="Delete collection"
                   >
                     <Trash2 className="w-4 h-4" />

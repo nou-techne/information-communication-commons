@@ -211,22 +211,22 @@ export function Explore() {
       </div>
 
       {/* How it works */}
-      <div className="mb-6 bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden">
+      <div className="mb-6 bg-[#0a101d] border border-[#1d2839] rounded-lg overflow-hidden">
         <button
           onClick={() => setShowHowItWorks(!showHowItWorks)}
-          className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#262626] transition-colors"
+          className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#1d2839] transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Info className="w-5 h-5 text-[#c3fd50]" />
+            <Info className="w-5 h-5 text-[#a6ed2a]" />
             <span className="text-sm font-medium text-white">How it works</span>
           </div>
           <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showHowItWorks ? 'rotate-180' : ''}`} />
         </button>
         
         {showHowItWorks && (
-          <div className="px-4 pb-4 text-sm space-y-3 border-t border-[#262626] pt-4">
+          <div className="px-4 pb-4 text-sm space-y-3 border-t border-[#1d2839] pt-4">
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#a6ed2a] text-[#080c16] flex items-center justify-center">
                 <PenLine className="w-4 h-4" />
               </span>
               <div>
@@ -235,7 +235,7 @@ export function Explore() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#a6ed2a] text-[#080c16] flex items-center justify-center">
                 <Sparkles className="w-4 h-4" />
               </span>
               <div>
@@ -244,7 +244,7 @@ export function Explore() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#c3fd50] text-[#0f0f0f] flex items-center justify-center">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#a6ed2a] text-[#080c16] flex items-center justify-center">
                 <GitBranch className="w-4 h-4" />
               </span>
               <div>
@@ -252,8 +252,8 @@ export function Explore() {
                 <div className="text-gray-400">Artifacts connect to each other. Patterns emerge. The collective knowledge becomes navigable by dimension, type, and relationship.</div>
               </div>
             </div>
-            <div className="pt-2 border-t border-[#262626]">
-              <Link to="/contribute" className="text-[#c3fd50] hover:text-white text-sm font-medium">
+            <div className="pt-2 border-t border-[#1d2839]">
+              <Link to="/contribute" className="text-[#a6ed2a] hover:text-white text-sm font-medium">
                 Try it yourself →
               </Link>
             </div>
@@ -270,7 +270,7 @@ export function Explore() {
             <Link
               key={d.key}
               to={`/d/${d.key}`}
-              className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-3 sm:p-4 hover:border-[#c3fd50] transition-colors text-center group"
+              className="block rounded-lg border border-[#1d2839] bg-[#0a101d] p-3 sm:p-4 hover:border-[#a6ed2a] transition-colors text-center group"
             >
               <div className="text-xs font-medium mb-1 truncate" style={{ color: d.color }}>{d.name}</div>
               <div className="flex items-baseline justify-center gap-1 sm:gap-1.5">
@@ -290,11 +290,11 @@ export function Explore() {
             <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
               {viewMode === '3d' ? 'Graph Constellation' : 'Graph Index'}
             </h2>
-            <div className="flex bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden">
+            <div className="flex bg-[#0a101d] border border-[#1d2839] rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode('2d')}
                 className={`px-3 py-1 text-xs font-medium transition-colors ${
-                  viewMode === '2d' ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'text-gray-400 hover:text-white'
+                  viewMode === '2d' ? 'bg-[#a6ed2a] text-[#080c16]' : 'text-gray-400 hover:text-white'
                 }`}
               >
                 2-D
@@ -302,7 +302,7 @@ export function Explore() {
               <button
                 onClick={() => setViewMode('3d')}
                 className={`px-3 py-1 text-xs font-medium transition-colors ${
-                  viewMode === '3d' ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'text-gray-400 hover:text-white'
+                  viewMode === '3d' ? 'bg-[#a6ed2a] text-[#080c16]' : 'text-gray-400 hover:text-white'
                 }`}
               >
                 3-D
@@ -310,7 +310,7 @@ export function Explore() {
             </div>
           </div>
           {viewMode === '3d' ? (
-            <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#0f0f0f] w-screen h-screen' : ''}`}>
+            <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#080c16] w-screen h-screen' : ''}`}>
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
                 <div className={`relative w-full ${isFullscreen ? 'h-full' : 'h-[500px]'}`}>
                   <Graph />
@@ -322,7 +322,7 @@ export function Explore() {
                         graphContainerRef.current?.requestFullscreen()
                       }
                     }}
-                    className="absolute top-3 left-3 z-50 px-3 py-1.5 text-xs bg-[#262626]/90 text-gray-300 rounded-lg hover:bg-[#333] transition-colors backdrop-blur-sm border border-[#333]"
+                    className="absolute top-3 left-3 z-50 px-3 py-1.5 text-xs bg-[#1d2839]/90 text-gray-300 rounded-lg hover:bg-[#333] transition-colors backdrop-blur-sm border border-[#333]"
                   >
                     {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
                   </button>
@@ -338,9 +338,9 @@ export function Explore() {
                 onChange={e => setSearch(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && doSearch()}
                 placeholder="Search the graph..."
-                className="flex-1 bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm"
+                className="flex-1 bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a] text-sm"
               />
-              <button onClick={doSearch} className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm whitespace-nowrap">
+              <button onClick={doSearch} className="bg-[#a6ed2a] text-[#080c16] hover:bg-[#b8f247] px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm whitespace-nowrap">
                 Search
               </button>
             </div>
@@ -348,7 +348,7 @@ export function Explore() {
               <select
                 value={dimFilter}
                 onChange={e => setDimFilter(e.target.value)}
-                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
+                className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="">All dimensions</option>
                 {DIMENSIONS.map(d => <option key={d.key} value={d.tag}>{d.letter} {d.name}</option>)}
@@ -356,7 +356,7 @@ export function Explore() {
               <select
                 value={typeFilter}
                 onChange={e => setTypeFilter(e.target.value as ArtifactType | '')}
-                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
+                className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="">All types</option>
                 {TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
@@ -364,7 +364,7 @@ export function Explore() {
               <select
                 value={stateFilter}
                 onChange={e => setStateFilter(e.target.value as ArtifactState | '')}
-                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
+                className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="">All states</option>
                 {Object.entries(STATE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
@@ -372,7 +372,7 @@ export function Explore() {
               <select
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value as 'recent' | 'coordination')}
-                className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
+                className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="recent">Sort: Recent</option>
                 <option value="coordination">Sort: Coordination</option>
@@ -389,7 +389,7 @@ export function Explore() {
           {display.length === 0 ? (
             <div className="text-center py-16">
               <div className="max-w-md mx-auto">
-                <div className="w-20 h-20 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 rounded-full bg-[#1d2839] flex items-center justify-center mx-auto mb-6">
                   <Inbox className="w-10 h-10 text-gray-600" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">
@@ -402,7 +402,7 @@ export function Explore() {
                 </p>
                 <Link
                   to="/contribute"
-                  className="inline-block bg-[#c3fd50] text-[#0f0f0f] font-medium px-6 py-3 rounded-lg hover:bg-[#d4fe80] transition-colors"
+                  className="inline-block bg-[#a6ed2a] text-[#080c16] font-medium px-6 py-3 rounded-lg hover:bg-[#b8f247] transition-colors"
                 >
                   Contribute to the Commons
                 </Link>
@@ -414,7 +414,7 @@ export function Explore() {
                 <Link
                   key={a.id}
                   to={`/artifact/${a.id}`}
-                  className="block bg-[#1a1a1a] border border-[#262626] rounded-xl p-4 hover:border-[#c3fd50] transition-colors group"
+                  className="block bg-[#0a101d] border border-[#1d2839] rounded-xl p-4 hover:border-[#a6ed2a] transition-colors group"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span
@@ -440,7 +440,7 @@ export function Explore() {
                     )}
                     <span className="ml-auto text-xs text-gray-500">{STATE_LABELS[a.state]}</span>
                   </div>
-                  <h3 className="font-semibold text-white group-hover:text-[#c3fd50] transition-colors mb-1 text-sm">
+                  <h3 className="font-semibold text-white group-hover:text-[#a6ed2a] transition-colors mb-1 text-sm">
                     {a.title}
                   </h3>
                   {a.summary && (
@@ -449,7 +449,7 @@ export function Explore() {
                   <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
                     <span>{timeAgo(a.created_at)}</span>
                     {(coordCounts[a.id] || 0) > 0 && (
-                      <span className="flex items-center gap-1 text-[#c3fd50]">
+                      <span className="flex items-center gap-1 text-[#a6ed2a]">
                         <Handshake className="w-3 h-3" />
                         {coordCounts[a.id]}
                       </span>
@@ -470,15 +470,15 @@ export function Explore() {
           ) : (
             <div className="space-y-1.5">
               {feedItems.map(item => (
-                <Link to={`/contribution/${item.id}`} key={item.id} className="block bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors">
+                <Link to={`/contribution/${item.id}`} key={item.id} className="block bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className={`w-1.5 h-1.5 rounded-full ${
-                      item.status === 'complete' ? 'bg-[#c3fd50]' : 
+                      item.status === 'complete' ? 'bg-[#a6ed2a]' : 
                       item.status === 'processing' ? 'bg-blue-400 animate-pulse' : 
                       item.status === 'error' ? 'bg-red-400' : 'bg-yellow-400'
                     }`} />
                     {item.participant_name && item.participant_id && (
-                      <Link to={`/p/${item.participant_id}`} className="text-xs font-medium text-gray-300 truncate hover:text-[#c3fd50] transition-colors" onClick={e => e.stopPropagation()}>
+                      <Link to={`/p/${item.participant_id}`} className="text-xs font-medium text-gray-300 truncate hover:text-[#a6ed2a] transition-colors" onClick={e => e.stopPropagation()}>
                         {item.participant_name}
                       </Link>
                     )}
@@ -495,12 +495,12 @@ export function Explore() {
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                       {item.artifact_count > 0 && (
                         <span className="text-xs text-gray-400">
-                          <span className="font-mono text-[#c3fd50] font-medium">{item.artifact_count}</span> {item.artifact_count === 1 ? 'node' : 'nodes'}
+                          <span className="font-mono text-[#a6ed2a] font-medium">{item.artifact_count}</span> {item.artifact_count === 1 ? 'node' : 'nodes'}
                         </span>
                       )}
                       {item.relationship_count > 0 && (
                         <span className="text-xs text-gray-400">
-                          <span className="font-mono text-[#c3fd50] font-medium">{item.relationship_count}</span> {item.relationship_count === 1 ? 'edge' : 'edges'}
+                          <span className="font-mono text-[#a6ed2a] font-medium">{item.relationship_count}</span> {item.relationship_count === 1 ? 'edge' : 'edges'}
                         </span>
                       )}
                       {item.commitment_count > 0 && (

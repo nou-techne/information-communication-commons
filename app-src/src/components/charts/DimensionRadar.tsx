@@ -18,7 +18,7 @@ interface DimensionRadarProps {
 export function DimensionRadar({
   data,
   size = 200,
-  color = '#c3fd50',
+  color = '#a6ed2a',
   maxValue = 100,
   showLabels = true,
   showGrid = true,

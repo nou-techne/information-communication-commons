@@ -77,7 +77,7 @@ export function CuratedCollection({
               onDragStart={() => handleDragStart(index)}
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
-              className={`flex items-center gap-3 p-3 bg-[#1a1a1a] border border-[#262626] rounded ${
+              className={`flex items-center gap-3 p-3 bg-[#0a101d] border border-[#1d2839] rounded ${
                 editable ? 'cursor-move' : ''
               } ${draggedIndex === index ? 'opacity-50' : ''}`}
             >
@@ -97,7 +97,7 @@ export function CuratedCollection({
               {editable && (
                 <button
                   onClick={() => onRemoveItem?.(itemId)}
-                  className="p-1 hover:bg-[#262626] rounded transition-colors"
+                  className="p-1 hover:bg-[#1d2839] rounded transition-colors"
                   aria-label="Remove item"
                 >
                   <X className="w-4 h-4 text-gray-500" />

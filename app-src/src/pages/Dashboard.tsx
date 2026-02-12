@@ -49,7 +49,7 @@ const DIMENSION_INFO: Record<string, { letter: string; name: string; desc: strin
     letter: 'L/',
     name: 'Language',
     desc: 'How We Talk',
-    color: '#c3fd50',
+    color: '#a6ed2a',
     explain: 'The shared vocabulary, concepts, and frameworks that enable coordination. Language is the medium through which collective intelligence flows.',
   },
   A: {
@@ -189,11 +189,11 @@ export default function Dashboard() {
   const maxDimCount = Math.max(...dimensions.map(d => d.count), 1);
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-gray-100 p-4 sm:p-8">
+    <div className="min-h-screen bg-[#080c16] text-gray-100 p-4 sm:p-8">
       {/* Header */}
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center gap-3 mb-2">
-          <div className="text-[#c3fd50] font-bold text-4xl sm:text-5xl tracking-tight">EthBoulder</div>
+          <div className="text-[#a6ed2a] font-bold text-4xl sm:text-5xl tracking-tight">EthBoulder</div>
           <div className="text-gray-500 text-4xl sm:text-5xl">.commons.id</div>
         </div>
         <div className="text-gray-500 text-lg mb-4">Knowledge Graph · Live</div>
@@ -203,7 +203,7 @@ export default function Dashboard() {
       <Card className="mb-8">
         <CardBody>
           <div className="flex items-start gap-3">
-            <Compass className="w-5 h-5 text-[#c3fd50] mt-0.5 flex-shrink-0" />
+            <Compass className="w-5 h-5 text-[#a6ed2a] mt-0.5 flex-shrink-0" />
             <div>
               <h2 className="text-lg font-semibold text-gray-200 mb-2">What is this?</h2>
               <p className="text-gray-400 text-sm leading-relaxed mb-3">
@@ -213,7 +213,7 @@ export default function Dashboard() {
               </p>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Knowledge is organized across <strong className="text-gray-300">six observation dimensions</strong> from
-                the <a href="https://the-habitat.org/thesis" target="_blank" rel="noopener noreferrer" className="text-[#c3fd50] hover:text-white transition-colors">H-LAM/T framework</a> — a
+                the <a href="https://the-habitat.org/thesis" target="_blank" rel="noopener noreferrer" className="text-[#a6ed2a] hover:text-white transition-colors">H-LAM/T framework</a> — a
                 model for understanding how humans, language, artifacts, and methodology combine to augment collective intelligence.
                 Each dimension reveals a different facet of the convergence.
               </p>
@@ -227,7 +227,7 @@ export default function Dashboard() {
         <Card>
           <CardBody className="text-center">
             <div className="flex justify-center mb-3">
-              <Activity className="w-7 h-7 text-[#c3fd50]" />
+              <Activity className="w-7 h-7 text-[#a6ed2a]" />
             </div>
             <div className="text-3xl sm:text-4xl font-bold mb-1">{stats.totalArtifacts}</div>
             <div className="text-gray-500 text-xs sm:text-sm uppercase tracking-wide">Artifacts</div>
@@ -260,7 +260,7 @@ export default function Dashboard() {
         <Card>
           <CardBody className="text-center">
             <div className="flex justify-center mb-3">
-              <TrendingUp className="w-7 h-7 text-[#c3fd50]" />
+              <TrendingUp className="w-7 h-7 text-[#a6ed2a]" />
             </div>
             <div className="text-3xl sm:text-4xl font-bold mb-1">{stats.recentContributions}</div>
             <div className="text-gray-500 text-xs sm:text-sm uppercase tracking-wide">Last Hour</div>
@@ -273,7 +273,7 @@ export default function Dashboard() {
       <Card className="mb-8">
         <CardBody>
           <div className="flex items-center gap-2 mb-2">
-            <BookOpen className="w-5 h-5 text-[#c3fd50]" />
+            <BookOpen className="w-5 h-5 text-[#a6ed2a]" />
             <h2 className="text-xl font-semibold text-gray-200">Observation Dimensions</h2>
           </div>
           <p className="text-gray-500 text-sm mb-5">
@@ -290,7 +290,7 @@ export default function Dashboard() {
                 <Link
                   key={dim.dimension}
                   to={`/d/${dimKey}`}
-                  className="block rounded-lg border border-[#262626] bg-[#1a1a1a] p-4 hover:border-opacity-60 transition-all group"
+                  className="block rounded-lg border border-[#1d2839] bg-[#0a101d] p-4 hover:border-opacity-60 transition-all group"
                   style={{ borderColor: dim.count > 0 ? info.color + '30' : undefined }}
                 >
                   <div className="flex items-baseline gap-2 mb-1">
@@ -300,7 +300,7 @@ export default function Dashboard() {
                   </div>
                   <div className="text-xs font-medium mb-2" style={{ color: info.color + 'cc' }}>{info.desc}</div>
                   <p className="text-xs text-gray-500 leading-relaxed mb-3">{info.explain}</p>
-                  <div className="w-full bg-[#0f0f0f] rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-[#080c16] rounded-full h-1.5 overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${widthPercent}%`, backgroundColor: info.color }}
@@ -319,36 +319,36 @@ export default function Dashboard() {
         <Card>
           <CardBody>
             <div className="flex items-center gap-2 mb-4">
-              <Info className="w-5 h-5 text-[#c3fd50]" />
+              <Info className="w-5 h-5 text-[#a6ed2a]" />
               <h2 className="text-lg font-semibold text-gray-200">How It Works</h2>
             </div>
             <div className="space-y-4 text-sm">
               <div className="flex gap-3">
-                <div className="w-7 h-7 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] flex items-center justify-center flex-shrink-0 text-xs font-bold">1</div>
+                <div className="w-7 h-7 rounded-full bg-[#a6ed2a]/10 text-[#a6ed2a] flex items-center justify-center flex-shrink-0 text-xs font-bold">1</div>
                 <div>
                   <div className="font-medium text-gray-300 mb-0.5">Contribute</div>
-                  <div className="text-gray-500">Share session notes, observations, or ideas through the <Link to="/contribute" className="text-[#c3fd50] hover:text-white transition-colors">Contribute</Link> page.</div>
+                  <div className="text-gray-500">Share session notes, observations, or ideas through the <Link to="/contribute" className="text-[#a6ed2a] hover:text-white transition-colors">Contribute</Link> page.</div>
                 </div>
               </div>
               <div className="flex gap-3">
-                <div className="w-7 h-7 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] flex items-center justify-center flex-shrink-0 text-xs font-bold">2</div>
+                <div className="w-7 h-7 rounded-full bg-[#a6ed2a]/10 text-[#a6ed2a] flex items-center justify-center flex-shrink-0 text-xs font-bold">2</div>
                 <div>
                   <div className="font-medium text-gray-300 mb-0.5">Extract</div>
                   <div className="text-gray-500">AI identifies artifacts, people, relationships, and dimensions — structuring free-form notes into a knowledge graph.</div>
                 </div>
               </div>
               <div className="flex gap-3">
-                <div className="w-7 h-7 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] flex items-center justify-center flex-shrink-0 text-xs font-bold">3</div>
+                <div className="w-7 h-7 rounded-full bg-[#a6ed2a]/10 text-[#a6ed2a] flex items-center justify-center flex-shrink-0 text-xs font-bold">3</div>
                 <div>
                   <div className="font-medium text-gray-300 mb-0.5">Connect</div>
                   <div className="text-gray-500">Artifacts link together across sessions and dimensions, revealing patterns no single person could see alone.</div>
                 </div>
               </div>
               <div className="flex gap-3">
-                <div className="w-7 h-7 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] flex items-center justify-center flex-shrink-0 text-xs font-bold">4</div>
+                <div className="w-7 h-7 rounded-full bg-[#a6ed2a]/10 text-[#a6ed2a] flex items-center justify-center flex-shrink-0 text-xs font-bold">4</div>
                 <div>
                   <div className="font-medium text-gray-300 mb-0.5">Explore</div>
-                  <div className="text-gray-500">Browse the <Link to="/graph" className="text-[#c3fd50] hover:text-white transition-colors">knowledge graph</Link>, <Link to="/dimensions" className="text-[#c3fd50] hover:text-white transition-colors">dimensions</Link>, and <Link to="/" className="text-[#c3fd50] hover:text-white transition-colors">activity feed</Link> to discover what's emerging.</div>
+                  <div className="text-gray-500">Browse the <Link to="/graph" className="text-[#a6ed2a] hover:text-white transition-colors">knowledge graph</Link>, <Link to="/dimensions" className="text-[#a6ed2a] hover:text-white transition-colors">dimensions</Link>, and <Link to="/" className="text-[#a6ed2a] hover:text-white transition-colors">activity feed</Link> to discover what's emerging.</div>
                 </div>
               </div>
             </div>
@@ -361,13 +361,13 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold mb-4 text-gray-200">Recent Artifacts</h2>
             <div className="space-y-2">
               {recentArtifacts.length === 0 ? (
-                <p className="text-gray-500 text-sm py-4 text-center">No artifacts yet. Be the first to <Link to="/contribute" className="text-[#c3fd50] hover:text-white">contribute</Link>!</p>
+                <p className="text-gray-500 text-sm py-4 text-center">No artifacts yet. Be the first to <Link to="/contribute" className="text-[#a6ed2a] hover:text-white">contribute</Link>!</p>
               ) : (
                 recentArtifacts.map((artifact) => (
                   <Link
                     key={artifact.id}
                     to={`/artifact/${artifact.id}`}
-                    className="flex items-start gap-3 p-3 bg-[#0f0f0f] rounded border border-gray-800 hover:border-[#c3fd50]/30 transition-colors"
+                    className="flex items-start gap-3 p-3 bg-[#080c16] rounded border border-gray-800 hover:border-[#a6ed2a]/30 transition-colors"
                   >
                     <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${REA_COLORS[artifact.rea_role] || 'bg-gray-500'}`} />
                     <div className="flex-1 min-w-0">
@@ -390,21 +390,21 @@ export default function Dashboard() {
             Every artifact in the knowledge graph is classified using the <strong className="text-gray-300">REA ontology</strong> (Resource–Event–Agent) — an accounting framework that makes economic and social relationships legible.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="rounded-lg bg-[#0f0f0f] border border-green-500/20 p-3">
+            <div className="rounded-lg bg-[#080c16] border border-green-500/20 p-3">
               <div className="flex items-center gap-2 mb-1.5">
                 <div className="w-3 h-3 rounded-full bg-green-500" />
                 <span className="font-medium text-green-400 text-sm">Resource</span>
               </div>
               <p className="text-xs text-gray-500">Things of value — tools, protocols, ideas, proposals. The building blocks that persist beyond the event.</p>
             </div>
-            <div className="rounded-lg bg-[#0f0f0f] border border-amber-500/20 p-3">
+            <div className="rounded-lg bg-[#080c16] border border-amber-500/20 p-3">
               <div className="flex items-center gap-2 mb-1.5">
                 <div className="w-3 h-3 rounded-full bg-amber-500" />
                 <span className="font-medium text-amber-400 text-sm">Event</span>
               </div>
               <p className="text-xs text-gray-500">Things that happen — sessions, workshops, discussions, decisions. Events transform resources and connect agents.</p>
             </div>
-            <div className="rounded-lg bg-[#0f0f0f] border border-blue-500/20 p-3">
+            <div className="rounded-lg bg-[#080c16] border border-blue-500/20 p-3">
               <div className="flex items-center gap-2 mb-1.5">
                 <div className="w-3 h-3 rounded-full bg-blue-500" />
                 <span className="font-medium text-blue-400 text-sm">Agent</span>
@@ -416,8 +416,8 @@ export default function Dashboard() {
       </Card>
 
       {/* Live Indicator */}
-      <div className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#1a1a1a] border border-gray-800 rounded-full px-4 py-2">
-        <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-pulse"></div>
+      <div className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#0a101d] border border-gray-800 rounded-full px-4 py-2">
+        <div className="w-2 h-2 rounded-full bg-[#a6ed2a] animate-pulse"></div>
         <span className="text-sm text-gray-400">LIVE</span>
       </div>
     </div>

@@ -167,7 +167,7 @@ export default function ApiDocsPage() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <BookOpen className="w-8 h-8 text-[#c3fd50]" />
+          <BookOpen className="w-8 h-8 text-[#a6ed2a]" />
           <h1 className="text-3xl font-bold">API Documentation</h1>
         </div>
         <p className="text-gray-400">
@@ -181,9 +181,9 @@ export default function ApiDocsPage() {
         </CardHeader>
         <CardBody>
           <p className="text-sm text-gray-300 mb-2">
-            Include your API key in the <code className="bg-[#0f0f0f] px-2 py-0.5 rounded text-[#c3fd50]">Authorization</code> header:
+            Include your API key in the <code className="bg-[#080c16] px-2 py-0.5 rounded text-[#a6ed2a]">Authorization</code> header:
           </p>
-          <pre className="bg-[#0f0f0f] p-3 rounded text-xs text-gray-300 overflow-x-auto">
+          <pre className="bg-[#080c16] p-3 rounded text-xs text-gray-300 overflow-x-auto">
             Authorization: Bearer cid_live_your_api_key_here
           </pre>
         </CardBody>
@@ -192,7 +192,7 @@ export default function ApiDocsPage() {
       <div className="space-y-8">
         {endpoints.map((category) => (
           <div key={category.category}>
-            <h2 className="text-2xl font-bold mb-4 text-[#c3fd50]">{category.category}</h2>
+            <h2 className="text-2xl font-bold mb-4 text-[#a6ed2a]">{category.category}</h2>
             <div className="space-y-4">
               {category.items.map((endpoint, i) => (
                 <Card key={i}>
@@ -215,7 +215,7 @@ export default function ApiDocsPage() {
                     {'params' in endpoint && endpoint.params && (
                       <div className="mb-4">
                         <h4 className="text-xs font-bold text-gray-500 uppercase mb-2">Query Parameters</h4>
-                        <pre className="bg-[#0f0f0f] p-3 rounded text-xs text-gray-300 overflow-x-auto">
+                        <pre className="bg-[#080c16] p-3 rounded text-xs text-gray-300 overflow-x-auto">
                           {JSON.stringify(endpoint.params, null, 2)}
                         </pre>
                       </div>
@@ -223,7 +223,7 @@ export default function ApiDocsPage() {
                     {'request' in endpoint && endpoint.request && (
                       <div className="mb-4">
                         <h4 className="text-xs font-bold text-gray-500 uppercase mb-2">Request Body</h4>
-                        <pre className="bg-[#0f0f0f] p-3 rounded text-xs text-gray-300 overflow-x-auto">
+                        <pre className="bg-[#080c16] p-3 rounded text-xs text-gray-300 overflow-x-auto">
                           {JSON.stringify(endpoint.request, null, 2)}
                         </pre>
                       </div>
@@ -231,7 +231,7 @@ export default function ApiDocsPage() {
                     {'response' in endpoint && endpoint.response && (
                       <div>
                         <h4 className="text-xs font-bold text-gray-500 uppercase mb-2">Response</h4>
-                        <pre className="bg-[#0f0f0f] p-3 rounded text-xs text-gray-300 overflow-x-auto">
+                        <pre className="bg-[#080c16] p-3 rounded text-xs text-gray-300 overflow-x-auto">
                           {JSON.stringify(endpoint.response, null, 2)}
                         </pre>
                       </div>
@@ -247,7 +247,7 @@ export default function ApiDocsPage() {
       <Card className="mt-8">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Code className="w-5 h-5 text-[#c3fd50]" />
+            <Code className="w-5 h-5 text-[#a6ed2a]" />
             <h2 className="text-lg font-bold">Rate Limits</h2>
           </div>
         </CardHeader>
@@ -256,8 +256,8 @@ export default function ApiDocsPage() {
             Standard: <strong className="text-white">100 requests/minute</strong>
           </p>
           <p className="text-sm text-gray-300 mt-1">
-            Response headers include <code className="bg-[#0f0f0f] px-2 py-0.5 rounded text-[#c3fd50]">X-RateLimit-Remaining</code> and{' '}
-            <code className="bg-[#0f0f0f] px-2 py-0.5 rounded text-[#c3fd50]">X-RateLimit-Reset</code>.
+            Response headers include <code className="bg-[#080c16] px-2 py-0.5 rounded text-[#a6ed2a]">X-RateLimit-Remaining</code> and{' '}
+            <code className="bg-[#080c16] px-2 py-0.5 rounded text-[#a6ed2a]">X-RateLimit-Reset</code>.
           </p>
         </CardBody>
       </Card>

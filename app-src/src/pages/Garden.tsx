@@ -47,9 +47,9 @@ export function Garden() {
             onChange={e => setSearch(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && doSearch()}
             placeholder="Search artifacts..."
-            className="flex-1 bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50]"
+            className="flex-1 bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a]"
           />
-          <button onClick={doSearch} className="bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] px-4 py-2 rounded-lg transition-colors">
+          <button onClick={doSearch} className="bg-[#a6ed2a] text-[#080c16] hover:bg-[#b8f247] px-4 py-2 rounded-lg transition-colors">
             Search
           </button>
         </div>
@@ -57,7 +57,7 @@ export function Garden() {
           <select
             value={typeFilter}
             onChange={e => setTypeFilter(e.target.value as ArtifactType | '')}
-            className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-white"
+            className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-sm text-white"
           >
             <option value="">All types</option>
             {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
@@ -65,7 +65,7 @@ export function Garden() {
           <select
             value={stateFilter}
             onChange={e => setStateFilter(e.target.value as ArtifactState | '')}
-            className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-white"
+            className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-sm text-white"
           >
             <option value="">All states</option>
             {Object.entries(STATE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
@@ -88,7 +88,7 @@ export function Garden() {
             <Link
               key={a.id}
               to={`/artifact/${a.id}`}
-              className="block bg-[#1a1a1a] border border-[#262626] rounded-xl p-4 hover:border-[#c3fd50] transition-colors group"
+              className="block bg-[#0a101d] border border-[#1d2839] rounded-xl p-4 hover:border-[#a6ed2a] transition-colors group"
             >
               <div className="flex items-center gap-2 mb-2">
                 <span
@@ -98,7 +98,7 @@ export function Garden() {
                 <span className="text-xs uppercase tracking-wider text-gray-400">{a.type}</span>
                 <span className="ml-auto text-xs text-gray-500">{STATE_LABELS[a.state]}</span>
               </div>
-              <h3 className="font-semibold text-white group-hover:text-[#c3fd50] transition-colors mb-1">
+              <h3 className="font-semibold text-white group-hover:text-[#a6ed2a] transition-colors mb-1">
                 {a.title}
               </h3>
               {a.summary && (

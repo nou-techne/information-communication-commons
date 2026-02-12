@@ -71,8 +71,8 @@ export function CoordinateButton({ artifactId, participantId, compact = false }:
         disabled={!participantId || loading}
         className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full transition-colors ${
           interested
-            ? 'bg-[#c3fd50]/20 text-[#c3fd50] border border-[#c3fd50]/30'
-            : 'bg-[#262626] text-gray-400 hover:text-[#c3fd50] hover:bg-[#c3fd50]/10'
+            ? 'bg-[#a6ed2a]/20 text-[#a6ed2a] border border-[#a6ed2a]/30'
+            : 'bg-[#1d2839] text-gray-400 hover:text-[#a6ed2a] hover:bg-[#a6ed2a]/10'
         } ${!participantId ? 'opacity-50 cursor-not-allowed' : ''}`}
         title={participantId ? (interested ? 'Remove coordination interest' : 'I want to coordinate on this') : 'Sign in to coordinate'}
       >
@@ -88,14 +88,14 @@ export function CoordinateButton({ artifactId, participantId, compact = false }:
       disabled={!participantId || loading}
       className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm ${
         interested
-          ? 'bg-[#c3fd50]/20 text-[#c3fd50] border border-[#c3fd50]/30'
-          : 'bg-[#262626] text-gray-300 hover:text-[#c3fd50] hover:bg-[#c3fd50]/10'
+          ? 'bg-[#a6ed2a]/20 text-[#a6ed2a] border border-[#a6ed2a]/30'
+          : 'bg-[#1d2839] text-gray-300 hover:text-[#a6ed2a] hover:bg-[#a6ed2a]/10'
       } ${!participantId ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <Handshake className="w-4 h-4" />
       <span>{interested ? 'Coordinating' : 'Coordinate'}</span>
       {count > 0 && (
-        <span className="px-1.5 py-0.5 rounded-full bg-[#262626] text-xs">{count}</span>
+        <span className="px-1.5 py-0.5 rounded-full bg-[#1d2839] text-xs">{count}</span>
       )}
     </button>
   )

@@ -137,7 +137,7 @@ export function PeerRegistry({ peers, onAddPeer, onRemovePeer, onSyncPeer }: Pee
                         href={peer.endpoint}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-500 hover:text-[#c3fd50]"
+                        className="text-gray-500 hover:text-[#a6ed2a]"
                       >
                         <ExternalLink className="w-3 h-3" />
                       </a>
@@ -163,7 +163,7 @@ export function PeerRegistry({ peers, onAddPeer, onRemovePeer, onSyncPeer }: Pee
                       {peer.capabilities.map(cap => (
                         <span
                           key={cap}
-                          className="px-2 py-0.5 text-xs rounded bg-[#1a1a1a] text-gray-400 border border-[#262626]"
+                          className="px-2 py-0.5 text-xs rounded bg-[#0a101d] text-gray-400 border border-[#1d2839]"
                         >
                           {cap}
                         </span>
@@ -176,7 +176,7 @@ export function PeerRegistry({ peers, onAddPeer, onRemovePeer, onSyncPeer }: Pee
                     {onSyncPeer && (
                       <button
                         onClick={() => onSyncPeer(peer.id)}
-                        className="text-gray-400 hover:text-[#c3fd50] px-2 py-1 text-sm"
+                        className="text-gray-400 hover:text-[#a6ed2a] px-2 py-1 text-sm"
                         disabled={peer.status === 'offline'}
                       >
                         Sync

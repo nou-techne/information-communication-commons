@@ -329,7 +329,7 @@ export function ThreadView() {
         <Link to={`/channels/${slug}`} className="text-gray-400 hover:text-white"><ArrowLeft className="w-5 h-5" /></Link>
         <div className="flex-1">
           <h1 className="text-lg font-bold">{thread.title}</h1>
-          <Link to={`/channels/${slug}`} className="text-xs text-gray-500 hover:text-[#c3fd50]">#{channel.name}</Link>
+          <Link to={`/channels/${slug}`} className="text-xs text-gray-500 hover:text-[#a6ed2a]">#{channel.name}</Link>
         </div>
         {session && (
           <div className="flex gap-2">
@@ -388,7 +388,7 @@ export function ThreadView() {
         <div className="mb-4 flex-shrink-0">
           <div className="flex flex-wrap gap-2 items-center">
             {tags.map(tag => (
-              <div key={tag.id} className="flex items-center gap-1 bg-[#1a1a1a] border border-[#262626] rounded-md px-2 py-1 text-xs">
+              <div key={tag.id} className="flex items-center gap-1 bg-[#0a101d] border border-[#1d2839] rounded-md px-2 py-1 text-xs">
                 <span className="text-gray-400">{tag.tag_value}</span>
                 {session && tag.created_by === session.user.id && (
                   <button onClick={() => removeTag(tag.id)} className="text-gray-600 hover:text-red-400">
@@ -402,7 +402,7 @@ export function ThreadView() {
                 <select
                   value={newTagType}
                   onChange={e => setNewTagType(e.target.value as ThreadTag['tag_type'])}
-                  className="bg-[#0f0f0f] border border-[#262626] rounded-md px-2 py-1 text-xs text-white"
+                  className="bg-[#080c16] border border-[#1d2839] rounded-md px-2 py-1 text-xs text-white"
                 >
                   <option value="dimension">Dimension</option>
                   <option value="topic">Topic</option>
@@ -414,11 +414,11 @@ export function ThreadView() {
                   onChange={e => setNewTagValue(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && addTag(newTagType, newTagValue)}
                   placeholder="Tag value..."
-                  className="bg-[#0f0f0f] border border-[#262626] rounded-md px-2 py-1 text-xs text-white placeholder-gray-600"
+                  className="bg-[#080c16] border border-[#1d2839] rounded-md px-2 py-1 text-xs text-white placeholder-gray-600"
                 />
                 <button
                   onClick={() => addTag(newTagType, newTagValue)}
-                  className="bg-[#c3fd50] text-[#0f0f0f] rounded-md p-1"
+                  className="bg-[#a6ed2a] text-[#080c16] rounded-md p-1"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -426,14 +426,14 @@ export function ThreadView() {
             )}
           </div>
           {showTagAdd && suggestedTags.length > 0 && (
-            <div className="mt-2 pt-2 border-t border-[#262626]">
+            <div className="mt-2 pt-2 border-t border-[#1d2839]">
               <div className="text-xs text-gray-500 mb-1">Suggested:</div>
               <div className="flex flex-wrap gap-1">
                 {suggestedTags.slice(0, 5).map((tag, i) => (
                   <button
                     key={i}
                     onClick={() => addTag(tag.tag_type, tag.tag_value)}
-                    className="text-xs px-2 py-1 rounded-md bg-[#0f0f0f] text-gray-400 border border-[#262626] hover:border-[#c3fd50] hover:text-white transition-colors"
+                    className="text-xs px-2 py-1 rounded-md bg-[#080c16] text-gray-400 border border-[#1d2839] hover:border-[#a6ed2a] hover:text-white transition-colors"
                   >
                     {tag.tag_value}
                   </button>
@@ -459,15 +459,15 @@ export function ThreadView() {
                 onMouseLeave={() => setActiveReactionMsg(null)}
               >
                 {isSystem ? (
-                  <div className="inline-block bg-[#262626] rounded-lg px-4 py-2 text-xs text-gray-400 italic">
+                  <div className="inline-block bg-[#1d2839] rounded-lg px-4 py-2 text-xs text-gray-400 italic">
                     {msg.content}
                   </div>
                 ) : msg.hidden ? (
-                  <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2 opacity-50">
+                  <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-2 opacity-50">
                     <span className="text-xs text-gray-500 italic">Message hidden by moderator</span>
                   </div>
                 ) : (
-                  <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3">
+                  <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-3">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm font-medium text-white">
                         {msg.author_id ? msg.author_id.slice(0, 8) : 'Anonymous'}
@@ -514,8 +514,8 @@ export function ThreadView() {
                               onClick={() => toggleReaction(msg.id, emoji)}
                               className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border transition-colors ${
                                 hasOwn
-                                  ? 'border-[#c3fd50]/40 bg-[#c3fd50]/10 text-[#c3fd50]'
-                                  : 'border-[#262626] bg-[#262626]/50 text-gray-400 hover:border-gray-500'
+                                  ? 'border-[#a6ed2a]/40 bg-[#a6ed2a]/10 text-[#a6ed2a]'
+                                  : 'border-[#1d2839] bg-[#1d2839]/50 text-gray-400 hover:border-gray-500'
                               }`}
                             >
                               <Icon className="w-3 h-3" />
@@ -528,7 +528,7 @@ export function ThreadView() {
 
                     {/* Reaction picker */}
                     {activeReactionMsg === msg.id && (
-                      <div className="flex gap-1 mt-2 bg-[#262626] rounded-lg p-1.5 w-fit">
+                      <div className="flex gap-1 mt-2 bg-[#1d2839] rounded-lg p-1.5 w-fit">
                         {REACTION_EMOJIS.map(({ emoji, icon: Icon, label }) => (
                           <button
                             key={emoji}
@@ -558,19 +558,19 @@ export function ThreadView() {
             onChange={e => setNewMessage(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendMessage())}
             placeholder="Type a message..."
-            className="flex-1 bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] text-sm"
+            className="flex-1 bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a] text-sm"
           />
           <button
             onClick={sendMessage}
             disabled={!newMessage.trim() || sending}
-            className="bg-[#c3fd50] text-[#0f0f0f] px-4 py-2.5 rounded-lg hover:bg-[#d4fe80] transition-colors disabled:opacity-50"
+            className="bg-[#a6ed2a] text-[#080c16] px-4 py-2.5 rounded-lg hover:bg-[#b8f247] transition-colors disabled:opacity-50"
           >
             <Send className="w-4 h-4" />
           </button>
         </div>
       ) : (
         <div className="text-center py-3 text-sm text-gray-500">
-          <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link> to send messages
+          <Link to="/auth" className="text-[#a6ed2a] hover:text-white">Sign in</Link> to send messages
         </div>
       )}
       {/* Resolve Dialog */}

@@ -84,7 +84,7 @@ export function SessionDetail() {
     return (
       <div className="text-center py-12">
         <p className="text-gray-400">Session not found</p>
-        <Link to="/" className="text-[#c3fd50] hover:underline mt-4 inline-block">
+        <Link to="/" className="text-[#a6ed2a] hover:underline mt-4 inline-block">
           Return to Explore
         </Link>
       </div>
@@ -112,12 +112,12 @@ export function SessionDetail() {
             </div>
           )}
           {session.track && (
-            <div className="px-2 py-1 bg-[#262626] rounded text-xs">
+            <div className="px-2 py-1 bg-[#1d2839] rounded text-xs">
               {session.track}
             </div>
           )}
           {session.session_type && (
-            <div className="px-2 py-1 bg-[#262626] rounded text-xs capitalize">
+            <div className="px-2 py-1 bg-[#1d2839] rounded text-xs capitalize">
               {session.session_type}
             </div>
           )}
@@ -125,20 +125,20 @@ export function SessionDetail() {
       </div>
 
       {session.description && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4 mb-6">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 mb-6">
           <p className="text-gray-300 whitespace-pre-wrap">{session.description}</p>
         </div>
       )}
 
       {session.speakers && session.speakers.length > 0 && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-4 mb-6">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 mb-6">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="w-4 h-4 text-[#c3fd50]" />
+            <Users className="w-4 h-4 text-[#a6ed2a]" />
             <h2 className="font-medium">Speakers</h2>
           </div>
           <div className="flex flex-wrap gap-2">
             {session.speakers.map((speaker, i) => (
-              <span key={i} className="px-2 py-1 bg-[#262626] rounded text-sm text-gray-300">
+              <span key={i} className="px-2 py-1 bg-[#1d2839] rounded text-sm text-gray-300">
                 {speaker}
               </span>
             ))}
@@ -149,7 +149,7 @@ export function SessionDetail() {
       <div className="mb-6">
         <Link
           to={`/contribute?session=${id}`}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#c3fd50] text-[#0f0f0f] rounded-lg hover:bg-[#d4fe80] transition-colors font-medium"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] transition-colors font-medium"
         >
           <PenLine className="w-4 h-4" />
           Contribute to this session
@@ -159,7 +159,7 @@ export function SessionDetail() {
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <GitBranch className="w-5 h-5 text-[#c3fd50]" />
+            <GitBranch className="w-5 h-5 text-[#a6ed2a]" />
             <h2 className="font-bold">Artifacts ({artifacts.length})</h2>
           </div>
           {artifacts.length === 0 ? (
@@ -170,12 +170,12 @@ export function SessionDetail() {
                 <Link
                   key={a.id}
                   to={`/artifact/${a.id}`}
-                  className="block bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors"
+                  className="block bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors"
                 >
                   <div className="font-medium text-sm mb-1">{a.title}</div>
                   <div className="flex gap-2 text-xs">
-                    <span className="px-2 py-0.5 bg-[#262626] rounded">{a.type}</span>
-                    <span className="px-2 py-0.5 bg-[#262626] rounded">{a.rea_role}</span>
+                    <span className="px-2 py-0.5 bg-[#1d2839] rounded">{a.type}</span>
+                    <span className="px-2 py-0.5 bg-[#1d2839] rounded">{a.rea_role}</span>
                   </div>
                 </Link>
               ))}
@@ -185,7 +185,7 @@ export function SessionDetail() {
 
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <FileText className="w-5 h-5 text-[#c3fd50]" />
+            <FileText className="w-5 h-5 text-[#a6ed2a]" />
             <h2 className="font-bold">Contributions ({contributions.length})</h2>
           </div>
           {contributions.length === 0 ? (
@@ -196,7 +196,7 @@ export function SessionDetail() {
                 <Link
                   key={c.id}
                   to={`/contribution/${c.id}`}
-                  className="block bg-[#1a1a1a] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors"
+                  className="block bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors"
                 >
                   <p className="text-sm text-gray-300 line-clamp-2 mb-2">
                     {c.content.substring(0, 150)}...
@@ -217,7 +217,7 @@ export function SessionDetail() {
       {participants.length > 0 && (
         <div className="mt-6">
           <div className="flex items-center gap-2 mb-3">
-            <Users className="w-5 h-5 text-[#c3fd50]" />
+            <Users className="w-5 h-5 text-[#a6ed2a]" />
             <h2 className="font-bold">Participants ({participants.length})</h2>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -225,7 +225,7 @@ export function SessionDetail() {
               <Link
                 key={p.id}
                 to={`/p/${p.id}`}
-                className="px-3 py-1.5 bg-[#1a1a1a] border border-[#262626] rounded-lg hover:border-[#c3fd50] transition-colors text-sm"
+                className="px-3 py-1.5 bg-[#0a101d] border border-[#1d2839] rounded-lg hover:border-[#a6ed2a] transition-colors text-sm"
               >
                 {p.name}
               </Link>

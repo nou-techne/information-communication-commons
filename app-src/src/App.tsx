@@ -63,7 +63,7 @@ function Nav() {
   ]
 
   return (
-    <nav className="bg-[#0f0f0f] border-b border-[#262626] px-4 py-3">
+    <nav className="bg-[#080c16] border-b border-[#1d2839] px-4 py-3">
       <div className="max-w-6xl mx-auto">
         {/* Desktop nav */}
         <div className="hidden md:flex items-center justify-between relative">
@@ -78,8 +78,8 @@ function Nav() {
                 to={l.to}
                 className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                   (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
-                    ? 'bg-[#262626] text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                    ? 'bg-[#1d2839] text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
                 }`}
               >
                 {l.label}
@@ -98,7 +98,7 @@ function Nav() {
                 </button>
               </>
             ) : (
-              <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link>
+              <Link to="/auth" className="text-[#a6ed2a] hover:text-white">Sign in</Link>
             )}
           </div>
         </div>
@@ -124,7 +124,7 @@ function Nav() {
           </div>
           
           {mobileMenuOpen && (
-            <div className="mt-3 pt-3 border-t border-[#262626] space-y-1">
+            <div className="mt-3 pt-3 border-t border-[#1d2839] space-y-1">
               {links.map(l => (
                 <Link
                   key={l.to}
@@ -132,8 +132,8 @@ function Nav() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                     location.pathname === l.to
-                      ? 'bg-[#262626] text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                      ? 'bg-[#1d2839] text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
                   }`}
                 >
                   {l.label}
@@ -144,13 +144,13 @@ function Nav() {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                   location.pathname === '/search'
-                    ? 'bg-[#262626] text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                    ? 'bg-[#1d2839] text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
                 }`}
               >
                 Search
               </Link>
-              <div className="pt-2 border-t border-[#262626]">
+              <div className="pt-2 border-t border-[#1d2839]">
                 {session ? (
                   <>
                     <Link
@@ -158,8 +158,8 @@ function Nav() {
                       onClick={() => setMobileMenuOpen(false)}
                       className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                         location.pathname === '/profile'
-                          ? 'bg-[#262626] text-white'
-                          : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                          ? 'bg-[#1d2839] text-white'
+                          : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
                       }`}
                     >
                       Profile
@@ -175,7 +175,7 @@ function Nav() {
                   <Link
                     to="/auth"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-sm text-[#c3fd50] hover:text-white"
+                    className="block px-3 py-2 text-sm text-[#a6ed2a] hover:text-white"
                   >
                     Sign in
                   </Link>
@@ -194,7 +194,7 @@ export default function App() {
     <BrowserRouter basename="/app">
       <ToastProvider>
       <ConvergenceProvider>
-        <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col">
+        <div className="min-h-screen bg-[#080c16] text-white flex flex-col">
           <Nav />
           <main className="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
           <ErrorBoundary>

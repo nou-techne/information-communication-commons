@@ -42,12 +42,12 @@ export function NodeDetailSidebar({ node, onClose, onNodeClick, onThreadClick }:
   }
 
   return (
-    <div className="fixed top-0 right-0 h-full w-96 bg-[#0a0a0a] border-l border-[#262626] shadow-2xl overflow-y-auto z-50">
-      <div className="sticky top-0 bg-[#0a0a0a] border-b border-[#262626] p-4 flex items-center justify-between">
+    <div className="fixed top-0 right-0 h-full w-96 bg-[#060a14] border-l border-[#1d2839] shadow-2xl overflow-y-auto z-50">
+      <div className="sticky top-0 bg-[#060a14] border-b border-[#1d2839] p-4 flex items-center justify-between">
         <h2 className="font-bold text-lg">Node Details</h2>
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-white p-1 rounded hover:bg-[#1a1a1a]"
+          className="text-gray-400 hover:text-white p-1 rounded hover:bg-[#0a101d]"
         >
           <X className="w-5 h-5" />
         </button>
@@ -97,7 +97,7 @@ export function NodeDetailSidebar({ node, onClose, onNodeClick, onThreadClick }:
               {allDimensions.map(dim => (
                 <span
                   key={dim}
-                  className="px-2 py-0.5 text-xs rounded-full bg-[#1a1a1a] text-gray-300 border border-[#262626]"
+                  className="px-2 py-0.5 text-xs rounded-full bg-[#0a101d] text-gray-300 border border-[#1d2839]"
                 >
                   {dim}
                 </span>
@@ -117,7 +117,7 @@ export function NodeDetailSidebar({ node, onClose, onNodeClick, onThreadClick }:
               {allTags.map(tag => (
                 <span
                   key={tag}
-                  className="px-2 py-0.5 text-xs rounded bg-[#c3fd50]/10 text-[#c3fd50] border border-[#c3fd50]/20"
+                  className="px-2 py-0.5 text-xs rounded bg-[#a6ed2a]/10 text-[#a6ed2a] border border-[#a6ed2a]/20"
                 >
                   {tag}
                 </span>
@@ -139,7 +139,7 @@ export function NodeDetailSidebar({ node, onClose, onNodeClick, onThreadClick }:
                   <button
                     key={`${conn.target}-${i}`}
                     onClick={() => onNodeClick?.(conn.target)}
-                    className="w-full text-left p-2 rounded bg-[#1a1a1a] hover:bg-[#262626] border border-[#262626] hover:border-[#c3fd50]/30 transition-colors group"
+                    className="w-full text-left p-2 rounded bg-[#0a101d] hover:bg-[#1d2839] border border-[#1d2839] hover:border-[#a6ed2a]/30 transition-colors group"
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <span
@@ -174,7 +174,7 @@ export function NodeDetailSidebar({ node, onClose, onNodeClick, onThreadClick }:
                   <button
                     key={`${conn.source}-${i}`}
                     onClick={() => onNodeClick?.(conn.source)}
-                    className="w-full text-left p-2 rounded bg-[#1a1a1a] hover:bg-[#262626] border border-[#262626] hover:border-[#c3fd50]/30 transition-colors group"
+                    className="w-full text-left p-2 rounded bg-[#0a101d] hover:bg-[#1d2839] border border-[#1d2839] hover:border-[#a6ed2a]/30 transition-colors group"
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-gray-600">←</span>
@@ -207,7 +207,7 @@ export function NodeDetailSidebar({ node, onClose, onNodeClick, onThreadClick }:
                 <button
                   key={threadId}
                   onClick={() => onThreadClick?.(threadId)}
-                  className="w-full text-left p-2 rounded bg-[#1a1a1a] hover:bg-[#262626] border border-[#262626] hover:border-[#c3fd50]/30 transition-colors text-sm text-gray-300 hover:text-white"
+                  className="w-full text-left p-2 rounded bg-[#0a101d] hover:bg-[#1d2839] border border-[#1d2839] hover:border-[#a6ed2a]/30 transition-colors text-sm text-gray-300 hover:text-white"
                 >
                   Thread #{threadId.slice(0, 8)}
                 </button>

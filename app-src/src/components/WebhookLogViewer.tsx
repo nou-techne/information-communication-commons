@@ -55,7 +55,7 @@ export function WebhookLogViewer({ deliveries, onRetry }: WebhookLogViewerProps)
         return (
           <div
             key={delivery.id}
-            className="bg-[#1a1a1a] border border-[#262626] rounded-lg overflow-hidden"
+            className="bg-[#0a101d] border border-[#1d2839] rounded-lg overflow-hidden"
           >
             <div className="flex items-center gap-3 p-4">
               <button
@@ -92,7 +92,7 @@ export function WebhookLogViewer({ deliveries, onRetry }: WebhookLogViewerProps)
               {delivery.status === 'failed' && onRetry && (
                 <button
                   onClick={() => onRetry(delivery.id)}
-                  className="text-gray-400 hover:text-white px-3 py-1.5 rounded border border-[#262626] hover:border-[#c3fd50] transition-colors text-sm"
+                  className="text-gray-400 hover:text-white px-3 py-1.5 rounded border border-[#1d2839] hover:border-[#a6ed2a] transition-colors text-sm"
                 >
                   Retry
                 </button>
@@ -100,7 +100,7 @@ export function WebhookLogViewer({ deliveries, onRetry }: WebhookLogViewerProps)
             </div>
 
             {isExpanded && (
-              <div className="border-t border-[#262626] bg-[#0f0f0f] p-4">
+              <div className="border-t border-[#1d2839] bg-[#080c16] p-4">
                 <div className="mb-3">
                   <div className="text-xs font-bold text-gray-500 uppercase mb-1">Webhook URL</div>
                   <div className="text-xs text-gray-300 font-mono break-all">{delivery.url}</div>

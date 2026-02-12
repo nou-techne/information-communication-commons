@@ -9,7 +9,7 @@ const HLAMT_LABELS: Record<string, { letter: string; name: string; color: string
   'hlamt:e': { letter: 'e/', name: 'Ecology', color: '#4a8c6f' },
   'hlamt:E': { letter: 'e/', name: 'Ecology', color: '#4a8c6f' },
   'hlamt:H': { letter: 'H/', name: 'Human', color: '#c4956a' },
-  'hlamt:L': { letter: 'L/', name: 'Language', color: '#c3fd50' },
+  'hlamt:L': { letter: 'L/', name: 'Language', color: '#a6ed2a' },
   'hlamt:A': { letter: 'A/', name: 'Artifacts', color: '#8bbfff' },
   'hlamt:M': { letter: 'M/', name: 'Methodology', color: '#7ccfb8' },
   'hlamt:T': { letter: 'T/', name: 'Training', color: '#e8927c' },
@@ -124,7 +124,7 @@ export function ArtifactDetail() {
       </nav>
 
       {/* Main artifact card */}
-      <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 mb-6">
+      <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 mb-6">
         {/* Type + REA + State badges */}
         <div className="flex items-center gap-2 mb-4 flex-wrap">
           <span className="w-3 h-3 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[artifact.type] }} />
@@ -149,7 +149,7 @@ export function ArtifactDetail() {
           )}
           <span className="text-xs text-gray-500">{STATE_LABELS[artifact.state]}</span>
           {artifact.created_by_agent && (
-            <span className="text-xs bg-[#262626] text-gray-400 px-2 py-0.5 rounded">AI-extracted</span>
+            <span className="text-xs bg-[#1d2839] text-gray-400 px-2 py-0.5 rounded">AI-extracted</span>
           )}
           <span className="ml-auto text-xs text-gray-600">{timeAgo(artifact.created_at)}</span>
         </div>
@@ -165,14 +165,14 @@ export function ArtifactDetail() {
 
         {/* Body */}
         {artifact.body && (
-          <div className="text-sm text-gray-400 mb-4 whitespace-pre-wrap leading-relaxed border-t border-[#262626] pt-4">
+          <div className="text-sm text-gray-400 mb-4 whitespace-pre-wrap leading-relaxed border-t border-[#1d2839] pt-4">
             {artifact.body}
           </div>
         )}
 
         {/* e/H-LAM/T Tags */}
         {hlamtTags.length > 0 && (
-          <div className="mb-4 pb-4 border-b border-[#262626]">
+          <div className="mb-4 pb-4 border-b border-[#1d2839]">
             <div className="text-xs text-gray-500 mb-2">Dimensions</div>
             <div className="flex flex-wrap gap-2">
               {hlamtTags.map(t => {
@@ -197,18 +197,18 @@ export function ArtifactDetail() {
             <div className="text-xs text-gray-500 mb-2">Tags</div>
             <div className="flex flex-wrap gap-2">
               {tags.map(t => (
-                <span key={t} className="bg-[#262626] text-gray-300 text-xs px-2 py-1 rounded">{t}</span>
+                <span key={t} className="bg-[#1d2839] text-gray-300 text-xs px-2 py-1 rounded">{t}</span>
               ))}
             </div>
           </div>
         )}
 
         {/* Metadata */}
-        <div className="text-xs text-gray-600 pt-4 border-t border-[#262626] space-y-1">
+        <div className="text-xs text-gray-600 pt-4 border-t border-[#1d2839] space-y-1">
           {steward && (
             <div>
               <span className="text-gray-500">Steward:</span>{' '}
-              <Link to={`/p/${steward.id}`} className="text-gray-400 hover:text-[#c3fd50] transition-colors">{steward.name}</Link>
+              <Link to={`/p/${steward.id}`} className="text-gray-400 hover:text-[#a6ed2a] transition-colors">{steward.name}</Link>
             </div>
           )}
           <div>
@@ -219,7 +219,7 @@ export function ArtifactDetail() {
 
       {/* Source Contribution */}
       {sourceContribution && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 mb-6">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 mb-6">
           <h2 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
             Source Contribution
@@ -236,7 +236,7 @@ export function ArtifactDetail() {
 
       {/* Related Artifacts */}
       {relationships.length > 0 && (
-        <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6">
+        <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6">
           <h2 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
             <Link2 className="w-4 h-4" />
             Related Artifacts
@@ -249,14 +249,14 @@ export function ArtifactDetail() {
                 <Link
                   key={rel.id}
                   to={`/artifact/${related.id}`}
-                  className="block bg-[#0f0f0f] border border-[#262626] rounded-lg p-3 hover:border-[#c3fd50] transition-colors group"
+                  className="block bg-[#080c16] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors group"
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ARTIFACT_COLORS[related.type] }} />
                     <span className="text-xs uppercase text-gray-500">{related.type}</span>
                     <span className="text-xs text-gray-600">· {rel.type.replace(/_/g, ' ')}</span>
                   </div>
-                  <div className="text-sm text-white group-hover:text-[#c3fd50] transition-colors font-medium">
+                  <div className="text-sm text-white group-hover:text-[#a6ed2a] transition-colors font-medium">
                     {related.title}
                   </div>
                   {related.summary && (

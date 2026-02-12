@@ -21,7 +21,7 @@ export function ActivityHeatmap({
   weeks = 26,
   cellSize = 12,
   cellGap = 3,
-  colorScale = ['#0a0a0a', '#1a4d1a', '#2d7a2d', '#3fa63f', '#c3fd50'],
+  colorScale = ['#060a14', '#1a4d1a', '#2d7a2d', '#3fa63f', '#a6ed2a'],
   showLabels = true,
 }: ActivityHeatmapProps) {
   const [hoveredCell, setHoveredCell] = useState<{ date: string; count: number } | null>(null)
@@ -107,7 +107,7 @@ export function ActivityHeatmap({
             height={cellSize}
             rx="2"
             fill={getCellColor(cell.count)}
-            stroke="#0a0a0a"
+            stroke="#060a14"
             strokeWidth="1"
             className="cursor-pointer transition-opacity hover:opacity-80"
             onMouseEnter={e => {
@@ -135,7 +135,7 @@ export function ActivityHeatmap({
                 height={cellSize}
                 rx="2"
                 fill={color}
-                stroke="#0a0a0a"
+                stroke="#060a14"
                 strokeWidth="1"
               />
             ))}

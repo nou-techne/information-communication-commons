@@ -45,13 +45,13 @@ export function KeyboardShortcutsModal() {
       onClick={() => setIsOpen(false)}
     >
       <div
-        className="bg-[#1a1a1a] border border-[#262626] rounded-xl p-6 w-full max-w-2xl"
+        className="bg-[#0a101d] border border-[#1d2839] rounded-xl p-6 w-full max-w-2xl"
         onClick={e => e.stopPropagation()}
         style={{ borderColor: colors.border }}
       >
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <Keyboard className="w-6 h-6 text-[#c3fd50]" />
+            <Keyboard className="w-6 h-6 text-[#a6ed2a]" />
             <h2 className="text-xl font-bold">Keyboard Shortcuts</h2>
           </div>
           <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white">
@@ -84,7 +84,7 @@ export function KeyboardShortcutsModal() {
 
         <div className="mt-6 pt-4 border-t" style={{ borderColor: colors.border }}>
           <p className="text-xs text-gray-500 text-center">
-            Press <kbd className="px-1.5 py-0.5 text-xs font-mono rounded border border-gray-700 bg-[#0f0f0f]">?</kbd> anytime to show this help
+            Press <kbd className="px-1.5 py-0.5 text-xs font-mono rounded border border-gray-700 bg-[#080c16]">?</kbd> anytime to show this help
           </p>
         </div>
       </div>

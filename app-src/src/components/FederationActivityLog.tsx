@@ -41,7 +41,7 @@ export function FederationActivityLog({ events, maxHeight = '400px' }: Federatio
       case 'sync-completed':
         return <CheckCircle className="w-4 h-4 text-green-400" />
       case 'items-sent':
-        return <Upload className="w-4 h-4 text-[#c3fd50]" />
+        return <Upload className="w-4 h-4 text-[#a6ed2a]" />
       case 'items-received':
         return <Download className="w-4 h-4 text-blue-400" />
       case 'conflict-resolved':
@@ -58,7 +58,7 @@ export function FederationActivityLog({ events, maxHeight = '400px' }: Federatio
       case 'sync-completed':
         return 'border-green-500/30'
       case 'items-sent':
-        return 'border-[#c3fd50]/30'
+        return 'border-[#a6ed2a]/30'
       case 'items-received':
         return 'border-blue-500/30'
       case 'conflict-resolved':
@@ -105,7 +105,7 @@ export function FederationActivityLog({ events, maxHeight = '400px' }: Federatio
           <select
             value={filterType}
             onChange={e => setFilterType(e.target.value as FederationEventType | 'all')}
-            className="bg-[#0f0f0f] border border-[#262626] rounded px-2 py-1 text-xs text-gray-300"
+            className="bg-[#080c16] border border-[#1d2839] rounded px-2 py-1 text-xs text-gray-300"
           >
             {eventTypes.map(({ type, label }) => (
               <option key={type} value={type}>
@@ -128,7 +128,7 @@ export function FederationActivityLog({ events, maxHeight = '400px' }: Federatio
             {filteredEvents.map(event => (
               <div
                 key={event.id}
-                className={`p-3 rounded border-l-2 ${getEventColor(event.type)} bg-[#1a1a1a]`}
+                className={`p-3 rounded border-l-2 ${getEventColor(event.type)} bg-[#0a101d]`}
               >
                 <div className="flex items-start gap-3">
                   <div className="mt-0.5">{getEventIcon(event.type)}</div>

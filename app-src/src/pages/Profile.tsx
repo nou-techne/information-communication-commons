@@ -32,12 +32,12 @@ function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfil
     .slice(0, 2)
 
   return (
-    <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl overflow-hidden mb-6">
+    <div className="bg-[#0a101d] border border-[#1d2839] rounded-xl overflow-hidden mb-6">
       {/* Header with gradient */}
-      <div className="bg-gradient-to-r from-[#c3fd50]/20 via-[#c3fd50]/10 to-transparent px-6 py-5">
+      <div className="bg-gradient-to-r from-[#a6ed2a]/20 via-[#a6ed2a]/10 to-transparent px-6 py-5">
         <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-full bg-[#c3fd50] flex items-center justify-center flex-shrink-0">
-            <span className="text-[#0f0f0f] font-bold text-lg">{initials}</span>
+          <div className="w-14 h-14 rounded-full bg-[#a6ed2a] flex items-center justify-center flex-shrink-0">
+            <span className="text-[#080c16] font-bold text-lg">{initials}</span>
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
@@ -45,7 +45,7 @@ function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfil
               {label && <span className="text-xs text-gray-500">{label}</span>}
             </div>
             {profile.affiliation && (
-              <p className="text-sm text-[#c3fd50] font-medium mt-0.5">{profile.affiliation}</p>
+              <p className="text-sm text-[#a6ed2a] font-medium mt-0.5">{profile.affiliation}</p>
             )}
             {profile.location && (
               <p className="text-xs text-gray-400 mt-0.5">{profile.location}</p>
@@ -62,7 +62,7 @@ function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfil
 
         {/* Background */}
         {profile.background && (
-          <div className="bg-[#0f0f0f] border border-[#262626] rounded-lg p-4">
+          <div className="bg-[#080c16] border border-[#1d2839] rounded-lg p-4">
             <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Background</div>
             <p className="text-sm text-gray-400 leading-relaxed">{profile.background}</p>
           </div>
@@ -71,10 +71,10 @@ function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfil
         {/* Skills — lime rounded pills */}
         {profile.skills && profile.skills.length > 0 && (
           <div>
-            <div className="text-xs text-[#c3fd50] uppercase tracking-wider mb-2 font-semibold">Skills</div>
+            <div className="text-xs text-[#a6ed2a] uppercase tracking-wider mb-2 font-semibold">Skills</div>
             <div className="flex flex-wrap gap-2">
               {profile.skills.map((s, i) => (
-                <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-[#c3fd50]/15 text-[#c3fd50] border border-[#c3fd50]/30 font-medium">{s}</span>
+                <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-[#a6ed2a]/15 text-[#a6ed2a] border border-[#a6ed2a]/30 font-medium">{s}</span>
               ))}
             </div>
           </div>
@@ -160,7 +160,7 @@ function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfil
             <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Dimensional Focus</div>
             <div className="flex flex-wrap gap-2">
               {extracted.hlamt_tags.map((tag: string, i: number) => (
-                <span key={i} className="text-xs px-2.5 py-1 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] font-mono border border-[#c3fd50]/20">
+                <span key={i} className="text-xs px-2.5 py-1 rounded-full bg-[#a6ed2a]/10 text-[#a6ed2a] font-mono border border-[#a6ed2a]/20">
                   {tag}
                 </span>
               ))}
@@ -249,7 +249,7 @@ export function Profile() {
   if (state === 'loading') {
     return (
       <div className="max-w-2xl mx-auto text-center py-16">
-        <div className="w-16 h-16 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-4 animate-pulse">
+        <div className="w-16 h-16 rounded-full bg-[#1d2839] flex items-center justify-center mx-auto mb-4 animate-pulse">
           <User className="w-8 h-8 text-gray-500" />
         </div>
         <p className="text-gray-400">Loading profile...</p>
@@ -260,17 +260,17 @@ export function Profile() {
   if (state === 'extracting') {
     return (
       <div className="max-w-2xl mx-auto text-center py-16">
-        <div className="w-16 h-16 rounded-full bg-[#262626] flex items-center justify-center mx-auto mb-6 animate-pulse">
-          <Zap className="w-8 h-8 text-[#c3fd50]" />
+        <div className="w-16 h-16 rounded-full bg-[#1d2839] flex items-center justify-center mx-auto mb-6 animate-pulse">
+          <Zap className="w-8 h-8 text-[#a6ed2a]" />
         </div>
         <h2 className="text-xl font-bold mb-3">Building your profile...</h2>
         <p className="text-gray-400 max-w-md mx-auto">
           AI is reading your introduction, extracting your name, interests, and dimensional focus.
         </p>
         <div className="mt-6 flex items-center justify-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '300ms' }} />
+          <div className="w-2 h-2 rounded-full bg-[#a6ed2a] animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-2 h-2 rounded-full bg-[#a6ed2a] animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-2 h-2 rounded-full bg-[#a6ed2a] animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
       </div>
     )
@@ -280,8 +280,8 @@ export function Profile() {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="text-center py-8">
-          <div className="w-16 h-16 rounded-full bg-[#c3fd50] flex items-center justify-center mx-auto mb-6">
-            <Check className="w-8 h-8 text-[#0f0f0f]" strokeWidth={3} />
+          <div className="w-16 h-16 rounded-full bg-[#a6ed2a] flex items-center justify-center mx-auto mb-6">
+            <Check className="w-8 h-8 text-[#080c16]" strokeWidth={3} />
           </div>
           <h2 className="text-xl font-bold mb-3">Profile {extracted?.isUpdate ? 'updated' : 'created'}!</h2>
         </div>
@@ -291,13 +291,13 @@ export function Profile() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={() => { setState('idle'); setText(''); }}
-            className="px-6 py-2.5 bg-[#262626] text-white rounded-lg hover:bg-[#333333] transition-colors text-sm"
+            className="px-6 py-2.5 bg-[#1d2839] text-white rounded-lg hover:bg-[#283347] transition-colors text-sm"
           >
             Update profile
           </button>
           <button
             onClick={() => navigate('/contribute')}
-            className="px-6 py-2.5 bg-[#c3fd50] text-[#0f0f0f] rounded-lg hover:bg-[#d4fe80] transition-colors text-sm"
+            className="px-6 py-2.5 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] transition-colors text-sm"
           >
             Start contributing
           </button>
@@ -312,7 +312,7 @@ export function Profile() {
         <>
           <ProfileCard profile={profile} label="Your current profile" />
           <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
-            <PenLine className="w-5 h-5 text-[#c3fd50]" />
+            <PenLine className="w-5 h-5 text-[#a6ed2a]" />
             Update Your Profile
           </h1>
           <p className="text-gray-400 text-sm mb-6">
@@ -322,7 +322,7 @@ export function Profile() {
       ) : (
         <>
           <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
-            <User className="w-5 h-5 text-[#c3fd50]" />
+            <User className="w-5 h-5 text-[#a6ed2a]" />
             Join the Commons
           </h1>
           <p className="text-gray-400 text-sm mb-6">
@@ -342,7 +342,7 @@ export function Profile() {
             }
             rows={8}
             required
-            className="w-full bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#c3fd50] resize-y leading-relaxed text-base"
+            className="w-full bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#a6ed2a] resize-y leading-relaxed text-base"
           />
           <div className="flex justify-between mt-2">
             <span className="text-xs text-gray-600">
@@ -361,7 +361,7 @@ export function Profile() {
         <button
           type="submit"
           disabled={state === 'submitting' || !text.trim()}
-          className="w-full bg-[#c3fd50] text-[#0f0f0f] hover:bg-[#d4fe80] py-3 rounded-lg transition-colors disabled:opacity-50"
+          className="w-full bg-[#a6ed2a] text-[#080c16] hover:bg-[#b8f247] py-3 rounded-lg transition-colors disabled:opacity-50"
         >
           {state === 'submitting' ? 'Saving...' : profile ? 'Update Profile' : 'Create Profile'}
         </button>

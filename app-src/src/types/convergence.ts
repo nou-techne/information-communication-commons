@@ -47,7 +47,7 @@ export const ETH_BOULDER_2026: Convergence = {
   status: 'active',
   metadata: {
     theme: 'Local-First Coordination Infrastructure',
-    colorPrimary: '#c3fd50',
+    colorPrimary: '#a6ed2a',
     colorSecondary: '#2a2a2a',
     website: 'https://ethboulder.commons.id',
   },

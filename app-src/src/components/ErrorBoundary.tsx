@@ -68,8 +68,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default error UI
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-[#0a0a0a]">
-          <div className="max-w-2xl w-full bg-[#1a1a1a] border border-[#262626] rounded-lg p-8">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-[#060a14]">
+          <div className="max-w-2xl w-full bg-[#0a101d] border border-[#1d2839] rounded-lg p-8">
             {/* Error icon and title */}
             <div className="flex items-start gap-4 mb-6">
               <div className="flex-shrink-0 w-12 h-12 rounded-full bg-red-900/20 flex items-center justify-center">
@@ -85,7 +85,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
             {/* Error message */}
             {this.state.error && (
-              <div className="mb-6 p-4 bg-[#0a0a0a] border border-red-900/30 rounded">
+              <div className="mb-6 p-4 bg-[#060a14] border border-red-900/30 rounded">
                 <div className="font-mono text-sm text-red-400">
                   {this.state.error.toString()}
                 </div>
@@ -124,11 +124,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
             {/* Error details (collapsible) */}
             {this.state.showDetails && this.state.errorInfo && (
-              <div className="border-t border-[#262626] pt-6">
+              <div className="border-t border-[#1d2839] pt-6">
                 <h3 className="text-sm font-bold mb-3 text-gray-400">
                   Error Details
                 </h3>
-                <div className="bg-[#0a0a0a] border border-[#262626] rounded p-4 overflow-x-auto">
+                <div className="bg-[#060a14] border border-[#1d2839] rounded p-4 overflow-x-auto">
                   <pre className="text-xs text-gray-400 whitespace-pre-wrap">
                     {this.state.errorInfo.componentStack}
                   </pre>
@@ -139,7 +139,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                     <h3 className="text-sm font-bold mb-3 mt-4 text-gray-400">
                       Stack Trace
                     </h3>
-                    <div className="bg-[#0a0a0a] border border-[#262626] rounded p-4 overflow-x-auto">
+                    <div className="bg-[#060a14] border border-[#1d2839] rounded p-4 overflow-x-auto">
                       <pre className="text-xs text-gray-400 whitespace-pre-wrap">
                         {this.state.error.stack}
                       </pre>
@@ -155,7 +155,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 If this problem persists, please{' '}
                 <a
                   href="mailto:hello@commons.id"
-                  className="text-[#c3fd50] hover:underline"
+                  className="text-[#a6ed2a] hover:underline"
                 >
                   contact support
                 </a>
