@@ -5,6 +5,7 @@ import { Menu, X, Search as SearchIcon } from 'lucide-react'
 import { ConvergenceProvider, useConvergence } from './contexts/ConvergenceContext'
 import { ToastProvider } from './contexts/ToastContext'
 import { ToastContainer } from './components/ui/Toast'
+import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { Explore } from './pages/Explore'
 import { ArtifactDetail } from './pages/ArtifactDetail'
@@ -219,6 +220,7 @@ export default function App() {
       </div>
       </ConvergenceProvider>
       <ToastContainer />
+      <KeyboardShortcutsModal />
       </ToastProvider>
     </BrowserRouter>
   )
