@@ -50,6 +50,7 @@ function RequireAuth({ children, session, loading }: { children: React.ReactNode
 const Graph = lazy(() => import('./pages/Graph').then(m => ({ default: m.Graph })))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Status = lazy(() => import('./pages/Status').then(m => ({ default: m.Status })))
+const Live = lazy(() => import('./pages/Live'))
 
 function Nav() {
   const location = useLocation()
@@ -227,7 +228,8 @@ function AuthGuardedRoutes() {
       <Route path="/contribution/:id" element={<ContributionDetail />} />
       <Route path="/graph" element={<Graph />} />
       <Route path="/coordinate" element={<RequireAuth session={session} loading={authLoading}><Coordinate /></RequireAuth>} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/live" element={<Live />} />
+      <Route path="/dashboard" element={<Navigate to="/live" replace />} />
       <Route path="/search" element={<Search />} />
       <Route path="/p/:id" element={<ParticipantProfile />} />
       <Route path="/session/:id" element={<SessionDetail />} />
@@ -237,7 +239,7 @@ function AuthGuardedRoutes() {
       <Route path="/channels/:slug" element={<RequireAuth session={session} loading={authLoading}><ChannelView /></RequireAuth>} />
       <Route path="/channels/:slug/:threadId" element={<RequireAuth session={session} loading={authLoading}><ThreadView /></RequireAuth>} />
       <Route path="/welcome" element={<Onboard />} />
-      <Route path="/status" element={<Status />} />
+      <Route path="/status" element={<Navigate to="/live" replace />} />
       <Route path="/api-docs" element={<ApiDocsPage />} />
       <Route path="/webhooks" element={<WebhooksPage />} />
       <Route path="/analytics" element={<AnalyticsPage />} />
