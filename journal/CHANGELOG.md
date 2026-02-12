@@ -309,6 +309,45 @@ Format: [Semantic Versioning](https://semver.org/). Each entry includes sprint r
 
 ## [Unreleased]
 
+### Cycle 11: Federation Foundations (Sprints 89-91)
+
+**Sprint 89: Instance Identity Schema** (Schema Architect)
+- Migration `026_instance_identity.sql` for federation registry
+- `instances` table with 4-level trust model (unknown, untrusted, verified, trusted)
+- `instance_metadata` flexible key-value store
+- Functions: `get_or_create_local_instance()`, `update_instance_stats()`
+- Added `instance_id` FK to convergences and artifacts
+- RLS policies for public federation directory
+- Auto-initialization of local instance on deployment
+
+**Sprint 90: Cross-Instance Artifact Format** (Schema Architect)
+- Specification `docs/federation-artifact-format.md` (12 pages)
+- JSON-LD canonical format with Ed25519 signatures
+- SHA-256 content hashing for integrity verification
+- TypeScript serializer/deserializer implementations
+- SQL `export_artifact_federated()` function
+- Security considerations and trust model integration
+
+**Sprint 91: Federation Protocol Design** (Technical Lead)
+- Protocol specification `docs/federation-protocol.md` (15 pages)
+- Instance discovery via DNS TXT + `.well-known/commons`
+- Pull-based artifact synchronization with optional webhooks
+- Deterministic conflict resolution (trust > timestamp > hash)
+- Extended data model: `federated_artifacts`, `federation_sync_log`, `federation_conflicts`
+- Complete API endpoint specs with rate limits
+- Security considerations, DoS prevention, monitoring strategy
+- 4-phase implementation roadmap (Sprints 89-120)
+
+**Strategic Achievement:** Federation foundations complete. Enables decentralized discovery, selective sync, and secure artifact sharing across independent commons.id instances. All specs ready for implementation post-ETHBoulder.
+
+---
+
+### Cycle 7-10: Communication Layer (Sprints 69-88) — DEFERRED
+
+**Status:** All communication features (thread tagging, resolution, security, agent API, quality improvements, rich communication) deferred to post-ETHBoulder (Feb 17+) for platform stability. Depends on messaging foundation (Sprints 57-64).
+
+---
+
 ### ETHBoulder Readiness Roadmap (Sprints 1-16)
 - See ROADMAP_ETHBOULDER_2026-02-11.md
 
