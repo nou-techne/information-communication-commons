@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
-import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, Handshake } from 'lucide-react'
+import { Info, ChevronDown, ChevronLeft, ChevronRight, Inbox, PenLine, Sparkles, GitBranch, Handshake } from 'lucide-react'
 import { ExtractionProgress } from '../components/ExtractionProgress'
 import { useConvergence } from '../contexts/ConvergenceContext'
 
@@ -195,6 +195,8 @@ export function Explore() {
   }
 
   const [showHowItWorks, setShowHowItWorks] = useState(false)
+  const [graphPage, setGraphPage] = useState(0)
+  const GRAPH_PAGE_SIZE = 10
 
   const sorted = sortBy === 'coordination'
     ? [...artifacts].sort((a, b) => (coordCounts[b.id] || 0) - (coordCounts[a.id] || 0))
@@ -347,7 +349,7 @@ export function Explore() {
             <div className="flex gap-2 flex-wrap items-center">
               <select
                 value={dimFilter}
-                onChange={e => setDimFilter(e.target.value)}
+                onChange={e => { setDimFilter(e.target.value); setGraphPage(0); }}
                 className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="">All dimensions</option>
@@ -355,7 +357,7 @@ export function Explore() {
               </select>
               <select
                 value={typeFilter}
-                onChange={e => setTypeFilter(e.target.value as ArtifactType | '')}
+                onChange={e => { setTypeFilter(e.target.value as ArtifactType | ''); setGraphPage(0); }}
                 className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="">All types</option>
@@ -363,7 +365,7 @@ export function Explore() {
               </select>
               <select
                 value={stateFilter}
-                onChange={e => setStateFilter(e.target.value as ArtifactState | '')}
+                onChange={e => { setStateFilter(e.target.value as ArtifactState | ''); setGraphPage(0); }}
                 className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-3 py-1.5 text-xs text-white flex-shrink-0"
               >
                 <option value="">All states</option>
@@ -378,7 +380,7 @@ export function Explore() {
                 <option value="coordination">Sort: Coordination</option>
               </select>
               {(dimFilter || typeFilter || stateFilter || searchResults) && (
-                <button onClick={() => { setDimFilter(''); setTypeFilter(''); setStateFilter(''); setSearch(''); setSearchResults(null); setSortBy('recent'); }} className="text-xs text-gray-400 hover:text-white flex-shrink-0">
+                <button onClick={() => { setDimFilter(''); setTypeFilter(''); setStateFilter(''); setSearch(''); setSearchResults(null); setSortBy('recent'); setGraphPage(0); }} className="text-xs text-gray-400 hover:text-white flex-shrink-0">
                   Clear
                 </button>
               )}
@@ -408,9 +410,9 @@ export function Explore() {
                 </Link>
               </div>
             </div>
-          ) : (
+          ) : (<>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {display.map(a => (
+              {display.slice(graphPage * GRAPH_PAGE_SIZE, (graphPage + 1) * GRAPH_PAGE_SIZE).map(a => (
                 <Link
                   key={a.id}
                   to={`/artifact/${a.id}`}
@@ -458,7 +460,29 @@ export function Explore() {
                 </Link>
               ))}
             </div>
-          )}
+            {/* Pagination */}
+            {display.length > GRAPH_PAGE_SIZE && (
+              <div className="flex items-center justify-between mt-4">
+                <button
+                  onClick={() => setGraphPage(p => Math.max(0, p - 1))}
+                  disabled={graphPage === 0}
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg bg-[#0a101d] border border-[#1d2839] text-gray-300 hover:border-[#a6ed2a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-4 h-4" /> Prev
+                </button>
+                <span className="text-xs text-gray-500">
+                  {graphPage * GRAPH_PAGE_SIZE + 1}–{Math.min((graphPage + 1) * GRAPH_PAGE_SIZE, display.length)} of {display.length}
+                </span>
+                <button
+                  onClick={() => setGraphPage(p => Math.min(Math.ceil(display.length / GRAPH_PAGE_SIZE) - 1, p + 1))}
+                  disabled={(graphPage + 1) * GRAPH_PAGE_SIZE >= display.length}
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg bg-[#0a101d] border border-[#1d2839] text-gray-300 hover:border-[#a6ed2a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  Next <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </>)}
           </>)}
         </div>
 
