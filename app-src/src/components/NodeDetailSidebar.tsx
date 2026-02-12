@@ -1,8 +1,10 @@
-import { X, ExternalLink, Calendar, Tag, Link as LinkIcon } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { X, ExternalLink, Calendar, Tag, Link as LinkIcon, Flame } from 'lucide-react'
 import { Card, CardHeader, CardBody } from './ui/Card'
 import { Button } from './Button'
 import { NODE_TYPE_METADATA, type NodeType } from '../types/graph-taxonomy'
 import { EDGE_TYPE_METADATA, type EdgeType } from '../types/edge-types'
+import { supabase } from '../lib/supabase'
 
 export interface NodeData {
   id: string
@@ -27,6 +29,58 @@ interface NodeDetailSidebarProps {
 }
 
 export function NodeDetailSidebar({ node, onClose, onNodeClick, onThreadClick }: NodeDetailSidebarProps) {
+  const [coordinating, setCoordinating] = useState(false)
+  const [coordinated, setCoordinated] = useState(false)
+  const [coordCount, setCoordCount] = useState(0)
+  const [session, setSession] = useState<any>(null)
+
+  useEffect(() => {
+    if (!node) return
+    setCoordinated(false)
+    setCoordCount(0)
+    
+    supabase.auth.getSession().then(({ data }) => setSession(data.session))
+
+    // Check if already coordinated + get count
+    supabase.from('coordination_interests').select('id, participant_id').eq('artifact_id', node.id).then(({ data }) => {
+      if (data) {
+        setCoordCount(data.length)
+        supabase.auth.getSession().then(({ data: s }) => {
+          if (s.session) {
+            supabase.from('participants').select('id').eq('auth_user_id', s.session.user.id).single().then(({ data: p }) => {
+              if (p && data.some(d => d.participant_id === p.id)) {
+                setCoordinated(true)
+              }
+            })
+          }
+        })
+      }
+    })
+  }, [node?.id])
+
+  async function handleCoordinate() {
+    if (!session || !node) return
+    setCoordinating(true)
+    try {
+      // Get or create participant
+      const { data: p } = await supabase.from('participants').select('id').eq('auth_user_id', session.user.id).single()
+      if (!p) {
+        // Create participant
+        const { data: np } = await supabase.from('participants').insert({ name: session.user.email?.split('@')[0] || 'anon', auth_user_id: session.user.id }).select('id').single()
+        if (np) {
+          await supabase.from('coordination_interests').insert({ artifact_id: node.id, participant_id: np.id })
+        }
+      } else {
+        await supabase.from('coordination_interests').insert({ artifact_id: node.id, participant_id: p.id })
+      }
+      setCoordinated(true)
+      setCoordCount(c => c + 1)
+    } catch (e) {
+      console.error('Coordinate error:', e)
+    }
+    setCoordinating(false)
+  }
+
   if (!node) return null
 
   const typeMeta = node.type ? NODE_TYPE_METADATA[node.type] : null
@@ -88,6 +142,31 @@ export function NodeDetailSidebar({ node, onClose, onNodeClick, onThreadClick }:
             <span>{outgoing.length + incoming.length} connections</span>
           </div>
         </div>
+
+        {/* Coordinate Button */}
+        {session && (
+          <button
+            onClick={handleCoordinate}
+            disabled={coordinated || coordinating}
+            className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              coordinated
+                ? 'bg-amber-900/20 border border-amber-700/30 text-amber-400 cursor-default'
+                : 'bg-[#f59e0b] text-[#080c16] hover:bg-[#fbbf24]'
+            }`}
+          >
+            <Flame className="w-4 h-4" />
+            {coordinating ? 'Signaling...' : coordinated ? `Coordinating (${coordCount})` : `Coordinate${coordCount > 0 ? ` (${coordCount})` : ''}`}
+          </button>
+        )}
+        {!session && (
+          <a
+            href="/app/auth"
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium bg-[#0a101d] border border-[#1d2839] text-gray-400 hover:text-white hover:border-[#f59e0b]/30 transition-colors"
+          >
+            <Flame className="w-4 h-4" />
+            Sign in to Coordinate
+          </a>
+        )}
 
         {/* Dimensions */}
         {allDimensions.length > 0 && (
