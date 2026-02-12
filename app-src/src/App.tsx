@@ -28,6 +28,7 @@ import { ChannelView } from './pages/ChannelView'
 import { ThreadView } from './pages/ThreadView'
 import { MessageSearch } from './pages/MessageSearch'
 import ApiDocsPage from './pages/ApiDocsPage'
+import WebhooksPage from './pages/WebhooksPage'
 import type { Session } from '@supabase/supabase-js'
 
 // Sprint 41: Lazy load heavy pages for code splitting
@@ -214,6 +215,7 @@ export default function App() {
               <Route path="/welcome" element={<Onboard />} />
               <Route path="/status" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Status /></Suspense>} />
               <Route path="/api-docs" element={<ApiDocsPage />} />
+              <Route path="/webhooks" element={<WebhooksPage />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
