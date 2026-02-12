@@ -246,9 +246,24 @@ export function Contribute() {
       <p className="text-gray-400 text-sm mb-2">
         Share what you observed, learned, or committed to. Write naturally — AI extracts the structure.
       </p>
-      <p className="text-gray-500 text-xs mb-6">
+      <p className="text-gray-500 text-xs mb-4">
         First time? <a href="/app/welcome" className="text-[#c3fd50] hover:underline">See how it works</a>
       </p>
+
+      <details className="mb-6">
+        <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-300 transition-colors">
+          What is e/H-LAM/T?
+        </summary>
+        <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">
+          {Object.entries(HLAMT_LABELS).map(([key, { label, desc }]) => (
+            <div key={key} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-3">
+              <div className="text-xs font-mono text-[#c3fd50] mb-1">{key}/</div>
+              <div className="text-sm font-medium text-gray-300 mb-1">{label}</div>
+              <div className="text-xs text-gray-500 leading-relaxed">{desc}</div>
+            </div>
+          ))}
+        </div>
+      </details>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {sessions.length > 0 && (
@@ -307,20 +322,6 @@ export function Contribute() {
         </button>
       </form>
 
-      <details className="mt-8">
-        <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-300 transition-colors">
-          What is e/H-LAM/T?
-        </summary>
-        <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">
-          {Object.entries(HLAMT_LABELS).map(([key, { label, desc }]) => (
-            <div key={key} className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-3">
-              <div className="text-xs font-mono text-[#c3fd50] mb-1">{key}/</div>
-              <div className="text-sm font-medium text-gray-300 mb-1">{label}</div>
-              <div className="text-xs text-gray-500 leading-relaxed">{desc}</div>
-            </div>
-          ))}
-        </div>
-      </details>
     </div>
   )
 }
