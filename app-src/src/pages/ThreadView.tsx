@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X } from 'lucide-react'
+import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X, CheckCircle, Archive } from 'lucide-react'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import type { Session } from '@supabase/supabase-js'
 
@@ -178,6 +178,47 @@ export function ThreadView() {
     if (!error) await loadTags()
   }
 
+  async function tagThreadStatus() {
+    if (!threadId || !session || !thread) return
+    if (thread.status !== 'open') {
+      alert('Only open threads can be tagged')
+      return
+    }
+    const { error } = await supabase
+      .from('threads')
+      .update({ status: 'tagged' })
+      .eq('id', threadId)
+    if (!error) await loadThread()
+  }
+
+  async function resolveThread() {
+    if (!threadId || !session || !thread) return
+    if (thread.status !== 'tagged') {
+      alert('Thread must be tagged before resolving')
+      return
+    }
+    const { error } = await supabase
+      .from('threads')
+      .update({ status: 'resolved' })
+      .eq('id', threadId)
+    if (!error) await loadThread()
+  }
+
+  async function consolidateThread() {
+    if (!threadId || !session || !thread) return
+    if (thread.status !== 'resolved') {
+      alert('Thread must be resolved before consolidating')
+      return
+    }
+    const { data, error } = await supabase.rpc('consolidate_thread', { p_thread_id: threadId })
+    if (!error && data) {
+      alert(`Artifact created: ${data}`)
+      await loadThread()
+    } else if (error) {
+      alert(`Error: ${error.message}`)
+    }
+  }
+
   async function loadReactions() {
     if (!threadId) return
     // Get reactions for all messages in this thread
@@ -248,15 +289,45 @@ export function ThreadView() {
           <Link to={`/channels/${slug}`} className="text-xs text-gray-500 hover:text-[#c3fd50]">#{channel.name}</Link>
         </div>
         {session && (
-          <button
-            onClick={() => {
-              setShowTagAdd(!showTagAdd)
-              if (!showTagAdd) loadSuggestedTags()
-            }}
-            className="text-gray-400 hover:text-white"
-          >
-            <Tag className="w-5 h-5" />
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setShowTagAdd(!showTagAdd)
+                if (!showTagAdd) loadSuggestedTags()
+              }}
+              className="text-gray-400 hover:text-white"
+              title="Manage tags"
+            >
+              <Tag className="w-5 h-5" />
+            </button>
+            {thread.status === 'open' && tags.length > 0 && (
+              <button
+                onClick={tagThreadStatus}
+                className="text-gray-400 hover:text-[#60a5fa] transition-colors"
+                title="Mark as tagged"
+              >
+                <Tag className="w-5 h-5 fill-current" />
+              </button>
+            )}
+            {thread.status === 'tagged' && (
+              <button
+                onClick={resolveThread}
+                className="text-gray-400 hover:text-[#a78bfa] transition-colors"
+                title="Resolve thread"
+              >
+                <CheckCircle className="w-5 h-5" />
+              </button>
+            )}
+            {thread.status === 'resolved' && (
+              <button
+                onClick={consolidateThread}
+                className="text-gray-400 hover:text-[#fb923c] transition-colors"
+                title="Consolidate into artifact"
+              >
+                <Archive className="w-5 h-5" />
+              </button>
+            )}
+          </div>
         )}
       </div>
 
