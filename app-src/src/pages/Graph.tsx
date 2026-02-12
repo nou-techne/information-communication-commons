@@ -178,6 +178,7 @@ export function Graph() {
   }, [])
 
   const simulationRef = useRef<d3.Simulation<any, any> | null>(null)
+  const zoomRef = useRef<any>(null)
 
   function resetGraph() {
     // Force full re-render by stopping old sim and clearing
@@ -417,6 +418,7 @@ export function Graph() {
       })
 
     svg.call(zoom as any)
+    zoomRef.current = zoom
 
     return () => {
       if (simulationRef.current) {
@@ -577,8 +579,32 @@ export function Graph() {
       )}
 
       <div className="flex gap-4">
-        <div className="flex-1 bg-[#060a14] border border-[#1d2839] rounded-lg overflow-hidden">
+        <div className="flex-1 bg-[#060a14] border border-[#1d2839] rounded-lg overflow-hidden relative">
           <svg ref={svgRef} className="w-full h-[600px]" />
+          <div className="absolute bottom-3 right-3 flex flex-col gap-1">
+            <button
+              onClick={() => {
+                if (svgRef.current && zoomRef.current) {
+                  d3.select(svgRef.current).transition().duration(200).call(zoomRef.current.scaleBy, 1.4)
+                }
+              }}
+              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center text-lg font-bold backdrop-blur-sm"
+              aria-label="Zoom in"
+            >
+              +
+            </button>
+            <button
+              onClick={() => {
+                if (svgRef.current && zoomRef.current) {
+                  d3.select(svgRef.current).transition().duration(200).call(zoomRef.current.scaleBy, 0.7)
+                }
+              }}
+              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center text-lg font-bold backdrop-blur-sm"
+              aria-label="Zoom out"
+            >
+              −
+            </button>
+          </div>
         </div>
 
         {selectedNode && (
