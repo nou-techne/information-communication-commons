@@ -65,7 +65,7 @@ export function Graph({ replaySeq }: GraphProps = {}) {
       supabase.from('contributions').select('id, content, created_at, seq, chain_hash, extraction, participant_id').order('seq'),
       supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(500),
       supabase.from('artifact_tags').select('artifact_id, tags!inner(name)'),
-      supabase.from('participants').select('id, name'),
+      supabase.from('public_participants').select('id, name'),
       supabase.rpc('chain_head'),
     ])
     if (aRes.data) setArtifacts(aRes.data as Artifact[])

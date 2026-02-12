@@ -58,7 +58,7 @@ export default function Live() {
   async function loadAll() {
     const [{ count: ac }, { count: pc }, { count: rc }, { count: cc }] = await Promise.all([
       supabase.from('artifacts').select('*', { count: 'exact', head: true }),
-      supabase.from('participants').select('*', { count: 'exact', head: true }),
+      supabase.from('public_participants').select('*', { count: 'exact', head: true }),
       supabase.from('artifact_relationships').select('*', { count: 'exact', head: true }),
       supabase.from('coordination_interests').select('*', { count: 'exact', head: true }),
     ])

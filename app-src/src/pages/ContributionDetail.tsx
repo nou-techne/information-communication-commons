@@ -76,7 +76,7 @@ export function ContributionDetail() {
     // Fetch participant name
     if (contrib.participant_id) {
       const { data: participant } = await supabase
-        .from('participants')
+        .from('public_participants')
         .select('name')
         .eq('id', contrib.participant_id)
         .single()
@@ -143,7 +143,7 @@ export function ContributionDetail() {
     setSubmitting(true)
     try {
       const { data: participant } = await supabase
-        .from('participants')
+        .from('public_participants')
         .select('id')
         .eq('auth_user_id', session.user.id)
         .single()

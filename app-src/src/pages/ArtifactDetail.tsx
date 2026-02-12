@@ -67,7 +67,7 @@ export function ArtifactDetail() {
 
     // Load steward
     if (a.steward_id) {
-      const { data: s } = await supabase.from('participants').select('id, name').eq('id', a.steward_id).single()
+      const { data: s } = await supabase.from('public_participants').select('id, name').eq('id', a.steward_id).single()
       if (s) setSteward(s)
     }
 

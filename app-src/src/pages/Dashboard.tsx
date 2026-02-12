@@ -101,7 +101,7 @@ export default function Dashboard() {
       .select('*', { count: 'exact', head: true });
 
     const { count: participantCount } = await supabase
-      .from('participants')
+      .from('public_participants')
       .select('*', { count: 'exact', head: true });
 
     const { count: relationshipCount } = await supabase

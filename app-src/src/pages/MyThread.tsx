@@ -226,7 +226,7 @@ export function MyThread() {
     // Get participant names
     const pIds = Object.keys(participantMap)
     if (pIds.length === 0) { setConnections([]); return }
-    const { data: participants } = await supabase.from('participants').select('id, name').in('id', pIds)
+    const { data: participants } = await supabase.from('public_participants').select('id, name').in('id', pIds)
 
     const conns: ParticipantConnection[] = pIds
       .map(pid => {

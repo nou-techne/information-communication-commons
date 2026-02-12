@@ -56,7 +56,7 @@ export function ParticipantProfile() {
 
     // Load participant
     const { data: p } = await supabase
-      .from('participants')
+      .from('public_participants')
       .select('id, name, affiliation, bio, interests, created_at')
       .eq('id', id!)
       .single()

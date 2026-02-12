@@ -127,7 +127,7 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
   const [showDirectory, setShowDirectory] = useState(true)
 
   useEffect(() => {
-    supabase.from('participants').select('id, name, email, bio, affiliation, skills, interests, location, role').then(({ data }) => {
+    supabase.from('public_participants').select('id, name, bio, affiliation, skills, interests, location, role').then(({ data }) => {
       if (data) {
         const sorted = (data as ParticipantRow[]).sort((a, b) => profileCompleteness(b) - profileCompleteness(a))
         setParticipants(sorted)
@@ -283,7 +283,7 @@ function SessionsView() {
   useEffect(() => {
     async function load() {
       // Get contributions that represent sessions (from ETHBoulder Sync participant)
-      const { data: syncP } = await supabase.from('participants').select('id').eq('name', 'ETHBoulder Sync').single()
+      const { data: syncP } = await supabase.from('public_participants').select('id').eq('name', 'ETHBoulder Sync').single()
       if (!syncP) return
 
       const { data: contribs } = await supabase.from('contributions')

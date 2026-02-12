@@ -129,7 +129,7 @@ export function Explore() {
   async function refreshDimCounts() {
     const [{ data: tagData }, { count: participantCount }, { data: wordData }] = await Promise.all([
       supabase.from('tags').select('name, artifact_tags(count)').like('name', 'hlamt:%'),
-      supabase.from('participants').select('*', { count: 'exact', head: true }),
+      supabase.from('public_participants').select('*', { count: 'exact', head: true }),
       supabase.rpc('word_frequencies'),
     ])
     const c: Record<string, number> = {}

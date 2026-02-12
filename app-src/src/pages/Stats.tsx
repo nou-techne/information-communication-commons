@@ -69,7 +69,7 @@ export function Stats() {
     ] = await Promise.all([
       supabase.from('contributions').select('*', { count: 'exact', head: true }),
       supabase.from('artifacts').select('*', { count: 'exact', head: true }),
-      supabase.from('participants').select('*', { count: 'exact', head: true }),
+      supabase.from('public_participants').select('*', { count: 'exact', head: true }),
       supabase.from('artifact_relationships').select('*', { count: 'exact', head: true }),
       supabase.from('sessions').select('*', { count: 'exact', head: true }),
       supabase
