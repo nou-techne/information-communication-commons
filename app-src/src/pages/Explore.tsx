@@ -84,6 +84,8 @@ export function Explore() {
 
   // Pulse state
   const [feedItems, setFeedItems] = useState<ContributionFeedItem[]>([])
+  const [feedPage, setFeedPage] = useState(0)
+  const FEED_PAGE_SIZE = 5
 
   // Dimension counts
   const [dimCounts, setDimCounts] = useState<Record<string, number>>({})
@@ -570,12 +572,35 @@ export function Explore() {
             </div>
           )}
 
-          <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Live Activity</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Live Activity</h2>
+            {feedItems.length > FEED_PAGE_SIZE && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setFeedPage(p => Math.max(0, p - 1))}
+                  disabled={feedPage === 0}
+                  className="px-2 py-1 text-xs rounded bg-[#0a101d] border border-[#1d2839] text-gray-300 hover:border-[#a6ed2a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-3 h-3" />
+                </button>
+                <span className="text-xs text-gray-500">
+                  {feedPage * FEED_PAGE_SIZE + 1}–{Math.min((feedPage + 1) * FEED_PAGE_SIZE, feedItems.length)} of {feedItems.length}
+                </span>
+                <button
+                  onClick={() => setFeedPage(p => Math.min(Math.ceil(feedItems.length / FEED_PAGE_SIZE) - 1, p + 1))}
+                  disabled={(feedPage + 1) * FEED_PAGE_SIZE >= feedItems.length}
+                  className="px-2 py-1 text-xs rounded bg-[#0a101d] border border-[#1d2839] text-gray-300 hover:border-[#a6ed2a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+          </div>
           {feedItems.length === 0 ? (
             <div className="text-gray-500 text-center py-8 text-sm">No contributions yet</div>
           ) : (
             <div className="space-y-1.5">
-              {feedItems.map(item => (
+              {feedItems.slice(feedPage * FEED_PAGE_SIZE, (feedPage + 1) * FEED_PAGE_SIZE).map(item => (
                 <Link to={`/contribution/${item.id}`} key={item.id} className="block bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className={`w-1.5 h-1.5 rounded-full ${
