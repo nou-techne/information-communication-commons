@@ -276,6 +276,89 @@ function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
   )
 }
 
+function SessionsView() {
+  const [sessions, setSessions] = useState<Array<{ id: string; title: string; host: string; format: string; track: string; schedule: string; description: string; votes: string; created_at: string; artifact_count: number }>>([])
+
+  useEffect(() => {
+    async function load() {
+      // Get contributions that represent sessions (from ETHBoulder Sync participant)
+      const { data: syncP } = await supabase.from('participants').select('id').eq('name', 'ETHBoulder Sync').single()
+      if (!syncP) return
+
+      const { data: contribs } = await supabase.from('contributions')
+        .select('id, content, created_at, extraction')
+        .eq('participant_id', syncP.id)
+        .order('created_at', { ascending: true })
+
+      if (!contribs) return
+
+      const parsed = contribs.map(c => {
+        const lines = c.content.split('\n')
+        const titleLine = lines.find((l: string) => l.startsWith('Session:')) || ''
+        const hostLine = lines.find((l: string) => l.startsWith('Host:')) || ''
+        const formatLine = lines.find((l: string) => l.startsWith('Format:')) || ''
+        const trackLine = lines.find((l: string) => l.startsWith('Track:')) || ''
+        const scheduleLine = lines.find((l: string) => l.startsWith('Schedule:')) || ''
+        const voteLine = lines.find((l: string) => l.startsWith('Quadratic')) || ''
+        const descStart = lines.findIndex((l: string) => l === '') 
+        const desc = descStart >= 0 ? lines.slice(descStart + 1).filter((l: string) => !l.startsWith('Quadratic')).join(' ').trim() : ''
+        const artCount = (c.extraction as any)?.artifacts?.length || 0
+
+        return {
+          id: c.id,
+          title: titleLine.replace('Session: ', ''),
+          host: hostLine.replace('Host: ', ''),
+          format: formatLine.replace('Format: ', ''),
+          track: trackLine.replace('Track: ', ''),
+          schedule: scheduleLine.replace('Schedule: ', ''),
+          description: desc.slice(0, 200),
+          votes: voteLine,
+          created_at: c.created_at,
+          artifact_count: artCount,
+        }
+      }).filter(s => s.title)
+
+      setSessions(parsed)
+    }
+    load()
+  }, [])
+
+  if (sessions.length === 0) {
+    return <p className="text-gray-500 text-sm">No sessions imported yet.</p>
+  }
+
+  return (
+    <div>
+      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+        ETHBoulder Sessions ({sessions.length})
+      </h2>
+      <div className="grid gap-3">
+        {sessions.map(s => (
+          <Link
+            key={s.id}
+            to={`/contribution/${s.id}`}
+            className="block rounded-lg border border-[#1d2839] bg-[#0a101d] p-4 hover:border-[#c084fc] transition-colors"
+            style={{ borderLeftWidth: '3px', borderLeftColor: '#c084fc' }}
+          >
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <h3 className="text-white font-semibold text-sm">{s.title}</h3>
+              <span className="text-xs text-gray-500 whitespace-nowrap">{s.artifact_count} artifacts</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-2 text-xs">
+              {s.host && <span className="text-gray-400">{s.host}</span>}
+              {s.format && <span className="text-gray-500">· {s.format}</span>}
+              {s.track && <span className="px-1.5 py-0.5 rounded bg-[#c084fc]/10 text-[#c084fc] border border-[#c084fc]/20">{s.track}</span>}
+            </div>
+            {s.schedule && <div className="text-xs text-gray-500 mb-2">{s.schedule}</div>}
+            {s.description && <p className="text-gray-400 text-xs line-clamp-2">{s.description}</p>}
+            {s.votes && <div className="text-xs text-amber-400/70 mt-2">{s.votes}</div>}
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const DIMENSION_PROMPTS: Record<string, string> = {
   e: 'Share observations about place, environment, or ecological context.',
   H: 'Introduce yourself, share who you met, or describe collaborative dynamics.',
@@ -415,7 +498,8 @@ export function DimensionView() {
         <>
           {dimension === 'H' && <HumanView artifacts={artifacts} />}
           {dimension === 'L' && <LanguageView artifacts={artifacts} />}
-          {dimension !== 'H' && dimension !== 'L' && <GenericDimensionView artifacts={artifacts} dim={dim} />}
+          {dimension === 'S' && <SessionsView />}
+          {dimension !== 'H' && dimension !== 'L' && dimension !== 'S' && <GenericDimensionView artifacts={artifacts} dim={dim} />}
         </>
       )}
     </div>
