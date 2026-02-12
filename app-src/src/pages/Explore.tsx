@@ -222,7 +222,7 @@ export function Explore() {
   if (loading) return <div className="text-center text-gray-500 py-12">Loading...</div>
 
   return (
-    <div>
+    <div className="pb-24">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-1">Explore</h1>
         <p className="text-gray-400 text-sm">The knowledge graph and live activity, side by side.</p>
