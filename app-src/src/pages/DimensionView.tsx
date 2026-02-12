@@ -97,39 +97,38 @@ function EcologyView({ artifacts }: { artifacts: Artifact[] }) {
   )
 }
 
-interface Participant {
+interface ParticipantRow {
   id: string
-  display_name: string | null
+  name: string
   email: string | null
   bio: string | null
-  organization: string | null
-  avatar_url: string | null
+  affiliation: string | null
   skills: string[] | null
   interests: string[] | null
-  social_links: Record<string, string> | null
+  location: string | null
+  role: string | null
 }
 
-function profileCompleteness(p: Participant): number {
+function profileCompleteness(p: ParticipantRow): number {
   let score = 0
-  if (p.display_name) score += 2
+  if (p.name) score += 2
   if (p.bio) score += 2
-  if (p.organization) score += 1
-  if (p.avatar_url) score += 1
+  if (p.affiliation) score += 1
   if (p.skills && p.skills.length > 0) score += 1
   if (p.interests && p.interests.length > 0) score += 1
-  if (p.social_links && Object.keys(p.social_links).length > 0) score += 1
   if (p.email) score += 1
-  return score // max 10
+  if (p.location) score += 1
+  return score // max 9
 }
 
 function HumanView({ artifacts }: { artifacts: Artifact[] }) {
-  const [participants, setParticipants] = useState<Participant[]>([])
+  const [participants, setParticipants] = useState<ParticipantRow[]>([])
   const [showDirectory, setShowDirectory] = useState(true)
 
   useEffect(() => {
-    supabase.from('participants').select('id, display_name, email, bio, organization, avatar_url, skills, interests, social_links').then(({ data }) => {
+    supabase.from('participants').select('id, name, email, bio, affiliation, skills, interests, location, role').then(({ data }) => {
       if (data) {
-        const sorted = (data as Participant[]).sort((a, b) => profileCompleteness(b) - profileCompleteness(a))
+        const sorted = (data as ParticipantRow[]).sort((a, b) => profileCompleteness(b) - profileCompleteness(a))
         setParticipants(sorted)
       }
     })
@@ -159,19 +158,18 @@ function HumanView({ artifacts }: { artifacts: Artifact[] }) {
             return (
               <Link
                 key={p.id}
-                to={`/p/${encodeURIComponent(p.display_name || p.id)}`}
+                to={`/p/${encodeURIComponent(p.name || p.id)}`}
                 className="flex items-center gap-3 p-3 rounded-lg border border-[#1d2839] bg-[#0a101d] hover:border-[#a6ed2a] transition-colors"
               >
-                {p.avatar_url ? (
-                  <img src={p.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
-                ) : (
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style={{ backgroundColor: '#c4956a30', color: '#c4956a' }}>
-                    {(p.display_name || '?')[0].toUpperCase()}
-                  </div>
-                )}
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0" style={{ backgroundColor: '#c4956a30', color: '#c4956a' }}>
+                  {(p.name || '?')[0].toUpperCase()}
+                </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-white font-medium text-sm truncate">{p.display_name || 'Anonymous'}</div>
-                  {p.organization && <div className="text-gray-500 text-xs truncate">{p.organization}</div>}
+                  <div className="flex items-center gap-2">
+                    <span className="text-white font-medium text-sm truncate">{p.name || 'Anonymous'}</span>
+                    {p.role === 'steward' && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-900/30 border border-amber-700/30 text-amber-400">Steward</span>}
+                  </div>
+                  {p.affiliation && <div className="text-gray-500 text-xs truncate">{p.affiliation}</div>}
                   {p.bio && <div className="text-gray-400 text-xs truncate mt-0.5">{p.bio}</div>}
                 </div>
                 <div className="flex gap-0.5">
