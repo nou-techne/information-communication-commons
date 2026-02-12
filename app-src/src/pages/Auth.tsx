@@ -4,9 +4,9 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Mail } from 'lucide-react'
 
 const FEATURES = [
-  { letter: 'e/', color: '#4a8c6f', text: 'Ground ideas in place and ecology' },
-  { letter: 'H/', color: '#c4956a', text: 'Connect with people who share your questions' },
-  { letter: 'A/', color: '#8bbfff', text: 'Build artifacts that outlast the event' },
+  { letter: 'e/', name: 'Ecology', color: '#4a8c6f', text: 'Ground ideas in place and ecology' },
+  { letter: 'H/', name: 'Human', color: '#c4956a', text: 'Connect with people who share your questions' },
+  { letter: 'A/', name: 'Artifacts', color: '#8bbfff', text: 'Build artifacts that outlast the event' },
 ]
 
 export function Auth() {
@@ -82,7 +82,10 @@ export function Auth() {
       <div className="mb-10 space-y-3">
         {FEATURES.map(f => (
           <div key={f.letter} className="flex items-start gap-3 bg-[#1a1a1a] border border-[#262626] rounded-lg p-3">
-            <span className="font-mono text-lg font-bold flex-shrink-0 mt-0.5" style={{ color: f.color }}>{f.letter}</span>
+            <div className="flex-shrink-0 mt-0.5 min-w-[90px]">
+              <span className="font-mono text-lg font-bold" style={{ color: f.color }}>{f.letter}</span>
+              <span className="text-xs font-medium text-gray-400">{f.name}</span>
+            </div>
             <span className="text-sm text-gray-300">{f.text}</span>
           </div>
         ))}
