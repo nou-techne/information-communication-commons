@@ -32,18 +32,65 @@ html, body {
   color: var(--text);
 }
 
-/* Light mode color overrides for hardcoded dark values */
+/* Light mode: comprehensive override strategy.
+   Tailwind v4 compiles arbitrary values, so attribute selectors on class names
+   are unreliable. Instead we use broad element/role selectors + specificity. */
 .light-mode {
-  /* Backgrounds */
+  /* ── Global resets ── */
+  background-color: var(--bg);
+  color: var(--text);
+
+  /* All elements: override dark backgrounds */
+  & * {
+    border-color: var(--border);
+  }
+
+  /* ── Structural containers ── */
+  & div, & section, & article, & main, & aside, & nav, & header, & footer {
+    &[style*="background"] { /* inline styles still win, leave them */ }
+  }
+
+  /* ── Buttons ── */
+  & button, & a[role="button"], & [class*="btn"] {
+    &:not([class*="bg-[#a6ed2a]"]):not([class*="bg-red"]):not([class*="bg-green"]):not([class*="bg-orange"]) {
+      color: var(--text);
+    }
+  }
+
+  /* ── Inputs ── */
+  & input, & textarea, & select {
+    background-color: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+  }
+  & input::placeholder, & textarea::placeholder { color: #a0aec0 !important; }
+
+  /* ── SVG graph ── */
+  & svg { background-color: transparent !important; }
+
+  /* ── Catch dark hex backgrounds via compiled Tailwind classes ── */
+  /* Tailwind v4 compiles bg-[#080c16] to a class with --tw-bg set inline,
+     so we override the CSS custom property approach */
+  & [style*="background-color: rgb(8, 12, 22)"],
+  & [style*="background-color: #080c16"],
+  & [style*="background: rgb(8, 12, 22)"] {
+    background-color: var(--bg) !important;
+  }
+  & [style*="background-color: rgb(10, 16, 29)"],
+  & [style*="background-color: #0a101d"],
+  & [style*="background: rgb(10, 16, 29)"] {
+    background-color: var(--surface) !important;
+  }
+
+  /* ── Class-based overrides (still works for some Tailwind versions) ── */
   & [class*="bg-[#080c16]"] { background-color: var(--bg) !important; }
   & [class*="bg-[#0a101d]"] { background-color: var(--surface) !important; }
   & [class*="bg-[#060a14]"] { background-color: #edf0f5 !important; }
-  
-  /* Borders */
+  & [class*="bg-[#1d2839]"] { background-color: #e2e6ed !important; }
   & [class*="border-[#1d2839]"] { border-color: var(--border) !important; }
   & [class*="border-[#283347]"] { border-color: var(--border-hover) !important; }
-  
-  /* Text overrides */
+
+  /* Text */
   & [class*="text-white"] { color: var(--text) !important; }
   & [class*="text-gray-100"] { color: #1a2332 !important; }
   & [class*="text-gray-200"] { color: #2d3748 !important; }
@@ -51,25 +98,32 @@ html, body {
   & [class*="text-gray-400"] { color: #5a6a7e !important; }
   & [class*="text-gray-500"] { color: #718096 !important; }
   & [class*="text-gray-600"] { color: #a0aec0 !important; }
-  
+
   /* Accent */
   & [class*="text-[#a6ed2a]"] { color: var(--accent) !important; }
-  & [class*="bg-[#a6ed2a]"] { background-color: var(--accent) !important; }
+  & [class*="bg-[#a6ed2a]"] { background-color: var(--accent) !important; color: white !important; }
   & [class*="hover:border-[#a6ed2a]"]:hover { border-color: var(--accent) !important; }
+  & [class*="hover:bg-[#b8f247]"]:hover { background-color: var(--accent-hover) !important; }
   & [class*="bg-[#b8f247]"] { background-color: var(--accent-hover) !important; }
-  
-  /* Fix SVG graph background */
-  & svg { background-color: transparent !important; }
-  
-  /* Placeholder text */
-  & input::placeholder, & textarea::placeholder { color: #a0aec0 !important; }
-  
-  /* Select dropdowns */
-  & select { background-color: var(--surface) !important; border-color: var(--border) !important; color: var(--text) !important; }
 
-  /* Cards get subtle shadow in light mode */
-  & [class*="rounded-lg"][class*="border"] { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-  & [class*="rounded-xl"][class*="border"] { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  /* ── Backdrop/overlay backgrounds ── */
+  & [class*="bg-black/"] { background-color: rgba(0,0,0,0.3) !important; }
+  & [class*="/90"] { opacity: 0.95; }
+
+  /* ── Cards get subtle shadow ── */
+  & [class*="rounded-lg"][class*="border"],
+  & [class*="rounded-xl"][class*="border"] {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    background-color: var(--surface);
+  }
+
+  /* ── Specific dark patterns that show dark-on-dark ── */
+  /* Secondary buttons and ghost buttons */
+  & [class*="hover:bg-[#0a101d]"]:hover { background-color: #e8ecf2 !important; }
+  & [class*="bg-[#1d2839]"] { background-color: #e2e6ed !important; color: var(--text) !important; }
+
+  /* ── Nav and footer ── */
+  & nav, & footer { background-color: #edf0f5 !important; }
 }
 
 /* Theme toggle styling */
