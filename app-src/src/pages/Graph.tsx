@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
-import { Network } from 'lucide-react'
+import { Network, Flame } from 'lucide-react'
+import { CoordinateButton } from '../components/CoordinateButton'
 import * as d3 from 'd3'
 import { EmptyState } from '../components/ui/EmptyState'
 
@@ -581,7 +582,10 @@ export function Graph({ replaySeq }: GraphProps = {}) {
                   <div><span className="text-gray-500">REA:</span><span className="ml-2 px-2 py-0.5 rounded-full bg-[#1d2839] text-xs">{selectedNode.rea_role}</span></div>
                   {selectedNode.tagCount != null && <div><span className="text-gray-500">Tags:</span><span className="ml-2 text-xs">{selectedNode.tagCount}</span></div>}
                   {selectedNode.clusterLabel && <div><span className="text-gray-500">Cluster:</span><span className="ml-2 text-xs">{selectedNode.clusterLabel}</span></div>}
-                  <button onClick={() => window.location.href = `/app/artifact/${selectedNode.id}`} className="w-full mt-4 px-3 py-2 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] text-sm">View details</button>
+                  <div className="mt-4 space-y-2">
+                    <CoordinateButton artifactId={selectedNode.id} />
+                    <button onClick={() => window.location.href = `/app/artifact/${selectedNode.id}`} className="w-full px-3 py-2 bg-[#a6ed2a] text-[#080c16] rounded-lg hover:bg-[#b8f247] text-sm">View details</button>
+                  </div>
                 </>}
                 {selectedNode.kind === 'contribution' && <>
                   <div><span className="text-gray-500">Seq:</span><span className="ml-2 text-xs">#{selectedNode.seq}</span></div>
