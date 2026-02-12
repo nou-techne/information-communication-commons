@@ -1,0 +1,345 @@
+/* Print Stylesheet */
+
+@media print {
+  /* Reset colors for print */
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Page setup */
+  @page {
+    margin: 2cm;
+    size: A4 portrait;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Hide navigation and UI chrome */
+  nav,
+  header nav,
+  aside,
+  .sidebar,
+  .navigation,
+  .nav,
+  .menu,
+  footer,
+  .skip-navigation,
+  [role="navigation"],
+  [role="banner"],
+  [role="contentinfo"],
+  .mobile-nav,
+  .bottom-sheet,
+  .toast,
+  .modal-backdrop,
+  button,
+  .button,
+  input[type="button"],
+  input[type="submit"],
+  .action-buttons,
+  .pagination,
+  .breadcrumb,
+  .tabs,
+  .filters,
+  .search-bar {
+    display: none !important;
+  }
+
+  /* Show only main content */
+  main,
+  article,
+  [role="main"] {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: 24pt;
+    margin-bottom: 0.5em;
+    page-break-after: avoid;
+  }
+
+  h2 {
+    font-size: 18pt;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 14pt;
+    margin-top: 0.75em;
+    margin-bottom: 0.5em;
+    page-break-after: avoid;
+  }
+
+  h4, h5, h6 {
+    font-size: 12pt;
+    margin-top: 0.5em;
+    margin-bottom: 0.25em;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin-bottom: 0.5em;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Links */
+  a {
+    color: black !important;
+    text-decoration: underline;
+  }
+
+  /* Show URLs after links */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 90%;
+    font-style: italic;
+  }
+
+  /* Don't show URLs for anchor links or javascript */
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
+
+  /* Lists */
+  ul, ol {
+    margin-left: 2em;
+  }
+
+  li {
+    margin-bottom: 0.25em;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+    page-break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tbody {
+    display: table-row-group;
+  }
+
+  th, td {
+    border: 1px solid black;
+    padding: 0.5em;
+    text-align: left;
+  }
+
+  th {
+    font-weight: bold;
+    background: #f0f0f0 !important;
+  }
+
+  /* Code blocks */
+  pre, code {
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+    border: 1px solid #ccc;
+    background: #f5f5f5 !important;
+    padding: 0.5em;
+    page-break-inside: avoid;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  code {
+    padding: 0.2em 0.4em;
+  }
+
+  /* Images */
+  img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+
+  /* Cards and containers */
+  .card,
+  .container,
+  .section {
+    border: 1px solid #ccc !important;
+    padding: 1em;
+    margin-bottom: 1em;
+    page-break-inside: avoid;
+  }
+
+  /* Grid layouts - linearize */
+  .grid,
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4,
+  [class*="grid-cols-"] {
+    display: block !important;
+  }
+
+  .grid > *,
+  .grid-cols-2 > *,
+  .grid-cols-3 > *,
+  .grid-cols-4 > * {
+    width: 100% !important;
+    margin-bottom: 1em;
+  }
+
+  /* Flex layouts - linearize */
+  .flex,
+  [class*="flex-"] {
+    display: block !important;
+  }
+
+  .flex > * {
+    width: 100% !important;
+    margin-bottom: 0.5em;
+  }
+
+  /* Page breaks */
+  .section,
+  section,
+  article {
+    page-break-after: auto;
+    page-break-before: auto;
+    page-break-inside: avoid;
+  }
+
+  /* Force page break before */
+  .page-break-before,
+  h1 {
+    page-break-before: always;
+  }
+
+  h1:first-child {
+    page-break-before: avoid;
+  }
+
+  /* Force page break after */
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  /* Prevent page break inside */
+  .page-break-avoid,
+  blockquote,
+  figure,
+  .contribution-card,
+  .thread-message,
+  .chart {
+    page-break-inside: avoid;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 3px solid #ccc;
+    padding-left: 1em;
+    margin-left: 0;
+    font-style: italic;
+    page-break-inside: avoid;
+  }
+
+  /* Badges and labels */
+  .badge,
+  .tag,
+  .label {
+    border: 1px solid black;
+    padding: 0.2em 0.5em;
+    display: inline-block;
+    font-size: 90%;
+  }
+
+  /* Dimension badges */
+  .dimension-badge {
+    border: 1px solid black !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Charts and graphs - show placeholder */
+  .chart,
+  .graph,
+  canvas,
+  svg {
+    border: 1px solid #ccc;
+    page-break-inside: avoid;
+  }
+
+  /* Hide interactive elements */
+  [contenteditable="true"],
+  textarea,
+  select,
+  input:not([type="checkbox"]):not([type="radio"]) {
+    border: 1px solid #ccc;
+    background: white !important;
+    pointer-events: none;
+  }
+
+  /* Checkboxes and radios */
+  input[type="checkbox"],
+  input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid black;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.5em;
+  }
+
+  input[type="checkbox"]:checked::before {
+    content: "✓";
+    display: block;
+    text-align: center;
+    line-height: 1;
+  }
+
+  input[type="radio"]:checked::before {
+    content: "●";
+    display: block;
+    text-align: center;
+    line-height: 1;
+  }
+
+  /* Abbreviations */
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+    font-size: 90%;
+  }
+
+  /* Print-only utilities */
+  .print-only {
+    display: block !important;
+  }
+
+  .screen-only,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure readable contrast */
+  ::selection {
+    background: #b3d4fc;
+    color: black;
+  }
+}
