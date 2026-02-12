@@ -99,6 +99,12 @@ function Nav() {
             ))}
           </div>
           <div className="flex items-center gap-4 text-sm">
+            <Link
+              to="/live"
+              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#16a34a]/15 text-[#4ade80] border border-[#16a34a]/30 hover:bg-[#16a34a]/25 transition-colors"
+            >
+              View Live
+            </Link>
             <ThemeToggle />
             <Link to="/search" className="text-gray-400 hover:text-white" aria-label="Search">
               <SearchIcon className="w-5 h-5" />
@@ -152,6 +158,13 @@ function Nav() {
                   {l.label}
                 </Link>
               ))}
+              <Link
+                to="/live"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm font-medium text-[#4ade80] bg-[#16a34a]/15 border border-[#16a34a]/30"
+              >
+                View Live
+              </Link>
               <Link
                 to="/search"
                 onClick={() => setMobileMenuOpen(false)}
