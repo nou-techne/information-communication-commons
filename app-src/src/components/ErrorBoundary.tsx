@@ -1,112 +1,188 @@
-import { Component } from 'react'
-import type { ReactNode, ErrorInfo } from 'react'
-import { supabase } from '../lib/supabase'
-import { AlertCircle, RefreshCw, Home } from 'lucide-react'
+import { Component, ReactNode } from 'react'
+import { AlertTriangle, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react'
+import { Button } from './Button'
 
-interface Props {
+interface ErrorBoundaryProps {
   children: ReactNode
-  fallbackTitle?: string
+  fallback?: ReactNode
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean
   error: Error | null
-  errorInfo: ErrorInfo | null
+  errorInfo: React.ErrorInfo | null
+  showDetails: boolean
 }
 
-export class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props)
-    this.state = { hasError: false, error: null, errorInfo: null }
-  }
-
-  static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error, errorInfo: null }
-  }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught:', error, errorInfo)
-    
-    // Log to Supabase
-    this.logError(error, errorInfo)
-    
-    this.setState({ error, errorInfo })
-  }
-
-  async logError(error: Error, errorInfo: ErrorInfo) {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      
-      await supabase.from('client_errors').insert({
-        message: error.message,
-        stack: error.stack || '',
-        component_stack: errorInfo.componentStack,
-        user_id: user?.id || null,
-        url: window.location.href,
-        user_agent: navigator.userAgent,
-      })
-    } catch (logError) {
-      console.error('Failed to log error to Supabase:', logError)
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+      showDetails: false,
     }
   }
 
-  handleReset = () => {
-    this.setState({ hasError: false, error: null, errorInfo: null })
-    window.location.href = '/'
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+    return {
+      hasError: true,
+      error,
+    }
   }
 
-  handleReload = () => {
-    window.location.reload()
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('ErrorBoundary caught error:', error, errorInfo)
+    
+    this.setState({
+      errorInfo,
+    })
+
+    // Call optional error handler
+    this.props.onError?.(error, errorInfo)
+  }
+
+  handleReset = () => {
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null,
+      showDetails: false,
+    })
+  }
+
+  toggleDetails = () => {
+    this.setState(prev => ({
+      showDetails: !prev.showDetails,
+    }))
   }
 
   render() {
     if (this.state.hasError) {
+      // Use custom fallback if provided
+      if (this.props.fallback) {
+        return this.props.fallback
+      }
+
+      // Default error UI
       return (
-        <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-[#1a1a1a] border border-[#262626] rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <AlertCircle className="w-8 h-8 text-red-500 flex-shrink-0" />
-              <div>
-                <h1 className="text-xl font-bold">Something went wrong</h1>
-                <p className="text-sm text-gray-400">
-                  {this.props.fallbackTitle || 'An unexpected error occurred'}
+        <div className="min-h-screen flex items-center justify-center p-4 bg-[#0a0a0a]">
+          <div className="max-w-2xl w-full bg-[#1a1a1a] border border-[#262626] rounded-lg p-8">
+            {/* Error icon and title */}
+            <div className="flex items-start gap-4 mb-6">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-red-900/20 flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-red-500" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-2xl font-bold mb-2">Something went wrong</h1>
+                <p className="text-gray-400">
+                  We encountered an unexpected error. This has been logged and we'll look into it.
                 </p>
               </div>
             </div>
 
+            {/* Error message */}
             {this.state.error && (
-              <div className="bg-[#0f0f0f] border border-[#262626] rounded p-3 mb-4">
-                <p className="text-xs text-red-400 font-mono break-words">
-                  {this.state.error.message}
-                </p>
+              <div className="mb-6 p-4 bg-[#0a0a0a] border border-red-900/30 rounded">
+                <div className="font-mono text-sm text-red-400">
+                  {this.state.error.toString()}
+                </div>
               </div>
             )}
 
-            <div className="flex gap-2">
-              <button
-                onClick={this.handleReload}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#262626] text-white rounded-lg hover:bg-[#333] transition-colors"
+            {/* Actions */}
+            <div className="flex flex-wrap gap-3 mb-6">
+              <Button onClick={this.handleReset}>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Try Again
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => window.location.href = '/'}
               >
-                <RefreshCw className="w-4 h-4" />
-                Reload
-              </button>
-              <button
-                onClick={this.handleReset}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#c3fd50] text-[#0f0f0f] rounded-lg hover:bg-[#d4fe80] transition-colors"
+                Go to Home
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={this.toggleDetails}
               >
-                <Home className="w-4 h-4" />
-                Go Home
-              </button>
+                {this.state.showDetails ? (
+                  <>
+                    <ChevronUp className="w-4 h-4 mr-2" />
+                    Hide Details
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-4 h-4 mr-2" />
+                    Show Details
+                  </>
+                )}
+              </Button>
             </div>
 
-            <p className="mt-4 text-xs text-gray-600 text-center">
-              The error has been logged. Try reloading the page or returning home.
-            </p>
+            {/* Error details (collapsible) */}
+            {this.state.showDetails && this.state.errorInfo && (
+              <div className="border-t border-[#262626] pt-6">
+                <h3 className="text-sm font-bold mb-3 text-gray-400">
+                  Error Details
+                </h3>
+                <div className="bg-[#0a0a0a] border border-[#262626] rounded p-4 overflow-x-auto">
+                  <pre className="text-xs text-gray-400 whitespace-pre-wrap">
+                    {this.state.errorInfo.componentStack}
+                  </pre>
+                </div>
+
+                {this.state.error?.stack && (
+                  <>
+                    <h3 className="text-sm font-bold mb-3 mt-4 text-gray-400">
+                      Stack Trace
+                    </h3>
+                    <div className="bg-[#0a0a0a] border border-[#262626] rounded p-4 overflow-x-auto">
+                      <pre className="text-xs text-gray-400 whitespace-pre-wrap">
+                        {this.state.error.stack}
+                      </pre>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Help text */}
+            <div className="mt-6 text-sm text-gray-500">
+              <p>
+                If this problem persists, please{' '}
+                <a
+                  href="mailto:hello@commons.id"
+                  className="text-[#c3fd50] hover:underline"
+                >
+                  contact support
+                </a>
+                {' '}with the error details above.
+              </p>
+            </div>
           </div>
         </div>
       )
     }
 
     return this.props.children
+  }
+}
+
+/**
+ * Hook-based wrapper for functional components
+ */
+export function withErrorBoundary<P extends object>(
+  Component: React.ComponentType<P>,
+  fallback?: ReactNode
+): React.ComponentType<P> {
+  return function WithErrorBoundary(props: P) {
+    return (
+      <ErrorBoundary fallback={fallback}>
+        <Component {...props} />
+      </ErrorBoundary>
+    )
   }
 }
