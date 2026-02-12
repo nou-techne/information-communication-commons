@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check } from 'lucide-react'
+import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X } from 'lucide-react'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import type { Session } from '@supabase/supabase-js'
 
@@ -15,6 +15,19 @@ interface Thread {
 interface Channel {
   slug: string
   name: string
+}
+
+interface ThreadTag {
+  id: string
+  tag_type: 'dimension' | 'topic' | 'artifact_type' | 'custom'
+  tag_value: string
+  created_by: string | null
+}
+
+interface SuggestedTag {
+  tag_type: 'dimension' | 'topic' | 'artifact_type' | 'custom'
+  tag_value: string
+  confidence: number
 }
 
 interface Message {
@@ -62,6 +75,11 @@ export function ThreadView() {
   const [newMessage, setNewMessage] = useState('')
   const [sending, setSending] = useState(false)
   const [activeReactionMsg, setActiveReactionMsg] = useState<string | null>(null)
+  const [tags, setTags] = useState<ThreadTag[]>([])
+  const [showTagAdd, setShowTagAdd] = useState(false)
+  const [suggestedTags, setSuggestedTags] = useState<SuggestedTag[]>([])
+  const [newTagValue, setNewTagValue] = useState('')
+  const [newTagType, setNewTagType] = useState<ThreadTag['tag_type']>('custom')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -115,7 +133,49 @@ export function ThreadView() {
     setMessages((msgs as Message[]) || [])
 
     await loadReactions()
+    await loadTags()
     setLoading(false)
+  }
+
+  async function loadTags() {
+    if (!threadId) return
+    const { data } = await supabase
+      .from('thread_tags')
+      .select('*')
+      .eq('thread_id', threadId)
+      .order('created_at', { ascending: true })
+    setTags((data as ThreadTag[]) || [])
+  }
+
+  async function loadSuggestedTags() {
+    if (!threadId) return
+    const { data, error } = await supabase.rpc('suggest_thread_tags', { p_thread_id: threadId })
+    if (!error && data) {
+      setSuggestedTags(data as SuggestedTag[])
+    }
+  }
+
+  async function addTag(tagType: ThreadTag['tag_type'], tagValue: string) {
+    if (!threadId || !session || !tagValue.trim()) return
+    const { error } = await supabase.rpc('add_thread_tag', {
+      p_thread_id: threadId,
+      p_tag_type: tagType,
+      p_tag_value: tagValue.trim(),
+      p_participant_id: session.user.id
+    })
+    if (!error) {
+      await loadTags()
+      setNewTagValue('')
+      setShowTagAdd(false)
+    }
+  }
+
+  async function removeTag(tagId: string) {
+    const { error } = await supabase
+      .from('thread_tags')
+      .delete()
+      .eq('id', tagId)
+    if (!error) await loadTags()
   }
 
   async function loadReactions() {
@@ -183,11 +243,83 @@ export function ThreadView() {
       {/* Header */}
       <div className="flex items-center gap-3 mb-4 flex-shrink-0">
         <Link to={`/channels/${slug}`} className="text-gray-400 hover:text-white"><ArrowLeft className="w-5 h-5" /></Link>
-        <div>
+        <div className="flex-1">
           <h1 className="text-lg font-bold">{thread.title}</h1>
           <Link to={`/channels/${slug}`} className="text-xs text-gray-500 hover:text-[#c3fd50]">#{channel.name}</Link>
         </div>
+        {session && (
+          <button
+            onClick={() => {
+              setShowTagAdd(!showTagAdd)
+              if (!showTagAdd) loadSuggestedTags()
+            }}
+            className="text-gray-400 hover:text-white"
+          >
+            <Tag className="w-5 h-5" />
+          </button>
+        )}
       </div>
+
+      {/* Tags */}
+      {(tags.length > 0 || showTagAdd) && (
+        <div className="mb-4 flex-shrink-0">
+          <div className="flex flex-wrap gap-2 items-center">
+            {tags.map(tag => (
+              <div key={tag.id} className="flex items-center gap-1 bg-[#1a1a1a] border border-[#262626] rounded-md px-2 py-1 text-xs">
+                <span className="text-gray-400">{tag.tag_value}</span>
+                {session && tag.created_by === session.user.id && (
+                  <button onClick={() => removeTag(tag.id)} className="text-gray-600 hover:text-red-400">
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            ))}
+            {showTagAdd && (
+              <div className="flex gap-2 items-center">
+                <select
+                  value={newTagType}
+                  onChange={e => setNewTagType(e.target.value as ThreadTag['tag_type'])}
+                  className="bg-[#0f0f0f] border border-[#262626] rounded-md px-2 py-1 text-xs text-white"
+                >
+                  <option value="dimension">Dimension</option>
+                  <option value="topic">Topic</option>
+                  <option value="artifact_type">Artifact Type</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <input
+                  value={newTagValue}
+                  onChange={e => setNewTagValue(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addTag(newTagType, newTagValue)}
+                  placeholder="Tag value..."
+                  className="bg-[#0f0f0f] border border-[#262626] rounded-md px-2 py-1 text-xs text-white placeholder-gray-600"
+                />
+                <button
+                  onClick={() => addTag(newTagType, newTagValue)}
+                  className="bg-[#c3fd50] text-[#0f0f0f] rounded-md p-1"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+          {showTagAdd && suggestedTags.length > 0 && (
+            <div className="mt-2 pt-2 border-t border-[#262626]">
+              <div className="text-xs text-gray-500 mb-1">Suggested:</div>
+              <div className="flex flex-wrap gap-1">
+                {suggestedTags.slice(0, 5).map((tag, i) => (
+                  <button
+                    key={i}
+                    onClick={() => addTag(tag.tag_type, tag.tag_value)}
+                    className="text-xs px-2 py-1 rounded-md bg-[#0f0f0f] text-gray-400 border border-[#262626] hover:border-[#c3fd50] hover:text-white transition-colors"
+                  >
+                    {tag.tag_value}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-3 mb-4">

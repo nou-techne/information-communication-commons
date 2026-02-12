@@ -21,6 +21,13 @@ interface Thread {
   created_at: string
   updated_at: string
   message_count?: number
+  tags?: ThreadTag[]
+}
+
+interface ThreadTag {
+  id: string
+  tag_type: 'dimension' | 'topic' | 'artifact_type' | 'custom'
+  tag_value: string
 }
 
 const STATUS_COLORS: Record<Thread['status'], string> = {
@@ -84,7 +91,7 @@ export function ChannelView() {
       .eq('channel_id', ch.id)
       .order('updated_at', { ascending: false })
     
-    // Get message counts
+    // Get message counts and tags
     const threadData = (th as Thread[]) || []
     if (threadData.length > 0) {
       const { data: counts } = await supabase
@@ -98,8 +105,25 @@ export function ChannelView() {
           countMap[row.thread_id] = (countMap[row.thread_id] || 0) + 1
         }
       }
+      
+      // Load tags for all threads
+      const { data: tags } = await supabase
+        .from('thread_tags')
+        .select('*')
+        .in('thread_id', threadData.map(t => t.id))
+      
+      const tagMap: Record<string, ThreadTag[]> = {}
+      if (tags) {
+        for (const tag of tags as ThreadTag[]) {
+          const threadId = (tag as any).thread_id
+          if (!tagMap[threadId]) tagMap[threadId] = []
+          tagMap[threadId].push(tag)
+        }
+      }
+      
       for (const t of threadData) {
         t.message_count = countMap[t.id] || 0
+        t.tags = tagMap[t.id] || []
       }
     }
     
@@ -258,6 +282,21 @@ export function ChannelView() {
                     {STATUS_LABELS[thread.status]}
                   </span>
                 </div>
+                {thread.tags && thread.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-1">
+                    {thread.tags.slice(0, 4).map(tag => (
+                      <span
+                        key={tag.id}
+                        className="text-xs px-2 py-0.5 rounded-md bg-[#0f0f0f] text-gray-400 border border-[#262626]"
+                      >
+                        {tag.tag_value}
+                      </span>
+                    ))}
+                    {thread.tags.length > 4 && (
+                      <span className="text-xs px-2 py-0.5 text-gray-500">+{thread.tags.length - 4}</span>
+                    )}
+                  </div>
+                )}
                 <div className="flex items-center gap-3 text-xs text-gray-500">
                   <span className="flex items-center gap-1">
                     <MessageSquare className="w-3 h-3" />
