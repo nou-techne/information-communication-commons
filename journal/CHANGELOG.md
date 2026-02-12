@@ -6,6 +6,77 @@ Format: [Semantic Versioning](https://semver.org/). Each entry includes sprint r
 
 ---
 
+## [0.16.0] — 2026-02-12
+
+### Communication Layer Complete (Sprints 57-68)
+
+**Sprint 57: Channel Data Model** (Technical Lead) ✅
+- Channels table with type enum (general/dimension/session/topic/meta) and visibility (public/members/private)
+- Auto-create default channels (general + announcements) on new convergence
+- Migration: `028_channels.sql`
+
+**Sprint 58: Thread Data Model** (Technical Lead) ✅
+- Threads with enforced status lifecycle: open → tagged → resolved → consolidated → archived
+- `consolidate_thread()` function aggregates messages into artifacts
+- Migration: `029_threads.sql`
+
+**Sprint 59: Message Data Model** (Backend Engineer) ✅
+- Messages with reactions, mentions, full-text search vector
+- `convert_message_to_contribution()` function promotes messages
+- Migration: `030_messages.sql`
+
+**Sprint 60: Real-Time Subscriptions** (Backend Engineer) ✅
+- Supabase Realtime publication for all communication tables
+- Typing indicators with auto-expiry
+- Migration: `031_realtime.sql`
+
+**Sprint 61: Channel List UI** (Frontend Engineer) ✅
+- Channels page with grouped channel list and creation modal
+- Component: `src/pages/Channels.tsx`
+
+**Sprint 62: Thread List UI** (Frontend Engineer) ✅
+- Channel view with thread list, status badges, creation form
+- Component: `src/pages/ChannelView.tsx`
+
+**Sprint 63: Real-Time Messages UI** (Frontend Engineer) ✅
+- Thread view with real-time message subscriptions, auto-scroll
+- Component: `src/pages/ThreadView.tsx`
+
+**Sprint 64: Message Reactions** (Frontend Engineer) ✅
+- Emoji reaction picker (5 icons), toggle, real-time updates
+- Integrated into ThreadView
+
+**Sprint 65: Message Formatting** (QA Engineer) ✅
+- Markdown rendering with XSS protection
+- Component: `src/components/MarkdownRenderer.tsx`
+
+**Sprint 66: Thread Status Indicators** (UI Designer) ✅
+- Filter tabs (All/Open/Tagged/Resolved/Archived) with counts
+- Color-coded status badges
+
+**Sprint 67: Unread Badges** (UX Designer) ✅
+- Blue dot indicators on channels with unread messages
+- localStorage-based "last read" tracking
+
+**Sprint 68: Message Search** (Backend Engineer) ✅
+- Full-text search page with snippet highlighting
+- Component: `src/pages/MessageSearch.tsx`
+- Route: `/channels/search`
+
+### Added
+- Complete communication layer: channels, threads, messages, reactions
+- Real-time subscriptions via Supabase
+- Markdown rendering with code highlighting
+- Message search with full-text indexing
+- Thread status workflow (5 states)
+- Unread tracking per channel
+
+### Changed
+- Routing: added `/channels`, `/channels/:slug`, `/channels/:slug/:threadId`, `/channels/search`
+- Navigation: added "Channels" link
+
+---
+
 ## [0.15.0] — 2026-02-11
 
 ### Cycle 6 Complete + Cycle 7 Ebb (Sprints 52-61)
