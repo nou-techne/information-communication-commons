@@ -31,6 +31,7 @@ import ApiDocsPage from './pages/ApiDocsPage'
 import WebhooksPage from './pages/WebhooksPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 import ConvergenceDashboardPage from './pages/ConvergenceDashboardPage'
+import FederationPage from './pages/FederationPage'
 import type { Session } from '@supabase/supabase-js'
 
 // Sprint 41: Lazy load heavy pages for code splitting
@@ -220,6 +221,7 @@ export default function App() {
               <Route path="/webhooks" element={<WebhooksPage />} />
               <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/convergence" element={<ConvergenceDashboardPage />} />
+              <Route path="/federation" element={<FederationPage />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
