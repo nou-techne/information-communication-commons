@@ -330,7 +330,7 @@ export function Explore() {
           {viewMode === '3d' ? (
             <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#080c16] w-screen h-screen flex flex-col' : ''}`}>
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
-                <div className={`relative w-full overflow-hidden rounded-lg ${isFullscreen ? 'flex-1' : 'h-[400px] sm:h-[500px] md:h-[700px]'}`}>
+                <div className={`relative w-full rounded-lg ${isFullscreen ? 'flex-1 overflow-auto' : 'h-[400px] sm:h-[500px] md:h-[700px] overflow-hidden'}`}>
                   <Graph replaySeq={replaySeq} />
                 </div>
               </Suspense>

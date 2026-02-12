@@ -701,10 +701,9 @@ export function Graph({ replaySeq }: GraphProps = {}) {
               </svg>
             </button>
           </div>
-        </div>
 
-        {selectedNode && (
-          <div className="w-64 bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
+          {selectedNode && (
+            <div className="w-64 bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 absolute top-4 right-4 z-50 max-h-[80vh] overflow-y-auto shadow-xl">
             <div className="flex items-start justify-between mb-2">
               <h3 className="font-bold flex-1">{selectedNode.title}</h3>
               <button
@@ -744,7 +743,8 @@ export function Graph({ replaySeq }: GraphProps = {}) {
               </button>
             </div>
           </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="flex gap-4 text-xs flex-wrap">
