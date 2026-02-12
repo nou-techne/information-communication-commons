@@ -36,7 +36,7 @@ const DEFAULT_CONFIG: ConvergenceConfig = {
   logo_accent: '.commons.id',
   tagline: 'Knowledge Graph · Live',
   dimensions: [
-    { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f', tag: 'hlamt:E' },
+    { key: 'e', letter: 'e/', name: 'Ecology', desc: 'Where We Are', color: '#4a8c6f', tag: 'hlamt:e' },
     { key: 'H', letter: 'H/', name: 'Human', desc: "Who's Here", color: '#c4956a', tag: 'hlamt:H' },
     { key: 'L', letter: 'L/', name: 'Language', desc: 'How We Talk', color: '#a6ed2a', tag: 'hlamt:L' },
     { key: 'A', letter: 'A/', name: 'Artifacts', desc: "What We're Building", color: '#8bbfff', tag: 'hlamt:A' },
