@@ -334,20 +334,16 @@ export function Explore() {
                   <Graph replaySeq={replaySeq} />
                 </div>
               </Suspense>
-              {/* Merkle Chain & Replay — inside fullscreen container */}
-              <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 ${isFullscreen ? 'p-4' : 'mt-2'}`}>
-                <div className="sm:col-span-1">
-                  <ChainStatus />
-                </div>
-                <div className="sm:col-span-2">
-                  {chainMaxSeq > 0 && (
-                    <ReplaySlider
-                      maxSeq={chainMaxSeq}
-                      onSeqChange={(seq) => setReplaySeq(seq)}
-                    />
-                  )}
+              {/* Replay slider — under graph (also in fullscreen) */}
+              <div className={`${isFullscreen ? 'p-4' : 'mt-2'}`}>
+                {chainMaxSeq > 0 && (
+                  <ReplaySlider
+                    maxSeq={chainMaxSeq}
+                    onSeqChange={(seq) => setReplaySeq(seq)}
+                  />
+                )}
               </div>
-            </div>
+              {isFullscreen && <div className="p-4 pt-0"><ChainStatus /></div>}
             </div>
           ) : (<>
           {/* Search + Filters */}
@@ -504,8 +500,11 @@ export function Explore() {
           </>)}
         </div>
 
-        {/* Right: Contribution Feed */}
+        {/* Right: Chain Status + Contribution Feed */}
         <div className="min-w-0">
+          <div className="mb-4">
+            <ChainStatus />
+          </div>
           <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Live Activity</h2>
           {feedItems.length === 0 ? (
             <div className="text-gray-500 text-center py-8 text-sm">No contributions yet</div>
