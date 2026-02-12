@@ -164,3 +164,30 @@ html, body {
 details[open] .hlamt-chevron {
   transform: rotate(90deg);
 }
+
+/* CS-07, CS-23: Signal pulse animation */
+@keyframes signal-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+.signal-pulse {
+  animation: signal-pulse 1.5s ease-out;
+}
+
+/* CS-15: Artifact signal glow */
+@keyframes signal-glow {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.3)); }
+  50% { filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6)); }
+}
+.signal-glow {
+  animation: signal-glow 2s ease-in-out infinite;
+}
+
+/* CS-23: Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .signal-pulse,
+  .signal-glow {
+    animation: none;
+  }
+}

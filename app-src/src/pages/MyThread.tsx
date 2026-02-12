@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS } from '../lib/supabase'
 import type { Artifact, Commitment } from '../lib/supabase'
 import type { Session } from '@supabase/supabase-js'
-import { Plus, FileText, GitBranch, Target, Clock, ChevronDown, ChevronUp, Link2, Users, Sparkles, Flame } from 'lucide-react'
+import { Plus, FileText, GitBranch, Target, Clock, ChevronDown, ChevronUp, Link2, Users, Sparkles, Flame, Radio } from 'lucide-react'
+import { SignalFlame } from '../components/SignalFlame'
 
 type ViewMode = 'chain' | 'social' | 'semantic'
 
@@ -56,6 +57,8 @@ export function MyThread() {
   const [tagClusters, setTagClusters] = useState<TagCluster[]>([])
   const [coordCounts, setCoordCounts] = useState<Record<string, number>>({})
   const [contribCoordCounts, setContribCoordCounts] = useState<Record<string, number>>({})
+  const [mySignalsGiven, setMySignalsGiven] = useState(0)
+  const [signalReach, setSignalReach] = useState(0)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -124,6 +127,15 @@ export function MyThread() {
         counts[row.artifact_id] = (counts[row.artifact_id] || 0) + 1
       }
       setCoordCounts(counts)
+
+      // CS-22: My signal activity
+      const [{ count: givenCount }, { data: receivedData }] = await Promise.all([
+        supabase.from('coordination_interests').select('*', { count: 'exact', head: true }).eq('participant_id', p.id),
+        supabase.from('coordination_interests').select('participant_id').in('artifact_id', artIds).neq('participant_id', p.id),
+      ])
+      setMySignalsGiven(givenCount || 0)
+      const uniqueSignalers = new Set((receivedData || []).map(r => r.participant_id))
+      setSignalReach(uniqueSignalers.size)
 
       // Load tag data for social + semantic views
       const { data: tagData } = await supabase.from('artifact_tags').select('artifact_id, tags!inner(name)').in('artifact_id', artIds)
@@ -355,6 +367,30 @@ export function MyThread() {
           </div>
         ))}
       </div>
+
+      {/* CS-22: My Signals summary */}
+      {session && (mySignalsGiven > 0 || totalCoordSignals > 0) && (
+        <div className="bg-[#0a101d] border border-orange-500/20 rounded-lg p-4 mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <Radio className="w-4 h-4 text-orange-400" />
+            <span className="text-sm font-semibold text-gray-300 uppercase tracking-wider">My Signals</span>
+          </div>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-xl font-bold text-orange-400">{mySignalsGiven}</div>
+              <div className="text-xs text-gray-500">Given</div>
+            </div>
+            <div>
+              <div className="text-xl font-bold text-orange-400">{totalCoordSignals}</div>
+              <div className="text-xs text-gray-500">Received</div>
+            </div>
+            <div>
+              <div className="text-xl font-bold text-orange-400">{signalReach}</div>
+              <div className="text-xs text-gray-500">Reach</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {!session && (
         <div className="bg-[#0a101d] border border-[#a6ed2a]/30 rounded-lg p-4 mb-6 text-sm text-gray-400">

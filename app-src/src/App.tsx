@@ -250,6 +250,65 @@ function AuthGuardedRoutes() {
   )
 }
 
+function CountdownBanner() {
+  const { convergence } = useConvergence()
+  const [remaining, setRemaining] = useState<{ d: number; h: number; m: number; s: number } | null>(null)
+
+  useEffect(() => {
+    if (!convergence.opens_at) return
+    const target = new Date(convergence.opens_at).getTime()
+    function tick() {
+      const diff = target - Date.now()
+      if (diff <= 0) { setRemaining(null); return }
+      setRemaining({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff % 86400000) / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
+      })
+    }
+    tick()
+    const i = setInterval(tick, 1000)
+    return () => clearInterval(i)
+  }, [convergence.opens_at])
+
+  if (!remaining) return null
+
+  return (
+    <div className="bg-gradient-to-r from-[#0a101d] via-[#111b2e] to-[#0a101d] border-b border-blue-500/20">
+      <div className="max-w-6xl mx-auto px-4 py-4 text-center">
+        <div className="text-xs uppercase tracking-widest text-blue-400 mb-2">Knowledge Graph Opens In</div>
+        <div className="flex items-center justify-center gap-3 sm:gap-5">
+          {remaining.d > 0 && (
+            <div className="flex flex-col items-center">
+              <span className="text-3xl sm:text-4xl font-mono font-bold text-white">{remaining.d}</span>
+              <span className="text-[10px] uppercase tracking-wider text-gray-500 mt-1">Days</span>
+            </div>
+          )}
+          {remaining.d > 0 && <span className="text-2xl text-gray-600 font-thin">:</span>}
+          <div className="flex flex-col items-center">
+            <span className="text-3xl sm:text-4xl font-mono font-bold text-white">{String(remaining.h).padStart(2, '0')}</span>
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 mt-1">Hours</span>
+          </div>
+          <span className="text-2xl text-gray-600 font-thin">:</span>
+          <div className="flex flex-col items-center">
+            <span className="text-3xl sm:text-4xl font-mono font-bold text-white">{String(remaining.m).padStart(2, '0')}</span>
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 mt-1">Min</span>
+          </div>
+          <span className="text-2xl text-gray-600 font-thin">:</span>
+          <div className="flex flex-col items-center">
+            <span className="text-3xl sm:text-4xl font-mono font-bold text-blue-400">{String(remaining.s).padStart(2, '0')}</span>
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 mt-1">Sec</span>
+          </div>
+        </div>
+        <div className="text-xs text-gray-600 mt-2">
+          {convergence.opens_at && new Date(convergence.opens_at).toLocaleString(undefined, { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter basename="/app">
@@ -257,6 +316,7 @@ export default function App() {
       <ToastProvider>
       <ConvergenceProvider>
         <div className="min-h-screen bg-[#080c16] text-white flex flex-col">
+          <CountdownBanner />
           <Nav />
           <main className="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
           <ErrorBoundary>

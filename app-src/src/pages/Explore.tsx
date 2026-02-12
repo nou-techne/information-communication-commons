@@ -2,7 +2,9 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
-import { Info, ChevronDown, ChevronLeft, ChevronRight, Inbox, PenLine, Sparkles, GitBranch, Handshake } from 'lucide-react'
+import { Info, ChevronDown, ChevronLeft, ChevronRight, Inbox, PenLine, Sparkles, GitBranch, Flame } from 'lucide-react'
+import { SignalFlame } from '../components/SignalFlame'
+import { fetchMostSignaled, fetchTagSignalDensity, subscribeToSignals } from '../lib/signals'
 import { ExtractionProgress } from '../components/ExtractionProgress'
 import { ChainStatus } from '../components/ChainStatus'
 import { ReplaySlider } from '../components/ReplaySlider'
@@ -50,6 +52,8 @@ export function Explore() {
   const [sortBy, setSortBy] = useState<'recent' | 'coordination'>('coordination')
   const [coordCounts, setCoordCounts] = useState<Record<string, number>>({})
   const [searchResults, setSearchResults] = useState<Artifact[] | null>(null)
+  const [mostSignaled, setMostSignaled] = useState<any[]>([])
+  const [dimSignalCounts, setDimSignalCounts] = useState<Record<string, number>>({})
 
   // Replay
   const [replaySeq, setReplaySeq] = useState<number | null>(null)
@@ -103,9 +107,16 @@ export function Explore() {
       })
       .subscribe()
 
+    // CS-04: Realtime signal subscription
+    const cleanupSignals = subscribeToSignals(
+      () => { refreshCoordCounts(); loadSignalData() },
+      () => { refreshCoordCounts(); loadSignalData() },
+    )
+
     return () => {
       supabase.removeChannel(artifactSub)
       supabase.removeChannel(contributionSub)
+      cleanupSignals()
     }
   }, [])
 
@@ -155,12 +166,28 @@ export function Explore() {
     return counts
   }
 
+  async function loadSignalData() {
+    const [leaderboard, density] = await Promise.all([
+      fetchMostSignaled(5),
+      fetchTagSignalDensity(),
+    ])
+    setMostSignaled(leaderboard)
+    // Map dimension tags to signal counts
+    const dsc: Record<string, number> = {}
+    for (const d of density) {
+      if (d.tag_name.startsWith('hlamt:')) {
+        dsc[d.tag_name] = d.total_signals
+      }
+    }
+    setDimSignalCounts(dsc)
+  }
+
   async function loadData() {
     const [{ data: arts }] = await Promise.all([
       supabase.from('artifacts').select('*').order('created_at', { ascending: false }).limit(50),
     ])
     setArtifacts(arts || [])
-    await Promise.all([loadFeed(), refreshDimCounts(), refreshCoordCounts()])
+    await Promise.all([loadFeed(), refreshDimCounts(), refreshCoordCounts(), loadSignalData()])
     setLoading(false)
   }
 
@@ -282,18 +309,27 @@ export function Explore() {
       <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-6">
         {DIMENSIONS.map(d => {
           const count = dimCounts[d.tag] ?? 0
+          const signals = dimSignalCounts[d.tag] ?? 0
+          const borderTint = signals > 0 ? `border-orange-500/${Math.min(60, signals * 15)}` : 'border-[#1d2839]'
           return (
             <Link
               key={d.key}
               to={`/d/${d.key}`}
-              className="block rounded-lg border border-[#1d2839] bg-[#0a101d] p-3 sm:p-4 hover:border-[#a6ed2a] transition-colors text-center group"
+              className={`block rounded-lg border bg-[#0a101d] p-3 sm:p-4 hover:border-[#a6ed2a] transition-colors text-center group ${borderTint}`}
+              style={signals > 0 ? { borderColor: `rgba(245,158,11,${Math.min(0.6, signals * 0.15)})` } : undefined}
             >
               <div className="text-xs font-medium mb-1 truncate" style={{ color: d.color }}>{d.name}</div>
               <div className="flex items-baseline justify-center gap-1 sm:gap-1.5">
                 <span className="font-mono text-xl sm:text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
                 <span className="text-xl sm:text-2xl font-bold text-white">{count}</span>
               </div>
-              <span className="text-xs text-gray-400 group-hover:text-white transition-colors block truncate">{d.desc}</span>
+              <div className="text-xs text-gray-400 group-hover:text-white transition-colors block truncate">{d.desc}</div>
+              {signals > 0 && (
+                <div className="flex items-center justify-center gap-1 mt-1 text-orange-400 text-xs">
+                  <Flame className="w-3 h-3" />
+                  <span>{signals} signal{signals !== 1 ? 's' : ''}</span>
+                </div>
+              )}
             </Link>
           )
         })}
@@ -463,10 +499,7 @@ export function Explore() {
                   <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
                     <span>{timeAgo(a.created_at)}</span>
                     {(coordCounts[a.id] || 0) > 0 && (
-                      <span className="flex items-center gap-1 text-[#a6ed2a]">
-                        <Handshake className="w-3 h-3" />
-                        {coordCounts[a.id]}
-                      </span>
+                      <SignalFlame count={coordCounts[a.id]} />
                     )}
                   </div>
                 </Link>
@@ -498,8 +531,45 @@ export function Explore() {
           </>)}
         </div>
 
-        {/* Right: Contribution Feed */}
+        {/* Right: Leaderboard + Feed */}
         <div className="min-w-0">
+          {/* CS-24: Empty state when no signals yet */}
+          {mostSignaled.length === 0 && artifacts.length > 0 && (
+            <div className="mb-6 bg-[#0a101d] border border-orange-500/20 rounded-lg p-4 text-center">
+              <Flame className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+              <p className="text-sm text-gray-400 mb-2">No coordination signals yet.</p>
+              <Link to="/coordinate" className="text-xs text-orange-400 hover:text-orange-300 transition-colors">
+                Visit Coordinate to signal what interests you
+              </Link>
+            </div>
+          )}
+
+          {/* CS-21: Most Signaled Leaderboard */}
+          {mostSignaled.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider flex items-center gap-2">
+                <Flame className="w-4 h-4 text-orange-400" />
+                Most Signaled
+              </h2>
+              <div className="space-y-1.5">
+                {mostSignaled.map((item: any, i: number) => (
+                  <Link
+                    key={item.artifact_id}
+                    to={`/artifact/${item.artifact_id}`}
+                    className="flex items-center gap-3 bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-orange-500/50 transition-colors"
+                  >
+                    <span className="text-xs font-mono text-gray-600 w-4">{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-white truncate">{item.title}</div>
+                      <div className="text-xs text-gray-500">{item.type}</div>
+                    </div>
+                    <SignalFlame count={item.signal_count} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Live Activity</h2>
           {feedItems.length === 0 ? (
             <div className="text-gray-500 text-center py-8 text-sm">No contributions yet</div>

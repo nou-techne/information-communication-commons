@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, REA_COLORS, REA_LABELS } from '../lib/supabase'
 import type { Artifact } from '../lib/supabase'
 import { Activity, Users, Link2, Flame, TrendingUp, Info, Compass, PenLine, Sparkles, GitBranch, ChevronDown } from 'lucide-react'
+import { fetchTagSignalDensity } from '../lib/signals'
 import { ExtractionProgress } from '../components/ExtractionProgress'
 import { ChainStatus } from '../components/ChainStatus'
 import { ReplaySlider } from '../components/ReplaySlider'
@@ -44,6 +45,7 @@ export default function Live() {
   const [replaySeq, setReplaySeq] = useState<number | null>(null)
   const [chainMaxSeq, setChainMaxSeq] = useState(0)
   const [showAbout, setShowAbout] = useState(false)
+  const [dimSignalCounts, setDimSignalCounts] = useState<Record<string, number>>({})
   const [isFullscreen, setIsFullscreen] = useState(false)
   const graphContainerRef = useRef<HTMLDivElement>(null)
 
@@ -90,6 +92,14 @@ export default function Live() {
     // Chain head
     const { data: chainData } = await supabase.rpc('chain_head')
     if (chainData && chainData.length > 0 && chainData[0].head_seq) setChainMaxSeq(chainData[0].head_seq)
+
+    // CS-20: Signal counts per dimension
+    const density = await fetchTagSignalDensity()
+    const dsc: Record<string, number> = {}
+    for (const d of density) {
+      if (d.tag_name.startsWith('hlamt:')) dsc[d.tag_name] = d.total_signals
+    }
+    setDimSignalCounts(dsc)
   }
 
   useEffect(() => {
@@ -169,16 +179,20 @@ export default function Live() {
       <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-6">
         {DIMENSIONS.map(d => {
           const count = dimCounts[d.tag] ?? 0
+          const signals = dimSignalCounts[d.tag] ?? 0
           return (
             <Link key={d.key} to={`/d/${d.key}`}
-              className="block rounded-lg border border-[#1d2839] bg-[#0a101d] p-3 sm:p-4 hover:border-[#a6ed2a] transition-colors text-center group"
+              className="block rounded-lg border bg-[#0a101d] p-3 sm:p-4 hover:border-[#a6ed2a] transition-colors text-center group"
+              style={signals > 0 ? { borderColor: `rgba(245,158,11,${Math.min(0.6, signals * 0.15)})` } : { borderColor: '#1d2839' }}
             >
               <div className="text-xs font-medium mb-1 truncate" style={{ color: d.color }}>{d.name}</div>
               <div className="flex items-baseline justify-center gap-1">
                 <span className="font-mono text-xl sm:text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
                 <span className="text-xl sm:text-2xl font-bold text-white">{count}</span>
               </div>
-              <span className="text-xs text-gray-400 group-hover:text-white transition-colors block truncate">{d.desc}</span>
+              <div className="text-xs text-gray-400 group-hover:text-white transition-colors block truncate">
+                {count} artifact{count !== 1 ? 's' : ''}{signals > 0 ? ` · ${signals} signal${signals !== 1 ? 's' : ''}` : ''}
+              </div>
             </Link>
           )
         })}
