@@ -2,3 +2,4 @@
 app-src/node_modules/
 app-src/dist/
 node_modules/
+.secrets/
