@@ -310,9 +310,9 @@ export function Explore() {
             </div>
           </div>
           {viewMode === '3d' ? (
-            <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#0f0f0f]' : ''}`}>
+            <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#0f0f0f] w-screen h-screen' : ''}`}>
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
-                <div className={`relative ${isFullscreen ? 'h-screen' : 'h-[500px]'}`}>
+                <div className={`relative w-full ${isFullscreen ? 'h-full' : 'h-[500px]'}`}>
                   <Graph />
                   <button
                     onClick={() => {
@@ -322,7 +322,7 @@ export function Explore() {
                         graphContainerRef.current?.requestFullscreen()
                       }
                     }}
-                    className="absolute bottom-3 right-3 z-50 px-3 py-1.5 text-xs bg-[#262626]/90 text-gray-300 rounded-lg hover:bg-[#333] transition-colors backdrop-blur-sm border border-[#333]"
+                    className="absolute top-3 left-3 z-50 px-3 py-1.5 text-xs bg-[#262626]/90 text-gray-300 rounded-lg hover:bg-[#333] transition-colors backdrop-blur-sm border border-[#333]"
                   >
                     {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
                   </button>
