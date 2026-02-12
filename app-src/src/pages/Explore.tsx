@@ -309,21 +309,21 @@ export function Explore() {
           </div>
           {viewMode === '3d' ? (
             <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#0f0f0f]' : ''}`}>
-              <button
-                onClick={() => {
-                  if (isFullscreen) {
-                    document.exitFullscreen()
-                  } else {
-                    graphContainerRef.current?.requestFullscreen()
-                  }
-                }}
-                className="absolute top-2 right-2 z-10 px-3 py-1.5 text-xs bg-[#262626] text-gray-300 rounded-lg hover:bg-[#333] transition-colors"
-              >
-                {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-              </button>
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
-                <div className={isFullscreen ? 'h-screen' : 'h-[500px]'}>
+                <div className={`relative ${isFullscreen ? 'h-screen' : 'h-[500px]'}`}>
                   <Graph />
+                  <button
+                    onClick={() => {
+                      if (isFullscreen) {
+                        document.exitFullscreen()
+                      } else {
+                        graphContainerRef.current?.requestFullscreen()
+                      }
+                    }}
+                    className="absolute top-2 right-2 z-50 px-3 py-1.5 text-xs bg-[#262626]/90 text-gray-300 rounded-lg hover:bg-[#333] transition-colors backdrop-blur-sm border border-[#333]"
+                  >
+                    {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+                  </button>
                 </div>
               </Suspense>
             </div>
