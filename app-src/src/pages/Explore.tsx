@@ -316,20 +316,8 @@ export function Explore() {
           {viewMode === '3d' ? (
             <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#080c16] w-screen h-screen' : ''}`}>
               <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
-                <div className={`relative w-full ${isFullscreen ? 'h-full' : 'h-[700px]'}`}>
+                <div className="relative w-full h-[700px]">
                   <Graph />
-                  <button
-                    onClick={() => {
-                      if (isFullscreen) {
-                        document.exitFullscreen()
-                      } else {
-                        graphContainerRef.current?.requestFullscreen()
-                      }
-                    }}
-                    className="absolute bottom-3 left-3 z-50 px-4 py-2 text-sm bg-[#0a101d]/90 text-gray-300 rounded-lg hover:border-[#a6ed2a] transition-colors backdrop-blur-sm border border-[#1d2839]"
-                  >
-                    {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-                  </button>
                 </div>
               </Suspense>
             </div>
