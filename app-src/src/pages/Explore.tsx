@@ -50,7 +50,7 @@ export function Explore() {
   const [searchResults, setSearchResults] = useState<Artifact[] | null>(null)
 
   // View mode
-  const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d')
+  const [viewMode, setViewMode] = useState<'2d' | '3d'>('3d')
   const [isFullscreen, setIsFullscreen] = useState(false)
   const graphContainerRef = useRef<HTMLDivElement>(null)
 
@@ -295,7 +295,7 @@ export function Explore() {
             <div className="flex bg-[#0a101d] border border-[#1d2839] rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode('2d')}
-                className={`px-3 py-1 text-xs font-medium transition-colors ${
+                className={`px-4 py-2 text-sm font-semibold transition-colors ${
                   viewMode === '2d' ? 'bg-[#a6ed2a] text-[#080c16]' : 'text-gray-400 hover:text-white'
                 }`}
               >
@@ -303,7 +303,7 @@ export function Explore() {
               </button>
               <button
                 onClick={() => setViewMode('3d')}
-                className={`px-3 py-1 text-xs font-medium transition-colors ${
+                className={`px-4 py-2 text-sm font-semibold transition-colors ${
                   viewMode === '3d' ? 'bg-[#a6ed2a] text-[#080c16]' : 'text-gray-400 hover:text-white'
                 }`}
               >
