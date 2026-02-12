@@ -516,7 +516,16 @@ export function Graph() {
 
         {selectedNode && (
           <div className="w-64 bg-[#1a1a1a] border border-[#262626] rounded-lg p-4">
-            <h3 className="font-bold mb-2">{selectedNode.title}</h3>
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-bold flex-1">{selectedNode.title}</h3>
+              <button
+                onClick={() => setSelectedNode(null)}
+                className="ml-2 p-1 text-gray-500 hover:text-white hover:bg-[#262626] rounded transition-colors flex-shrink-0"
+                aria-label="Close"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
             <div className="space-y-2 text-sm">
               <div>
                 <span className="text-gray-500">Type:</span>
