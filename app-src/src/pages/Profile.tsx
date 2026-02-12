@@ -43,72 +43,125 @@ function ProfileSection({ label, children }: { label: string, children: React.Re
 }
 
 function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfile, extracted?: any, label?: string }) {
+  // Generate initials for avatar
+  const initials = profile.name
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+
   return (
-    <div className="bg-[#1a1a1a] border border-[#262626] rounded-lg p-6 mb-6">
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <h3 className="text-lg font-bold">{profile.name}</h3>
-          {profile.affiliation && <p className="text-sm text-gray-400">{profile.affiliation}</p>}
-          {profile.location && <p className="text-xs text-gray-500">{profile.location}</p>}
+    <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl overflow-hidden mb-6">
+      {/* Header with gradient */}
+      <div className="bg-gradient-to-r from-[#c3fd50]/20 via-[#c3fd50]/10 to-transparent px-6 py-5">
+        <div className="flex items-start gap-4">
+          <div className="w-14 h-14 rounded-full bg-[#c3fd50] flex items-center justify-center flex-shrink-0">
+            <span className="text-[#0f0f0f] font-bold text-lg">{initials}</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold text-white">{profile.name}</h3>
+              {label && <span className="text-xs text-gray-500">{label}</span>}
+            </div>
+            {profile.affiliation && (
+              <p className="text-sm text-[#c3fd50] font-medium mt-0.5">{profile.affiliation}</p>
+            )}
+            {profile.location && (
+              <p className="text-xs text-gray-400 mt-0.5">{profile.location}</p>
+            )}
+          </div>
         </div>
-        {label && <span className="text-xs text-gray-500">{label}</span>}
       </div>
 
-      {profile.bio && (
-        <p className="text-gray-300 text-sm mb-4">{profile.bio}</p>
-      )}
+      <div className="px-6 py-5 space-y-5">
+        {/* Bio */}
+        {profile.bio && (
+          <p className="text-gray-300 leading-relaxed">{profile.bio}</p>
+        )}
 
-      {profile.background && (
-        <ProfileSection label="Background">
-          <p className="text-sm text-gray-400">{profile.background}</p>
-        </ProfileSection>
-      )}
+        {/* Background */}
+        {profile.background && (
+          <div className="bg-[#0f0f0f] border border-[#262626] rounded-lg p-4">
+            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Background</div>
+            <p className="text-sm text-gray-400 leading-relaxed">{profile.background}</p>
+          </div>
+        )}
 
-      {profile.skills && profile.skills.length > 0 && (
-        <ProfileSection label="Skills">
-          <TagList items={profile.skills} color="bg-[#262626] text-gray-300" />
-        </ProfileSection>
-      )}
+        {/* Two-column grid for skills + experience */}
+        {((profile.skills && profile.skills.length > 0) || (profile.experience && profile.experience.length > 0)) && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {profile.skills && profile.skills.length > 0 && (
+              <div>
+                <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Skills</div>
+                <TagList items={profile.skills} color="bg-[#c3fd50]/10 text-[#c3fd50] border border-[#c3fd50]/20" />
+              </div>
+            )}
+            {profile.experience && profile.experience.length > 0 && (
+              <div>
+                <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Experience</div>
+                <TagList items={profile.experience} color="bg-[#262626] text-gray-300" />
+              </div>
+            )}
+          </div>
+        )}
 
-      {profile.experience && profile.experience.length > 0 && (
-        <ProfileSection label="Experience">
-          <TagList items={profile.experience} color="bg-[#262626] text-gray-300" />
-        </ProfileSection>
-      )}
+        {/* Capabilities */}
+        {profile.capabilities && profile.capabilities.length > 0 && (
+          <div>
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2">What I can do for others</div>
+            <TagList items={profile.capabilities} color="bg-blue-900/20 text-blue-300 border border-blue-800/30" />
+          </div>
+        )}
 
-      {profile.capabilities && profile.capabilities.length > 0 && (
-        <ProfileSection label="Capabilities">
-          <TagList items={profile.capabilities} color="bg-blue-900/30 text-blue-300" />
-        </ProfileSection>
-      )}
+        {/* Offering + Looking for side by side */}
+        {((profile.offering && profile.offering.length > 0) || (profile.looking_for && profile.looking_for.length > 0)) && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {profile.offering && profile.offering.length > 0 && (
+              <div className="bg-green-900/10 border border-green-800/20 rounded-lg p-4">
+                <div className="text-xs text-green-400 uppercase tracking-wider mb-2">Offering</div>
+                <div className="space-y-1.5">
+                  {profile.offering.map((item, i) => (
+                    <p key={i} className="text-sm text-green-300">{item}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+            {profile.looking_for && profile.looking_for.length > 0 && (
+              <div className="bg-amber-900/10 border border-amber-800/20 rounded-lg p-4">
+                <div className="text-xs text-amber-400 uppercase tracking-wider mb-2">Looking for</div>
+                <div className="space-y-1.5">
+                  {profile.looking_for.map((item, i) => (
+                    <p key={i} className="text-sm text-amber-300">{item}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
-      {profile.offering && profile.offering.length > 0 && (
-        <ProfileSection label="Offering">
-          <TagList items={profile.offering} color="bg-green-900/30 text-green-300" />
-        </ProfileSection>
-      )}
+        {/* Interests */}
+        {profile.interests && profile.interests.length > 0 && (
+          <div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Interests</div>
+            <TagList items={profile.interests} color="bg-purple-900/20 text-purple-300 border border-purple-800/30" />
+          </div>
+        )}
 
-      {profile.looking_for && profile.looking_for.length > 0 && (
-        <ProfileSection label="Looking for">
-          <TagList items={profile.looking_for} color="bg-amber-900/30 text-amber-300" />
-        </ProfileSection>
-      )}
-
-      {profile.interests && profile.interests.length > 0 && (
-        <ProfileSection label="Interests">
-          <TagList items={profile.interests} />
-        </ProfileSection>
-      )}
-
-      {extracted?.hlamt_tags && extracted.hlamt_tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {extracted.hlamt_tags.map((tag: string, i: number) => (
-            <span key={i} className="text-xs px-2 py-1 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] font-mono">
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
+        {/* Dimension tags */}
+        {extracted?.hlamt_tags && extracted.hlamt_tags.length > 0 && (
+          <div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Dimensional Focus</div>
+            <div className="flex flex-wrap gap-2">
+              {extracted.hlamt_tags.map((tag: string, i: number) => (
+                <span key={i} className="text-xs px-2.5 py-1 rounded-full bg-[#c3fd50]/10 text-[#c3fd50] font-mono border border-[#c3fd50]/20">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
