@@ -160,7 +160,7 @@ export function ArtifactDetail() {
 
         {/* Coordination signal */}
         <div className="mb-4">
-          <CoordinateButton artifactId={artifact.id} participantId={participantId} />
+          <CoordinateButton artifactId={artifact.id} />
         </div>
 
         {/* Body */}
