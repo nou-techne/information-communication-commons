@@ -335,6 +335,20 @@ export function Explore() {
                 </div>
               </Suspense>
             </div>
+            {/* Merkle Chain & Replay — directly under 3D graph */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+              <div className="sm:col-span-1">
+                <ChainStatus />
+              </div>
+              <div className="sm:col-span-2">
+                {chainMaxSeq > 0 && (
+                  <ReplaySlider
+                    maxSeq={chainMaxSeq}
+                    onSeqChange={(seq) => setReplaySeq(seq)}
+                  />
+                )}
+              </div>
+            </div>
           ) : (<>
           {/* Search + Filters */}
           <div className="mb-4">
@@ -553,20 +567,6 @@ export function Explore() {
         </div>
       </div>
 
-      {/* Merkle Chain & Replay — below the graph */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6 mb-12">
-        <div className="lg:col-span-1">
-          <ChainStatus />
-        </div>
-        <div className="lg:col-span-2">
-          {chainMaxSeq > 0 && (
-            <ReplaySlider
-              maxSeq={chainMaxSeq}
-              onSeqChange={(seq) => setReplaySeq(seq)}
-            />
-          )}
-        </div>
-      </div>
     </div>
   )
 }
