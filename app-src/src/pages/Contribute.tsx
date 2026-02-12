@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { Zap, Check } from 'lucide-react'
+import { ExtractionProgress } from '../components/ExtractionProgress'
 
 interface Session {
   id: string
@@ -33,6 +34,7 @@ export function Contribute() {
   const [searchParams] = useSearchParams()
   const [text, setText] = useState('')
   const [state, setState] = useState<ProcessingState>('idle')
+  const [extractionStartedAt, setExtractionStartedAt] = useState<number>(Date.now())
   const [error, setError] = useState('')
   const [contributionId, setContributionId] = useState<string | null>(null)
   const [artifactCount, setArtifactCount] = useState(0)
@@ -73,6 +75,7 @@ export function Contribute() {
         const status = payload.new.status
         
         if (status === 'processing') {
+          setExtractionStartedAt(Date.now())
           setState('extracting')
         } else if (status === 'complete') {
           // Fetch created artifacts from extraction
@@ -161,6 +164,7 @@ export function Contribute() {
 
       // Save contribution ID and transition to extracting state
       setContributionId(newContribution.id)
+      setExtractionStartedAt(Date.now())
       setState('extracting')
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please try again.')
@@ -179,10 +183,8 @@ export function Contribute() {
           <p className="text-gray-400 max-w-md mx-auto">
             AI is analyzing your contribution, identifying artifacts, tagging by dimension, and linking to the knowledge graph.
           </p>
-          <div className="mt-6 flex items-center justify-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '0ms' }} />
-            <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '150ms' }} />
-            <div className="w-2 h-2 rounded-full bg-[#c3fd50] animate-bounce" style={{ animationDelay: '300ms' }} />
+          <div className="mt-6">
+            <ExtractionProgress startedAt={extractionStartedAt} />
           </div>
         </div>
       </div>

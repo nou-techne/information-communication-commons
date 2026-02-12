@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
 import { Info, ChevronDown, Inbox, PenLine, Sparkles, GitBranch, Handshake } from 'lucide-react'
+import { ExtractionProgress } from '../components/ExtractionProgress'
 import { useConvergence } from '../contexts/ConvergenceContext'
 
 const Graph = lazy(() => import('./Graph').then(m => ({ default: m.Graph })))
@@ -510,7 +511,9 @@ export function Explore() {
                     </div>
                   )}
                   {item.status === 'processing' && (
-                    <span className="text-xs text-blue-400">Extracting...</span>
+                    <div className="mt-1">
+                      <ExtractionProgress startedAt={item.created_at} compact />
+                    </div>
                   )}
                   {item.status === 'error' && (
                     <span className="text-xs text-red-400">Extraction failed</span>
