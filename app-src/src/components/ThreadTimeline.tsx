@@ -1,4 +1,4 @@
-import { MessageSquare, Tag, CheckCircle, Archive, Merge, Clock } from 'lucide-react'
+import { MessageSquare, Tag, CheckCircle, Merge, Clock } from 'lucide-react'
 
 interface TimelineEvent {
   id: string
@@ -39,7 +39,7 @@ export function ThreadTimeline({ events }: ThreadTimelineProps) {
       {/* Vertical line */}
       <div className="absolute left-[11px] top-2 bottom-2 w-px bg-[#262626]" />
 
-      {events.map((event, i) => {
+      {events.map((event) => {
         const config = EVENT_CONFIG[event.type]
         const Icon = config.icon
 
