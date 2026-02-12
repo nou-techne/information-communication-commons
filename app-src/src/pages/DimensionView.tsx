@@ -175,104 +175,21 @@ function WordFrequencyChart({ words, maxCount, label }: { words: WordFreq[]; max
 
 function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
   const [collectiveWords, setCollectiveWords] = useState<WordFreq[]>([])
-  const [participantWords, setParticipantWords] = useState<Record<string, WordFreq[]>>({})
-  const [participants, setParticipants] = useState<{ id: string; name: string }[]>([])
-  const [selectedParticipant, setSelectedParticipant] = useState<string | null>(null)
-  const [view, setView] = useState<'collective' | 'participant'>('collective')
 
   useEffect(() => {
     async function load() {
-      // Collective word frequencies
       const { data: cw } = await supabase.rpc('word_frequencies')
       if (cw) setCollectiveWords(cw.slice(0, 25))
-
-      // Load participants who have contributions
-      const { data: parts } = await supabase
-        .from('participants')
-        .select('id, name')
-        .order('name')
-      if (parts) setParticipants(parts)
     }
     load()
   }, [])
 
-  async function loadParticipantWords(pid: string) {
-    if (participantWords[pid]) return
-    const { data } = await supabase.rpc('word_frequencies', { p_participant_id: pid })
-    if (data) setParticipantWords(prev => ({ ...prev, [pid]: data.slice(0, 30) }))
-  }
-
-  useEffect(() => {
-    if (selectedParticipant) loadParticipantWords(selectedParticipant)
-  }, [selectedParticipant])
-
   const maxCollective = collectiveWords[0]?.count ?? 1
-  const currentParticipantWords = selectedParticipant ? (participantWords[selectedParticipant] || []) : []
-  const maxParticipant = currentParticipantWords[0]?.count ?? 1
 
   return (
     <div className="space-y-6">
-      {/* Toggle */}
-      <div className="flex gap-2">
-        <button
-          onClick={() => setView('collective')}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            view === 'collective' ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-400 hover:text-white'
-          }`}
-        >
-          Collective
-        </button>
-        <button
-          onClick={() => setView('participant')}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            view === 'participant' ? 'bg-[#c3fd50] text-[#0f0f0f]' : 'bg-[#262626] text-gray-400 hover:text-white'
-          }`}
-        >
-          By Participant
-        </button>
-      </div>
+      <WordFrequencyChart words={collectiveWords} maxCount={maxCollective} label="Emergent Vocabulary" />
 
-      {view === 'collective' && (
-        <WordFrequencyChart words={collectiveWords} maxCount={maxCollective} label="Emergent Vocabulary" />
-      )}
-
-      {view === 'participant' && (
-        <div className="space-y-4">
-          {participants.length > 0 ? (
-            <>
-              <div className="flex flex-wrap gap-2">
-                {participants.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => setSelectedParticipant(p.id)}
-                    className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                      selectedParticipant === p.id
-                        ? 'bg-[#c4956a] text-[#0f0f0f] font-medium'
-                        : 'bg-[#262626] text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    {p.name}
-                  </button>
-                ))}
-              </div>
-              {selectedParticipant && (
-                <WordFrequencyChart
-                  words={currentParticipantWords}
-                  maxCount={maxParticipant}
-                  label={`${participants.find(p => p.id === selectedParticipant)?.name || 'Participant'} Vocabulary`}
-                />
-              )}
-              {!selectedParticipant && (
-                <p className="text-gray-500 text-sm">Select a participant to see their vocabulary.</p>
-              )}
-            </>
-          ) : (
-            <p className="text-gray-500 text-sm">No participants yet.</p>
-          )}
-        </div>
-      )}
-
-      {/* Language artifacts below */}
       {artifacts.length > 0 && (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Language Knowledge Nodes ({artifacts.length})</h2>
