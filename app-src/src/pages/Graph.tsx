@@ -273,7 +273,30 @@ export function Graph() {
 
     const cx = width / 2
     const cy = height / 2
-    const ringRadius = Math.min(width, height) * 0.3
+    const ringRadius = Math.min(width, height) * 0.4
+
+    // Count edges per dimension node for dynamic sizing
+    const dimEdgeCounts: Record<string, number> = {}
+    // Count "coordinate" signals (commitment-type artifacts) per dimension
+    const dimCoordinateCounts: Record<string, number> = {}
+    for (const key of DIMENSION_KEYS) {
+      const dimId = `dim-${key}`
+      dimEdgeCounts[dimId] = filteredLinks.filter(l => {
+        const src = getId(l.source), tgt = getId(l.target)
+        return src === dimId || tgt === dimId
+      }).length
+      // Count coordinate signals: artifacts of type 'commitment' connected to this dimension
+      const connectedArtifactIds = new Set(
+        filteredLinks
+          .filter(l => {
+            const src = getId(l.source), tgt = getId(l.target)
+            return (src === dimId || tgt === dimId) && l.type === 'dimension_link'
+          })
+          .map(l => { const src = getId(l.source), tgt = getId(l.target); return src === dimId ? tgt : src })
+      )
+      dimCoordinateCounts[dimId] = filteredNodes.filter(n => connectedArtifactIds.has(n.id) && n.type === 'commitment').length
+    }
+    const maxDimEdges = Math.max(1, ...Object.values(dimEdgeCounts))
 
     // Pre-position dimension nodes in hexagonal layout (initial positions, not fixed)
     const simNodes = filteredNodes.map((n, _i) => {
@@ -283,6 +306,8 @@ export function Graph() {
         const angle = (dimIdx / 6) * Math.PI * 2 - Math.PI / 2
         copy.x = cx + ringRadius * Math.cos(angle)
         copy.y = cy + ringRadius * Math.sin(angle)
+        copy.dimEdges = dimEdgeCounts[n.id] || 0
+        copy.dimCoordinate = dimCoordinateCounts[n.id] || 0
       }
       return copy
     })
@@ -299,10 +324,16 @@ export function Graph() {
     }
 
     const simulation = d3.forceSimulation(simNodes)
-      .force('link', d3.forceLink(filteredLinks as any).id((d: any) => d.id).distance((d: any) => d.type === 'dimension_link' ? 120 : 80))
-      .force('charge', d3.forceManyBody().strength((d: any) => d.isDimension ? -600 : -200))
-      .force('center', d3.forceCenter(cx, cy).strength(0.05))
-      .force('collision', d3.forceCollide().radius((d: any) => d.isDimension ? 30 : 12))
+      .force('link', d3.forceLink(filteredLinks as any).id((d: any) => d.id).distance((d: any) => d.type === 'dimension_link' ? 160 : 80))
+      .force('charge', d3.forceManyBody().strength((d: any) => d.isDimension ? -1200 : -200))
+      .force('center', d3.forceCenter(cx, cy).strength(0.03))
+      .force('collision', d3.forceCollide().radius((d: any) => {
+        if (d.isDimension) {
+          const edges = d.dimEdges || 0
+          return 18 + (edges / maxDimEdges) * 30
+        }
+        return 12
+      }))
       // Gentle pull toward ring positions instead of pinning
       .force('dimX', d3.forceX((d: any) => dimTargets[d.id]?.x ?? cx).strength((d: any) => d.isDimension ? 0.3 : 0))
       .force('dimY', d3.forceY((d: any) => dimTargets[d.id]?.y ?? cy).strength((d: any) => d.isDimension ? 0.3 : 0))
@@ -332,7 +363,11 @@ export function Graph() {
       .data(simNodes)
       .enter().append('circle')
       .attr('r', (d: any) => {
-        if (d.isDimension) return 22
+        if (d.isDimension) {
+          const edges = d.dimEdges || 0
+          const coordBonus = (d.dimCoordinate || 0) * 3
+          return Math.max(18, 18 + ((edges + coordBonus) / maxDimEdges) * 28)
+        }
         const degree = d.dimensionDegree || 0
         return Math.min(14, Math.max(6, 6 + degree * 1.5))
       })
@@ -390,7 +425,10 @@ export function Graph() {
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'central')
       .attr('fill', '#080c16')
-      .attr('font-size', '12px')
+      .attr('font-size', (d: any) => {
+        const edges = d.dimEdges || 0
+        return `${Math.max(11, 11 + (edges / maxDimEdges) * 6)}px`
+      })
       .attr('font-weight', 'bold')
       .attr('pointer-events', 'none')
       .text((d: any) => `${d.dimensionLabel}/`)
