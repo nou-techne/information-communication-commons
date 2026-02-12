@@ -35,11 +35,21 @@ export function Contribute() {
   const [searchParams] = useSearchParams()
   const { convergence } = useConvergence()
   
-  // Gate: check if convergence is open
+  // Gate: check if convergence is open or user is steward
   const opensAt = convergence.opens_at ? new Date(convergence.opens_at).getTime() : 0
   const [isOpen, setIsOpen] = useState(opensAt <= Date.now())
+  const [isSteward, setIsSteward] = useState(false)
   const [countdown, setCountdown] = useState('')
   
+  useEffect(() => {
+    // Check steward status
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session && convergence.steward_ids?.includes(data.session.user.id)) {
+        setIsSteward(true)
+      }
+    })
+  }, [convergence.steward_ids])
+
   useEffect(() => {
     if (!convergence.opens_at) { setIsOpen(true); return }
     function tick() {
@@ -264,7 +274,7 @@ export function Contribute() {
     )
   }
 
-  if (!isOpen) {
+  if (!isOpen && !isSteward) {
     return (
       <div className="max-w-2xl mx-auto text-center py-16">
         <Clock className="w-16 h-16 text-blue-500 mx-auto mb-6" />
@@ -285,7 +295,12 @@ export function Contribute() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-2">Contribute</h1>
+      <div className="flex items-center gap-3 mb-2">
+        <h1 className="text-2xl font-bold">Contribute</h1>
+        {isSteward && !isOpen && (
+          <span className="text-xs px-2.5 py-1 rounded-full bg-amber-900/30 border border-amber-700/30 text-amber-400">Steward Access</span>
+        )}
+      </div>
       <p className="text-gray-400 text-sm mb-2">
         Share what you observed, learned, or committed to. Write naturally — AI extracts the structure.
       </p>
