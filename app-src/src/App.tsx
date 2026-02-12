@@ -38,6 +38,12 @@ const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
 const ConvergenceDashboardPage = lazy(() => import('./pages/ConvergenceDashboardPage'))
 const FederationPage = lazy(() => import('./pages/FederationPage'))
 import type { Session } from '@supabase/supabase-js'
+import { Navigate } from 'react-router-dom'
+
+function RequireAuth({ children, session }: { children: React.ReactNode; session: Session | null }) {
+  if (!session) return <Navigate to="/auth" replace />
+  return <>{children}</>
+}
 
 // Sprint 41: Lazy load heavy pages for code splitting
 const Graph = lazy(() => import('./pages/Graph').then(m => ({ default: m.Graph })))
@@ -56,13 +62,16 @@ function Nav() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const links = [
+  const publicLinks = [
     { to: '/', label: 'Explore' },
+  ]
+  const authedLinks = [
     { to: '/contribute', label: 'Contribute' },
     { to: '/coordinate', label: 'Coordinate' },
     { to: '/channels', label: 'Channels' },
     { to: '/me', label: 'My Activity' },
   ]
+  const links = session ? [...publicLinks, ...authedLinks] : publicLinks
 
   return (
     <nav className="bg-[#080c16] border-b border-[#1d2839] px-4 py-3">
@@ -196,6 +205,48 @@ function Nav() {
   )
 }
 
+function AuthGuardedRoutes() {
+  const [session, setSession] = useState<Session | null>(null)
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session))
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return (
+    <Routes>
+      <Route path="/" element={<Explore />} />
+      <Route path="/dimensions" element={<Dimensions />} />
+      <Route path="/d/:dimension" element={<DimensionView />} />
+      <Route path="/artifact/:id" element={<ArtifactDetail />} />
+      <Route path="/me" element={<RequireAuth session={session}><MyThread /></RequireAuth>} />
+      <Route path="/contribute" element={<RequireAuth session={session}><Contribute /></RequireAuth>} />
+      <Route path="/profile" element={<RequireAuth session={session}><Profile /></RequireAuth>} />
+      <Route path="/contribution/:id" element={<ContributionDetail />} />
+      <Route path="/graph" element={<Graph />} />
+      <Route path="/coordinate" element={<RequireAuth session={session}><Coordinate /></RequireAuth>} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/search" element={<Search />} />
+      <Route path="/p/:id" element={<ParticipantProfile />} />
+      <Route path="/session/:id" element={<SessionDetail />} />
+      <Route path="/stats" element={<Stats />} />
+      <Route path="/channels" element={<RequireAuth session={session}><Channels /></RequireAuth>} />
+      <Route path="/channels/search" element={<RequireAuth session={session}><MessageSearch /></RequireAuth>} />
+      <Route path="/channels/:slug" element={<RequireAuth session={session}><ChannelView /></RequireAuth>} />
+      <Route path="/channels/:slug/:threadId" element={<RequireAuth session={session}><ThreadView /></RequireAuth>} />
+      <Route path="/welcome" element={<Onboard />} />
+      <Route path="/status" element={<Status />} />
+      <Route path="/api-docs" element={<ApiDocsPage />} />
+      <Route path="/webhooks" element={<WebhooksPage />} />
+      <Route path="/analytics" element={<AnalyticsPage />} />
+      <Route path="/convergence" element={<ConvergenceDashboardPage />} />
+      <Route path="/federation" element={<FederationPage />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter basename="/app">
@@ -207,36 +258,7 @@ export default function App() {
           <main className="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
           <ErrorBoundary>
             <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Explore />} />
-              <Route path="/dimensions" element={<Dimensions />} />
-              <Route path="/d/:dimension" element={<DimensionView />} />
-              <Route path="/artifact/:id" element={<ArtifactDetail />} />
-              <Route path="/me" element={<MyThread />} />
-              <Route path="/contribute" element={<Contribute />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/contribution/:id" element={<ContributionDetail />} />
-              <Route path="/graph" element={<Graph />} />
-              <Route path="/coordinate" element={<Coordinate />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/p/:id" element={<ParticipantProfile />} />
-              <Route path="/session/:id" element={<SessionDetail />} />
-              <Route path="/stats" element={<Stats />} />
-              <Route path="/channels" element={<Channels />} />
-              <Route path="/channels/search" element={<MessageSearch />} />
-              <Route path="/channels/:slug" element={<ChannelView />} />
-              <Route path="/channels/:slug/:threadId" element={<ThreadView />} />
-              <Route path="/welcome" element={<Onboard />} />
-              <Route path="/status" element={<Status />} />
-              <Route path="/api-docs" element={<ApiDocsPage />} />
-              <Route path="/webhooks" element={<WebhooksPage />} />
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/convergence" element={<ConvergenceDashboardPage />} />
-              <Route path="/federation" element={<FederationPage />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+              <AuthGuardedRoutes />
             </Suspense>
           </ErrorBoundary>
         </main>
