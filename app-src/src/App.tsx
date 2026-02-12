@@ -75,9 +75,12 @@ function Nav() {
               <SearchIcon className="w-5 h-5" />
             </Link>
             {session ? (
-              <button onClick={() => supabase.auth.signOut()} className="text-gray-400 hover:text-white">
-                Sign out
-              </button>
+              <>
+                <Link to="/profile" className="text-gray-400 hover:text-white">Profile</Link>
+                <button onClick={() => supabase.auth.signOut()} className="text-gray-400 hover:text-white">
+                  Sign out
+                </button>
+              </>
             ) : (
               <Link to="/auth" className="text-[#c3fd50] hover:text-white">Sign in</Link>
             )}
@@ -133,12 +136,25 @@ function Nav() {
               </Link>
               <div className="pt-2 border-t border-[#262626]">
                 {session ? (
-                  <button
-                    onClick={() => { supabase.auth.signOut(); setMobileMenuOpen(false); }}
-                    className="block w-full text-left px-3 py-2 text-sm text-gray-400 hover:text-white"
-                  >
-                    Sign out
-                  </button>
+                  <>
+                    <Link
+                      to="/profile"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
+                        location.pathname === '/profile'
+                          ? 'bg-[#262626] text-white'
+                          : 'text-gray-400 hover:text-white hover:bg-[#1a1a1a]'
+                      }`}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={() => { supabase.auth.signOut(); setMobileMenuOpen(false); }}
+                      className="block w-full text-left px-3 py-2 text-sm text-gray-400 hover:text-white"
+                    >
+                      Sign out
+                    </button>
+                  </>
                 ) : (
                   <Link
                     to="/auth"
