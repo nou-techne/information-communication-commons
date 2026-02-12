@@ -199,24 +199,27 @@ export function Channels() {
                   <Link
                     key={ch.id}
                     to={`/channels/${ch.slug}`}
-                    className="flex items-center gap-3 bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-3 hover:border-[#a6ed2a] transition-colors group"
+                    className="flex items-center gap-3 bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-4 hover:border-[#a6ed2a] transition-colors group"
                   >
-                    <div className="flex-shrink-0 text-gray-500 group-hover:text-[#a6ed2a] transition-colors">
-                      {ch.visibility === 'private' ? <Lock className="w-4 h-4" /> : <Hash className="w-4 h-4" />}
+                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#1d2839] flex items-center justify-center text-gray-400 group-hover:text-[#a6ed2a] group-hover:bg-[#1d2839]/80 transition-colors">
+                      {ch.visibility === 'private' ? <Lock className="w-5 h-5" /> : <Hash className="w-5 h-5" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-white text-sm group-hover:text-[#a6ed2a] transition-colors">{ch.name}</span>
+                        <span className="font-semibold text-white text-base group-hover:text-[#a6ed2a] transition-colors">{ch.name}</span>
+                        {unreadChannels.has(ch.slug) && (
+                          <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />
+                        )}
                       </div>
-                      {ch.description && (
-                        <p className="text-xs text-gray-500 truncate">{ch.description}</p>
+                      {ch.description ? (
+                        <p className="text-sm text-gray-400 truncate mt-0.5">{ch.description}</p>
+                      ) : (
+                        <p className="text-sm text-gray-600 mt-0.5">No description</p>
                       )}
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      {unreadChannels.has(ch.slug) && (
-                        <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />
-                      )}
-                      <span className="text-xs text-gray-600">{timeAgo(ch.updated_at)}</span>
+                      <span className="text-xs text-gray-500">{timeAgo(ch.updated_at)}</span>
+                      <svg className="w-4 h-4 text-gray-600 group-hover:text-[#a6ed2a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                     </div>
                   </Link>
                 ))}
