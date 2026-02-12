@@ -153,14 +153,10 @@ export function MyThread() {
       </div>
 
       {/* Summary stats */}
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
         <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-white">{totalContributions}</div>
           <div className="text-xs text-gray-500 mt-1">Contributions</div>
-        </div>
-        <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-blue-400">{completedContributions}</div>
-          <div className="text-xs text-gray-500 mt-1">Processed</div>
         </div>
         <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4 text-center">
           <div className="text-2xl font-bold text-[#a6ed2a]">{totalArtifacts}</div>
