@@ -123,7 +123,7 @@ function profileCompleteness(p: Participant): number {
 
 function HumanView({ artifacts }: { artifacts: Artifact[] }) {
   const [participants, setParticipants] = useState<Participant[]>([])
-  const [showDirectory, setShowDirectory] = useState(false)
+  const [showDirectory, setShowDirectory] = useState(true)
 
   useEffect(() => {
     supabase.from('participants').select('id, display_name, email, bio, organization, avatar_url, skills, interests, social_links').then(({ data }) => {
