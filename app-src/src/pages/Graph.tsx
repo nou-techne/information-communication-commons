@@ -212,6 +212,7 @@ export function Graph({ replaySeq }: GraphProps = {}) {
 
   const simulationRef = useRef<d3.Simulation<any, any> | null>(null)
   const zoomRef = useRef<any>(null)
+  const graphContainerRef = useRef<HTMLDivElement>(null)
 
   function resetGraph() {
     // Force full re-render by stopping old sim and clearing
@@ -651,7 +652,7 @@ export function Graph({ replaySeq }: GraphProps = {}) {
       )}
 
       <div className="flex gap-4">
-        <div className="flex-1 bg-[#060a14] border border-[#1d2839] rounded-lg overflow-hidden relative">
+        <div ref={graphContainerRef} className="flex-1 bg-[#060a14] border border-[#1d2839] rounded-lg overflow-hidden relative">
           <svg ref={svgRef} className="w-full h-full min-h-[400px]" style={{ maxHeight: '700px' }} />
           <div className="absolute bottom-3 right-3 flex flex-col gap-1">
             <button
@@ -675,6 +676,23 @@ export function Graph({ replaySeq }: GraphProps = {}) {
               aria-label="Zoom out"
             >
               −
+            </button>
+            <button
+              onClick={() => {
+                const el = graphContainerRef.current
+                if (!el) return
+                if (document.fullscreenElement) {
+                  document.exitFullscreen()
+                } else {
+                  el.requestFullscreen()
+                }
+              }}
+              className="w-8 h-8 rounded-lg bg-[#0a101d]/90 border border-[#1d2839] text-gray-300 hover:text-white hover:border-[#a6ed2a] transition-colors flex items-center justify-center backdrop-blur-sm"
+              aria-label="Toggle fullscreen"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+              </svg>
             </button>
           </div>
         </div>
