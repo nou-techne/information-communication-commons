@@ -97,86 +97,45 @@ function EcologyView({ artifacts }: { artifacts: Artifact[] }) {
 }
 
 function HumanView({ artifacts }: { artifacts: Artifact[] }) {
-  const [participants, setParticipants] = useState<Participant[]>([])
-  const [participantArtifacts, setParticipantArtifacts] = useState<Record<string, Artifact[]>>({})
+  const [participantCount, setParticipantCount] = useState(0)
 
   useEffect(() => {
-    async function load() {
-      const { data: parts } = await supabase.from('participants').select('*').order('name')
-      if (parts) {
-        setParticipants(parts)
-        // Get artifacts created by each participant
-        const pArtifacts: Record<string, Artifact[]> = {}
-        for (const p of parts) {
-          const { data: arts } = await supabase
-            .from('artifacts')
-            .select('*')
-            .eq('created_by', p.id)
-            .order('created_at', { ascending: false })
-            .limit(3)
-          if (arts) pArtifacts[p.id] = arts
-        }
-        setParticipantArtifacts(pArtifacts)
-      }
-    }
-    load()
+    supabase.from('participants').select('*', { count: 'exact', head: true }).then(({ count }) => {
+      setParticipantCount(count ?? 0)
+    })
   }, [])
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-          Participants ({participants.length})
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {participants.map(p => (
-            <div key={p.id} className="rounded-lg border border-[#262626] bg-[#1a1a1a] p-4">
-              <h3 className="font-medium text-white mb-1" style={{ color: '#c4956a' }}>{p.name}</h3>
-              {p.affiliation && <p className="text-xs text-gray-500 mb-1">{p.affiliation}</p>}
-              {p.bio && <p className="text-sm text-gray-400 mb-2">{p.bio}</p>}
-              {p.interests?.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {p.interests.map((i, idx) => (
-                    <span key={idx} className="text-xs px-2 py-0.5 rounded bg-[#262626] text-gray-400">{i}</span>
-                  ))}
-                </div>
-              )}
-              {participantArtifacts[p.id]?.length > 0 && (
-                <div className="mt-2 border-t border-[#262626] pt-2">
-                  <span className="text-xs text-gray-500">Recent contributions:</span>
-                  {participantArtifacts[p.id].map(a => (
-                    <Link key={a.id} to={`/artifact/${a.id}`} className="block text-xs text-[#c3fd50] hover:text-white mt-1">
-                      {a.title}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+      {participantCount > 0 && (
+        <div className="rounded-lg border border-[#262626] bg-[#1a1a1a] p-4">
+          <p className="text-gray-400 text-sm">
+            <span className="text-2xl font-bold mr-2" style={{ color: '#c4956a' }}>{participantCount}</span>
+            participants registered. Browse the <Link to="/" className="text-[#c3fd50] hover:text-white transition-colors">activity feed</Link> to see their contributions.
+          </p>
         </div>
-        {participants.length === 0 && (
-          <div className="text-center py-12 bg-[#1a1a1a] border border-[#262626] rounded-lg mt-4">
-            <div className="max-w-sm mx-auto">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#c4956a20' }}>
-                <Users className="w-8 h-8" style={{ color: '#c4956a' }} />
-              </div>
-              <h3 className="text-white font-semibold mb-2">No participants registered yet</h3>
-              <p className="text-gray-400 text-sm mb-4">Sign in to create your participant profile and link your contributions to your identity.</p>
-              <Link
-                to="/auth"
-                className="inline-block bg-[#c3fd50] text-[#0f0f0f] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#d4fe80] transition-colors"
-              >
-                Sign In
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-      {artifacts.length > 0 && (
+      )}
+      {artifacts.length > 0 ? (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Human-tagged Knowledge Nodes</h2>
           <div className="grid gap-3">
             {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
+          </div>
+        </div>
+      ) : (
+        <div className="text-center py-12 bg-[#1a1a1a] border border-[#262626] rounded-lg">
+          <div className="max-w-sm mx-auto">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#c4956a20' }}>
+              <Users className="w-8 h-8" style={{ color: '#c4956a' }} />
+            </div>
+            <h3 className="text-white font-semibold mb-2">No human-tagged artifacts yet</h3>
+            <p className="text-gray-400 text-sm mb-4">Contribute session notes to populate the Human dimension.</p>
+            <Link
+              to="/contribute"
+              className="inline-block bg-[#c3fd50] text-[#0f0f0f] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#d4fe80] transition-colors"
+            >
+              Contribute
+            </Link>
           </div>
         </div>
       )}
