@@ -41,12 +41,20 @@ Return ONLY valid JSON, no code fences.
 - If they don't give their name, set name to null — the system will fall back to their email
 - Bio should be third-person ("Sarah is a..." not "I am a...")
 - All array fields should contain specific, actionable items — not generic categories
-- skills vs capabilities: skills are what they know, capabilities are what they can do for others
+- skills vs capabilities: skills are what they know (e.g. "Solidity", "facilitation"), capabilities are what they can do for others (e.g. "technical architecture review", "grant writing support")
 - looking_for + offering are the coordination engine — extract these carefully, they enable matchmaking
 - Background is the longer narrative; bio is the 1-3 sentence summary
 - Tag them with the hlamt dimensions that best describe where their capability lives
 - Most people touch 2-3 dimensions
 - Omit any field where there's no signal (use null for strings, empty array for arrays)
+
+## CRITICAL: No duplication across fields
+- Each piece of information should appear in EXACTLY ONE field — the most appropriate one
+- Do NOT repeat the same concept across skills, experience, capabilities, and interests
+- If input is brief, put information in the single best field and leave others as empty arrays
+- "cooperative infrastructure" is an INTEREST, not also a skill and experience and capability
+- Prefer fewer, more specific entries over many vague ones
+- If you can't clearly distinguish between fields from the input, use only: bio + interests + skills. Leave others empty.
 
 Text:
 `
