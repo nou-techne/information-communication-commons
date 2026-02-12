@@ -321,7 +321,7 @@ export function Explore() {
                         graphContainerRef.current?.requestFullscreen()
                       }
                     }}
-                    className="absolute top-2 right-2 z-50 px-3 py-1.5 text-xs bg-[#262626]/90 text-gray-300 rounded-lg hover:bg-[#333] transition-colors backdrop-blur-sm border border-[#333]"
+                    className="absolute bottom-3 right-3 z-50 px-3 py-1.5 text-xs bg-[#262626]/90 text-gray-300 rounded-lg hover:bg-[#333] transition-colors backdrop-blur-sm border border-[#333]"
                   >
                     {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
                   </button>
