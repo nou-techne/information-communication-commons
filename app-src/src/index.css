@@ -1,10 +1,89 @@
 @import "tailwindcss";
 
+:root {
+  --bg: #080c16;
+  --surface: #0a101d;
+  --border: #1d2839;
+  --border-hover: #283347;
+  --text: #f7f9fb;
+  --text-muted: #93a2b7;
+  --text-dim: #6b7a8d;
+  --accent: #a6ed2a;
+  --accent-hover: #b8f247;
+}
+
+.light-mode {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --border: #d8dde6;
+  --border-hover: #b8c0cc;
+  --text: #0f1419;
+  --text-muted: #4a5568;
+  --text-dim: #8494a7;
+  --accent: #4a9e15;
+  --accent-hover: #3d8512;
+}
+
 html, body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background-color: #080c16;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Light mode color overrides for hardcoded dark values */
+.light-mode {
+  /* Backgrounds */
+  & [class*="bg-[#080c16]"] { background-color: var(--bg) !important; }
+  & [class*="bg-[#0a101d]"] { background-color: var(--surface) !important; }
+  & [class*="bg-[#060a14]"] { background-color: #edf0f5 !important; }
+  
+  /* Borders */
+  & [class*="border-[#1d2839]"] { border-color: var(--border) !important; }
+  & [class*="border-[#283347]"] { border-color: var(--border-hover) !important; }
+  
+  /* Text overrides */
+  & [class*="text-white"] { color: var(--text) !important; }
+  & [class*="text-gray-100"] { color: #1a2332 !important; }
+  & [class*="text-gray-200"] { color: #2d3748 !important; }
+  & [class*="text-gray-300"] { color: #4a5568 !important; }
+  & [class*="text-gray-400"] { color: #5a6a7e !important; }
+  & [class*="text-gray-500"] { color: #718096 !important; }
+  & [class*="text-gray-600"] { color: #a0aec0 !important; }
+  
+  /* Accent */
+  & [class*="text-[#a6ed2a]"] { color: var(--accent) !important; }
+  & [class*="bg-[#a6ed2a]"] { background-color: var(--accent) !important; }
+  & [class*="hover:border-[#a6ed2a]"]:hover { border-color: var(--accent) !important; }
+  & [class*="bg-[#b8f247]"] { background-color: var(--accent-hover) !important; }
+  
+  /* Fix SVG graph background */
+  & svg { background-color: transparent !important; }
+  
+  /* Placeholder text */
+  & input::placeholder, & textarea::placeholder { color: #a0aec0 !important; }
+  
+  /* Select dropdowns */
+  & select { background-color: var(--surface) !important; border-color: var(--border) !important; color: var(--text) !important; }
+
+  /* Cards get subtle shadow in light mode */
+  & [class*="rounded-lg"][class*="border"] { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  & [class*="rounded-xl"][class*="border"] { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+}
+
+/* Theme toggle styling */
+.theme-toggle-track {
+  background-color: #1d2839;
+}
+.light-mode .theme-toggle-track {
+  background-color: #d8dde6;
+}
+.theme-toggle-thumb {
+  background-color: #a6ed2a;
+}
+.light-mode .theme-toggle-thumb {
+  background-color: #4a9e15;
 }
 
 .line-clamp-3 {

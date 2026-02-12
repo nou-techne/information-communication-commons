@@ -4,6 +4,8 @@ import { supabase } from './lib/supabase'
 import { Menu, X, Search as SearchIcon } from 'lucide-react'
 import { ConvergenceProvider, useConvergence } from './contexts/ConvergenceContext'
 import { ToastProvider } from './contexts/ToastContext'
+import { ThemeProvider } from './contexts/ThemeContext'
+import { ThemeToggle } from './components/ThemeToggle'
 import { ToastContainer } from './components/ui/Toast'
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -87,6 +89,7 @@ function Nav() {
             ))}
           </div>
           <div className="flex items-center gap-4 text-sm">
+            <ThemeToggle />
             <Link to="/search" className="text-gray-400 hover:text-white" aria-label="Search">
               <SearchIcon className="w-5 h-5" />
             </Link>
@@ -181,6 +184,10 @@ function Nav() {
                   </Link>
                 )}
               </div>
+              <div className="flex items-center gap-3 px-3 py-2">
+                <span className="text-xs text-gray-400">Theme</span>
+                <ThemeToggle />
+              </div>
             </div>
           )}
         </div>
@@ -192,6 +199,7 @@ function Nav() {
 export default function App() {
   return (
     <BrowserRouter basename="/app">
+      <ThemeProvider>
       <ToastProvider>
       <ConvergenceProvider>
         <div className="min-h-screen bg-[#080c16] text-white flex flex-col">
@@ -238,6 +246,7 @@ export default function App() {
       <ToastContainer />
       <KeyboardShortcutsModal />
       </ToastProvider>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }
