@@ -492,16 +492,7 @@ export function Explore() {
 
         {/* Right: Contribution Feed */}
         <div className="min-w-0">
-          <ChainStatus />
-          {chainMaxSeq > 0 && (
-            <div className="mt-3">
-              <ReplaySlider
-                maxSeq={chainMaxSeq}
-                onSeqChange={(seq) => setReplaySeq(seq)}
-              />
-            </div>
-          )}
-          <h2 className="text-sm font-semibold text-gray-300 mb-3 mt-4 uppercase tracking-wider">Live Activity</h2>
+          <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Live Activity</h2>
           {feedItems.length === 0 ? (
             <div className="text-gray-500 text-center py-8 text-sm">No contributions yet</div>
           ) : (
@@ -558,6 +549,21 @@ export function Explore() {
                 </Link>
               ))}
             </div>
+          )}
+        </div>
+      </div>
+
+      {/* Merkle Chain & Replay — below the graph */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
+        <div className="lg:col-span-1">
+          <ChainStatus />
+        </div>
+        <div className="lg:col-span-2">
+          {chainMaxSeq > 0 && (
+            <ReplaySlider
+              maxSeq={chainMaxSeq}
+              onSeqChange={(seq) => setReplaySeq(seq)}
+            />
           )}
         </div>
       </div>
