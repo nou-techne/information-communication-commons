@@ -43,7 +43,7 @@ export function Explore() {
   const [dimFilter, setDimFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState<ArtifactType | ''>('')
   const [stateFilter, setStateFilter] = useState<ArtifactState | ''>('')
-  const [sortBy, setSortBy] = useState<'recent' | 'coordination'>('recent')
+  const [sortBy, setSortBy] = useState<'recent' | 'coordination'>('coordination')
   const [coordCounts, setCoordCounts] = useState<Record<string, number>>({})
   const [searchResults, setSearchResults] = useState<Artifact[] | null>(null)
 

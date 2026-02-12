@@ -43,7 +43,7 @@ function Nav() {
     { to: '/', label: 'Explore' },
     { to: '/contribute', label: 'Contribute' },
     { to: '/coordinate', label: 'Coordinate' },
-    { to: '/me', label: 'My Thread' },
+    { to: '/me', label: 'My Activity' },
   ]
 
   return (
