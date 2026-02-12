@@ -212,7 +212,7 @@ export default function ApiDocsPage() {
                     <p className="text-sm text-gray-400 mt-2">{endpoint.description}</p>
                   </CardHeader>
                   <CardBody>
-                    {endpoint.params && (
+                    {'params' in endpoint && endpoint.params && (
                       <div className="mb-4">
                         <h4 className="text-xs font-bold text-gray-500 uppercase mb-2">Query Parameters</h4>
                         <pre className="bg-[#0f0f0f] p-3 rounded text-xs text-gray-300 overflow-x-auto">
@@ -220,7 +220,7 @@ export default function ApiDocsPage() {
                         </pre>
                       </div>
                     )}
-                    {endpoint.request && (
+                    {'request' in endpoint && endpoint.request && (
                       <div className="mb-4">
                         <h4 className="text-xs font-bold text-gray-500 uppercase mb-2">Request Body</h4>
                         <pre className="bg-[#0f0f0f] p-3 rounded text-xs text-gray-300 overflow-x-auto">
@@ -228,7 +228,7 @@ export default function ApiDocsPage() {
                         </pre>
                       </div>
                     )}
-                    {endpoint.response && (
+                    {'response' in endpoint && endpoint.response && (
                       <div>
                         <h4 className="text-xs font-bold text-gray-500 uppercase mb-2">Response</h4>
                         <pre className="bg-[#0f0f0f] p-3 rounded text-xs text-gray-300 overflow-x-auto">
