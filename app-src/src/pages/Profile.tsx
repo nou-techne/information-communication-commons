@@ -79,51 +79,73 @@ function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfil
           </div>
         )}
 
-        {/* Two-column grid for skills + experience */}
-        {((profile.skills && profile.skills.length > 0) || (profile.experience && profile.experience.length > 0)) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {profile.skills && profile.skills.length > 0 && (
-              <div>
-                <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Skills</div>
-                <TagList items={profile.skills} color="bg-[#c3fd50]/10 text-[#c3fd50] border border-[#c3fd50]/20" />
-              </div>
-            )}
-            {profile.experience && profile.experience.length > 0 && (
-              <div>
-                <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Experience</div>
-                <TagList items={profile.experience} color="bg-[#262626] text-gray-300" />
-              </div>
-            )}
+        {/* Skills — lime rounded pills */}
+        {profile.skills && profile.skills.length > 0 && (
+          <div>
+            <div className="text-xs text-[#c3fd50] uppercase tracking-wider mb-2 font-semibold">Skills</div>
+            <div className="flex flex-wrap gap-2">
+              {profile.skills.map((s, i) => (
+                <span key={i} className="text-xs px-3 py-1.5 rounded-full bg-[#c3fd50]/15 text-[#c3fd50] border border-[#c3fd50]/30 font-medium">{s}</span>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Capabilities */}
+        {/* Experience — timeline-style list with left border */}
+        {profile.experience && profile.experience.length > 0 && (
+          <div>
+            <div className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-semibold">Experience</div>
+            <div className="border-l-2 border-[#333] pl-3 space-y-2">
+              {profile.experience.map((e, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-500 -ml-[0.9rem] flex-shrink-0" />
+                  <span className="text-sm text-gray-300">{e}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Capabilities — blue cards with icons */}
         {profile.capabilities && profile.capabilities.length > 0 && (
           <div>
-            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2">What I can do for others</div>
-            <TagList items={profile.capabilities} color="bg-blue-900/20 text-blue-300 border border-blue-800/30" />
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2 font-semibold">What I can do for others</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {profile.capabilities.map((c, i) => (
+                <div key={i} className="bg-blue-900/15 border border-blue-800/25 rounded-lg px-3 py-2.5 text-sm text-blue-300 flex items-start gap-2">
+                  <span className="text-blue-400 mt-0.5 flex-shrink-0">&#9656;</span>
+                  {c}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Offering + Looking for side by side */}
+        {/* Offering + Looking for side by side — card style with distinct colors */}
         {((profile.offering && profile.offering.length > 0) || (profile.looking_for && profile.looking_for.length > 0)) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {profile.offering && profile.offering.length > 0 && (
-              <div className="bg-green-900/10 border border-green-800/20 rounded-lg p-4">
-                <div className="text-xs text-green-400 uppercase tracking-wider mb-2">Offering</div>
-                <div className="space-y-1.5">
+              <div className="bg-green-900/10 border border-green-800/25 rounded-lg p-4">
+                <div className="text-xs text-green-400 uppercase tracking-wider mb-3 font-semibold">Offering</div>
+                <div className="space-y-2">
                   {profile.offering.map((item, i) => (
-                    <p key={i} className="text-sm text-green-300">{item}</p>
+                    <div key={i} className="flex items-start gap-2">
+                      <span className="text-green-500 mt-0.5 flex-shrink-0">+</span>
+                      <p className="text-sm text-green-300">{item}</p>
+                    </div>
                   ))}
                 </div>
               </div>
             )}
             {profile.looking_for && profile.looking_for.length > 0 && (
-              <div className="bg-amber-900/10 border border-amber-800/20 rounded-lg p-4">
-                <div className="text-xs text-amber-400 uppercase tracking-wider mb-2">Looking for</div>
-                <div className="space-y-1.5">
+              <div className="bg-amber-900/10 border border-amber-800/25 rounded-lg p-4">
+                <div className="text-xs text-amber-400 uppercase tracking-wider mb-3 font-semibold">Looking for</div>
+                <div className="space-y-2">
                   {profile.looking_for.map((item, i) => (
-                    <p key={i} className="text-sm text-amber-300">{item}</p>
+                    <div key={i} className="flex items-start gap-2">
+                      <span className="text-amber-500 mt-0.5 flex-shrink-0">&#9678;</span>
+                      <p className="text-sm text-amber-300">{item}</p>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -131,11 +153,15 @@ function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfil
           </div>
         )}
 
-        {/* Interests */}
+        {/* Interests — purple outlined tags, larger */}
         {profile.interests && profile.interests.length > 0 && (
           <div>
-            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Interests</div>
-            <TagList items={profile.interests} color="bg-purple-900/20 text-purple-300 border border-purple-800/30" />
+            <div className="text-xs text-purple-400 uppercase tracking-wider mb-2 font-semibold">Interests</div>
+            <div className="flex flex-wrap gap-2">
+              {profile.interests.map((item, i) => (
+                <span key={i} className="text-xs px-3 py-1.5 rounded-lg bg-purple-900/20 text-purple-300 border border-purple-700/30">{item}</span>
+              ))}
+            </div>
           </div>
         )}
 
