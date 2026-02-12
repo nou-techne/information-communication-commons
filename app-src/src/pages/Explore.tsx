@@ -335,7 +335,7 @@ export function Explore() {
                 </div>
               </Suspense>
               {/* Merkle Chain & Replay — inside fullscreen container */}
-              <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 ${isFullscreen ? 'p-4' : 'mt-4'}`}>
+              <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 ${isFullscreen ? 'p-4' : 'mt-2'}`}>
                 <div className="sm:col-span-1">
                   <ChainStatus />
                 </div>
