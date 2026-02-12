@@ -30,7 +30,7 @@ export function Footer() {
 
           <div className="flex items-center gap-3">
             <a
-              href="https://commons.id/terms"
+              href="/terms.html"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-300 transition-colors"
@@ -38,7 +38,7 @@ export function Footer() {
               Terms
             </a>
             <a
-              href="https://commons.id/privacy"
+              href="/privacy.html"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-300 transition-colors"
