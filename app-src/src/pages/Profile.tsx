@@ -22,17 +22,6 @@ interface ParticipantProfile {
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://hvbdpgkdcdskhpbdeeim.supabase.co'
 
-function TagList({ items, color = 'bg-[#262626] text-gray-300' }: { items: string[], color?: string }) {
-  if (!items || items.length === 0) return null
-  return (
-    <div className="flex flex-wrap gap-2">
-      {items.map((item, i) => (
-        <span key={i} className={`text-xs px-2 py-1 rounded-full ${color}`}>{item}</span>
-      ))}
-    </div>
-  )
-}
-
 function ProfileCard({ profile, extracted, label }: { profile: ParticipantProfile, extracted?: any, label?: string }) {
   // Generate initials for avatar
   const initials = profile.name
