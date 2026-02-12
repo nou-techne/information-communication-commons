@@ -7,31 +7,33 @@ import { ToastProvider } from './contexts/ToastContext'
 import { ToastContainer } from './components/ui/Toast'
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal'
 import { ErrorBoundary } from './components/ErrorBoundary'
-import { Explore } from './pages/Explore'
-import { ArtifactDetail } from './pages/ArtifactDetail'
-import { MyThread } from './pages/MyThread'
-import { Contribute } from './pages/Contribute'
-import { Auth } from './pages/Auth'
-import { Dimensions } from './pages/Dimensions'
-import { DimensionView } from './pages/DimensionView'
-import { NotFound } from './pages/NotFound'
-import { Profile } from './pages/Profile'
-import { Coordinate } from './pages/Coordinate'
-import { Search } from './pages/Search'
-import { ContributionDetail } from './pages/ContributionDetail'
-import { ParticipantProfile } from './pages/ParticipantProfile'
-import { SessionDetail } from './pages/SessionDetail'
-import { Stats } from './pages/Stats'
-import { Onboard } from './pages/Onboard'
-import { Channels } from './pages/Channels'
-import { ChannelView } from './pages/ChannelView'
-import { ThreadView } from './pages/ThreadView'
-import { MessageSearch } from './pages/MessageSearch'
-import ApiDocsPage from './pages/ApiDocsPage'
-import WebhooksPage from './pages/WebhooksPage'
-import AnalyticsPage from './pages/AnalyticsPage'
-import ConvergenceDashboardPage from './pages/ConvergenceDashboardPage'
-import FederationPage from './pages/FederationPage'
+import { PageLoader } from './components/ui/PageLoader'
+// Lazy load all page components for code splitting
+const Explore = lazy(() => import('./pages/Explore').then(m => ({ default: m.Explore })))
+const ArtifactDetail = lazy(() => import('./pages/ArtifactDetail').then(m => ({ default: m.ArtifactDetail })))
+const MyThread = lazy(() => import('./pages/MyThread').then(m => ({ default: m.MyThread })))
+const Contribute = lazy(() => import('./pages/Contribute').then(m => ({ default: m.Contribute })))
+const Auth = lazy(() => import('./pages/Auth').then(m => ({ default: m.Auth })))
+const Dimensions = lazy(() => import('./pages/Dimensions').then(m => ({ default: m.Dimensions })))
+const DimensionView = lazy(() => import('./pages/DimensionView').then(m => ({ default: m.DimensionView })))
+const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })))
+const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })))
+const Coordinate = lazy(() => import('./pages/Coordinate').then(m => ({ default: m.Coordinate })))
+const Search = lazy(() => import('./pages/Search').then(m => ({ default: m.Search })))
+const ContributionDetail = lazy(() => import('./pages/ContributionDetail').then(m => ({ default: m.ContributionDetail })))
+const ParticipantProfile = lazy(() => import('./pages/ParticipantProfile').then(m => ({ default: m.ParticipantProfile })))
+const SessionDetail = lazy(() => import('./pages/SessionDetail').then(m => ({ default: m.SessionDetail })))
+const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })))
+const Onboard = lazy(() => import('./pages/Onboard').then(m => ({ default: m.Onboard })))
+const Channels = lazy(() => import('./pages/Channels').then(m => ({ default: m.Channels })))
+const ChannelView = lazy(() => import('./pages/ChannelView').then(m => ({ default: m.ChannelView })))
+const ThreadView = lazy(() => import('./pages/ThreadView').then(m => ({ default: m.ThreadView })))
+const MessageSearch = lazy(() => import('./pages/MessageSearch').then(m => ({ default: m.MessageSearch })))
+const ApiDocsPage = lazy(() => import('./pages/ApiDocsPage'))
+const WebhooksPage = lazy(() => import('./pages/WebhooksPage'))
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
+const ConvergenceDashboardPage = lazy(() => import('./pages/ConvergenceDashboardPage'))
+const FederationPage = lazy(() => import('./pages/FederationPage'))
 import type { Session } from '@supabase/supabase-js'
 
 // Sprint 41: Lazy load heavy pages for code splitting
@@ -195,6 +197,7 @@ export default function App() {
           <Nav />
           <main className="max-w-6xl mx-auto px-4 py-6">
           <ErrorBoundary>
+            <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Explore />} />
               <Route path="/dimensions" element={<Dimensions />} />
@@ -204,9 +207,9 @@ export default function App() {
               <Route path="/contribute" element={<Contribute />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/contribution/:id" element={<ContributionDetail />} />
-              <Route path="/graph" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Graph /></Suspense>} />
+              <Route path="/graph" element={<Graph />} />
               <Route path="/coordinate" element={<Coordinate />} />
-              <Route path="/dashboard" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Dashboard /></Suspense>} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/search" element={<Search />} />
               <Route path="/p/:id" element={<ParticipantProfile />} />
               <Route path="/session/:id" element={<SessionDetail />} />
@@ -216,7 +219,7 @@ export default function App() {
               <Route path="/channels/:slug" element={<ChannelView />} />
               <Route path="/channels/:slug/:threadId" element={<ThreadView />} />
               <Route path="/welcome" element={<Onboard />} />
-              <Route path="/status" element={<Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading...</div></div>}><Status /></Suspense>} />
+              <Route path="/status" element={<Status />} />
               <Route path="/api-docs" element={<ApiDocsPage />} />
               <Route path="/webhooks" element={<WebhooksPage />} />
               <Route path="/analytics" element={<AnalyticsPage />} />
@@ -225,6 +228,7 @@ export default function App() {
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
           </ErrorBoundary>
         </main>
       </div>
