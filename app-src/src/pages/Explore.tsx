@@ -301,7 +301,7 @@ export function Explore() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left: Graph Index / 3D Graph */}
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-3">
@@ -491,7 +491,7 @@ export function Explore() {
         </div>
 
         {/* Right: Contribution Feed */}
-        <div>
+        <div className="min-w-0">
           <ChainStatus />
           {chainMaxSeq > 0 && (
             <div className="mt-3">

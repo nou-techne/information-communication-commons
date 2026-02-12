@@ -59,7 +59,7 @@ export function ReplaySlider({ maxSeq, onSeqChange }: ReplaySliderProps) {
   }, [playing, currentSeq, maxSeq])
 
   return (
-    <div className="rounded-lg border border-[#1d2839] bg-[#0a101d] p-4">
+    <div className="rounded-lg border border-[#1d2839] bg-[#0a101d] p-4 pb-5">
       <div className="flex items-center gap-2 mb-3">
         <Clock className="w-4 h-4 text-[#a6ed2a]" />
         <h3 className="text-sm font-semibold text-white">Graph Replay</h3>
