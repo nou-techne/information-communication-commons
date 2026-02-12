@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { Hash, Plus, X, ArrowLeft, MessageSquare } from 'lucide-react'
+import { Hash, Plus, X, ArrowLeft, MessageSquare, Merge, Check } from 'lucide-react'
 import type { Session } from '@supabase/supabase-js'
 
 interface Channel {
@@ -65,6 +65,9 @@ export function ChannelView() {
   const [newMessage, setNewMessage] = useState('')
   const [creating, setCreating] = useState(false)
   const [statusFilter, setStatusFilter] = useState<'all' | Thread['status']>('all')
+  const [consolidateMode, setConsolidateMode] = useState(false)
+  const [selectedThreads, setSelectedThreads] = useState<Set<string>>(new Set())
+  const [consolidating, setConsolidating] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
@@ -171,6 +174,31 @@ export function ChannelView() {
     setCreating(false)
   }
 
+  function toggleThreadSelection(threadId: string) {
+    setSelectedThreads(prev => {
+      const next = new Set(prev)
+      if (next.has(threadId)) next.delete(threadId)
+      else next.add(threadId)
+      return next
+    })
+  }
+
+  async function consolidateThreads() {
+    if (selectedThreads.size < 2) return
+    setConsolidating(true)
+    const { data, error } = await supabase.rpc('consolidate_threads', {
+      p_thread_ids: Array.from(selectedThreads)
+    })
+    if (!error && data) {
+      setConsolidateMode(false)
+      setSelectedThreads(new Set())
+      await loadChannel()
+    } else if (error) {
+      alert(`Error: ${error.message}`)
+    }
+    setConsolidating(false)
+  }
+
   if (loading) return <div className="text-center text-gray-500 py-12">Loading...</div>
   if (!channel) return <div className="text-center text-gray-500 py-12">Channel not found</div>
 
@@ -186,13 +214,45 @@ export function ChannelView() {
           {channel.description && <p className="text-gray-400 text-sm mt-1">{channel.description}</p>}
         </div>
         {session && (
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 bg-[#c3fd50] text-[#0f0f0f] font-medium px-4 py-2 rounded-lg hover:bg-[#d4fe80] transition-colors text-sm"
-          >
-            <Plus className="w-4 h-4" />
-            New Thread
-          </button>
+          <div className="flex gap-2">
+            {consolidateMode ? (
+              <>
+                <button
+                  onClick={consolidateThreads}
+                  disabled={selectedThreads.size < 2 || consolidating}
+                  className="flex items-center gap-2 bg-[#fb923c] text-[#0f0f0f] font-medium px-4 py-2 rounded-lg hover:bg-[#fdba74] transition-colors text-sm disabled:opacity-50"
+                >
+                  <Merge className="w-4 h-4" />
+                  {consolidating ? 'Merging...' : `Merge ${selectedThreads.size} threads`}
+                </button>
+                <button
+                  onClick={() => { setConsolidateMode(false); setSelectedThreads(new Set()) }}
+                  className="text-gray-400 hover:text-white px-3 py-2 text-sm"
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                {threads.some(t => t.status === 'resolved') && (
+                  <button
+                    onClick={() => setConsolidateMode(true)}
+                    className="flex items-center gap-2 bg-[#1a1a1a] border border-[#262626] text-gray-400 font-medium px-4 py-2 rounded-lg hover:text-white hover:border-[#fb923c] transition-colors text-sm"
+                  >
+                    <Merge className="w-4 h-4" />
+                    Consolidate
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowCreate(true)}
+                  className="flex items-center gap-2 bg-[#c3fd50] text-[#0f0f0f] font-medium px-4 py-2 rounded-lg hover:bg-[#d4fe80] transition-colors text-sm"
+                >
+                  <Plus className="w-4 h-4" />
+                  New Thread
+                </button>
+              </>
+            )}
+          </div>
         )}
       </div>
 
@@ -267,10 +327,25 @@ export function ChannelView() {
       ) : (
         <div className="space-y-2">
           {filtered.map(thread => (
+            <div key={thread.id} className="flex items-center gap-3">
+              {consolidateMode && thread.status === 'resolved' && (
+                <button
+                  onClick={() => toggleThreadSelection(thread.id)}
+                  className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
+                    selectedThreads.has(thread.id)
+                      ? 'bg-[#fb923c] border-[#fb923c]'
+                      : 'border-[#262626] hover:border-[#fb923c]'
+                  }`}
+                >
+                  {selectedThreads.has(thread.id) && <Check className="w-3 h-3 text-[#0f0f0f]" />}
+                </button>
+              )}
             <Link
-              key={thread.id}
-              to={`/channels/${slug}/${thread.id}`}
-              className="flex items-center gap-3 bg-[#1a1a1a] border border-[#262626] rounded-lg px-4 py-3 hover:border-[#c3fd50] transition-colors group"
+              to={consolidateMode ? '#' : `/channels/${slug}/${thread.id}`}
+              onClick={consolidateMode ? (e: React.MouseEvent) => { e.preventDefault(); if (thread.status === 'resolved') toggleThreadSelection(thread.id) } : undefined}
+              className={`flex-1 flex items-center gap-3 bg-[#1a1a1a] border rounded-lg px-4 py-3 hover:border-[#c3fd50] transition-colors group ${
+                selectedThreads.has(thread.id) ? 'border-[#fb923c]' : 'border-[#262626]'
+              }`}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
@@ -306,6 +381,7 @@ export function ChannelView() {
                 </div>
               </div>
             </Link>
+            </div>
           ))}
         </div>
       )})()}
