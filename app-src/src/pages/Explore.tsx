@@ -10,6 +10,7 @@ const Graph = lazy(() => import('./Graph').then(m => ({ default: m.Graph })))
 interface ContributionFeedItem {
   id: string
   content: string
+  title: string | null
   status: string
   participant_id: string | null
   participant_name: string | null
@@ -485,6 +486,9 @@ export function Explore() {
                     )}
                     <span className="text-xs text-gray-600 ml-auto flex-shrink-0">{timeAgo(item.created_at)}</span>
                   </div>
+                  {item.title && (
+                    <p className="text-sm font-medium text-white mb-1">{item.title}</p>
+                  )}
                   <p className="text-xs text-gray-400 line-clamp-2 mb-1.5">{item.preview}</p>
                   {item.status === 'complete' && (item.artifact_count > 0 || item.relationship_count > 0) && (
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">

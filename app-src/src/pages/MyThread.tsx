@@ -8,6 +8,7 @@ import { Plus, FileText, GitBranch, Target, Clock, ChevronDown, ChevronUp } from
 interface Contribution {
   id: string
   content: string
+  title: string | null
   status: string
   created_at: string
   processed_at: string | null
@@ -59,7 +60,7 @@ export function MyThread() {
   async function loadContributions(filterParticipantId: string | null) {
     let query = supabase
       .from('contributions')
-      .select('id, content, status, created_at, processed_at, extraction')
+      .select('id, content, title, status, created_at, processed_at, extraction')
       .order('created_at', { ascending: false })
       .limit(30)
     
@@ -250,7 +251,10 @@ export function MyThread() {
                         )}
                       </div>
                     </div>
-                    <p className={`text-sm text-gray-300 ${isExpanded ? '' : 'line-clamp-2'}`}>{c.content}</p>
+                    {c.title && (
+                      <p className="text-sm font-medium text-white mb-1">{c.title}</p>
+                    )}
+                    <p className={`text-xs text-gray-400 ${isExpanded ? '' : 'line-clamp-2'}`}>{c.content}</p>
                   </button>
 
                   {/* Expanded: show extracted artifacts */}

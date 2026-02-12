@@ -40,7 +40,7 @@ IMPORTANT: "dimension" must be one of EXACTLY: "temporal", "social", "thematic",
 
 ## Output Schema
 
-{"artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "event_temporality": "past|present|future (only when rea_role is event)", "type": "idea|proposal|commitment|question|pattern|reflection", "confidence": 0.0-1.0, "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value", "weight": 0.0-1.0}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
+{"contribution_title": "A short, descriptive title for this contribution (5-10 words, like a headline)", "artifacts": [{"title": "short title", "summary": "1-2 sentences", "rea_role": "resource|event|agent", "agent_type": "human|non-human (only when rea_role is agent)", "event_temporality": "past|present|future (only when rea_role is event)", "type": "idea|proposal|commitment|question|pattern|reflection", "confidence": 0.0-1.0, "tags": ["descriptive-tag", "hlamt:X"], "dimensions": [{"dimension": "temporal|social|thematic|energetic|spatial", "key": "key", "value": "value", "weight": 0.0-1.0}]}], "relationships": [{"from_title": "title", "to_title": "title", "type": "builds_on|extends|contradicts|related_to"}], "commitments": [{"participant": "name", "description": "what"}], "themes": [], "summary": "overall summary"}
 
 ## Confidence Scoring
 Rate each artifact 0.0-1.0 for extraction confidence:
@@ -277,6 +277,7 @@ serve(async (req) => {
       .update({
         status: 'complete',
         extraction: extraction,
+        title: extraction.contribution_title || null,
         processed_at: new Date().toISOString(),
       })
       .eq('id', contributionId)
