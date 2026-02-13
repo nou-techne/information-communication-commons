@@ -18,6 +18,12 @@
 | Q6 | Optimize /live for TV/large screen view density | Frontend & DevOps (07) | DONE | 2026-02-13 16:55 | 2026-02-13 16:57 |
 | Q7 | Move Chain Replay to slimline bottom panel | Frontend & DevOps (07) | DONE | 2026-02-13 17:04 | 2026-02-13 17:06 |
 | Q8 | Holistic Live page redesign for visual clarity | Frontend & DevOps (07) | DONE | 2026-02-13 17:10 | 2026-02-13 17:12 |
+| Q9 | DB reset for ETHBoulder (truncate contributions/artifacts/relationships) | Data & Integration (04) | DONE | 2026-02-13 17:14 | 2026-02-13 17:16 |
+| Q10 | Sync ETHBoulder sessions from app.ethboulder.xyz to commons.id | Data & Integration (04) | DONE | 2026-02-13 18:07 | 2026-02-13 18:12 |
+| Q11 | Mobile-optimized footer | Frontend & DevOps (07) | DONE | 2026-02-13 18:12 | 2026-02-13 18:18 |
+| Q12 | Sessions in /S dimension + Explore + Live pages | Frontend & DevOps (07) | DONE | 2026-02-13 18:12 | 2026-02-13 18:20 |
+| Q13 | Fix /S Sessions dimension tag mismatch + rewrite SessionsView | Frontend & DevOps (07) | DONE | 2026-02-13 18:27 | 2026-02-13 18:30 |
+| Q14 | Graph mirroring report: Bonfires.ai × commons.id | Research & Strategy (01) | DONE | 2026-02-13 18:32 | 2026-02-13 18:34 |
 
 ---
 
