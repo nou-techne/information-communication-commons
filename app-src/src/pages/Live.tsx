@@ -47,7 +47,7 @@ export default function Live() {
   const [showAbout, setShowAbout] = useState(false)
   const [dimSignalCounts, setDimSignalCounts] = useState<Record<string, number>>({})
   const [feedPage, setFeedPage] = useState(0)
-  const FEED_PAGE_SIZE = 5
+  const FEED_PAGE_SIZE = 8
   const [isFullscreen, setIsFullscreen] = useState(false)
   const graphContainerRef = useRef<HTMLDivElement>(null)
 
@@ -115,197 +115,169 @@ export default function Live() {
   }, [])
 
   return (
-    <div className="pb-24">
-      {/* Header */}
-      <div className="mb-6 text-center">
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <div className="text-[#a6ed2a] font-bold text-3xl sm:text-4xl tracking-tight">EthBoulder</div>
-          <div className="text-gray-500 text-3xl sm:text-4xl">.commons.id</div>
+    <div className="pb-8">
+      {/* Header — compact for TV/large screen */}
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-baseline gap-2">
+          <span className="text-[#a6ed2a] font-bold text-xl tracking-tight">EthBoulder</span>
+          <span className="text-gray-500 text-xl">.commons.id</span>
+          <span className="text-gray-600 text-xs ml-2">Knowledge Graph · Live</span>
         </div>
-        <div className="text-gray-500 text-base">Knowledge Graph · Live</div>
-      </div>
-
-      {/* About (collapsible) */}
-      <div className="mb-6 bg-[#0a101d] border border-[#1d2839] rounded-lg overflow-hidden">
-        <button onClick={() => setShowAbout(!showAbout)} className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#1d2839] transition-colors">
-          <div className="flex items-center gap-2">
-            <Compass className="w-5 h-5 text-[#a6ed2a]" />
-            <span className="text-sm font-medium text-white">What is this?</span>
-          </div>
-          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showAbout ? 'rotate-180' : ''}`} />
+        <button onClick={() => setShowAbout(!showAbout)} className="flex items-center gap-1 text-xs text-gray-500 hover:text-[#a6ed2a] transition-colors">
+          <Info className="w-3.5 h-3.5" />
+          <span>About</span>
         </button>
-        {showAbout && (
-          <div className="px-4 pb-4 text-sm space-y-3 border-t border-[#1d2839] pt-4">
-            <p className="text-gray-400 leading-relaxed">
-              A <strong className="text-gray-300">living knowledge graph</strong> for ETHBoulder 2026.
-              Every contribution is captured, extracted into structured artifacts, and connected — building a collective map of what happened, who was involved, and what emerged.
-            </p>
-            <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#a6ed2a] text-[#080c16] flex items-center justify-center"><PenLine className="w-4 h-4" /></span>
-              <div><div className="text-white font-medium mb-0.5">Contribute</div><div className="text-gray-400">Share session notes, ideas, commitments, questions. Write naturally.</div></div>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#a6ed2a] text-[#080c16] flex items-center justify-center"><Sparkles className="w-4 h-4" /></span>
-              <div><div className="text-white font-medium mb-0.5">Extract</div><div className="text-gray-400">AI identifies artifacts (resources, events, agents) and tags by dimension.</div></div>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#a6ed2a] text-[#080c16] flex items-center justify-center"><GitBranch className="w-4 h-4" /></span>
-              <div><div className="text-white font-medium mb-0.5">Connect</div><div className="text-gray-400">Artifacts link across sessions and dimensions. Patterns emerge.</div></div>
-            </div>
-            <div className="pt-2 border-t border-[#1d2839]">
-              <Link to="/contribute" className="text-[#a6ed2a] hover:text-white text-sm font-medium">Try it yourself →</Link>
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Stats row */}
-      <div className="grid grid-cols-5 gap-2 sm:gap-4 mb-6">
+      {/* About (collapsed by default, minimal) */}
+      {showAbout && (
+        <div className="mb-3 bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-3 text-xs text-gray-400 leading-relaxed">
+          A <strong className="text-gray-300">living knowledge graph</strong> for ETHBoulder 2026.
+          Contribute naturally — AI extracts artifacts, tags dimensions, connects the graph.
+          <Link to="/contribute" className="text-[#a6ed2a] hover:text-white ml-2">Try it →</Link>
+        </div>
+      )}
+
+      {/* Stats + Dimensions in one compact row */}
+      <div className="grid grid-cols-12 gap-1.5 mb-3">
+        {/* Stats: 5 tiles */}
         {[
           { icon: Activity, value: stats.artifacts, label: 'Artifacts', color: 'text-[#a6ed2a]' },
           { icon: Users, value: stats.participants, label: 'Participants', color: 'text-violet-500' },
-          { icon: Link2, value: stats.relationships, label: 'Connections', color: 'text-cyan-500' },
+          { icon: Link2, value: stats.relationships, label: 'Edges', color: 'text-cyan-500' },
           { icon: Flame, value: stats.signals, label: 'Signals', color: 'text-orange-400' },
-          { icon: TrendingUp, value: stats.lastHour, label: 'Last Hour', color: 'text-[#a6ed2a]' },
+          { icon: TrendingUp, value: stats.lastHour, label: 'Last Hr', color: 'text-[#a6ed2a]' },
         ].map(({ icon: Icon, value, label, color }) => (
-          <div key={label} className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 text-center">
-            <Icon className={`w-5 h-5 ${color} mx-auto mb-1`} />
-            <div className="text-2xl font-bold">{value}</div>
-            <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wide">{label}</div>
+          <div key={label} className="bg-[#0a101d] border border-[#1d2839] rounded p-1.5 text-center">
+            <div className="flex items-center justify-center gap-1">
+              <Icon className={`w-3 h-3 ${color}`} />
+              <span className="text-lg font-bold">{value}</span>
+            </div>
+            <div className="text-[9px] text-gray-500 uppercase tracking-wide leading-none">{label}</div>
           </div>
         ))}
-      </div>
-
-      {/* Dimensions */}
-      <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Graph Dimensions</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-7 gap-2 mb-6">
+        {/* Dimensions: 7 tiles */}
         {DIMENSIONS.map(d => {
           const count = dimCounts[d.tag] ?? 0
           const signals = dimSignalCounts[d.tag] ?? 0
           return (
             <Link key={d.key} to={`/d/${d.key}`}
-              className="block rounded-lg border bg-[#0a101d] p-3 sm:p-4 hover:border-[#a6ed2a] transition-colors text-center group"
+              className="block rounded border bg-[#0a101d] p-1.5 hover:border-[#a6ed2a] transition-colors text-center group"
               style={signals > 0 ? { borderColor: `rgba(245,158,11,${Math.min(0.6, signals * 0.15)})` } : { borderColor: '#1d2839' }}
             >
-              <div className="text-xs font-medium mb-1 truncate" style={{ color: d.color }}>{d.name}</div>
-              <div className="flex items-baseline justify-center gap-1">
-                <span className="font-mono text-xl sm:text-2xl font-bold" style={{ color: d.color }}>{d.letter}</span>
-                <span className="text-xl sm:text-2xl font-bold text-white">{count}</span>
+              <div className="flex items-baseline justify-center gap-0.5">
+                <span className="font-mono text-sm font-bold" style={{ color: d.color }}>{d.letter}</span>
+                <span className="text-sm font-bold text-white">{count}</span>
               </div>
-              <div className="text-xs text-gray-400 group-hover:text-white transition-colors block truncate">
-                {count} artifact{count !== 1 ? 's' : ''}{signals > 0 ? ` · ${signals} signal${signals !== 1 ? 's' : ''}` : ''}
-              </div>
+              <div className="text-[9px] text-gray-500 uppercase tracking-wide leading-none truncate">{d.name}</div>
             </Link>
           )
         })}
       </div>
 
-      {/* Main: Graph + Feed side by side */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Left: 3D Graph */}
-        <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Graph Constellation</h2>
-            <Link to="/explore" className="text-xs text-[#a6ed2a] hover:text-white transition-colors">Full Explorer →</Link>
+      {/* Main: Graph + Feed + Recent in dense layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+        {/* Left: 3D Graph — takes 7/12 */}
+        <div className="lg:col-span-7">
+          <div className="flex items-center justify-between mb-1.5">
+            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Graph Constellation</h2>
+            <Link to="/explore" className="text-[10px] text-[#a6ed2a] hover:text-white transition-colors">Explorer →</Link>
           </div>
           <div ref={graphContainerRef} className={`relative ${isFullscreen ? 'bg-[#080c16] w-screen h-screen flex flex-col' : ''}`}>
-            <Suspense fallback={<div className="flex items-center justify-center h-96"><div className="text-gray-500">Loading constellation...</div></div>}>
-              <div className={`relative w-full rounded-lg ${isFullscreen ? 'flex-1 overflow-auto' : 'h-[400px] sm:h-[500px] md:h-[700px] overflow-hidden'}`}>
+            <Suspense fallback={<div className="flex items-center justify-center h-64"><div className="text-gray-500 text-sm">Loading...</div></div>}>
+              <div className={`relative w-full rounded-lg ${isFullscreen ? 'flex-1 overflow-auto' : 'h-[350px] sm:h-[420px] md:h-[520px] lg:h-[calc(100vh-220px)] overflow-hidden'}`}>
                 <Graph replaySeq={replaySeq} />
               </div>
             </Suspense>
-            <div className={`${isFullscreen ? 'p-4' : 'mt-4'}`}>
-              {chainMaxSeq > 0 && (
-                <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg p-4">
-                  <div className="mb-3">
-                    <h3 className="text-sm font-semibold text-gray-300 mb-1">Graph Replay</h3>
-                    <p className="text-xs text-gray-500">Drag to replay the knowledge graph as it grew. Each step adds a contribution and its extracted artifacts to the constellation.</p>
-                  </div>
-                  <ReplaySlider maxSeq={chainMaxSeq} onSeqChange={seq => setReplaySeq(seq)} />
+            {chainMaxSeq > 0 && (
+              <div className="mt-2 bg-[#0a101d] border border-[#1d2839] rounded p-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-[10px] font-semibold text-gray-400 uppercase">Replay</h3>
+                  <span className="text-[10px] text-gray-600">Drag to replay graph growth</span>
                 </div>
-              )}
-            </div>
-            {isFullscreen && <div className="p-4 pt-0"><ChainStatus compact /></div>}
+                <ReplaySlider maxSeq={chainMaxSeq} onSeqChange={seq => setReplaySeq(seq)} />
+              </div>
+            )}
+            {isFullscreen && <div className="p-2 pt-0"><ChainStatus compact /></div>}
           </div>
         </div>
 
-        {/* Right: Chain + Feed + Recent */}
-        <div className="min-w-0">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Live Activity</h2>
+        {/* Right: Feed + Recent — takes 5/12 */}
+        <div className="lg:col-span-5 min-w-0">
+          <div className="flex items-center justify-between mb-1.5">
+            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Live Activity</h2>
             {feedItems.length > FEED_PAGE_SIZE && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <button onClick={() => setFeedPage(p => Math.max(0, p - 1))} disabled={feedPage === 0}
-                  className="px-2 py-1 text-xs rounded bg-[#0a101d] border border-[#1d2839] text-gray-300 hover:border-[#a6ed2a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                  className="p-0.5 text-xs rounded bg-[#0a101d] border border-[#1d2839] text-gray-300 hover:border-[#a6ed2a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                   <ChevronLeft className="w-3 h-3" />
                 </button>
-                <span className="text-xs text-gray-500">{feedPage * FEED_PAGE_SIZE + 1}–{Math.min((feedPage + 1) * FEED_PAGE_SIZE, feedItems.length)} of {feedItems.length}</span>
+                <span className="text-[10px] text-gray-500">{feedPage * FEED_PAGE_SIZE + 1}–{Math.min((feedPage + 1) * FEED_PAGE_SIZE, feedItems.length)}/{feedItems.length}</span>
                 <button onClick={() => setFeedPage(p => Math.min(Math.ceil(feedItems.length / FEED_PAGE_SIZE) - 1, p + 1))} disabled={(feedPage + 1) * FEED_PAGE_SIZE >= feedItems.length}
-                  className="px-2 py-1 text-xs rounded bg-[#0a101d] border border-[#1d2839] text-gray-300 hover:border-[#a6ed2a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                  className="p-0.5 text-xs rounded bg-[#0a101d] border border-[#1d2839] text-gray-300 hover:border-[#a6ed2a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                   <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
             )}
           </div>
           {feedItems.length === 0 ? (
-            <div className="text-gray-500 text-center py-8 text-sm">No contributions yet. <Link to="/contribute" className="text-[#a6ed2a]">Be the first.</Link></div>
+            <div className="text-gray-500 text-center py-4 text-xs">No contributions yet. <Link to="/contribute" className="text-[#a6ed2a]">Be the first.</Link></div>
           ) : (
-            <div className="space-y-1.5 mb-6">
+            <div className="space-y-1 mb-3">
               {feedItems.slice(feedPage * FEED_PAGE_SIZE, (feedPage + 1) * FEED_PAGE_SIZE).map(item => (
-                <Link to={`/contribution/${item.id}`} key={item.id} className="block bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className={`w-1.5 h-1.5 rounded-full ${
+                <Link to={`/contribution/${item.id}`} key={item.id} className="block bg-[#0a101d] border border-[#1d2839] rounded p-2 hover:border-[#a6ed2a] transition-colors">
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
                       item.status === 'complete' ? 'bg-[#a6ed2a]' :
                       item.status === 'processing' ? 'bg-blue-400 animate-pulse' :
                       item.status === 'error' ? 'bg-red-400' : 'bg-yellow-400'
                     }`} />
                     {item.participant_name && item.participant_id && (
-                      <Link to={`/p/${item.participant_id}`} className="text-xs font-medium text-gray-300 truncate hover:text-[#a6ed2a]" onClick={e => e.stopPropagation()}>
+                      <Link to={`/p/${item.participant_id}`} className="text-[11px] font-medium text-gray-300 truncate hover:text-[#a6ed2a]" onClick={e => e.stopPropagation()}>
                         {item.participant_name}
                       </Link>
                     )}
                     {item.participant_name && !item.participant_id && (
-                      <span className="text-xs font-medium text-gray-300 truncate">{item.participant_name}</span>
+                      <span className="text-[11px] font-medium text-gray-300 truncate">{item.participant_name}</span>
                     )}
-                    <span className="text-xs text-gray-600 ml-auto flex-shrink-0">{timeAgo(item.created_at)}</span>
+                    <span className="text-[10px] text-gray-600 ml-auto flex-shrink-0">{timeAgo(item.created_at)}</span>
                   </div>
-                  {item.title && <p className="text-sm font-medium text-white mb-1">{item.title}</p>}
-                  <p className="text-xs text-gray-400 line-clamp-2 mb-1.5">{item.preview}</p>
+                  {item.title && <p className="text-xs font-medium text-white mb-0.5 truncate">{item.title}</p>}
+                  <p className="text-[11px] text-gray-400 line-clamp-1">{item.preview}</p>
                   {item.status === 'complete' && (item.artifact_count > 0 || item.relationship_count > 0) && (
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                    <div className="flex items-center gap-2 mt-0.5">
                       {item.artifact_count > 0 && (
-                        <span className="text-xs text-gray-400"><span className="font-mono text-[#a6ed2a] font-medium">{item.artifact_count}</span> {item.artifact_count === 1 ? 'node' : 'nodes'}</span>
+                        <span className="text-[10px] text-gray-500"><span className="font-mono text-[#a6ed2a]">{item.artifact_count}</span> nodes</span>
                       )}
                       {item.relationship_count > 0 && (
-                        <span className="text-xs text-gray-400"><span className="font-mono text-[#a6ed2a] font-medium">{item.relationship_count}</span> {item.relationship_count === 1 ? 'edge' : 'edges'}</span>
+                        <span className="text-[10px] text-gray-500"><span className="font-mono text-[#a6ed2a]">{item.relationship_count}</span> edges</span>
                       )}
                       {item.commitment_count > 0 && (
-                        <span className="text-xs text-gray-400"><span className="font-mono text-amber-400 font-medium">{item.commitment_count}</span> {item.commitment_count === 1 ? 'commitment' : 'commitments'}</span>
+                        <span className="text-[10px] text-gray-500"><span className="font-mono text-amber-400">{item.commitment_count}</span> commits</span>
                       )}
                     </div>
                   )}
-                  {item.status === 'processing' && <div className="mt-1"><ExtractionProgress startedAt={item.created_at} compact /></div>}
-                  {item.status === 'error' && <span className="text-xs text-red-400">Extraction failed</span>}
+                  {item.status === 'processing' && <div className="mt-0.5"><ExtractionProgress startedAt={item.created_at} compact /></div>}
+                  {item.status === 'error' && <span className="text-[10px] text-red-400">Failed</span>}
                 </Link>
               ))}
             </div>
           )}
 
-          {/* Recent Artifacts */}
+          {/* Recent Artifacts — compact */}
           {recentArtifacts.length > 0 && (
             <>
-              <h2 className="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider">Recent Artifacts</h2>
-              <div className="space-y-1.5">
+              <h2 className="text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">Recent Artifacts</h2>
+              <div className="space-y-1">
                 {recentArtifacts.map(a => (
-                  <Link key={a.id} to={`/artifact/${a.id}`} className="flex items-start gap-3 bg-[#0a101d] border border-[#1d2839] rounded-lg p-3 hover:border-[#a6ed2a] transition-colors">
-                    <span className="w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: ARTIFACT_COLORS[a.type] }} />
+                  <Link key={a.id} to={`/artifact/${a.id}`} className="flex items-center gap-2 bg-[#0a101d] border border-[#1d2839] rounded p-1.5 hover:border-[#a6ed2a] transition-colors">
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: ARTIFACT_COLORS[a.type] }} />
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm text-white truncate">{a.title}</div>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-xs text-gray-500">{a.type}</span>
-                        {a.rea_role && <span className="text-xs" style={{ color: REA_COLORS[a.rea_role] }}>{REA_LABELS[a.rea_role]}</span>}
-                        <span className="text-xs text-gray-600 ml-auto">{timeAgo(a.created_at)}</span>
-                      </div>
+                      <div className="font-medium text-[11px] text-white truncate">{a.title}</div>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      {a.rea_role && <span className="text-[10px]" style={{ color: REA_COLORS[a.rea_role] }}>{REA_LABELS[a.rea_role]}</span>}
+                      <span className="text-[10px] text-gray-600">{timeAgo(a.created_at)}</span>
                     </div>
                   </Link>
                 ))}
