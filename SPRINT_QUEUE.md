@@ -27,6 +27,8 @@
 | Q15 | Bonfires.ai → commons.id episode mirroring via contribution pipeline | Data & Integration (04) | DONE | 2026-02-13 19:35 | 2026-02-13 19:45 |
 | Q16 | Investigate edge function failures + re-run failed contributions | Technical Lead (00) | DONE | 2026-02-13 19:39 | 2026-02-13 19:55 |
 | Q17 | Don't write to merkle chain on extraction errors — retry until success | Technical Lead (00) | DONE | 2026-02-13 19:42 | 2026-02-13 19:55 |
+| Q18 | Fix broken convergence chain + add queuing to Bonfires sync | Technical Lead (00) | DONE | 2026-02-13 19:45 | 2026-02-13 20:00 |
+| Q19 | Investigate /S Sessions dimension not showing synced sessions | Frontend & DevOps (07) | DONE | 2026-02-13 19:50 | 2026-02-13 20:00 |
 
 ---
 
