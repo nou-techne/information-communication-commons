@@ -15,6 +15,7 @@
 | Q3 | Holistic seven-layer architecture diagram | Technical Lead (00) | DONE | 2026-02-13 16:51 | 2026-02-13 16:52 |
 | Q4 | Server (Hetzner) performance and security investigation + risk-ranked plan | Compliance & Security (06) | DONE (plan written) | 2026-02-13 16:52 | 2026-02-13 16:53 |
 | Q5 | Copy tio/ethboulder26-commons-id to public repo | Frontend & DevOps (07) | DONE | 2026-02-13 16:54 | 2026-02-13 16:54 |
+| Q6 | Optimize /live for TV/large screen view density | Frontend & DevOps (07) | DONE | 2026-02-13 16:55 | 2026-02-13 16:57 |
 
 ---
 
