@@ -29,7 +29,7 @@ const DIMENSION_MAP: Record<string, DimensionConfig> = {
   A: { letter: 'A/', name: 'Tools & Infrastructure', subtitle: 'What We\'re Building', tagName: 'hlamt:A', color: '#8bbfff' },
   M: { letter: 'M/', name: 'Methodology', subtitle: 'How We Work', tagName: 'hlamt:M', color: '#7ccfb8' },
   T: { letter: 'T/', name: 'Training', subtitle: 'What We\'re Learning', tagName: 'hlamt:T', color: '#e8927c' },
-  S: { letter: 'S/', name: 'Sessions', subtitle: 'Where Convergence Happens', tagName: 'hlamt:S', color: '#c084fc' },
+  S: { letter: 'S/', name: 'Sessions', subtitle: 'Where Convergence Happens', tagName: 'sessions', color: '#c084fc' },
 }
 
 function ArtifactCard({ artifact }: { artifact: Artifact }) {
@@ -277,85 +277,143 @@ function LanguageView({ artifacts }: { artifacts: Artifact[] }) {
   )
 }
 
-function SessionsView() {
-  const [sessions, setSessions] = useState<Array<{ id: string; title: string; host: string; format: string; track: string; schedule: string; description: string; votes: string; created_at: string; artifact_count: number }>>([])
+interface SessionRow {
+  id: string
+  title: string
+  description: string | null
+  location: string | null
+  time_start: string | null
+  time_end: string | null
+  track: string | null
+  speakers: string[] | null
+  session_type: string | null
+  tags: string[] | null
+}
+
+const TRACK_COLORS: Record<string, string> = {
+  'Privacy': '#6366f1',
+  'Creativity': '#ec4899',
+  'Public Goods Funding': '#22c55e',
+  'Ethereum Localism': '#f59e0b',
+  'd/acc': '#ef4444',
+  'DeSci': '#06b6d4',
+  'AI & Society': '#8b5cf6',
+  'Onchain Organizations': '#14b8a6',
+  'DAO Tooling': '#3b82f6',
+  'Hackathon': '#f97316',
+}
+
+function formatSessionTime(time: string) {
+  const d = new Date(time)
+  return d.toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' })
+}
+
+function SessionsView({ artifacts }: { artifacts: Artifact[] }) {
+  const [sessions, setSessions] = useState<SessionRow[]>([])
+  const [trackFilter, setTrackFilter] = useState('')
+  const [tracks, setTracks] = useState<string[]>([])
 
   useEffect(() => {
     async function load() {
-      // Get contributions that represent sessions (from ETHBoulder Sync participant)
-      const { data: syncP } = await supabase.from('public_participants').select('id').eq('name', 'ETHBoulder Sync').single()
-      if (!syncP) return
-
-      const { data: contribs } = await supabase.from('contributions')
-        .select('id, content, created_at, extraction')
-        .eq('participant_id', syncP.id)
-        .order('created_at', { ascending: true })
-
-      if (!contribs) return
-
-      const parsed = contribs.map(c => {
-        const lines = c.content.split('\n')
-        const titleLine = lines.find((l: string) => l.startsWith('Session:')) || ''
-        const hostLine = lines.find((l: string) => l.startsWith('Host:')) || ''
-        const formatLine = lines.find((l: string) => l.startsWith('Format:')) || ''
-        const trackLine = lines.find((l: string) => l.startsWith('Track:')) || ''
-        const scheduleLine = lines.find((l: string) => l.startsWith('Schedule:')) || ''
-        const voteLine = lines.find((l: string) => l.startsWith('Quadratic')) || ''
-        const descStart = lines.findIndex((l: string) => l === '') 
-        const desc = descStart >= 0 ? lines.slice(descStart + 1).filter((l: string) => !l.startsWith('Quadratic')).join(' ').trim() : ''
-        const artCount = (c.extraction as any)?.artifacts?.length || 0
-
-        return {
-          id: c.id,
-          title: titleLine.replace('Session: ', ''),
-          host: hostLine.replace('Host: ', ''),
-          format: formatLine.replace('Format: ', ''),
-          track: trackLine.replace('Track: ', ''),
-          schedule: scheduleLine.replace('Schedule: ', ''),
-          description: desc.slice(0, 200),
-          votes: voteLine,
-          created_at: c.created_at,
-          artifact_count: artCount,
-        }
-      }).filter(s => s.title)
-
-      setSessions(parsed)
+      const { data } = await supabase.from('sessions').select('*').order('time_start', { ascending: true, nullsFirst: false })
+      if (data) {
+        setSessions(data)
+        const unique = [...new Set(data.map(s => s.track).filter(Boolean))] as string[]
+        setTracks(unique.sort())
+      }
     }
     load()
   }, [])
 
-  if (sessions.length === 0) {
-    return <p className="text-gray-500 text-sm">No sessions imported yet.</p>
-  }
+  const filtered = trackFilter ? sessions.filter(s => s.track === trackFilter) : sessions
 
   return (
-    <div>
-      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-        ETHBoulder Sessions ({sessions.length})
-      </h2>
-      <div className="grid gap-3">
-        {sessions.map(s => (
+    <div className="space-y-6">
+      {/* Session count + track filters */}
+      <div>
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-2xl font-bold" style={{ color: '#c084fc' }}>{sessions.length}</span>
+          <span className="text-gray-400 text-sm">sessions from ETHBoulder 2026</span>
+        </div>
+        {tracks.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              onClick={() => setTrackFilter('')}
+              className={`px-2.5 py-1 rounded text-xs transition-colors ${!trackFilter ? 'bg-[#c084fc] text-[#080c16] font-medium' : 'bg-[#1d2839] text-gray-400 hover:text-white'}`}
+            >
+              All
+            </button>
+            {tracks.map(t => (
+              <button
+                key={t}
+                onClick={() => setTrackFilter(trackFilter === t ? '' : t)}
+                className={`px-2.5 py-1 rounded text-xs transition-colors ${trackFilter === t ? 'font-medium text-[#080c16]' : 'text-gray-400 hover:text-white'}`}
+                style={trackFilter === t ? { backgroundColor: TRACK_COLORS[t] || '#c084fc' } : { backgroundColor: '#1d2839' }}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Sessions list */}
+      <div className="grid gap-2">
+        {filtered.map(s => (
           <Link
             key={s.id}
-            to={`/contribution/${s.id}`}
+            to={`/session/${s.id}`}
             className="block rounded-lg border border-[#1d2839] bg-[#0a101d] p-4 hover:border-[#c084fc] transition-colors"
-            style={{ borderLeftWidth: '3px', borderLeftColor: '#c084fc' }}
+            style={{ borderLeftWidth: '3px', borderLeftColor: TRACK_COLORS[s.track || ''] || '#c084fc' }}
           >
-            <div className="flex items-start justify-between gap-3 mb-2">
+            <div className="flex items-start justify-between gap-3 mb-1.5">
               <h3 className="text-white font-semibold text-sm">{s.title}</h3>
-              <span className="text-xs text-gray-500 whitespace-nowrap">{s.artifact_count} artifacts</span>
+              {s.session_type && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#1d2839] text-gray-400 capitalize whitespace-nowrap">{s.session_type}</span>
+              )}
             </div>
-            <div className="flex flex-wrap gap-2 mb-2 text-xs">
-              {s.host && <span className="text-gray-400">{s.host}</span>}
-              {s.format && <span className="text-gray-500">· {s.format}</span>}
-              {s.track && <span className="px-1.5 py-0.5 rounded bg-[#c084fc]/10 text-[#c084fc] border border-[#c084fc]/20">{s.track}</span>}
+            <div className="flex flex-wrap items-center gap-2 mb-1.5 text-xs text-gray-500">
+              {s.speakers && s.speakers.length > 0 && (
+                <span className="text-gray-300">{s.speakers.join(', ')}</span>
+              )}
+              {s.time_start && (
+                <span className="flex items-center gap-1">
+                  <span>{formatSessionTime(s.time_start)}</span>
+                </span>
+              )}
+              {s.location && <span>{s.location}</span>}
             </div>
-            {s.schedule && <div className="text-xs text-gray-500 mb-2">{s.schedule}</div>}
+            {s.track && (
+              <span
+                className="inline-block text-[10px] px-1.5 py-0.5 rounded border mb-1.5"
+                style={{ backgroundColor: (TRACK_COLORS[s.track] || '#c084fc') + '15', color: TRACK_COLORS[s.track] || '#c084fc', borderColor: (TRACK_COLORS[s.track] || '#c084fc') + '30' }}
+              >
+                {s.track}
+              </span>
+            )}
             {s.description && <p className="text-gray-400 text-xs line-clamp-2">{s.description}</p>}
-            {s.votes && <div className="text-xs text-amber-400/70 mt-2">{s.votes}</div>}
+            {s.tags && s.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-1.5">
+                {s.tags.map((tag, i) => (
+                  <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-[#1d2839] text-gray-500">{tag}</span>
+                ))}
+              </div>
+            )}
           </Link>
         ))}
       </div>
+
+      {/* Also show tagged artifacts if any */}
+      {artifacts.length > 0 && (
+        <div>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            Session Artifacts ({artifacts.length})
+          </h2>
+          <div className="grid gap-3">
+            {artifacts.map(a => <ArtifactCard key={a.id} artifact={a} />)}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -500,7 +558,7 @@ export function DimensionView() {
         <>
           {dimension === 'H' && <HumanView artifacts={artifacts} />}
           {dimension === 'L' && <LanguageView artifacts={artifacts} />}
-          {dimension === 'S' && <SessionsView />}
+          {dimension === 'S' && <SessionsView artifacts={artifacts} />}
           {dimension !== 'H' && dimension !== 'L' && dimension !== 'S' && <GenericDimensionView artifacts={artifacts} dim={dim} />}
         </>
       )}
