@@ -33,6 +33,7 @@ const ChannelView = lazy(() => import('./pages/ChannelView').then(m => ({ defaul
 const ThreadView = lazy(() => import('./pages/ThreadView').then(m => ({ default: m.ThreadView })))
 const MessageSearch = lazy(() => import('./pages/MessageSearch').then(m => ({ default: m.MessageSearch })))
 const ApiDocsPage = lazy(() => import('./pages/ApiDocsPage'))
+const ApiKeysPage = lazy(() => import('./pages/ApiKeysPage').then(m => ({ default: m.ApiKeysPage })))
 const WebhooksPage = lazy(() => import('./pages/WebhooksPage'))
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
 const ConvergenceDashboardPage = lazy(() => import('./pages/ConvergenceDashboardPage'))
@@ -253,6 +254,7 @@ function AuthGuardedRoutes() {
       <Route path="/welcome" element={<Onboard />} />
       <Route path="/status" element={<Navigate to="/live" replace />} />
       <Route path="/api-docs" element={<ApiDocsPage />} />
+      <Route path="/api-keys" element={<RequireAuth session={session} loading={authLoading}><ApiKeysPage /></RequireAuth>} />
       <Route path="/webhooks" element={<WebhooksPage />} />
       <Route path="/analytics" element={<AnalyticsPage />} />
       <Route path="/convergence" element={<ConvergenceDashboardPage />} />
