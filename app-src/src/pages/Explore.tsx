@@ -2,12 +2,13 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS, AGENT_TYPE_COLORS, AGENT_TYPE_LABELS } from '../lib/supabase'
 import type { Artifact, ArtifactType, ArtifactState } from '../lib/supabase'
-import { Info, ChevronDown, ChevronLeft, ChevronRight, Inbox, PenLine, Sparkles, GitBranch, Flame } from 'lucide-react'
+import { Info, ChevronDown, ChevronLeft, ChevronRight, Inbox, PenLine, Sparkles, GitBranch, Flame, Calendar } from 'lucide-react'
 import { SignalFlame } from '../components/SignalFlame'
 import { fetchMostSignaled, fetchTagSignalDensity, subscribeToSignals } from '../lib/signals'
 import { ExtractionProgress } from '../components/ExtractionProgress'
 import { ChainStatus } from '../components/ChainStatus'
 import { ReplaySlider } from '../components/ReplaySlider'
+import { SessionsList } from '../components/SessionsList'
 import { useConvergence } from '../contexts/ConvergenceContext'
 
 const Graph = lazy(() => import('./Graph').then(m => ({ default: m.Graph })))
@@ -238,6 +239,7 @@ export function Explore() {
   }
 
   const [showHowItWorks, setShowHowItWorks] = useState(false)
+  const [showSessions, setShowSessions] = useState(false)
   const [graphPage, setGraphPage] = useState(0)
   const GRAPH_PAGE_SIZE = 10
 
@@ -335,6 +337,26 @@ export function Explore() {
             </Link>
           )
         })}
+      </div>
+
+      {/* Sessions */}
+      <div className="mb-6 bg-[#0a101d] border border-[#1d2839] rounded-lg overflow-hidden">
+        <button
+          onClick={() => setShowSessions(!showSessions)}
+          className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#1d2839] transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-[#a6ed2a]" />
+            <span className="text-sm font-medium text-white">Sessions</span>
+            <span className="text-xs text-gray-500">ETHBoulder schedule</span>
+          </div>
+          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showSessions ? 'rotate-180' : ''}`} />
+        </button>
+        {showSessions && (
+          <div className="px-4 pb-4 border-t border-[#1d2839] pt-3">
+            <SessionsList limit={20} />
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">

@@ -7,6 +7,7 @@ import { fetchTagSignalDensity } from '../lib/signals'
 import { ExtractionProgress } from '../components/ExtractionProgress'
 import { ChainStatus } from '../components/ChainStatus'
 import { ReplaySlider } from '../components/ReplaySlider'
+import { SessionsList } from '../components/SessionsList'
 import { useConvergence } from '../contexts/ConvergenceContext'
 
 const Graph = lazy(() => import('./Graph').then(m => ({ default: m.Graph })))
@@ -258,6 +259,12 @@ export default function Live() {
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Sessions */}
+          <div>
+            <h2 className="text-[10px] font-semibold text-gray-500 mb-1 uppercase tracking-wider">Sessions</h2>
+            <SessionsList compact limit={6} />
           </div>
 
           {/* Recent Artifacts */}
