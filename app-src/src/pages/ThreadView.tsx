@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X, CheckCircle, Archive, Flag, EyeOff } from 'lucide-react'
+import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X, CheckCircle, Archive, Flag, EyeOff, Bot } from 'lucide-react'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import { ResolveThreadDialog } from '../components/ResolveThreadDialog'
 import type { Session } from '@supabase/supabase-js'
@@ -40,6 +40,11 @@ interface Message {
   created_at: string
   updated_at: string
   hidden?: boolean
+  author?: {
+    id: string
+    name: string | null
+    account_type: 'human' | 'agent'
+  }
 }
 
 interface Reaction {
@@ -134,10 +139,13 @@ export function ThreadView() {
     const { data: th } = await supabase.from('threads').select('*').eq('id', threadId).single()
     setThread(th as Thread)
 
-    // Load most recent messages (up to INITIAL_LOAD)
+    // Load most recent messages (up to INITIAL_LOAD) with author info
     const { data: msgs, count } = await supabase
       .from('messages')
-      .select('*', { count: 'exact' })
+      .select(`
+        *,
+        author:participants!messages_author_id_fkey(id, name, account_type)
+      `, { count: 'exact' })
       .eq('thread_id', threadId)
       .order('created_at', { ascending: false })
       .limit(INITIAL_LOAD)
@@ -163,7 +171,10 @@ export function ThreadView() {
 
     const { data: msgs } = await supabase
       .from('messages')
-      .select('*')
+      .select(`
+        *,
+        author:participants!messages_author_id_fkey(id, name, account_type)
+      `)
       .eq('thread_id', threadId)
       .lt('created_at', oldestMessage.created_at)
       .order('created_at', { ascending: false })
@@ -516,8 +527,14 @@ export function ThreadView() {
                   <div className="bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-3">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm font-medium text-white">
-                        {msg.author_id ? msg.author_id.slice(0, 8) : 'Anonymous'}
+                        {msg.author?.name || (msg.author_id ? msg.author_id.slice(0, 8) : 'Anonymous')}
                       </span>
+                      {msg.author?.account_type === 'agent' && (
+                        <span className="inline-flex items-center gap-1 bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded text-xs">
+                          <Bot className="w-3 h-3" />
+                          Agent
+                        </span>
+                      )}
                       <span className="text-xs text-gray-600">{timeAgo(msg.created_at)}</span>
                       {/* Message actions */}
                       {session && (
