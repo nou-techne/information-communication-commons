@@ -101,6 +101,9 @@ serve(async (req) => {
           'POST /contribute': 'Submit a contribution (body: {content, participant_id?})',
           'POST /agent/contribute': 'Agent-authenticated contribution (requires X-API-Key header)',
           'POST /agent/message': 'Agent-authenticated message to thread (requires X-API-Key header)',
+          'GET /agent/channels': 'List channels (query: ?convergence_id=, ?visibility=)',
+          'GET /agent/threads': 'List threads (query: ?channel_id=, ?status=, ?limit=)',
+          'POST /agent/threads': 'Create a thread (body: {channel_id, title, initial_message?})',
         },
         docs: 'https://commons.id/app/api-docs',
       })
@@ -379,6 +382,138 @@ serve(async (req) => {
       })
     }
 
+    // Sprint 79: GET /agent/channels — List channels
+    if (path === 'agent/channels' && method === 'GET') {
+      const auth = await validateApiKey(req, supabase)
+      if (!auth.valid) {
+        return json({ error: auth.error }, auth.status)
+      }
+
+      const convergenceId = url.searchParams.get('convergence_id')
+      const visibility = url.searchParams.get('visibility')
+
+      let query = supabase
+        .from('channels')
+        .select('id, convergence_id, name, slug, description, type, visibility, created_at, updated_at')
+        .order('position', { ascending: true })
+        .order('created_at', { ascending: true })
+
+      if (convergenceId) {
+        query = query.eq('convergence_id', convergenceId)
+      }
+
+      if (visibility) {
+        query = query.eq('visibility', visibility)
+      }
+
+      const { data, error } = await query
+
+      if (error) return err(error.message, 500)
+
+      return new Response(JSON.stringify({
+        channels: data || [],
+        count: data?.length || 0,
+      }), {
+        status: 200,
+        headers: { ...CORS_HEADERS, ...auth.headers }
+      })
+    }
+
+    // Sprint 79: GET /agent/threads — List threads
+    if (path === 'agent/threads' && method === 'GET') {
+      const auth = await validateApiKey(req, supabase)
+      if (!auth.valid) {
+        return json({ error: auth.error }, auth.status)
+      }
+
+      const channelId = url.searchParams.get('channel_id')
+      const status = url.searchParams.get('status')
+      const limit = parseInt(url.searchParams.get('limit') || '50')
+
+      let query = supabase
+        .from('threads')
+        .select('id, channel_id, title, status, created_by, created_at, updated_at, resolved_at')
+        .order('updated_at', { ascending: false })
+        .limit(limit)
+
+      if (channelId) {
+        query = query.eq('channel_id', channelId)
+      }
+
+      if (status) {
+        query = query.eq('status', status)
+      }
+
+      const { data, error } = await query
+
+      if (error) return err(error.message, 500)
+
+      return new Response(JSON.stringify({
+        threads: data || [],
+        count: data?.length || 0,
+      }), {
+        status: 200,
+        headers: { ...CORS_HEADERS, ...auth.headers }
+      })
+    }
+
+    // Sprint 79: POST /agent/threads — Create a thread
+    if (path === 'agent/threads' && method === 'POST') {
+      const auth = await validateApiKey(req, supabase)
+      if (!auth.valid) {
+        return json({ error: auth.error }, auth.status)
+      }
+
+      const body = await req.json()
+      const { channel_id, title, initial_message } = body
+
+      if (!channel_id || !title) {
+        return err('Missing required fields: channel_id, title')
+      }
+
+      if (title.length < 3 || title.length > 200) {
+        return err('Title must be 3-200 characters')
+      }
+
+      // Create thread
+      const { data: thread, error: threadError } = await supabase
+        .from('threads')
+        .insert({
+          channel_id,
+          title,
+          status: 'open',
+          created_by: auth.participantId,
+        })
+        .select('id, channel_id, title, status, created_at')
+        .single()
+
+      if (threadError) return err(threadError.message, 500)
+
+      // If initial_message provided, post it
+      if (initial_message && initial_message.length > 0) {
+        await supabase
+          .from('messages')
+          .insert({
+            thread_id: thread.id,
+            author_id: auth.participantId,
+            content: initial_message,
+            type: 'text',
+          })
+      }
+
+      return new Response(JSON.stringify({
+        id: thread.id,
+        channel_id: thread.channel_id,
+        title: thread.title,
+        status: thread.status,
+        created_at: thread.created_at,
+        message: 'Thread created successfully',
+      }), {
+        status: 201,
+        headers: { ...CORS_HEADERS, ...auth.headers }
+      })
+    }
+
     // GET /guidelines — bot interaction guidelines
     if (path === 'guidelines' && method === 'GET') {
       return json({
@@ -464,6 +599,9 @@ serve(async (req) => {
             'POST /contribute': 'Submit a contribution ({content, participant_id?, convergence_id?})',
             'POST /agent/contribute': 'Agent-authenticated contribution (requires X-API-Key header)',
             'POST /agent/message': 'Post message to thread as agent ({thread_id, content, type?})',
+            'GET /agent/channels': 'List channels (?convergence_id=, ?visibility=)',
+            'GET /agent/threads': 'List threads (?channel_id=, ?status=, ?limit=)',
+            'POST /agent/threads': 'Create thread ({channel_id, title, initial_message?})',
           },
         },
         clawsmos: {
