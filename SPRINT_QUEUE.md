@@ -17,6 +17,7 @@
 | Q5 | Copy tio/ethboulder26-commons-id to public repo | Frontend & DevOps (07) | DONE | 2026-02-13 16:54 | 2026-02-13 16:54 |
 | Q6 | Optimize /live for TV/large screen view density | Frontend & DevOps (07) | DONE | 2026-02-13 16:55 | 2026-02-13 16:57 |
 | Q7 | Move Chain Replay to slimline bottom panel | Frontend & DevOps (07) | DONE | 2026-02-13 17:04 | 2026-02-13 17:06 |
+| Q8 | Holistic Live page redesign for visual clarity | Frontend & DevOps (07) | DONE | 2026-02-13 17:10 | 2026-02-13 17:12 |
 
 ---
 
