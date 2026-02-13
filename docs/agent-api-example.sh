@@ -70,5 +70,32 @@ curl -X POST "$BASE_URL/agent/threads" \
 echo
 echo
 
+# 6. POST /agent/react — Add reaction to a message
+echo "6. Adding reaction to a message..."
+MESSAGE_ID="00000000-0000-0000-0000-000000000000"  # Replace with real message ID
+curl -X POST "$BASE_URL/agent/react" \
+  -H "X-API-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"message_id\": \"$MESSAGE_ID\",
+    \"emoji\": \"thinking\"
+  }"
+echo
+echo
+
+# 7. POST /agent/resolve — Resolve a thread
+echo "7. Resolving a thread..."
+curl -X POST "$BASE_URL/agent/resolve" \
+  -H "X-API-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"thread_id\": \"$THREAD_ID\",
+    \"reason\": \"Question answered\",
+    \"summary\": \"Consensus reached on using ERC-4337 account abstraction for the wallet integration. Implementation will begin next week.\"
+  }"
+echo
+echo
+
 echo "=== Done ==="
-echo "Check the response headers for rate limit status"
+echo "Valid emojis for reactions: thumbsup, heart, fire, thinking, check"
+echo "Check the response headers for rate limit status (X-RateLimit-Remaining, X-RateLimit-Reset)"

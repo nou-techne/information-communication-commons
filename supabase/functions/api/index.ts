@@ -104,6 +104,8 @@ serve(async (req) => {
           'GET /agent/channels': 'List channels (query: ?convergence_id=, ?visibility=)',
           'GET /agent/threads': 'List threads (query: ?channel_id=, ?status=, ?limit=)',
           'POST /agent/threads': 'Create a thread (body: {channel_id, title, initial_message?})',
+          'POST /agent/react': 'Add reaction to a message (body: {message_id, emoji})',
+          'POST /agent/resolve': 'Resolve a thread (body: {thread_id, reason?, summary?})',
         },
         docs: 'https://commons.id/app/api-docs',
       })
@@ -514,6 +516,136 @@ serve(async (req) => {
       })
     }
 
+    // Sprint 80: POST /agent/react — Add reaction to a message
+    if (path === 'agent/react' && method === 'POST') {
+      const auth = await validateApiKey(req, supabase)
+      if (!auth.valid) {
+        return json({ error: auth.error }, auth.status)
+      }
+
+      const body = await req.json()
+      const { message_id, emoji } = body
+
+      if (!message_id || !emoji) {
+        return err('Missing required fields: message_id, emoji')
+      }
+
+      // Valid emojis from the app
+      const validEmojis = ['thumbsup', 'heart', 'fire', 'thinking', 'check']
+      if (!validEmojis.includes(emoji)) {
+        return err(`Invalid emoji. Valid options: ${validEmojis.join(', ')}`)
+      }
+
+      // Check if already reacted with this emoji (upsert behavior)
+      const { data: existing } = await supabase
+        .from('message_reactions')
+        .select('id')
+        .eq('message_id', message_id)
+        .eq('participant_id', auth.participantId)
+        .eq('emoji', emoji)
+        .single()
+
+      if (existing) {
+        // Already reacted, return existing
+        return new Response(JSON.stringify({
+          message_id,
+          emoji,
+          message: 'Reaction already exists',
+        }), {
+          status: 200,
+          headers: { ...CORS_HEADERS, ...auth.headers }
+        })
+      }
+
+      // Add reaction
+      const { data, error } = await supabase
+        .from('message_reactions')
+        .insert({
+          message_id,
+          participant_id: auth.participantId,
+          emoji,
+        })
+        .select('id, created_at')
+        .single()
+
+      if (error) return err(error.message, 500)
+
+      return new Response(JSON.stringify({
+        id: data.id,
+        message_id,
+        emoji,
+        created_at: data.created_at,
+        message: 'Reaction added successfully',
+      }), {
+        status: 201,
+        headers: { ...CORS_HEADERS, ...auth.headers }
+      })
+    }
+
+    // Sprint 80: POST /agent/resolve — Resolve a thread
+    if (path === 'agent/resolve' && method === 'POST') {
+      const auth = await validateApiKey(req, supabase)
+      if (!auth.valid) {
+        return json({ error: auth.error }, auth.status)
+      }
+
+      const body = await req.json()
+      const { thread_id, reason, summary } = body
+
+      if (!thread_id) {
+        return err('Missing required field: thread_id')
+      }
+
+      // Get thread to check status
+      const { data: thread, error: threadError } = await supabase
+        .from('threads')
+        .select('id, status, title')
+        .eq('id', thread_id)
+        .single()
+
+      if (threadError || !thread) {
+        return err('Thread not found', 404)
+      }
+
+      if (thread.status === 'resolved' || thread.status === 'consolidated' || thread.status === 'archived') {
+        return err(`Thread is already ${thread.status}`, 400)
+      }
+
+      // Post resolution summary as system message if provided
+      if (summary && summary.length > 0) {
+        const content = reason
+          ? `**Resolved:** ${reason}\n\n${summary}`
+          : `**Resolved**\n\n${summary}`
+
+        await supabase.from('messages').insert({
+          thread_id,
+          author_id: auth.participantId,
+          content,
+          type: 'system',
+        })
+      }
+
+      // Update thread status to resolved
+      const { error: updateError } = await supabase
+        .from('threads')
+        .update({
+          status: 'resolved',
+          resolved_at: new Date().toISOString(),
+        })
+        .eq('id', thread_id)
+
+      if (updateError) return err(updateError.message, 500)
+
+      return new Response(JSON.stringify({
+        thread_id,
+        status: 'resolved',
+        message: 'Thread resolved successfully',
+      }), {
+        status: 200,
+        headers: { ...CORS_HEADERS, ...auth.headers }
+      })
+    }
+
     // GET /guidelines — bot interaction guidelines
     if (path === 'guidelines' && method === 'GET') {
       return json({
@@ -602,6 +734,8 @@ serve(async (req) => {
             'GET /agent/channels': 'List channels (?convergence_id=, ?visibility=)',
             'GET /agent/threads': 'List threads (?channel_id=, ?status=, ?limit=)',
             'POST /agent/threads': 'Create thread ({channel_id, title, initial_message?})',
+            'POST /agent/react': 'Add reaction to message ({message_id, emoji})',
+            'POST /agent/resolve': 'Resolve thread ({thread_id, reason?, summary?})',
           },
         },
         clawsmos: {
