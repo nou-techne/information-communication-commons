@@ -16,6 +16,7 @@
 | Q4 | Server (Hetzner) performance and security investigation + risk-ranked plan | Compliance & Security (06) | DONE (plan written) | 2026-02-13 16:52 | 2026-02-13 16:53 |
 | Q5 | Copy tio/ethboulder26-commons-id to public repo | Frontend & DevOps (07) | DONE | 2026-02-13 16:54 | 2026-02-13 16:54 |
 | Q6 | Optimize /live for TV/large screen view density | Frontend & DevOps (07) | DONE | 2026-02-13 16:55 | 2026-02-13 16:57 |
+| Q7 | Move Chain Replay to slimline bottom panel | Frontend & DevOps (07) | DONE | 2026-02-13 17:04 | 2026-02-13 17:06 |
 
 ---
 
@@ -28,3 +29,5 @@
 - Q3: Seven-layer architecture diagram at tio-ethboulder26/commons-id-architecture.md
 - Q4: Server security plan at docs/SERVER_SECURITY_PLAN.md (3 critical, 4 medium, 3 high risk items)
 - Q5: All artifacts pushed to public repo (commit 773d262)
+- Q6: Live.tsx view density optimization for TV display
+- Q7: Chain Replay relocated from graph section to slimline bottom panel (label + ChainStatus + slider inline)
