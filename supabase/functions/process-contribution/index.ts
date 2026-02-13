@@ -146,17 +146,21 @@ async function logError(supabase: any, contributionId: string, stage: string, me
   }
   
   // Append to errors array
-  await supabase.rpc('jsonb_array_append', {
-    table_name: 'contributions',
-    column_name: 'errors',
-    row_id: contributionId,
-    new_value: JSON.stringify(errorEntry)
-  }).catch(() => {
+  try {
+    await supabase.rpc('jsonb_array_append', {
+      table_name: 'contributions',
+      column_name: 'errors',
+      row_id: contributionId,
+      new_value: JSON.stringify(errorEntry)
+    })
+  } catch {
     // Fallback: set errors directly if function doesn't exist
-    supabase.from('contributions')
-      .update({ errors: [errorEntry] })
-      .eq('id', contributionId)
-  })
+    try {
+      await supabase.from('contributions')
+        .update({ errors: [errorEntry] })
+        .eq('id', contributionId)
+    } catch { /* best effort */ }
+  }
 }
 
 serve(async (req) => {

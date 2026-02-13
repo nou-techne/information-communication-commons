@@ -25,6 +25,8 @@
 | Q13 | Fix /S Sessions dimension tag mismatch + rewrite SessionsView | Frontend & DevOps (07) | DONE | 2026-02-13 18:27 | 2026-02-13 18:30 |
 | Q14 | Graph mirroring report: Bonfires.ai × commons.id | Research & Strategy (01) | DONE | 2026-02-13 18:32 | 2026-02-13 18:34 |
 | Q15 | Bonfires.ai → commons.id episode mirroring via contribution pipeline | Data & Integration (04) | DONE | 2026-02-13 19:35 | 2026-02-13 19:45 |
+| Q16 | Investigate edge function failures + re-run failed contributions | Technical Lead (00) | DONE | 2026-02-13 19:39 | 2026-02-13 19:55 |
+| Q17 | Don't write to merkle chain on extraction errors — retry until success | Technical Lead (00) | DONE | 2026-02-13 19:42 | 2026-02-13 19:55 |
 
 ---
 
