@@ -55,6 +55,25 @@ async function validateApiKey(req: Request, supabase: any) {
     }
   }
 
+  // Sprint 84: Check if agent should be throttled (abuse prevention)
+  if (result.account_type === 'agent') {
+    const { data: shouldThrottle } = await supabase.rpc('should_throttle_agent', {
+      p_participant_id: result.participant_id
+    })
+
+    if (shouldThrottle) {
+      return {
+        valid: false,
+        error: 'Agent throttled due to low reputation or abuse reports',
+        status: 429,
+        headers: {
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': result.reset_at
+        }
+      }
+    }
+  }
+
   return {
     valid: true,
     participantId: result.participant_id,

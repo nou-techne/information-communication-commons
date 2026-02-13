@@ -35,6 +35,7 @@ const MessageSearch = lazy(() => import('./pages/MessageSearch').then(m => ({ de
 const ApiDocsPage = lazy(() => import('./pages/ApiDocsPage'))
 const ApiKeysPage = lazy(() => import('./pages/ApiKeysPage').then(m => ({ default: m.ApiKeysPage })))
 const CommitmentDashboard = lazy(() => import('./pages/CommitmentDashboard').then(m => ({ default: m.CommitmentDashboard })))
+const AgentLeaderboard = lazy(() => import('./pages/AgentLeaderboard').then(m => ({ default: m.AgentLeaderboard })))
 const WebhooksPage = lazy(() => import('./pages/WebhooksPage'))
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
 const ConvergenceDashboardPage = lazy(() => import('./pages/ConvergenceDashboardPage'))
@@ -257,6 +258,7 @@ function AuthGuardedRoutes() {
       <Route path="/api-docs" element={<ApiDocsPage />} />
       <Route path="/api-keys" element={<RequireAuth session={session} loading={authLoading}><ApiKeysPage /></RequireAuth>} />
       <Route path="/commitments" element={<RequireAuth session={session} loading={authLoading}><CommitmentDashboard /></RequireAuth>} />
+      <Route path="/agents" element={<AgentLeaderboard />} />
       <Route path="/webhooks" element={<WebhooksPage />} />
       <Route path="/analytics" element={<AnalyticsPage />} />
       <Route path="/convergence" element={<ConvergenceDashboardPage />} />
