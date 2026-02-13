@@ -189,15 +189,7 @@ export default function Live() {
                 <Graph replaySeq={replaySeq} />
               </div>
             </Suspense>
-            {chainMaxSeq > 0 && (
-              <div className="mt-2 bg-[#0a101d] border border-[#1d2839] rounded p-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-[10px] font-semibold text-gray-400 uppercase">Replay</h3>
-                  <span className="text-[10px] text-gray-600">Drag to replay graph growth</span>
-                </div>
-                <ReplaySlider maxSeq={chainMaxSeq} onSeqChange={seq => setReplaySeq(seq)} />
-              </div>
-            )}
+            {/* Chain Replay moved to bottom panel */}
             {isFullscreen && <div className="p-2 pt-0"><ChainStatus compact /></div>}
           </div>
         </div>
@@ -286,6 +278,19 @@ export default function Live() {
           )}
         </div>
       </div>
+
+      {/* Chain Replay — slimline bottom panel */}
+      {chainMaxSeq > 0 && (
+        <div className="mt-3 bg-[#0a101d]/80 border border-[#1d2839] rounded px-4 py-2 flex items-center gap-4">
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <h3 className="text-[10px] font-semibold text-gray-400 uppercase">Chain Replay</h3>
+            <ChainStatus compact />
+          </div>
+          <div className="flex-1 min-w-0">
+            <ReplaySlider maxSeq={chainMaxSeq} onSeqChange={seq => setReplaySeq(seq)} />
+          </div>
+        </div>
+      )}
 
     </div>
   )
