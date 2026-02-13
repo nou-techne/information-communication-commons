@@ -58,6 +58,9 @@ const REACTION_EMOJIS = [
   { emoji: 'check', icon: Check, label: 'Check' },
 ]
 
+const MESSAGES_PER_PAGE = 50
+const INITIAL_LOAD = 100
+
 function timeAgo(date: string) {
   const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
   if (s < 60) return `${s}s ago`
@@ -83,7 +86,10 @@ export function ThreadView() {
   const [newTagValue, setNewTagValue] = useState('')
   const [newTagType, setNewTagType] = useState<ThreadTag['tag_type']>('custom')
   const [showResolveDialog, setShowResolveDialog] = useState(false)
+  const [hasMoreMessages, setHasMoreMessages] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const subscriptionRef = useRef<any>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
@@ -128,16 +134,45 @@ export function ThreadView() {
     const { data: th } = await supabase.from('threads').select('*').eq('id', threadId).single()
     setThread(th as Thread)
 
-    const { data: msgs } = await supabase
+    // Load most recent messages (up to INITIAL_LOAD)
+    const { data: msgs, count } = await supabase
       .from('messages')
-      .select('*')
+      .select('*', { count: 'exact' })
       .eq('thread_id', threadId)
-      .order('created_at', { ascending: true })
-    setMessages((msgs as Message[]) || [])
+      .order('created_at', { ascending: false })
+      .limit(INITIAL_LOAD)
+    
+    const reversed = ((msgs as Message[]) || []).reverse()
+    setMessages(reversed)
+    setHasMoreMessages((count || 0) > INITIAL_LOAD)
 
     await loadReactions()
     await loadTags()
     setLoading(false)
+  }
+
+  async function loadMoreMessages() {
+    if (!threadId || loadingMore || !hasMoreMessages) return
+    setLoadingMore(true)
+    
+    const oldestMessage = messages[0]
+    if (!oldestMessage) {
+      setLoadingMore(false)
+      return
+    }
+
+    const { data: msgs } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('thread_id', threadId)
+      .lt('created_at', oldestMessage.created_at)
+      .order('created_at', { ascending: false })
+      .limit(MESSAGES_PER_PAGE)
+    
+    const reversed = ((msgs as Message[]) || []).reverse()
+    setMessages(prev => [...reversed, ...prev])
+    setHasMoreMessages(reversed.length === MESSAGES_PER_PAGE)
+    setLoadingMore(false)
   }
 
   async function loadTags() {
@@ -446,6 +481,17 @@ export function ThreadView() {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-3 mb-4">
+        {hasMoreMessages && (
+          <div className="text-center py-2">
+            <button
+              onClick={loadMoreMessages}
+              disabled={loadingMore}
+              className="text-sm text-[#a6ed2a] hover:text-[#b8f247] disabled:opacity-50"
+            >
+              {loadingMore ? 'Loading...' : 'Load earlier messages'}
+            </button>
+          </div>
+        )}
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 py-12 text-sm">No messages yet. Start the conversation!</div>
         ) : (
