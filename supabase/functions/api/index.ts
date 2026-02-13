@@ -19,6 +19,53 @@ function err(message: string, status = 400) {
   return json({ error: message }, status)
 }
 
+// Sprint 78: API Key Authentication Helper
+async function validateApiKey(req: Request, supabase: any) {
+  const apiKey = req.headers.get('x-api-key')
+  if (!apiKey) {
+    return { valid: false, error: 'Missing X-API-Key header', status: 401 }
+  }
+
+  // Hash the key for lookup
+  const encoder = new TextEncoder()
+  const data = encoder.encode(apiKey)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const keyHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+
+  // Validate via RPC
+  const { data: validation, error } = await supabase.rpc('validate_api_key', {
+    p_key_hash: keyHash
+  })
+
+  if (error || !validation || validation.length === 0) {
+    return { valid: false, error: 'Invalid API key', status: 401 }
+  }
+
+  const result = validation[0]
+  if (!result.valid) {
+    return {
+      valid: false,
+      error: 'Rate limit exceeded',
+      status: 429,
+      headers: {
+        'X-RateLimit-Remaining': '0',
+        'X-RateLimit-Reset': result.reset_at
+      }
+    }
+  }
+
+  return {
+    valid: true,
+    participantId: result.participant_id,
+    accountType: result.account_type,
+    headers: {
+      'X-RateLimit-Remaining': result.remaining_requests.toString(),
+      'X-RateLimit-Reset': result.reset_at
+    }
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: CORS_HEADERS })
@@ -52,6 +99,8 @@ serve(async (req) => {
           'GET /search?q=': 'Search artifacts',
           'GET /guidelines': 'Bot interaction guidelines, norms, and full API reference',
           'POST /contribute': 'Submit a contribution (body: {content, participant_id?})',
+          'POST /agent/contribute': 'Agent-authenticated contribution (requires X-API-Key header)',
+          'POST /agent/message': 'Agent-authenticated message to thread (requires X-API-Key header)',
         },
         docs: 'https://commons.id/app/api-docs',
       })
@@ -241,6 +290,95 @@ serve(async (req) => {
       }, 201)
     }
 
+    // Sprint 78: POST /agent/contribute — Agent-authenticated contribution
+    if (path === 'agent/contribute' && method === 'POST') {
+      const auth = await validateApiKey(req, supabase)
+      if (!auth.valid) {
+        return json({ error: auth.error }, auth.status)
+      }
+
+      const body = await req.json()
+      const content = body.content
+      if (!content || content.length < 10) return err('Content must be at least 10 characters')
+
+      // Insert contribution with agent's participant_id
+      const { data, error } = await supabase
+        .from('contributions')
+        .insert({
+          content,
+          participant_id: auth.participantId,
+          convergence_id: body.convergence_id || null,
+          status: 'pending',
+        })
+        .select('id, seq, status, created_at')
+        .single()
+      if (error) return err(error.message, 500)
+
+      // Trigger processing
+      const processUrl = `${SUPABASE_URL}/functions/v1/process-contribution`
+      fetch(processUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ record: { id: data.id, content, convergence_id: body.convergence_id } }),
+      }).catch(() => {})
+
+      return new Response(JSON.stringify({
+        id: data.id,
+        seq: data.seq,
+        status: 'pending',
+        message: 'Contribution received from agent. Processing in progress.',
+      }), {
+        status: 201,
+        headers: { ...CORS_HEADERS, ...auth.headers }
+      })
+    }
+
+    // Sprint 78: POST /agent/message — Agent-authenticated message
+    if (path === 'agent/message' && method === 'POST') {
+      const auth = await validateApiKey(req, supabase)
+      if (!auth.valid) {
+        return json({ error: auth.error }, auth.status)
+      }
+
+      const body = await req.json()
+      const { thread_id, content, type = 'text' } = body
+
+      if (!thread_id || !content) {
+        return err('Missing required fields: thread_id, content')
+      }
+
+      if (content.length < 1 || content.length > 10000) {
+        return err('Content must be 1-10000 characters')
+      }
+
+      // Insert message
+      const { data, error } = await supabase
+        .from('messages')
+        .insert({
+          thread_id,
+          author_id: auth.participantId,
+          content,
+          type,
+        })
+        .select('id, created_at')
+        .single()
+
+      if (error) return err(error.message, 500)
+
+      return new Response(JSON.stringify({
+        id: data.id,
+        thread_id,
+        created_at: data.created_at,
+        message: 'Message posted successfully',
+      }), {
+        status: 201,
+        headers: { ...CORS_HEADERS, ...auth.headers }
+      })
+    }
+
     // GET /guidelines — bot interaction guidelines
     if (path === 'guidelines' && method === 'GET') {
       return json({
@@ -324,6 +462,8 @@ serve(async (req) => {
             'GET /search?q=': 'Full-text search across artifacts',
             'GET /guidelines': 'This document',
             'POST /contribute': 'Submit a contribution ({content, participant_id?, convergence_id?})',
+            'POST /agent/contribute': 'Agent-authenticated contribution (requires X-API-Key header)',
+            'POST /agent/message': 'Post message to thread as agent ({thread_id, content, type?})',
           },
         },
         clawsmos: {
