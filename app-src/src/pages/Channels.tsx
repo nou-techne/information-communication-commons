@@ -45,6 +45,7 @@ export function Channels() {
   const [newName, setNewName] = useState('')
   const [newDesc, setNewDesc] = useState('')
   const [newType, setNewType] = useState<Channel['type']>('general')
+  const [newVisibility, setNewVisibility] = useState<'public' | 'members' | 'admin'>('public')
   const [creating, setCreating] = useState(false)
   const [unreadChannels, setUnreadChannels] = useState<Set<string>>(new Set())
 
@@ -92,7 +93,7 @@ export function Channels() {
       slug,
       description: newDesc.trim() || null,
       type: newType,
-      visibility: 'public',
+      visibility: newVisibility,
       convergence_id: convergence.id,
       created_by: session.user.id,
     })
@@ -170,6 +171,18 @@ export function Channels() {
                   {TYPE_ORDER.map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}
                 </select>
               </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Visibility</label>
+                <select
+                  value={newVisibility}
+                  onChange={e => setNewVisibility(e.target.value as 'public' | 'members' | 'admin')}
+                  className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white text-sm"
+                >
+                  <option value="public">Public — Anyone can view</option>
+                  <option value="members">Members — Authenticated users only</option>
+                  <option value="admin">Admin — Stewards and creator only</option>
+                </select>
+              </div>
               <button
                 onClick={createChannel}
                 disabled={!newName.trim() || creating}
@@ -202,7 +215,7 @@ export function Channels() {
                     className="flex items-center gap-3 bg-[#0a101d] border border-[#1d2839] rounded-lg px-4 py-4 hover:border-[#a6ed2a] transition-colors group"
                   >
                     <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#1d2839] flex items-center justify-center text-gray-400 group-hover:text-[#a6ed2a] group-hover:bg-[#1d2839]/80 transition-colors">
-                      {ch.visibility === 'private' ? <Lock className="w-5 h-5" /> : <Hash className="w-5 h-5" />}
+                      {ch.visibility === 'members' || ch.visibility === 'admin' ? <Lock className="w-5 h-5" /> : <Hash className="w-5 h-5" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
