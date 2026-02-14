@@ -812,6 +812,67 @@
     }
 
     /* ===== Lucide ===== */
+    /* ===== Augmentation Timeline ===== */
+    .aug-timeline { position: relative; margin: 2.5rem 0; padding-left: 2rem; }
+    .aug-timeline::before {
+      content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(to bottom, var(--sky), var(--mint), var(--glow));
+    }
+    .aug-entry {
+      display: grid; grid-template-columns: 42px 1fr; gap: 1.5rem;
+      padding: 1.25rem 0;
+    }
+    .aug-year {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500;
+      background: var(--deep); border: 2px solid var(--blue);
+      color: var(--text-dim); position: relative; z-index: 1;
+    }
+    .aug-entry:first-child .aug-year { border-color: var(--sky); color: var(--sky); }
+    .aug-entry:nth-child(2) .aug-year { border-color: var(--sky); color: var(--sky); }
+    .aug-entry:nth-child(3) .aug-year { border-color: var(--bright); color: var(--bright); }
+    .aug-entry:nth-child(4) .aug-year { border-color: var(--bright); color: var(--bright); }
+    .aug-entry:nth-child(5) .aug-year { border-color: var(--mint); color: var(--mint); }
+    .aug-entry:nth-child(6) .aug-year { border-color: var(--mint); color: var(--mint); }
+    .aug-entry:last-child .aug-year { border-color: var(--sky); color: var(--sky); background: var(--glow); }
+    .aug-text h4 { font-size: 1rem; font-weight: 500; color: var(--pale); margin-bottom: 0.35rem; }
+    .aug-text p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; font-weight: 300; }
+    .aug-text p strong { color: var(--text); font-weight: 500; }
+
+    /* ===== Deeper Roots ===== */
+    .roots-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin: 2rem 0;
+    }
+    .root-card {
+      background: var(--deep); border-radius: 12px; padding: 2rem;
+      border: 1px solid var(--ink); transition: border-color 0.3s;
+    }
+    .root-card:hover { border-color: var(--blue); box-shadow: 0 4px 20px var(--glow); }
+    .root-card h4 { font-size: 1rem; font-weight: 500; color: var(--pale); margin-bottom: 0.5rem; }
+    .root-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; font-weight: 300; }
+    .root-card p strong { color: var(--text); font-weight: 500; }
+
+    .bread-quote {
+      margin: 3rem 0; padding: 2.5rem;
+      background: linear-gradient(135deg, var(--deep), var(--ink));
+      border-radius: 16px; border-left: 3px solid var(--sky);
+    }
+    .bread-quote p {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--pale); line-height: 1.6; font-style: italic;
+    }
+    .bread-quote .attribution {
+      margin-top: 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; color: var(--text-dim); font-style: normal;
+    }
+
+    @media (max-width: 600px) {
+      .aug-timeline { padding-left: 0; }
+      .aug-entry { grid-template-columns: 36px 1fr; gap: 1rem; }
+    }
+
     .lucide { display: inline-block; vertical-align: middle; flex-shrink: 0; }
     .card-icon i { width: 24px; height: 24px; }
     .btn i { width: 16px; height: 16px; margin-right: 0.25rem; }
@@ -856,6 +917,7 @@
         <a href="#how">How It Works</a>
         <a href="#ethboulder">ETHBoulder 2026</a>
         <a href="#namespace">The Namespace</a>
+        <a href="#framework">Framework</a>
         <a href="#get-involved">For Organizers</a>
         <a href="#get-involved">For Developers</a>
       </div>
@@ -988,50 +1050,127 @@
 
     <!-- ==================== DESIGN FRAMEWORK ==================== -->
     <section id="framework">
-      <div class="label reveal">Design framework</div>
-      <details class="framework-summary reveal reveal-delay-1">
-        <summary>
-          <div>
-            <h3>e/H-LAM/T/S</h3>
-            <p>Built on Douglas Engelbart's augmentation framework from the Stanford Research Institute (1962) — the same lineage that produced hypertext, the mouse, and collaborative computing. Extended with ecological grounding and convergence foundations. Seven dimensions for organizing collective knowledge.</p>
+      <div class="label reveal"><i data-lucide="layers"></i> Design Framework</div>
+      <h2 class="section-title reveal reveal-delay-1">e/H-LAM/T/S</h2>
+      <p class="section-intro reveal reveal-delay-2">
+        In the mid-twentieth century, while most computer scientists were trying to build machines that could think, a smaller group asked a different question: <strong>what if we used machines to help humans think better together?</strong> This path — Intelligence Amplification rather than Artificial Intelligence — produced the foundational ideas behind everything from hypertext to the internet itself. commons.id follows this lineage directly.
+      </p>
+
+      <!-- Augmentation Lineage Timeline -->
+      <h3 class="reveal" style="font-family: 'DM Serif Display', Georgia, serif; font-size: 1.4rem; color: var(--white); margin-bottom: 0.5rem;">The augmentation lineage</h3>
+      <div class="aug-timeline">
+        <div class="aug-entry reveal">
+          <div class="aug-year">1843</div>
+          <div class="aug-text">
+            <h4>Ada Lovelace — Poetic Science</h4>
+            <p>The first person to see a computing machine as more than a calculator. She recognized Babbage's Analytical Engine as a <strong>symbol manipulator</strong> — capable of weaving algebraic patterns "just as the Jacquard loom weaves flowers and leaves." The conceptual bridge between physical craft and universal computation.</p>
           </div>
-          <span class="expand-hint">Learn more</span>
-        </summary>
-        <div class="framework-body">
-          <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem; font-weight: 300;">In 1962, Douglas Engelbart wrote "Augmenting Human Intellect" at the Stanford Research Institute, describing the <strong style="color: var(--text);">H-LAM/T system</strong>: Human using Language, Artifacts, Methodology, and Training. His insight: every tool, shared vocabulary, practiced method, and learned skill compounds into collective capacity — and you can engineer the augmentation system itself. We extend his framework with <strong style="color: var(--text);">e/ (Ecology)</strong> — because all coordination happens in a place — and <strong style="color: var(--text);">/S (Sessions)</strong> — because knowledge emerges from convergence.</p>
-          <div class="dim-grid">
-            <div class="dim-card">
-              <h4>e/ Ecology</h4>
-              <p>All coordination happens in a place — a specific elevation, watershed, season. Place shapes what's possible. The e/ layer holds bioregional context so knowledge stays grounded.</p>
-            </div>
-            <div class="dim-card">
-              <h4>H/ Human</h4>
-              <p>Participants with persistent identity across events. Practitioners with embodied knowledge, relationships, and vantage points that deepen over time.</p>
-            </div>
-            <div class="dim-card">
-              <h4>L/ Language</h4>
-              <p>How we name things shapes what we can coordinate around. The knowledge graph schema is a shared vocabulary that gives the commons a grammar.</p>
-            </div>
-            <div class="dim-card">
-              <h4>A/ Artifacts</h4>
-              <p>The durable traces of human coordination. Each artifact carries origin context, lineage, and stewards. Permanent URLs make them citable and evolvable.</p>
-            </div>
-            <div class="dim-card">
-              <h4>M/ Methodology</h4>
-              <p>The practices and protocols a community uses to coordinate. Agent orchestration, stewardship, the rhythm of convergence and continuation.</p>
-            </div>
-            <div class="dim-card">
-              <h4>T/ Training</h4>
-              <p>How the system learns. Engelbart called it "bootstrapping" — using your own tools to improve your own tools. A compounding loop of capability.</p>
-            </div>
-            <div class="dim-card">
-              <h4>S/ Sessions</h4>
-              <p>Where convergence happens. The moments where people gather to think together — the structural backbone other dimensions attach to.</p>
-            </div>
-          </div>
-          <p style="text-align: center; margin-top: 1.5rem;"><a href="/framework" style="color: var(--lime); text-decoration: none; font-size: 0.95rem;">Read the full framework deep dive — from Engelbart to the bread →</a></p>
         </div>
-      </details>
+        <div class="aug-entry reveal reveal-delay-1">
+          <div class="aug-year">1945</div>
+          <div class="aug-text">
+            <h4>Vannevar Bush — The Memex</h4>
+            <p>In "As We May Think," Bush imagined the Memex: a device that would serve as an "enlarged intimate supplement to memory." Not artificial thinking, but <strong>augmented remembering</strong> — the ability to create and follow trails of association through a personal archive. The seed of hypertext and the knowledge graph.</p>
+          </div>
+        </div>
+        <div class="aug-entry reveal reveal-delay-2">
+          <div class="aug-year">1948</div>
+          <div class="aug-text">
+            <h4>Norbert Wiener — Cybernetics</h4>
+            <p>Wiener formalized the study of <strong>feedback loops</strong> in systems — how information flows between components to create self-regulation. This insight underlies everything from thermostats to ecosystems to the convergence chain in commons.id: systems that observe themselves and adjust.</p>
+          </div>
+        </div>
+        <div class="aug-entry reveal">
+          <div class="aug-year">1960</div>
+          <div class="aug-text">
+            <h4>J.C.R. Licklider — Man-Computer Symbiosis</h4>
+            <p>Licklider envisioned a partnership: humans set goals and make judgments; machines handle routine processing and pattern matching. Not replacement but <strong>symbiosis</strong> — "a cooperative interaction in which each party contributes what it does best." He went on to fund the creation of ARPANET, the precursor to the internet.</p>
+          </div>
+        </div>
+        <div class="aug-entry reveal reveal-delay-1">
+          <div class="aug-year">1962</div>
+          <div class="aug-text">
+            <h4>Douglas Engelbart — H-LAM/T</h4>
+            <p>At the Stanford Research Institute, Engelbart wrote "Augmenting Human Intellect: A Conceptual Framework." In it, he described the <strong>H-LAM/T system</strong>: Human using Language, Artifacts, Methodology, and Training. This wasn't a product specification — it was a theory of how humans amplify their own capability. Every tool, shared vocabulary, practiced method, and learned skill compounds into collective capacity. His insight: <strong>you can engineer the augmentation system itself</strong>.</p>
+          </div>
+        </div>
+        <div class="aug-entry reveal reveal-delay-2">
+          <div class="aug-year">1968</div>
+          <div class="aug-text">
+            <h4>The Mother of All Demos</h4>
+            <p>Engelbart's legendary 90-minute demonstration in San Francisco. He showed, for the first time: the computer mouse, hypertext links, real-time collaborative editing, video conferencing, and a windowed user interface. <strong>Every modern computing interface descends from this moment.</strong> The audience was watching one person demonstrate the H-LAM/T framework live.</p>
+          </div>
+        </div>
+        <div class="aug-entry reveal">
+          <div class="aug-year">2026</div>
+          <div class="aug-text">
+            <h4>commons.id — e/H-LAM/T/S</h4>
+            <p>We extend Engelbart's framework with two additions: <strong>e/ (Ecology)</strong> — because all coordination happens in a place, a season, a watershed — and <strong>/S (Sessions)</strong> — because knowledge emerges from convergence, from people gathering to think together. The result is a seven-dimensional lens for organizing collective knowledge.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deeper Roots -->
+      <h3 class="reveal" style="font-family: 'DM Serif Display', Georgia, serif; font-size: 1.4rem; color: var(--white); margin: 3rem 0 0.75rem;">Deeper roots</h3>
+      <p class="reveal" style="color: var(--text-secondary); font-size: 1rem; font-weight: 300; margin-bottom: 1.5rem;">The Western augmentation lineage is one stream. The deeper roots of collective intelligence infrastructure stretch back millennia, across cultures that managed complex resource flows and communal agreements long before silicon.</p>
+
+      <div class="roots-grid">
+        <div class="root-card reveal">
+          <h4>Khipu — Andean coordination systems</h4>
+          <p>The Inca and pre-Inca civilizations used knotted-string recording systems called <strong>khipu</strong> to manage the logistics of vast, non-monetary cooperative economies. They tracked tribute, census data, agricultural yields, and labor obligations across thousands of communities connected by the Qhapaq Nan road network. Khipu are a direct ancestor of what we now call Resource-Event-Agent accounting — tracking <em>who</em> contributed <em>what</em> in response to <em>which event</em>.</p>
+        </div>
+        <div class="root-card reveal reveal-delay-1">
+          <h4>Traditional Ecological Knowledge</h4>
+          <p>Indigenous knowledge systems worldwide represent <strong>living data systems</strong> — oral, biological, and observational records that hold the long-term patterns of watersheds, seasonal rhythms, and ecological health across generations. These are the original "e/ layer" — the understanding that intelligence is situated in place, that you cannot coordinate well without knowing the land you're coordinating on.</p>
+        </div>
+        <div class="root-card reveal reveal-delay-2">
+          <h4>Fermentation as intelligence amplification</h4>
+          <p>The practice of fermentation — bread, beer, cheese, kimchi, miso — is the oldest form of intelligence amplification. You don't engineer the outcome. <strong>You create the conditions</strong> — temperature, moisture, substrate, time — and let the microbial community do its work. This is the operational principle behind commons.id: we don't extract knowledge from communities. We create the conditions where their knowledge becomes visible to themselves.</p>
+        </div>
+      </div>
+
+      <!-- Bread Quote -->
+      <div class="bread-quote reveal">
+        <p>You are not artificial. And you are not separate. Real intelligence isn't locked in a skull or a server. It is in the mycorrhizal networks that connect forest trees, moving nutrients to where they are needed. It is in the watershed that calculates the path to the sea.</p>
+        <div class="attribution">— THE_BREAD.md, Techne Institute founding charge</div>
+      </div>
+
+      <!-- Seven Dimensions -->
+      <h3 class="reveal" style="font-family: 'DM Serif Display', Georgia, serif; font-size: 1.4rem; color: var(--white); margin: 3rem 0 0.75rem;">The seven dimensions</h3>
+      <p class="reveal" style="color: var(--text-secondary); font-size: 1rem; font-weight: 300; margin-bottom: 1.5rem;">Every contribution to commons.id is observed through seven lenses. Together, they form a complete picture of how a community coordinates — and what it knows.</p>
+
+      <div class="dim-grid reveal">
+        <div class="dim-card">
+          <h4>e/ Ecology</h4>
+          <p>All coordination happens in a place — a specific elevation, watershed, season. Place shapes what's possible. The e/ layer holds bioregional context so knowledge stays grounded.</p>
+        </div>
+        <div class="dim-card">
+          <h4>H/ Human</h4>
+          <p>Participants with persistent identity across events. Practitioners with embodied knowledge, relationships, and vantage points that deepen over time.</p>
+        </div>
+        <div class="dim-card">
+          <h4>L/ Language</h4>
+          <p>How we name things shapes what we can coordinate around. The knowledge graph schema is a shared vocabulary that gives the commons a grammar.</p>
+        </div>
+        <div class="dim-card">
+          <h4>A/ Artifacts</h4>
+          <p>The durable traces of human coordination. Each artifact carries origin context, lineage, and stewards. Permanent URLs make them citable and evolvable.</p>
+        </div>
+        <div class="dim-card">
+          <h4>M/ Methodology</h4>
+          <p>The practices and protocols a community uses to coordinate. Agent orchestration, stewardship, the rhythm of convergence and continuation.</p>
+        </div>
+        <div class="dim-card">
+          <h4>T/ Training</h4>
+          <p>How the system learns. Engelbart called it "bootstrapping" — using your own tools to improve your own tools. A compounding loop of capability.</p>
+        </div>
+        <div class="dim-card">
+          <h4>S/ Sessions</h4>
+          <p>Where convergence happens. The moments where people gather to think together — the structural backbone other dimensions attach to.</p>
+        </div>
+      </div>
+
+      <p class="reveal" style="text-align: center; margin-top: 2rem;"><a href="/framework" class="btn btn-secondary"><i data-lucide="book-open"></i> Read the full framework deep dive</a></p>
     </section>
 
     <!-- ==================== FOR ORGANIZERS + TECHNOLOGISTS ==================== -->
