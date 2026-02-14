@@ -80,17 +80,42 @@ export function Graph({ replaySeq }: GraphProps = {}) {
     setLoading(false)
   }, [])
 
+  // Throttled refresh: at most once every 5 seconds
+  const pendingRefresh = useRef(false)
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastRefresh = useRef(0)
+
+  const throttledLoadData = useCallback(() => {
+    const now = Date.now()
+    const elapsed = now - lastRefresh.current
+    if (elapsed >= 5000) {
+      lastRefresh.current = now
+      loadData()
+    } else if (!pendingRefresh.current) {
+      pendingRefresh.current = true
+      refreshTimer.current = setTimeout(() => {
+        pendingRefresh.current = false
+        lastRefresh.current = Date.now()
+        loadData()
+      }, 5000 - elapsed)
+    }
+  }, [loadData])
+
   useEffect(() => {
     loadData()
+    lastRefresh.current = Date.now()
     const sub = supabase.channel('graph-realtime')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => loadData())
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_relationships' }, () => loadData())
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_tags' }, () => loadData())
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'contributions' }, () => loadData())
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'contributions' }, () => loadData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifacts' }, () => throttledLoadData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_relationships' }, () => throttledLoadData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'artifact_tags' }, () => throttledLoadData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'contributions' }, () => throttledLoadData())
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'contributions' }, () => throttledLoadData())
       .subscribe()
-    return () => { supabase.removeChannel(sub) }
-  }, [loadData])
+    return () => {
+      supabase.removeChannel(sub)
+      if (refreshTimer.current) clearTimeout(refreshTimer.current)
+    }
+  }, [loadData, throttledLoadData])
 
   /* ── helpers ── */
   const artifactDimMap = useCallback((): Map<string, string> => {
