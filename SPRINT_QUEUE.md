@@ -46,3 +46,8 @@
 - Q5: All artifacts pushed to public repo (commit 773d262)
 - Q6: Live.tsx view density optimization for TV display
 - Q7: Chain Replay relocated from graph section to slimline bottom panel (label + ChainStatus + slider inline)
+
+- Q15: Five additional Techne Artizen Fund posters — further design exploration
+  - TIO Role: Perceive + Connect
+  - Queued: 2026-02-14T08:22Z
+  - Status: COMPLETE · 2026-02-14T08:29Z
