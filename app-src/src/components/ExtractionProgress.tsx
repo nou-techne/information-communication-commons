@@ -58,7 +58,7 @@ export function ExtractionProgress({ startedAt, compact = false }: ExtractionPro
         />
       </div>
       <p className="text-xs text-gray-600 mt-2 text-center">
-        Avg. extraction: ~{avgSeconds}s (based on last 5)
+        Avg. extraction: ~{avgSeconds}s (based on last 10)
       </p>
     </div>
   )
