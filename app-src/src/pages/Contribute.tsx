@@ -179,36 +179,30 @@ export function Contribute() {
         }
       }
 
-      // Insert contribution with optional participant_id and session_id
-      const { data: newContribution, error: insertError } = await supabase
-        .from('contributions')
-        .insert({
+      // Submit via API endpoint (handles insert + edge function call with service key)
+      const apiUrl = 'https://hvbdpgkdcdskhpbdeeim.supabase.co/functions/v1/api/contribute'
+      const apiResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           content: text,
           convergence_id: CONVERGENCE_ID,
           participant_id: participantId,
           session_id: sessionId || null,
-          status: 'pending',
-        })
-        .select('id')
-        .single()
+        }),
+      })
 
-      if (insertError) throw insertError
+      if (!apiResponse.ok) {
+        const apiError = await apiResponse.json().catch(() => ({ error: 'API error' }))
+        throw new Error(apiError.error || `API returned ${apiResponse.status}`)
+      }
+
+      const apiData = await apiResponse.json()
 
       // Save contribution ID and transition to extracting state
-      setContributionId(newContribution.id)
+      setContributionId(apiData.id)
       setExtractionStartedAt(Date.now())
       setState('extracting')
-
-      // Call edge function directly as fallback (pg_net trigger is unreliable)
-      supabase.functions.invoke('process-contribution', {
-        body: {
-          record: {
-            id: newContribution.id,
-            content: text,
-            convergence_id: CONVERGENCE_ID,
-          }
-        }
-      }).catch(() => {}) // Fire and forget — realtime subscription handles status
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please try again.')
       setState('error')
