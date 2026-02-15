@@ -72,6 +72,7 @@ function Nav() {
   ]
   const authedLinks = [
     { to: '/contribute', label: 'Contribute' },
+    { to: '/channels', label: 'Channels' },
     { to: '/coordinate', label: 'Coordinate' },
     { to: '/me', label: 'My Activity' },
   ]

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase, ARTIFACT_COLORS, STATE_LABELS, REA_COLORS, REA_LABELS } from '../lib/supabase'
+import { supabase, ARTIFACT_COLORS, REA_COLORS, REA_LABELS } from '../lib/supabase'
 import type { Artifact, Commitment } from '../lib/supabase'
 import type { Session } from '@supabase/supabase-js'
 import { Plus, FileText, GitBranch, Target, Clock, ChevronDown, ChevronUp, Link2, Users, Sparkles, Flame, Radio } from 'lucide-react'
-import { SignalFlame } from '../components/SignalFlame'
 
 type ViewMode = 'chain' | 'social' | 'semantic'
 
@@ -163,7 +162,7 @@ export function MyThread() {
     }
   }
 
-  async function loadSocialConnections(myId: string, myArts: Artifact[], myTagData: any[], myCoordCounts: Record<string, number>) {
+  async function loadSocialConnections(myId: string, _myArts: Artifact[], _myTagData: any[], _myCoordCounts: Record<string, number>) {
     // Find other participants who share tags with my artifacts
     const myArtIds = new Set(myArts.map(a => a.id))
     const myTags = new Set<string>()
@@ -291,7 +290,7 @@ export function MyThread() {
 
   const totalContributions = contributions.length
   const totalArtifacts = artifacts.length
-  const totalCommitments = commitments.length
+  const _totalCommitments = commitments.length
   const totalCoordSignals = Object.values(coordCounts).reduce((sum, c) => sum + c, 0)
 
   // View-specific stats

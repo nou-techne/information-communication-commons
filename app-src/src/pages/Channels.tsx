@@ -45,7 +45,7 @@ export function Channels() {
   const [newName, setNewName] = useState('')
   const [newDesc, setNewDesc] = useState('')
   const [newType, setNewType] = useState<Channel['type']>('general')
-  const [newVisibility, setNewVisibility] = useState<'public' | 'members' | 'admin'>('public')
+  const [newVisibility, setNewVisibility] = useState<'public' | 'members'>('public')
   const [creating, setCreating] = useState(false)
   const [unreadChannels, setUnreadChannels] = useState<Set<string>>(new Set())
 
@@ -175,12 +175,11 @@ export function Channels() {
                 <label className="block text-sm text-gray-400 mb-1">Visibility</label>
                 <select
                   value={newVisibility}
-                  onChange={e => setNewVisibility(e.target.value as 'public' | 'members' | 'admin')}
+                  onChange={e => setNewVisibility(e.target.value as 'public' | 'members')}
                   className="w-full bg-[#080c16] border border-[#1d2839] rounded-lg px-3 py-2 text-white text-sm"
                 >
                   <option value="public">Public — Anyone can view</option>
                   <option value="members">Members — Authenticated users only</option>
-                  <option value="admin">Admin — Stewards and creator only</option>
                 </select>
               </div>
               <button

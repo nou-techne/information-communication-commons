@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X, CheckCircle, Archive, Flag, EyeOff, Bot, Paperclip, File, Image as ImageIcon } from 'lucide-react'
+import { ArrowLeft, Send, ThumbsUp, Heart, Flame, Brain, Check, Tag, Plus, X, CheckCircle, Archive, Flag, EyeOff, Bot } from 'lucide-react'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import { ResolveThreadDialog } from '../components/ResolveThreadDialog'
 import type { Session } from '@supabase/supabase-js'
@@ -94,7 +94,7 @@ export function ThreadView() {
   const [hasMoreMessages, setHasMoreMessages] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const subscriptionRef = useRef<any>(null)
+  const _subscriptionRef = useRef<any>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
