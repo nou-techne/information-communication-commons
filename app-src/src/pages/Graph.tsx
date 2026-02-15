@@ -122,7 +122,7 @@ export function Graph({ replaySeq }: GraphProps = {}) {
     const m = new Map<string, string>()
     for (const t of tagEntries) {
       if (t.tags?.name?.startsWith('hlamt:')) {
-        const _dim = t.tags.name.replace('hlamt:', '')
+        const dim = t.tags.name.replace('hlamt:', '')
         if (!m.has(t.artifact_id)) m.set(t.artifact_id, dim)
       }
     }
@@ -174,11 +174,11 @@ export function Graph({ replaySeq }: GraphProps = {}) {
       const visCont = visibleContributions()
       const nodes: GNode[] = []
       const links: GLink[] = []
-      const _artIdSet = new Set(visArts.map(a => a.id))
+      const artIdSet = new Set(visArts.map(a => a.id))
 
       // contribution nodes
       for (const c of visCont) {
-        const _dim = null
+        // eslint-disable-next-line
         nodes.push({
           id: `c-${c.id}`, label: c.content?.slice(0, 40) || `Contribution #${c.seq}`,
           kind: 'contribution', r: 16, color: '#a6ed2a', dashed: true,
