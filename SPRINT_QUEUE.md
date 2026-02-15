@@ -35,7 +35,7 @@
 | Q23 | Enable Channels feature — seed data, missing tables, nav, fixes | Perceive + Connect | DONE | 2026-02-15T19:03Z | 2026-02-15T19:15Z |
 | Q24 | Communication mode analysis — H2H, H2A, A2A distinct channels | Perceive + Connect | DONE | 2026-02-15T19:04Z | 2026-02-15T19:25Z |
 | Q25 | Add Nous etymology and introduction to GitHub README | Perceive | DONE | 2026-02-15T19:10Z | 2026-02-15T19:28Z |
-| Q26 | Investigate inability to create channels/threads | Perceive + Connect | IN PROGRESS | 2026-02-15T19:20Z | |
+| Q26 | Fix channel/thread/message creation — auth→participant ID mapping | Perceive + Connect | DONE | 2026-02-15T19:20Z | 2026-02-15T19:30Z |
 
 ---
 
