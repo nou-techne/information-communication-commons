@@ -38,6 +38,7 @@
 | Q26 | Fix channel/thread/message creation — auth→participant ID mapping | Perceive + Connect | DONE | 2026-02-15T19:20Z | 2026-02-15T19:30Z |
 | Q27 | Sync all Bonfires.ai episodes to commons.id with merkle chain, no dupes | Perceive + Connect | DONE | 2026-02-15T19:21Z | 2026-02-15T19:35Z |
 | Q28 | Token consumption tracking with sunrise/sunset reports | Perceive + Ground | DONE | 2026-02-15T21:45Z | 2026-02-15T21:48Z |
+| Q29 | Investigate/remediate contribution submission — edge function extraction | Perceive + Connect | IN PROGRESS | 2026-02-15T23:15Z | |
 
 ---
 

@@ -198,6 +198,17 @@ export function Contribute() {
       setContributionId(newContribution.id)
       setExtractionStartedAt(Date.now())
       setState('extracting')
+
+      // Call edge function directly as fallback (pg_net trigger is unreliable)
+      supabase.functions.invoke('process-contribution', {
+        body: {
+          record: {
+            id: newContribution.id,
+            content: text,
+            convergence_id: CONVERGENCE_ID,
+          }
+        }
+      }).catch(() => {}) // Fire and forget — realtime subscription handles status
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please try again.')
       setState('error')
