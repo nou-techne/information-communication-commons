@@ -137,6 +137,14 @@ export function Channels() {
     if (!newName.trim() || !session) return
     setCreating(true)
     const slug = newName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    
+    // Look up participant ID from auth user ID
+    const { data: participant } = await supabase
+      .from('participants')
+      .select('id')
+      .eq('auth_user_id', session.user.id)
+      .single()
+    
     const { error } = await supabase.from('channels').insert({
       name: newName.trim(),
       slug,
@@ -145,7 +153,7 @@ export function Channels() {
       communication_mode: newMode,
       visibility: newVisibility,
       convergence_id: convergence.id,
-      created_by: session.user.id,
+      created_by: participant?.id || null,
     })
     if (!error) {
       setNewName('')

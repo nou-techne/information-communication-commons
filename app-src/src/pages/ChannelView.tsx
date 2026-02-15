@@ -155,13 +155,21 @@ export function ChannelView() {
   async function createThread() {
     if (!newTitle.trim() || !session || !channel) return
     setCreating(true)
+    
+    // Look up participant ID from auth user ID
+    const { data: participant } = await supabase
+      .from('participants')
+      .select('id')
+      .eq('auth_user_id', session.user.id)
+      .single()
+    
     const { data: thread, error } = await supabase
       .from('threads')
       .insert({
         channel_id: channel.id,
         title: newTitle.trim(),
         status: 'open',
-        created_by: session.user.id,
+        created_by: participant?.id || null,
       })
       .select()
       .single()
@@ -169,7 +177,7 @@ export function ChannelView() {
     if (!error && thread && newMessage.trim()) {
       await supabase.from('messages').insert({
         thread_id: thread.id,
-        author_id: session.user.id,
+        author_id: participant?.id || null,
         content: newMessage.trim(),
         type: 'text',
       })

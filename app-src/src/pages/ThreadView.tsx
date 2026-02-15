@@ -95,12 +95,24 @@ export function ThreadView() {
   const [loadingMore, setLoadingMore] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const _subscriptionRef = useRef<any>(null)
+  const [participantId, setParticipantId] = useState<string | null>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
     return () => subscription.unsubscribe()
   }, [])
+
+  // Look up participant ID from auth user
+  useEffect(() => {
+    if (!session) return
+    supabase
+      .from('participants')
+      .select('id')
+      .eq('auth_user_id', session.user.id)
+      .single()
+      .then(({ data }) => setParticipantId(data?.id || null))
+  }, [session])
 
   useEffect(() => {
     if (threadId && slug) loadThread()
@@ -210,7 +222,7 @@ export function ThreadView() {
       p_thread_id: threadId,
       p_tag_type: tagType,
       p_tag_value: tagValue.trim(),
-      p_participant_id: session.user.id
+      p_participant_id: participantId
     })
     if (!error) {
       await loadTags()
@@ -250,7 +262,7 @@ export function ThreadView() {
     if (data?.summary) {
       await supabase.from('messages').insert({
         thread_id: threadId,
-        author_id: session.user.id,
+        author_id: participantId,
         content: `**Resolved:** ${data.reason}\n\n${data.summary}`,
         type: 'system',
       })
@@ -292,7 +304,7 @@ export function ThreadView() {
     if (!reason) return
     await supabase.rpc('report_message', {
       p_message_id: messageId,
-      p_reporter_id: session.user.id,
+      p_reporter_id: participantId,
       p_reason: reason
     })
     alert('Message reported')
@@ -302,7 +314,7 @@ export function ThreadView() {
     if (!session) return
     await supabase.rpc('moderate_hide_message', {
       p_message_id: messageId,
-      p_moderator_id: session.user.id,
+      p_moderator_id: participantId,
       p_reason: 'Hidden by moderator'
     })
     setMessages(prev => prev.map(m => m.id === messageId ? { ...m, hidden: true } : m))
@@ -329,7 +341,7 @@ export function ThreadView() {
     setSending(true)
     await supabase.from('messages').insert({
       thread_id: threadId,
-      author_id: session.user.id,
+      author_id: participantId,
       content: newMessage.trim(),
       type: 'text',
     })
@@ -339,14 +351,14 @@ export function ThreadView() {
 
   async function toggleReaction(messageId: string, emoji: string) {
     if (!session) return
-    const existing = reactions.find(r => r.message_id === messageId && r.participant_id === session.user.id && r.emoji === emoji)
+    const existing = reactions.find(r => r.message_id === messageId && r.participant_id === participantId && r.emoji === emoji)
     if (existing) {
       await supabase.from('message_reactions').delete().eq('id', existing.id)
       setReactions(prev => prev.filter(r => r.id !== existing.id))
     } else {
       const { data } = await supabase.from('message_reactions').insert({
         message_id: messageId,
-        participant_id: session.user.id,
+        participant_id: participantId,
         emoji,
       }).select().single()
       if (data) setReactions(prev => [...prev, data as Reaction])
@@ -360,7 +372,7 @@ export function ThreadView() {
     for (const r of msgReactions) {
       if (!counts[r.emoji]) counts[r.emoji] = { count: 0, hasOwn: false }
       counts[r.emoji].count++
-      if (session && r.participant_id === session.user.id) counts[r.emoji].hasOwn = true
+      if (session && r.participant_id === participantId) counts[r.emoji].hasOwn = true
     }
     return counts
   }
