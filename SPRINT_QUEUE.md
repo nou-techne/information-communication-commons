@@ -34,6 +34,7 @@
 | Q22 | Rate-limit 3D graph refresh to 5s throttle | Frontend & DevOps (07) | DONE | 2026-02-14 00:03 | 2026-02-14 00:10 |
 | Q23 | Enable Channels feature — seed data, missing tables, nav, fixes | Perceive + Connect | DONE | 2026-02-15T19:03Z | 2026-02-15T19:15Z |
 | Q24 | Communication mode analysis — H2H, H2A, A2A distinct channels | Perceive + Connect | DONE | 2026-02-15T19:04Z | 2026-02-15T19:25Z |
+| Q25 | Add Nous etymology and introduction to GitHub README | Perceive | DONE | 2026-02-15T19:10Z | 2026-02-15T19:28Z |
 
 ---
 
