@@ -1,9 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { Hash, Plus, X, ArrowLeft, MessageSquare, Merge, Check } from 'lucide-react'
+import { Hash, Plus, X, ArrowLeft, MessageSquare, Merge, Check, Users, Bot, Cpu } from 'lucide-react'
 import { EmptyState } from '../components/ui/EmptyState'
 import type { Session } from '@supabase/supabase-js'
+
+type CommunicationMode = 'human-to-human' | 'human-to-agent' | 'agent-to-agent'
+
+const MODE_BADGE: Record<CommunicationMode, { label: string; color: string; bg: string; icon: typeof Users }> = {
+  'human-to-human': { label: 'H\u2194H', color: '#a6ed2a', bg: 'rgba(166, 237, 42, 0.12)', icon: Users },
+  'human-to-agent': { label: 'H\u2194A', color: '#60a5fa', bg: 'rgba(96, 165, 250, 0.12)', icon: Bot },
+  'agent-to-agent': { label: 'A\u2194A', color: '#a78bfa', bg: 'rgba(167, 139, 250, 0.12)', icon: Cpu },
+}
 
 interface Channel {
   id: string
@@ -11,6 +19,7 @@ interface Channel {
   slug: string
   description: string | null
   type: string
+  communication_mode: CommunicationMode
 }
 
 interface Thread {
@@ -211,6 +220,19 @@ export function ChannelView() {
           <div className="flex items-center gap-2">
             <Hash className="w-5 h-5 text-gray-500" />
             <h1 className="text-2xl font-bold">{channel.name}</h1>
+            {channel.communication_mode && (() => {
+              const badge = MODE_BADGE[channel.communication_mode]
+              const Icon = badge.icon
+              return (
+                <span
+                  className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
+                  style={{ backgroundColor: badge.bg, color: badge.color }}
+                >
+                  <Icon className="w-3 h-3" />
+                  {badge.label}
+                </span>
+              )
+            })()}
           </div>
           {channel.description && <p className="text-gray-400 text-sm mt-1">{channel.description}</p>}
         </div>
