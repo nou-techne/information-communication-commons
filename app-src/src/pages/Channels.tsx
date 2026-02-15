@@ -303,7 +303,7 @@ export function Channels() {
                       >
                         <ModeIcon mode={mode} className="w-4 h-4 mx-auto mb-1" style={{ color: config.color } as React.CSSProperties} />
                         <span className="text-xs" style={{ color: newMode === mode ? config.color : '#9ca3af' }}>
-                          {mode.split('-').map(w => w[0].toUpperCase()).join('\u2194')}
+                          {mode === 'human-to-human' ? 'H\u2194H' : mode === 'human-to-agent' ? 'H\u2194A' : 'A\u2194A'}
                         </span>
                       </button>
                     )
