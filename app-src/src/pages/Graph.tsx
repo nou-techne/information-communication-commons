@@ -62,9 +62,9 @@ export function Graph({ replaySeq }: GraphProps = {}) {
   /* ── load data ── */
   const loadData = useCallback(async () => {
     const [aRes, cRes, rRes, tRes, pRes, hRes] = await Promise.all([
-      supabase.from('artifacts').select('id, title, type, rea_role, created_by, steward_id').limit(300),
+      supabase.from('artifacts').select('id, title, type, rea_role, created_by, steward_id').limit(1000),
       supabase.from('contributions').select('id, content, created_at, seq, chain_hash, extraction, participant_id').order('seq'),
-      supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(500),
+      supabase.from('artifact_relationships').select('from_artifact_id, to_artifact_id, type').limit(1000),
       supabase.from('artifact_tags').select('artifact_id, tags!inner(name)'),
       supabase.from('public_participants').select('id, name'),
       supabase.rpc('chain_head'),
