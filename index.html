@@ -105,7 +105,7 @@
       --mint: #7ccfb8;
       --text: #e4ecf7;
       --text-secondary: #8fa4c4;
-      --text-dim: #5b7399;
+      --text-dim: #7d94b4;
       --glow: rgba(91, 157, 228, 0.15);
       --glow-strong: rgba(91, 157, 228, 0.3);
     }
@@ -876,17 +876,41 @@
     .lucide { display: inline-block; vertical-align: middle; flex-shrink: 0; }
     .card-icon i { width: 24px; height: 24px; }
     .btn i { width: 16px; height: 16px; margin-right: 0.25rem; }
+
+    /* === Accessibility === */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 1000;
+      padding: 0.75rem 1.5rem;
+      background: var(--white);
+      color: var(--navy);
+      font-weight: 600;
+      border-radius: 0 0 8px 8px;
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+    *:focus-visible {
+      outline: 3px solid var(--sky);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="bg-grid"></div>
-  <canvas class="node-canvas" id="nodeCanvas"></canvas>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <canvas class="node-canvas" id="nodeCanvas" aria-hidden="true"></canvas>
 
   <div class="container">
 
     <!-- ==================== HERO ==================== -->
-    <div class="hero">
+    <header class="hero" id="main-content">
       <div class="label reveal">Knowledge that lasts</div>
       <h1 class="reveal reveal-delay-1">
         Conferences produce incredible ideas.<br>
@@ -895,7 +919,7 @@
       <p class="lead reveal reveal-delay-2">
         <strong>commons.id</strong> is a living archive that captures what happens at events — ideas, commitments, relationships — and gives them permanent addresses. Not another notes app. A knowledge graph that grows with every conversation.
       </p>
-      <div class="hero-visual">
+      <div class="hero-visual" aria-hidden="true">
         <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
         <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
         <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
@@ -905,14 +929,14 @@
         <a href="#how" class="btn btn-secondary"><span>Learn More</span></a>
       </div>
 
-      <div class="scroll-cue">
+      <div class="scroll-cue" aria-hidden="true">
         <span>How it works</span>
         <div class="scroll-line"></div>
       </div>
-    </div>
+    </header>
 
     <!-- Jump links -->
-    <nav class="jump-nav" id="jumpNav">
+    <nav class="jump-nav" id="jumpNav" aria-label="Page sections">
       <div class="jump-nav-inner">
         <a href="#how">How It Works</a>
         <a href="#ethboulder">ETHBoulder 2026</a>
@@ -923,6 +947,7 @@
       </div>
     </nav>
 
+    <main>
     <!-- ==================== HOW IT WORKS ==================== -->
     <section id="how">
       <div class="label reveal">Three steps</div>
@@ -1211,6 +1236,7 @@
       </div>
     </section>
 
+    </main>
     <!-- ==================== FOOTER ==================== -->
     <footer>
       <div class="footer-links">

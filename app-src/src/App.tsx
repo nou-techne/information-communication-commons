@@ -79,7 +79,7 @@ function Nav() {
   const links = session ? [...publicLinks, ...authedLinks] : publicLinks
 
   return (
-    <nav className="bg-[#080c16] border-b border-[#1d2839] px-4 py-3">
+    <nav className="bg-[#080c16] border-b border-[#1d2839] px-4 py-3" aria-label="Main navigation">
       <div className="max-w-6xl mx-auto">
         {/* Desktop nav */}
         <div className="hidden md:flex items-center justify-between relative">
@@ -137,6 +137,7 @@ function Nav() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-gray-400 hover:text-white p-2"
               aria-label="Menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -345,15 +346,17 @@ export default function App() {
       <ToastProvider>
       <ConvergenceProvider>
         <div className="min-h-screen bg-[#080c16] text-white flex flex-col">
+          <a href="#main-content" className="skip-link">Skip to main content</a>
           <CountdownBanner />
           <Nav />
-          <main className="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
+          <main id="main-content" className="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
           <ErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <AuthGuardedRoutes />
             </Suspense>
           </ErrorBoundary>
         </main>
+          <div aria-live="polite" className="sr-only" id="status-announcements"></div>
           <Footer />
       </div>
       </ConvergenceProvider>

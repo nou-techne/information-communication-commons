@@ -59,3 +59,4 @@
   - Queued: 2026-02-14T08:22Z
   - Status: COMPLETE · 2026-02-14T08:29Z
 | Q30 | Investigate white pages on commons.id/app/* when logged in | Perceive | DONE | 2026-02-15T23:32Z | 2026-02-15T23:38Z |
+| Q31 | W3C lowest-risk standards integration across commons.id, /ethboulder, /app | Compliance & Security (06) | IN PROGRESS | 2026-02-17T15:41Z | — |

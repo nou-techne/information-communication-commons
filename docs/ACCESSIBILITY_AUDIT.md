@@ -131,12 +131,26 @@ Or use Chrome DevTools → Lighthouse → Accessibility.
 - **All form inputs have labels**
 - **Color contrast ≥ 4.5:1 for normal text, ≥ 3:1 for large text**
 
+## Sprint 43 — W3C Integration (Feb 2026)
+
+### Completed
+- [x] Skip links ("Skip to main content") on all three surfaces (commons.id, ethboulder, app)
+- [x] ARIA landmarks (`<main>`, `<header>`, `<nav aria-label>`, `<footer>`) on all surfaces
+- [x] Color contrast: `--text-dim` values bumped to ≥4.5:1 on all surfaces
+- [x] Custom `:focus-visible` styles with high-contrast outline (lime/sky) on dark backgrounds
+- [x] `aria-hidden="true"` on decorative canvases, orbit animations, scroll cues
+- [x] `aria-expanded` on mobile menu toggle
+- [x] `aria-live="polite"` region in React app for status announcements
+- [x] `lang="en"` confirmed on all `<html>` tags
+- [x] Meta tags (og:title, og:description, twitter:card, canonical) on app surface
+- [x] JSON-LD structured data (WebSite, Organization) on ethboulder landing page
+- [x] Semantic HTML (`<header>`, `<main>`, `<footer>`) on both landing pages
+
 ## Future Work (Post-ETHBoulder)
 
 - Graph keyboard navigation (tab through nodes, arrow keys)
 - Focus trap in modals
-- Skip links
-- ARIA live regions for real-time updates
+- Graph SVG role="img" + aria-label
 - Comprehensive screen reader testing
 - User testing with assistive technology users
 

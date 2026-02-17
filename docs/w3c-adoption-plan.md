@@ -91,6 +91,8 @@ T (Training)      → skos:Concept
 S (Session)       → skos:Concept
 ```
 
+**Status:** ✅ SKOS-aligned vocabulary comments added to `app-src/src/pages/Dimensions.tsx` (Sprint 43, Feb 2026). Runtime mapping deferred to JSON-LD context phase.
+
 **Effort:** 1 sprint
 
 ## Phase 3: Provenance (PROV-O)
@@ -163,13 +165,31 @@ S (Session)       → skos:Concept
 ### W3C Web Content Accessibility Guidelines
 **Spec:** https://www.w3.org/TR/WCAG22/
 
-**Current state:** Basic accessibility from React component library. Not audited.
+**Current state:** Basic accessibility from React component library. Partially audited.
 
 **Implementation:**
 1. WCAG 2.2 Level AA audit of all pages
 2. Fix: color contrast (lime on dark may fail), keyboard navigation, screen reader labels, focus management
 3. Add skip links, ARIA landmarks, alt text for graph visualizations
 4. Test with screen reader (NVDA/VoiceOver)
+
+**Status (Sprint 43 — Feb 2026):**
+- ✅ Skip links added to all three surfaces (commons.id, ethboulder, app)
+- ✅ ARIA landmarks: `<main>`, `<header>`, `<nav aria-label>`, `<footer>` on all surfaces
+- ✅ Color contrast fixed: `--text-dim` bumped to ≥4.5:1 ratio on all surfaces
+- ✅ Custom `:focus-visible` styles with high-contrast outline on all surfaces
+- ✅ `aria-hidden="true"` on decorative elements (canvases, orbits, scroll cues)
+- ✅ `aria-expanded` on mobile menu toggle in React app
+- ✅ `aria-live="polite"` region added to React app for status announcements
+- ✅ `lang="en"` confirmed on all `<html>` tags
+- ✅ Meta tags (og:title, og:description, twitter:card, canonical) on all surfaces
+- ✅ Semantic HTML (`<header>`, `<main>`, `<footer>`) on landing pages
+
+**Remaining:**
+- [ ] Graph SVG `role="img"` + `aria-label` (requires Graph component changes)
+- [ ] Focus trap in modals
+- [ ] Graph keyboard navigation
+- [ ] Screen reader testing with NVDA/VoiceOver
 
 **Effort:** 2-3 sprints (can be interleaved)
 

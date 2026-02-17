@@ -11,6 +11,24 @@ interface DimensionDef {
   color: string
 }
 
+/**
+ * e/H-LAM/T/S Dimension Definitions
+ *
+ * SKOS (Simple Knowledge Organization System) alignment:
+ * Each dimension maps to a skos:Concept within the concept scheme
+ * <https://commons.id/ns/v1/dimensions>.
+ *
+ *   e/ Ecology    → skos:Concept <commons:dim/ecology>    — broader: skos:Concept "Context"
+ *   H/ Human      → skos:Concept <commons:dim/human>      — broader: skos:Concept "Agent"
+ *   L/ Language    → skos:Concept <commons:dim/language>   — broader: skos:Concept "Representation"
+ *   A/ Artifacts   → skos:Concept <commons:dim/artifact>   — maps to schema:CreativeWork
+ *   M/ Methodology → skos:Concept <commons:dim/methodology>— broader: skos:Concept "Process"
+ *   T/ Training    → skos:Concept <commons:dim/training>   — broader: skos:Concept "Capability"
+ *   S/ Sessions    → skos:Concept <commons:dim/session>    — maps to schema:Event
+ *
+ * See W3C SKOS Reference: https://www.w3.org/TR/skos-reference/
+ * See docs/w3c-adoption-plan.md Phase 2: Vocabulary Alignment
+ */
 const DIMENSIONS: DimensionDef[] = [
   { key: 'e', letter: 'e/', name: 'Ecology', tagName: 'hlamt:E', description: 'Where We Are — place, environment, context', color: '#4a8c6f' },
   { key: 'H', letter: 'H/', name: 'Human', tagName: 'hlamt:H', description: 'Who\'s Here — people, participants, relationships', color: '#c4956a' },
