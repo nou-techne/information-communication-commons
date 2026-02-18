@@ -102,7 +102,7 @@ function Nav() {
   const links = session ? [...publicLinks, ...authedLinks, ...techneLinks] : [...publicLinks, ...techneLinks]
 
   return (
-    <nav className="bg-[#080c16] border-b border-[#1d2839] px-4 py-3" aria-label="Main navigation">
+    <nav style={{ background: convergence.theme_bg, borderBottom: `1px solid ${convergence.theme_border}` }} className="px-4 py-3" aria-label="Main navigation">
       <div className="max-w-6xl mx-auto">
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-3">
@@ -116,10 +116,15 @@ function Nav() {
                 <Link
                   key={l.to}
                   to={l.to}
+                  style={
+                    (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
+                      ? { background: convergence.theme_surface }
+                      : undefined
+                  }
                   className={`px-2.5 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
                     (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
-                      ? 'bg-[#1d2839] text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
+                      ? 'text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   {l.label}
@@ -147,7 +152,7 @@ function Nav() {
                 </button>
               </>
             ) : (
-              <Link to="/auth" className="text-[#a6ed2a] hover:text-white">Sign in</Link>
+              <Link to="/auth" style={{ color: convergence.theme_primary }} className="hover:text-white">Sign in</Link>
             )}
           </div>
         </div>
@@ -174,16 +179,17 @@ function Nav() {
           </div>
           
           {mobileMenuOpen && (
-            <div className="mt-3 pt-3 border-t border-[#1d2839] space-y-1">
+            <div className="mt-3 pt-3 space-y-1" style={{ borderTop: `1px solid ${convergence.theme_border}` }}>
               {links.map(l => (
                 <Link
                   key={l.to}
                   to={l.to}
                   onClick={() => setMobileMenuOpen(false)}
+                  style={location.pathname === l.to ? { background: convergence.theme_surface } : undefined}
                   className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                     location.pathname === l.to
-                      ? 'bg-[#1d2839] text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
+                      ? 'text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   {l.label}
@@ -199,24 +205,26 @@ function Nav() {
               <Link
                 to="/search"
                 onClick={() => setMobileMenuOpen(false)}
+                style={location.pathname === '/search' ? { background: convergence.theme_surface } : undefined}
                 className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                   location.pathname === '/search'
-                    ? 'bg-[#1d2839] text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
+                    ? 'text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 Search
               </Link>
-              <div className="pt-2 border-t border-[#1d2839]">
+              <div className="pt-2" style={{ borderTop: `1px solid ${convergence.theme_border}` }}>
                 {session ? (
                   <>
                     <Link
                       to="/profile"
                       onClick={() => setMobileMenuOpen(false)}
+                      style={location.pathname === '/profile' ? { background: convergence.theme_surface } : undefined}
                       className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                         location.pathname === '/profile'
-                          ? 'bg-[#1d2839] text-white'
-                          : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
+                          ? 'text-white'
+                          : 'text-gray-400 hover:text-white hover:bg-white/5'
                       }`}
                     >
                       Profile
@@ -232,7 +240,8 @@ function Nav() {
                   <Link
                     to="/auth"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-sm text-[#a6ed2a] hover:text-white"
+                    style={{ color: convergence.theme_primary }}
+                    className="block px-3 py-2 text-sm hover:text-white"
                   >
                     Sign in
                   </Link>
@@ -334,7 +343,7 @@ function CountdownBanner() {
   if (!remaining) return null
 
   return (
-    <div className="countdown-banner bg-gradient-to-r from-[#0a101d] via-[#111b2e] to-[#0a101d] border-b border-blue-500/20">
+    <div className="countdown-banner border-b border-white/10" style={{ background: `linear-gradient(90deg, ${convergence.theme_surface}, ${convergence.theme_bg}, ${convergence.theme_surface})` }}>
       <div className="max-w-6xl mx-auto px-4 py-4 text-center">
         <div className="text-xs uppercase tracking-widest text-blue-400 mb-2 flex items-center justify-center gap-2">
           <span>Convergence Chain Opens In</span>
@@ -383,7 +392,7 @@ export default function App() {
       <ThemeProvider>
       <ToastProvider>
       <ConvergenceProvider>
-        <div className="min-h-screen bg-[#080c16] text-white flex flex-col">
+        <div className="min-h-screen text-white flex flex-col" style={{ background: convergence.theme_bg }}>
           <a href="#main-content" className="skip-link">Skip to main content</a>
           <CountdownBanner />
           <Nav />

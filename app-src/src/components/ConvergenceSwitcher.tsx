@@ -39,7 +39,7 @@ export function ConvergenceSwitcher() {
         <ChevronDown className="w-3 h-3 text-white/30" />
       </button>
       {open && (
-        <div className="absolute top-full mt-1 right-0 bg-[#0a101d] border border-white/10 rounded shadow-lg z-50 min-w-[180px]">
+        <div className="absolute top-full mt-1 right-0 border border-white/10 rounded shadow-lg z-50 min-w-[180px]" style={{ background: convergence.theme_surface }}>
           {CONVERGENCES.map(c => (
             <button
               key={c.id}
