@@ -102,3 +102,16 @@
 - Ready for chat bot integration (Discord/Telegram), voice notes, and form auto-fill
 - Documentation: tio/techne-commons-id/docs/NL_CONTRIBUTION_PARSER.md
 - Commit: 2aa19e2 (app-src), ef45dfc (tio)
+
+**Q42: Contribution Lifecycle Workflow**
+- Workflow engine (`contribution-lifecycle-workflow.ts`):
+  - Atomic transitions for Validate, Value, Approve, Reject, Void
+  - Automatic double-entry transaction creation on Approval
+  - Automatic compensating transaction on Void (rollback)
+  - Auto-validation logic (trusted domains: GitHub, Notion, etc.)
+- Orchestrator (`contribution-orchestrator.ts`):
+  - `fastTrackApprove()`: Validate → Value → Approve in one call (preserves audit trail)
+  - `batchValidateSubmitted()`: Bulk processing for coordinators
+  - `getReviewQueue()`: Dashboard data source for pending items
+- Documentation: `tio/techne-commons-id/docs/CONTRIBUTION_WORKFLOW.md`
+- Commit: (latest)
