@@ -51,7 +51,7 @@ export function TechneLanding() {
           space, legal, planning, capital access. Soil, not plant.
         </p>
         <p className="text-white/20 text-xs">
-          1515 Walnut Street, Third Floor · Boulder, Colorado · 5,430 ft
+          Boulder, Colorado · Boulder, Colorado · 5,430 ft
         </p>
       </div>
 
