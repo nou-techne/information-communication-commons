@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techne — commons.id</title>
+  <meta name="description" content="Techne on the Information & Communications Commons. A perpetual convergence chain — cooperative patronage accounting as a living knowledge graph.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://commons.id/techne/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://commons.id/techne/">
+  <meta property="og:title" content="Techne — commons.id">
+  <meta property="og:description" content="Cooperative patronage accounting as a perpetual convergence chain. Every contribution, allocation, and distribution becomes an immutable entry in a living knowledge graph.">
+  <meta property="og:site_name" content="commons.id">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Techne — commons.id">
+  <meta name="twitter:description" content="The chain is the ledger. The graph is the dashboard.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Techne",
+    "legalName": "RegenHub, LCA",
+    "description": "A Colorado Limited Cooperative Association operating as a venture studio. Perpetual convergence on the Information & Communications Commons.",
+    "foundingDate": "2026-02-06",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1515 Walnut Street, Third Floor",
+      "addressLocality": "Boulder",
+      "addressRegion": "CO",
+      "postalCode": "80302",
+      "addressCountry": "US"
+    },
+    "url": "https://commons.id/techne/"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=DM+Serif+Display&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0f0f0f;
+      --deep: #1a1a1a;
+      --ink: #262626;
+      --blue: #333333;
+      --mid: #444444;
+      --copper: #c4956a;
+      --copper-dim: rgba(196, 149, 106, 0.15);
+      --copper-mid: rgba(196, 149, 106, 0.3);
+      --alpine: #4a8c6f;
+      --alpine-dim: rgba(74, 140, 111, 0.15);
+      --gold: #d9b457;
+      --gold-dim: rgba(217, 180, 87, 0.15);
+      --text: #e8e8e8;
+      --text-secondary: #999999;
+      --text-dim: #888888;
+      --white: #f5f5f5;
+      --sky: #5b9de4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-terrain {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 100% 50% at 50% 100%, rgba(74, 140, 111, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 50% 0%, var(--copper-dim) 0%, transparent 70%),
+        linear-gradient(to bottom, var(--navy) 0%, #111111 50%, #141414 100%);
+    }
+
+    .container { position: relative; z-index: 1; }
+    section { padding: 6rem 2rem; max-width: 1000px; margin: 0 auto; }
+
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
+
+    .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; font-weight: 400;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--copper);
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 4rem 2rem;
+      max-width: 1000px; margin: 0 auto;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge .commons-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--sky);
+      text-decoration: none;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid var(--blue);
+      border-radius: 100px;
+      transition: all 0.3s;
+    }
+    .hero-badge .commons-link:hover {
+      border-color: var(--sky);
+      background: rgba(91, 157, 228, 0.08);
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 400; line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero h1 .techne {
+      background: linear-gradient(135deg, var(--copper), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .type-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--copper);
+      margin-bottom: 2rem;
+    }
+
+    .hero .lead {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--text-secondary);
+      max-width: 620px; line-height: 1.8; font-weight: 300;
+    }
+    .hero .lead strong { color: var(--white); font-weight: 500; }
+
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .meta-item {
+      display: flex; flex-direction: column; gap: 0.25rem;
+    }
+    .meta-item .meta-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+    .meta-item .meta-value {
+      font-size: 1rem; color: var(--white); font-weight: 500;
+    }
+
+    .scroll-cue {
+      position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .scroll-cue span { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--copper), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.6); } 50% { opacity: 1; transform: scaleY(1); } }
+
+    /* ===== Sections ===== */
+    section h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--white); margin-bottom: 1.5rem; line-height: 1.15;
+    }
+
+    .intro {
+      font-size: 1.1rem; color: var(--text-secondary);
+      max-width: 640px; margin-bottom: 3rem; font-weight: 300;
+    }
+    .intro strong { color: var(--text); font-weight: 500; }
+
+    /* ===== Feature grid ===== */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--deep);
+      border-radius: 12px;
+      padding: 2rem;
+      border: 1px solid var(--ink);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .feature-card:hover { border-color: var(--copper); box-shadow: 0 4px 30px var(--copper-dim); }
+
+    .feature-card .f-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; margin-bottom: 1.25rem;
+      background: var(--copper-dim);
+      color: var(--copper);
+      border: 1px solid var(--copper-mid);
+    }
+
+    .feature-card h3 { font-size: 1.05rem; font-weight: 500; color: var(--white); margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
+
+    .feature-card .layer-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+      border: 1px solid var(--ink);
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+
+    /* Alternate icon colors per card */
+    .feature-card:nth-child(2) .f-icon { background: var(--alpine-dim); color: var(--alpine); border-color: rgba(74, 140, 111, 0.25); }
+    .feature-card:nth-child(3) .f-icon { background: var(--gold-dim); color: var(--gold); border-color: rgba(217, 180, 87, 0.25); }
+    .feature-card:nth-child(4) .f-icon { background: var(--copper-dim); color: var(--copper); border-color: var(--copper-mid); }
+    .feature-card:nth-child(5) .f-icon { background: var(--alpine-dim); color: var(--alpine); border-color: rgba(74, 140, 111, 0.25); }
+    .feature-card:nth-child(6) .f-icon { background: var(--gold-dim); color: var(--gold); border-color: rgba(217, 180, 87, 0.25); }
+
+    /* ===== Tool cards ===== */
+    .tool-stack { display: flex; flex-direction: column; gap: 1rem; }
+
+    .tool-card {
+      display: grid; grid-template-columns: 6px 1fr; gap: 0;
+      background: var(--deep); border-radius: 12px; overflow: hidden;
+      border: 1px solid transparent; transition: border-color 0.3s;
+    }
+    .tool-card:hover { border-color: var(--ink); }
+
+    .tool-bar { border-radius: 4px 0 0 4px; }
+    .tool-card:nth-child(1) .tool-bar { background: var(--copper); }
+    .tool-card:nth-child(2) .tool-bar { background: var(--alpine); }
+    .tool-card:nth-child(3) .tool-bar { background: var(--gold); }
+
+    .tool-content { padding: 1.75rem 2rem; }
+    .tool-content h3 { font-size: 1.15rem; font-weight: 500; color: var(--white); margin-bottom: 0.5rem; }
+    .tool-content p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
+
+    .tool-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .tool-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; padding: 0.25rem 0.6rem;
+      border-radius: 100px; border: 1px solid var(--ink);
+      color: var(--text-dim); transition: all 0.2s;
+    }
+    .tool-card:nth-child(1) .tool-tag:hover { border-color: var(--copper); color: var(--copper); }
+    .tool-card:nth-child(2) .tool-tag:hover { border-color: var(--alpine); color: var(--alpine); }
+    .tool-card:nth-child(3) .tool-tag:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ===== Steps (timeline) ===== */
+    .steps { display: flex; flex-direction: column; gap: 0; position: relative; }
+    .steps::before {
+      content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(to bottom, var(--copper), var(--alpine), var(--gold));
+    }
+
+    .step {
+      display: grid; grid-template-columns: 42px 1fr; gap: 1.5rem;
+      padding: 1.5rem 0;
+    }
+
+    .step-number {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 500;
+      background: var(--deep); border: 2px solid var(--blue);
+      color: var(--text-dim); position: relative; z-index: 1;
+      transition: all 0.3s;
+    }
+
+    .step:nth-child(1) .step-number { border-color: var(--copper); color: var(--copper); }
+    .step:nth-child(2) .step-number { border-color: var(--copper); color: var(--copper); }
+    .step:nth-child(3) .step-number { border-color: var(--alpine); color: var(--alpine); }
+    .step:nth-child(4) .step-number { border-color: var(--alpine); color: var(--alpine); }
+    .step:nth-child(5) .step-number { border-color: var(--gold); color: var(--gold); }
+
+    .step-content h3 { font-size: 1.05rem; font-weight: 500; color: var(--white); margin-bottom: 0.35rem; }
+    .step-content p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
+
+    /* ===== Pattern stack ===== */
+    .pattern-stack {
+      display: flex; flex-direction: column; gap: 0;
+      border: 1px solid var(--ink); border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .pattern-layer {
+      display: grid; grid-template-columns: 60px 1fr; gap: 0;
+      border-bottom: 1px solid var(--ink);
+      transition: background 0.2s;
+    }
+    .pattern-layer:last-child { border-bottom: none; }
+    .pattern-layer:hover { background: var(--deep); }
+
+    .pattern-num {
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; font-weight: 500;
+      color: var(--text-dim);
+      border-right: 1px solid var(--ink);
+      padding: 1.25rem 0;
+    }
+
+    .pattern-info { padding: 1.25rem 1.5rem; }
+    .pattern-info h4 { font-size: 0.95rem; font-weight: 500; color: var(--white); margin-bottom: 0.25rem; }
+    .pattern-info p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; }
+
+    /* Color gradient for layers */
+    .pattern-layer:nth-child(1) .pattern-num { color: var(--copper); }
+    .pattern-layer:nth-child(2) .pattern-num { color: var(--copper); }
+    .pattern-layer:nth-child(3) .pattern-num { color: var(--alpine); }
+    .pattern-layer:nth-child(4) .pattern-num { color: var(--alpine); }
+    .pattern-layer:nth-child(5) .pattern-num { color: var(--gold); }
+    .pattern-layer:nth-child(6) .pattern-num { color: var(--gold); }
+    .pattern-layer:nth-child(7) .pattern-num { color: var(--copper); }
+
+    /* ===== Pull quote ===== */
+    .pull-quote {
+      margin: 3rem 0; padding: 2.5rem;
+      background: linear-gradient(135deg, var(--deep), var(--ink));
+      border-radius: 16px;
+      border-left: 3px solid var(--copper);
+    }
+    .pull-quote p {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      color: var(--white); line-height: 1.6;
+    }
+    .pull-quote .attribution {
+      margin-top: 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; color: var(--text-dim);
+    }
+
+    /* ===== Chain example ===== */
+    .chain-example {
+      background: var(--deep);
+      border: 1px solid var(--ink);
+      border-radius: 12px;
+      padding: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.9;
+      color: var(--text-dim);
+      overflow-x: auto;
+    }
+    .chain-example .entry { margin-bottom: 0.25rem; }
+    .chain-example .hash { color: var(--mid); }
+    .chain-example .type { color: var(--copper); }
+    .chain-example .detail { color: var(--text-secondary); }
+    .chain-example .connector { color: var(--ink); margin-left: 1.5rem; }
+
+    /* ===== Member grid ===== */
+    .member-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .member-card {
+      background: var(--deep); border-radius: 10px; padding: 1.25rem;
+      border: 1px solid var(--ink); text-align: center;
+      transition: border-color 0.3s;
+    }
+    .member-card:hover { border-color: var(--copper); }
+    .member-card .initials {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--ink); display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      color: var(--text-dim); margin: 0 auto 0.75rem;
+    }
+    .member-card h4 { font-size: 0.9rem; font-weight: 500; color: var(--white); margin-bottom: 0.25rem; }
+    .member-card p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
+    .member-card .member-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; color: var(--mid);
+    }
+
+    /* ===== CTA ===== */
+    .cta { text-align: center; padding: 8rem 2rem; }
+    .cta h2 { margin-bottom: 1.5rem; }
+    .cta .lead { font-size: 1.1rem; color: var(--text-secondary); max-width: 520px; margin: 0 auto 3rem; font-weight: 300; }
+
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 2rem; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+      text-decoration: none; transition: all 0.3s; cursor: pointer;
+    }
+    .btn-primary { background: var(--copper); color: #0f0f0f; border: 1px solid var(--copper); font-weight: 600; }
+    .btn-primary:hover { background: #d4a87a; border-color: #d4a87a; box-shadow: 0 4px 20px var(--copper-mid); transform: translateY(-1px); }
+    .btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--mid); }
+    .btn-secondary:hover { border-color: var(--text-dim); color: var(--text); background: var(--deep); }
+
+    .divider { width: 60px; height: 2px; background: linear-gradient(to right, var(--copper), var(--alpine)); border-radius: 1px; margin: 0 auto 3rem; }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem; text-align: center;
+      font-size: 0.8rem; color: var(--text-dim);
+      border-top: 1px solid var(--ink);
+    }
+    footer a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--copper); }
+    footer .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1rem; }
+
+    /* Lucide */
+    .lucide { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+    .label i { width: 14px; height: 14px; margin-right: 0.75rem; opacity: 0.7; position: relative; top: -1px; }
+    .feature-card .f-icon i { width: 24px; height: 24px; }
+    .btn i { width: 16px; height: 16px; margin-right: 0.25rem; }
+    .commons-link i { width: 14px; height: 14px; margin-right: 0.5rem; position: relative; top: -1px; }
+    .tool-content h3 i { width: 18px; height: 18px; margin-right: 0.4rem; opacity: 0.6; }
+    .step-content h3 i { width: 16px; height: 16px; margin-right: 0.35rem; opacity: 0.6; }
+    .footer-links a i { width: 12px; height: 12px; margin-right: 0.3rem; }
+
+    /* Accessibility */
+    .skip-link {
+      position: absolute; top: -100%; left: 1rem; z-index: 1000;
+      padding: 0.75rem 1.5rem; background: var(--white); color: var(--navy);
+      font-weight: 600; border-radius: 0 0 8px 8px; text-decoration: none; transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+    *:focus-visible { outline: 3px solid var(--copper); outline-offset: 2px; border-radius: 2px; }
+
+    @media (max-width: 600px) {
+      section { padding: 4rem 1.25rem; }
+      .hero-meta { gap: 1.5rem; }
+      .step { grid-template-columns: 36px 1fr; gap: 1rem; }
+      .pattern-layer { grid-template-columns: 45px 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="bg-terrain" aria-hidden="true"></div>
+
+  <div class="container">
+
+    <!-- ===== Hero ===== -->
+    <header class="hero" id="main-content">
+      <div class="hero-badge reveal">
+        <a href="https://commons.id" class="commons-link">commons.id</a>
+        <span class="label">Perpetual Convergence</span>
+      </div>
+      <h1 class="reveal reveal-delay-1">
+        <span class="techne">Techne</span>
+      </h1>
+      <div class="type-label reveal reveal-delay-1">RegenHub, LCA · Boulder, Colorado</div>
+      <p class="lead reveal reveal-delay-2">
+        A cooperative venture studio running on a <strong>perpetual convergence chain</strong> — where every contribution, allocation, and distribution becomes an immutable entry in a living knowledge graph. The chain is the ledger. The graph is the dashboard.
+      </p>
+
+      <div class="hero-meta reveal reveal-delay-3">
+        <div class="meta-item">
+          <span class="meta-label">Founded</span>
+          <span class="meta-value">February 6, 2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Structure</span>
+          <span class="meta-value">Colorado LCA</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Elevation</span>
+          <span class="meta-value">5,430 ft</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Watershed</span>
+          <span class="meta-value">South Boulder Creek</span>
+        </div>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true">
+        <span>Explore</span>
+        <div class="scroll-line"></div>
+      </div>
+    </header>
+
+    <main>
+
+    <!-- ===== What is a perpetual convergence ===== -->
+    <section>
+      <div class="label reveal"><i data-lucide="link"></i> The Chain</div>
+      <h2 class="reveal reveal-delay-1">A convergence<br>that never ends</h2>
+      <p class="intro reveal reveal-delay-2">
+        ETHBoulder was a bounded convergence — a 3-day event captured in the knowledge graph. Techne is a <strong>perpetual convergence</strong>: an ongoing, append-only chain where cooperative economic events accumulate over time. There is no closing ceremony. The chain grows with every contribution.
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature-card reveal">
+          <div class="f-icon"><i data-lucide="link"></i></div>
+          <span class="layer-tag">append-only</span>
+          <h3>Merkle chain</h3>
+          <p>Every entry is hash-linked to its predecessor. No edits, no deletes. Corrections create new entries. The chain is the audit trail — verifiable from genesis to now.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="f-icon"><i data-lucide="message-square-text"></i></div>
+          <span class="layer-tag">natural language</span>
+          <h3>Say what you did</h3>
+          <p>"Spent 3 hours on the treasury API." The system extracts a typed contribution, classifies it against the patronage formula, and queues it for approval. Five chain entries from one sentence.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="f-icon"><i data-lucide="scale"></i></div>
+          <span class="layer-tag">IRC 1385</span>
+          <h3>Patronage formula</h3>
+          <p>At period close, surplus is allocated to members based on weighted contributions. The formula execution itself becomes a chain entry — you can see exactly how every allocation was computed.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="f-icon"><i data-lucide="shield-check"></i></div>
+          <span class="layer-tag">704(b)</span>
+          <h3>Compliance on chain</h3>
+          <p>The system records not just what happened, but what it checked. Double-entry verification, substantial economic effect tests, and allocation invariants — all chain entries.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-4">
+          <div class="f-icon"><i data-lucide="calculator"></i></div>
+          <span class="layer-tag">computed</span>
+          <h3>Capital accounts</h3>
+          <p>Balances aren't stored — they're computed from the chain. Beginning balance + contributions + allocations − distributions = ending balance. State is a view over events.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-5">
+          <div class="f-icon"><i data-lucide="git-branch"></i></div>
+          <span class="layer-tag">on-chain anchoring</span>
+          <h3>Integrity proof</h3>
+          <p>The chain lives off-chain in Supabase. Periodically, the head hash is anchored on Base — a public, timestamped proof that the chain hasn't been tampered with.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Three Tools ===== -->
+    <section>
+      <div class="label reveal"><i data-lucide="boxes"></i> Composable Tools</div>
+      <h2 class="reveal reveal-delay-1">Three tools,<br>one chain</h2>
+      <p class="intro reveal reveal-delay-2">
+        The patronage system is built from three independent, event-sourced tools. They communicate through the chain, not shared databases. Each tool writes entries; the chain connects them.
+      </p>
+
+      <div class="tool-stack">
+        <div class="tool-card reveal">
+          <div class="tool-bar"></div>
+          <div class="tool-content">
+            <h3><i data-lucide="landmark"></i> Treasury</h3>
+            <p>Double-entry accounting, capital accounts, balance computation, and reporting. Every transaction posts a chain entry with matching debits and credits. Balances are computed views — never stored, always derived.</p>
+            <div class="tool-tags">
+              <span class="tool-tag">double-entry</span>
+              <span class="tool-tag">capital accounts</span>
+              <span class="tool-tag">balance sheets</span>
+              <span class="tool-tag">K-1 assembly</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-card reveal reveal-delay-1">
+          <div class="tool-bar"></div>
+          <div class="tool-content">
+            <h3><i data-lucide="users"></i> People</h3>
+            <p>Member identity, contribution lifecycle, valuation, and approval workflows. Each contribution moves through five stages — submit, validate, value, approve, credit — and each transition is a chain entry.</p>
+            <div class="tool-tags">
+              <span class="tool-tag">member identity</span>
+              <span class="tool-tag">contributions</span>
+              <span class="tool-tag">approval workflow</span>
+              <span class="tool-tag">NL parsing</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-card reveal reveal-delay-2">
+          <div class="tool-bar"></div>
+          <div class="tool-content">
+            <h3><i data-lucide="handshake"></i> Agreements</h3>
+            <p>Patronage formulas, period close, allocation calculation, distribution scheduling, and governance approval. The formula weights are the cooperative's value statement expressed as arithmetic.</p>
+            <div class="tool-tags">
+              <span class="tool-tag">patronage formula</span>
+              <span class="tool-tag">period close</span>
+              <span class="tool-tag">allocations</span>
+              <span class="tool-tag">distributions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Contribution lifecycle ===== -->
+    <section>
+      <div class="label reveal"><i data-lucide="git-commit-horizontal"></i> Contribution Lifecycle</div>
+      <h2 class="reveal reveal-delay-1">From sentence<br>to capital account</h2>
+      <p class="intro reveal reveal-delay-2">
+        Every contribution moves through five stages. Each stage transition is an entry in the chain. One sentence generates a verifiable, auditable trail from natural language to capital account credit.
+      </p>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3><i data-lucide="message-square"></i> Submit</h3>
+            <p>Member describes their contribution in natural language. "Facilitated the Wednesday standup" or "deposited $500 operating capital." The NL parser extracts type, duration, and context.</p>
+          </div>
+        </div>
+
+        <div class="step reveal reveal-delay-1">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3><i data-lucide="check-circle"></i> Validate</h3>
+            <p>System checks: is this a recognized contribution type? Does the member have standing? Is the period open? Validation passes or returns for clarification.</p>
+          </div>
+        </div>
+
+        <div class="step reveal reveal-delay-2">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3><i data-lucide="coins"></i> Value</h3>
+            <p>Contribution receives a monetary value. Labor is valued at the member's rate × hours. Cash at face value. Revenue at amount received. Community involvement at the cooperative's standard rate.</p>
+          </div>
+        </div>
+
+        <div class="step reveal reveal-delay-3">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3><i data-lucide="stamp"></i> Approve</h3>
+            <p>A steward reviews and approves. Approval creates a chain entry linking the approver to the contribution. This is the governance checkpoint — no contribution credits without human review.</p>
+          </div>
+        </div>
+
+        <div class="step reveal reveal-delay-4">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h3><i data-lucide="landmark"></i> Credit</h3>
+            <p>Treasury posts a double-entry transaction: debit the expense category, credit the member's capital account. The balance updates automatically — computed from the chain, not stored.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chain example -->
+      <div class="chain-example reveal" style="margin-top: 2.5rem;">
+        <div class="entry"><span class="hash">#42</span> <span class="type">people.contribution.created</span> <span class="detail">→ "3 hours on treasury API"</span></div>
+        <div class="connector">│</div>
+        <div class="entry"><span class="hash">#43</span> <span class="type">people.contribution.submitted</span> <span class="detail">→ type: labor, member: 008</span></div>
+        <div class="connector">│</div>
+        <div class="entry"><span class="hash">#44</span> <span class="type">people.contribution.valued</span> <span class="detail">→ hours: 3, rate: $75, value: $225</span></div>
+        <div class="connector">│</div>
+        <div class="entry"><span class="hash">#45</span> <span class="type">people.contribution.approved</span> <span class="detail">→ approvedBy: steward</span></div>
+        <div class="connector">│</div>
+        <div class="entry"><span class="hash">#46</span> <span class="type">treasury.transaction.posted</span> <span class="detail">→ debit: labor_expense, credit: capital_008</span></div>
+      </div>
+    </section>
+
+    <!-- ===== Seven-Layer Pattern Stack ===== -->
+    <section style="border-top: 1px solid rgba(255,255,255,0.04);">
+      <div class="label reveal"><i data-lucide="layers"></i> Design Framework</div>
+      <h2 class="reveal reveal-delay-1">Seven layers</h2>
+      <p class="intro reveal reveal-delay-2">
+        Every information system decomposes into a progressive set of design patterns. Each layer depends on the ones beneath it. The stack reads bottom-up, like sedimentary rock. Each chain entry is tagged with its layer — making the graph filterable by abstraction level.
+      </p>
+
+      <div class="pattern-stack reveal">
+        <div class="pattern-layer">
+          <div class="pattern-num">1</div>
+          <div class="pattern-info">
+            <h4>Identity</h4>
+            <p>Distinguishing one thing from another. Member UUIDs, member numbers, ENS names, account codes, transaction IDs. Without identity, nothing else is possible.</p>
+          </div>
+        </div>
+        <div class="pattern-layer">
+          <div class="pattern-num">2</div>
+          <div class="pattern-info">
+            <h4>State</h4>
+            <p>Recording attributes of identifiable things. Member profiles, account balances, contribution amounts, operating agreement versions. Capital accounts are computed state — derived from events.</p>
+          </div>
+        </div>
+        <div class="pattern-layer">
+          <div class="pattern-num">3</div>
+          <div class="pattern-info">
+            <h4>Relationship</h4>
+            <p>Connecting identifiable things. REA ontology — Event connects Resource to Agent. Member-to-contribution links. Parent-child accounts. Allocation-to-member.</p>
+          </div>
+        </div>
+        <div class="pattern-layer">
+          <div class="pattern-num">4</div>
+          <div class="pattern-info">
+            <h4>Event</h4>
+            <p>Recording that something happened. ContributionApproved, TransactionPosted, PeriodClosed. Events are immutable facts — the atoms of the chain.</p>
+          </div>
+        </div>
+        <div class="pattern-layer">
+          <div class="pattern-num">5</div>
+          <div class="pattern-info">
+            <h4>Flow</h4>
+            <p>Value moving between agents. Patronage allocation: surplus flows to members proportional to contribution. Capital account credits and debits. The patronage formula is a flow specification.</p>
+          </div>
+        </div>
+        <div class="pattern-layer">
+          <div class="pattern-num">6</div>
+          <div class="pattern-info">
+            <h4>Constraint</h4>
+            <p>Rules governing valid states. IRC 704(b) compliance. Double-entry invariant: debits must equal credits. Formula weights must have documented business purpose. Cash distribution rate ≥ 20%.</p>
+          </div>
+        </div>
+        <div class="pattern-layer">
+          <div class="pattern-num">7</div>
+          <div class="pattern-info">
+            <h4>View</h4>
+            <p>Presenting information for a purpose. Member allocation statements, balance sheets, K-1 tax forms, the patronage graph. Views make the chain legible to humans and accountants.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pull-quote reveal" style="margin-top: 2.5rem;">
+        <p>The weights are the cooperative's value statement expressed as arithmetic. A development shop might weight labor at 60%. A sales cooperative might weight revenue at 50%. The only requirement: the weights must have documented business purpose, satisfying the IRS substantiality test.</p>
+        <div class="attribution">— The Patronage Formula, Habitat Pattern Library</div>
+      </div>
+    </section>
+
+    <!-- ===== Founding Members ===== -->
+    <section>
+      <div class="label reveal">Chain Genesis</div>
+      <h2 class="reveal reveal-delay-1">The founders</h2>
+      <p class="intro reveal reveal-delay-2">
+        Eight founding members. Eight chain entries. The first identities in the Techne perpetual convergence, seeded on the day the LCA was filed.
+      </p>
+
+      <div class="member-grid">
+        <div class="member-card reveal">
+          <div class="initials">AN</div>
+          <h4>Aaron G Neyer</h4>
+          <span class="member-number">member #001</span>
+        </div>
+        <div class="member-card reveal reveal-delay-1">
+          <div class="initials">BR</div>
+          <h4>Benjamin Ross</h4>
+          <span class="member-number">member #002</span>
+        </div>
+        <div class="member-card reveal reveal-delay-2">
+          <div class="initials">JB</div>
+          <h4>Jonathan Borichevskiy</h4>
+          <span class="member-number">member #003</span>
+        </div>
+        <div class="member-card reveal reveal-delay-3">
+          <div class="initials">KO</div>
+          <h4>Kevin Owocki</h4>
+          <span class="member-number">member #004</span>
+        </div>
+        <div class="member-card reveal reveal-delay-4">
+          <div class="initials">LH</div>
+          <h4>Lucian Hymer</h4>
+          <span class="member-number">member #005</span>
+        </div>
+        <div class="member-card reveal reveal-delay-5">
+          <div class="initials">NM</div>
+          <h4>Neil Mackay Yarnal</h4>
+          <span class="member-number">member #006</span>
+        </div>
+        <div class="member-card reveal reveal-delay-6">
+          <div class="initials">SK</div>
+          <h4>Savannah Kruger</h4>
+          <span class="member-number">member #007</span>
+        </div>
+        <div class="member-card reveal">
+          <div class="initials">TY</div>
+          <h4>Todd Youngblood</h4>
+          <span class="member-number">member #008</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta">
+      <div class="divider reveal"></div>
+      <div class="label reveal reveal-delay-1">Perpetual Convergence</div>
+      <h2 class="reveal reveal-delay-2">The chain<br>is growing</h2>
+      <p class="lead reveal reveal-delay-3">
+        Every contribution adds an entry. Every period close seals a chapter. The cooperative's economic life — visible, verifiable, and permanent.
+      </p>
+      <div class="cta-buttons reveal reveal-delay-4">
+        <a href="https://the-habitat.org/patronage/" class="btn btn-primary">
+          <span>How Patronage Works</span> <span>→</span>
+        </a>
+        <a href="https://the-habitat.org/patterns/" class="btn btn-secondary">Pattern Library</a>
+        <a href="https://commons.id" class="btn btn-secondary">commons.id</a>
+      </div>
+    </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-links">
+        <a href="https://commons.id">commons.id</a>
+        <a href="https://the-habitat.org">Habitat</a>
+        <a href="https://the-habitat.org/patronage/">Patronage</a>
+        <a href="https://the-habitat.org/patterns/">Patterns</a>
+      </div>
+      <p>commons.id/techne · Perpetual Convergence · RegenHub, LCA · 1515 Walnut Street · Boulder, Colorado</p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
+
+</body>
+</html>
