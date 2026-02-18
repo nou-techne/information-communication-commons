@@ -60,13 +60,13 @@
   - Status: COMPLETE · 2026-02-14T08:29Z
 | Q30 | Investigate white pages on commons.id/app/* when logged in | Perceive | DONE | 2026-02-15T23:32Z | 2026-02-15T23:38Z |
 | Q31 | W3C lowest-risk standards integration across commons.id, /ethboulder, /app | Compliance & Security (06) | DONE | 2026-02-17T15:41Z | 2026-02-17T15:47Z |
-| Q32 | Supabase migration — `chain_entries` table + `convergence_type` column | Technical Lead (00) | BLOCKED (admin access) | 2026-02-18T04:11Z | — |
+| Q32 | Supabase migration — `chain_entries` table + `convergence_type` column | Technical Lead (00) | DONE | 2026-02-18T04:11Z | 2026-02-18T05:15Z |
 | Q33 | `types/chain.ts` — ChainEntry, ChainEventType, typed payloads | Technical Lead (00) | DONE | 2026-02-18T04:11Z | 2026-02-18T04:11Z |
 | Q34 | `lib/chain-engine.ts` — computeHash, appendEntry, verifyChain, queryChain | Technical Lead (00) | DONE | 2026-02-18T04:11Z | 2026-02-18T04:11Z |
-| Q35 | Genesis script — seed Techne convergence + 8 founding members | Technical Lead (00) | BLOCKED (requires Q32) | 2026-02-18T04:11Z | — |
-| Q36 | ConvergenceProvider context + convergence picker at `/app/` | Frontend & DevOps (07) | BLOCKED (requires Techne DB row) | 2026-02-18T04:11Z | — |
+| Q35 | Genesis script — seed Techne convergence + 8 founding members | Technical Lead (00) | DONE | 2026-02-18T04:11Z | 2026-02-18T05:16Z |
+| Q36 | ConvergenceProvider context + convergence picker at `/app/` | Frontend & DevOps (07) | DONE | 2026-02-18T04:11Z | 2026-02-18T05:17Z |
 | Q37 | Replace hardcoded convergence ID — all pages read from context | Frontend & DevOps (07) | DONE | 2026-02-18T04:11Z | 2026-02-18T04:11Z |
-| Q38 | Techne theme in convergence config (copper/alpine/gold) | Frontend & DevOps (07) | BLOCKED (requires Techne DB row) | 2026-02-18T04:11Z | — |
+| Q38 | Techne theme in convergence config (copper/alpine/gold) | Frontend & DevOps (07) | DONE | 2026-02-18T04:11Z | 2026-02-18T05:18Z |
 | Q39 | Chain explorer page — browse chain entries for any convergence | Frontend & DevOps (07) | DONE (UI ready) | 2026-02-18T04:11Z | 2026-02-18T04:11Z |
 | Q40 | Contribution chain entry types + five-stage lifecycle schema | Technical Lead (00) | DONE | 2026-02-18T04:19Z | 2026-02-18T04:19Z |
 | Q41 | NL contribution parser (rule-based + LLM extraction → typed payloads) | Technical Lead (00) | DONE | 2026-02-18T04:19Z | 2026-02-18T04:25Z |
