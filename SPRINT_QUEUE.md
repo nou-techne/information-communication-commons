@@ -72,6 +72,10 @@
 | Q41 | NL contribution parser (rule-based + LLM extraction → typed payloads) | Technical Lead (00) | DONE | 2026-02-18T04:19Z | 2026-02-18T04:25Z |
 | Q42 | Contribution lifecycle workflow (state machine operations) | Technical Lead (00) | DONE | 2026-02-18T04:25Z | 2026-02-18T04:26Z |
 | Q43 | Double-entry transaction engine on contribution approval | Technical Lead (00) | DONE | 2026-02-18T04:26Z | 2026-02-18T04:26Z |
+| Q44 | Contribution submission form with NL parser preview | Frontend & DevOps (07) | DONE | 2026-02-18T04:27Z | 2026-02-18T04:30Z |
+| Q45 | Member contribution history view component | Frontend & DevOps (07) | DONE | 2026-02-18T04:30Z | 2026-02-18T04:32Z |
+| Q46 | Cross-convergence participant linking (ETHBoulder ↔ Techne) | Data & Integration (04) | DONE | 2026-02-18T04:32Z | 2026-02-18T04:34Z |
+| Q47 | Chain integrity verification script (cron-ready) | Technical Lead (00) | DONE | 2026-02-18T04:34Z | 2026-02-18T04:36Z |
 
 ---
 
