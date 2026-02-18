@@ -105,32 +105,34 @@ function Nav() {
     <nav className="bg-[#080c16] border-b border-[#1d2839] px-4 py-3" aria-label="Main navigation">
       <div className="max-w-6xl mx-auto">
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center justify-between relative">
-          <Link to="/" className="text-xl font-bold tracking-tight">
+        <div className="hidden md:flex items-center gap-3">
+          <Link to="/" className="text-xl font-bold tracking-tight shrink-0">
             <span style={{ color: convergence.theme_primary }}>{convergence.logo_text}</span>
             <span className="text-gray-500">{convergence.logo_accent}</span>
           </Link>
-          <div className="absolute left-1/2 -translate-x-1/2 flex gap-1">
-            {links.map(l => (
-              <Link
-                key={l.to}
-                to={l.to}
-                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                  (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
-                    ? 'bg-[#1d2839] text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
-                }`}
-              >
-                {l.label}
-              </Link>
-            ))}
+          <div className="flex-1 flex justify-center">
+            <div className="flex gap-0.5 flex-wrap justify-center">
+              {links.map(l => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  className={`px-2.5 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                    (location.pathname === l.to || (l.to === '/dimensions' && location.pathname.startsWith('/d/')))
+                      ? 'bg-[#1d2839] text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-[#0a101d]'
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-2 text-sm shrink-0">
             <Link
               to="/live"
-              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#16a34a]/15 text-[#4ade80] border border-[#16a34a]/30 hover:bg-[#16a34a]/25 transition-colors"
+              className="px-2.5 py-1.5 rounded-lg text-sm font-medium bg-[#16a34a]/15 text-[#4ade80] border border-[#16a34a]/30 hover:bg-[#16a34a]/25 transition-colors whitespace-nowrap"
             >
-              View Live
+              Live
             </Link>
             <ConvergenceSwitcher />
             <ThemeToggle />
