@@ -92,6 +92,14 @@
 | Q61 | Member royalties dashboard (vesting progress, earned/pending) | Frontend & DevOps (07) | DONE | 2026-02-18T04:58Z | 2026-02-18T05:00Z |
 | Q62 | Royalty agreement builder (shares, vesting timeline, governance) | Frontend & DevOps (07) | DONE | 2026-02-18T04:58Z | 2026-02-18T05:00Z |
 | Q63 | Venture revenue reconciliation (import, auto-allocate, reports) | Technical Lead (00) | DONE | 2026-02-18T04:58Z | 2026-02-18T05:00Z |
+| Q64 | Education content schema (glossary, paths, help contexts) | Technical Lead (00) | DONE | 2026-02-18T05:02Z | 2026-02-18T05:05Z |
+| Q65 | Contextual help system (tooltip/popover component) | Frontend & DevOps (07) | DONE | 2026-02-18T05:05Z | 2026-02-18T05:08Z |
+| Q66 | Learning path engine + glossary chain entries | Technical Lead (00) | DONE | 2026-02-18T05:08Z | 2026-02-18T05:12Z |
+| Q67 | Seed core glossary terms (capital account, patronage, K-1) | Technical Lead (00) | DONE | 2026-02-18T05:08Z | 2026-02-18T05:12Z |
+| Q68 | Member onboarding wizard (interactive step-by-step) | Frontend & DevOps (07) | DONE | 2026-02-18T05:12Z | 2026-02-18T05:15Z |
+| Q69 | In-app education hub (/app/learn) | Frontend & DevOps (07) | DONE | 2026-02-18T05:15Z | 2026-02-18T05:18Z |
+| Q70 | Community writer toolkit (editor with style guide) | Frontend & DevOps (07) | DONE | 2026-02-18T05:18Z | 2026-02-18T05:22Z |
+| Q71 | Training analytics dashboard | Frontend & DevOps (07) | DONE | 2026-02-18T05:22Z | 2026-02-18T05:25Z |
 
 ---
 
