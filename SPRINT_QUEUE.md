@@ -80,6 +80,10 @@
 | Q49 | Period open/close chain entries + period lifecycle | Technical Lead (00) | DONE | 2026-02-18T04:40Z | 2026-02-18T04:40Z |
 | Q50 | Allocation calculation → chain entries (formula inputs + outputs recorded) | Technical Lead (00) | DONE | 2026-02-18T04:45Z | 2026-02-18T04:45Z |
 | Q51 | Compliance check entries (704b validator, double-entry checker) | Technical Lead (00) | DONE | 2026-02-18T04:45Z | 2026-02-18T04:45Z |
+| Q52 | Member dashboard — capital account balance (computed from chain) | Frontend & DevOps (07) | DONE | 2026-02-18T04:50Z | 2026-02-18T04:50Z |
+| Q53 | Allocation statements + K-1 data export | Technical Lead (00) | DONE | 2026-02-18T04:50Z | 2026-02-18T04:55Z |
+| Q54 | Period close governance approval workflow | Technical Lead (00) | DONE | 2026-02-18T04:55Z | 2026-02-18T04:55Z |
+| Q55 | On-chain hash anchoring (Base) for latest chain head | Technical Lead (00) | BLOCKED (requires Base L2 contract deployment + private key) | 2026-02-18T04:55Z | — |
 
 ---
 
@@ -153,3 +157,25 @@
   6. chain_integrity — full merkle hash verification
 - runComplianceSuite(): runs all checks, records results at Pattern Layer 6 (Constraint)
 - Quick check helpers for dashboard widgets
+
+### v1.3.1 — 2026-02-18 (Cycle 3: Patronage Engine — Flow)
+
+**Q52: Member Dashboard**
+- React component: MemberDashboard.tsx
+- Capital account balance from chain, contribution summary, allocation history
+- Recent chain activity feed with formatted event labels
+
+**Q53: Allocation Statements + K-1 Data Export**
+- Per-member allocation statements with contribution detail
+- IRS K-1 data: Box 1 (ordinary income), Box 11A/11B (cash/retained patronage)
+- Capital account analysis (beginning/ending/contributions/distributions)
+- Batch export for all members, CSV format for accountant import
+
+**Q54: Period Close Governance Workflow**
+- Proposal → compliance → voting → execution pipeline
+- Auto-execute on reaching configurable approval threshold
+- All governance events on chain at Pattern Layer 6 (Constraint)
+
+**Q55: On-Chain Hash Anchoring (Base L2)**
+- BLOCKED: Requires smart contract deployment on Base + private key management
+- When unblocked: Will anchor chain head hash for tamper-evidence
