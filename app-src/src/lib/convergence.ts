@@ -30,10 +30,10 @@ export const TECHNE_CONFIG: ConvergenceConfig = {
   id: '00000000-0000-0000-0000-000000000200',
   name: 'Techne',
   description: 'RegenHub LCA — cooperative patronage chain',
-  theme_primary: '#c4956a',
-  theme_bg: '#0f0f0f',
-  theme_surface: '#1a1a1a',
-  theme_border: '#333333',
+  theme_primary: '#c8956a',
+  theme_bg: '#0d0f0c',
+  theme_surface: '#141812',
+  theme_border: '#2a3020',
   logo_text: 'techne',
   logo_accent: '.commons.id',
   tagline: 'Cooperative Economic Infrastructure',
@@ -102,13 +102,7 @@ export async function getConvergenceConfig(): Promise<ConvergenceConfig> {
         }
         raw.dimensions = mapped
       }
-      cachedConfig = {
-        ...DEFAULT_CONFIG,
-        ...raw,
-        logo_text: raw.logo_text || raw.name?.toLowerCase() || DEFAULT_CONFIG.logo_text,
-        logo_accent: raw.logo_accent || DEFAULT_CONFIG.logo_accent,
-        tagline: raw.tagline || raw.description || DEFAULT_CONFIG.tagline,
-      } as ConvergenceConfig
+      cachedConfig = raw as ConvergenceConfig
       return cachedConfig
     }
   } catch (e) {
