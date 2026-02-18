@@ -1,15 +1,39 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/app/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <title>Information &amp; Communications Commons</title>
-    <script type="module" crossorigin src="/app/assets/index-DjrWgS0Z.js"></script>
-    <link rel="stylesheet" crossorigin href="/app/assets/index-CRvCyVsB.css">
+    <meta charset="utf-8">
+    <title>commons.id</title>
+    <script type="text/javascript">
+      // SPA redirect for GitHub Pages
+      // Routes like /progress, /chain, /techne etc. hit 404 on GitHub Pages
+      // This redirects them to /app/ with the path preserved as a query param
+      var l = window.location;
+      var path = l.pathname;
+
+      // Routes that belong to the React SPA app
+      var spaRoutes = ['/progress', '/chain', '/techne', '/members', '/submit',
+        '/audit', '/ventures', '/learn', '/search', '/contribute', '/dashboard',
+        '/onboarding', '/coordinator', '/profile', '/settings', '/live',
+        '/capital', '/k1', '/patronage', '/governance', '/education',
+        '/graph', '/stats', '/status', '/collections', '/webhooks', '/api-docs',
+        '/federation', '/threads', '/my-thread', '/artifact', '/session',
+        '/participant', '/convergence', '/public-portfolio', '/portfolio'];
+
+      var isSpaRoute = spaRoutes.some(function(r) { return path === r || path.startsWith(r + '/'); });
+
+      if (isSpaRoute) {
+        // Redirect to /app/ with path preserved for the SPA router
+        l.replace(
+          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+          '/app/?/' + path.slice(1).replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+        );
+      } else {
+        // For unknown routes, redirect to home
+        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/');
+      }
+    </script>
   </head>
-  <body>
-    <div id="root"></div>
-  </body>
+  <body></body>
 </html>
