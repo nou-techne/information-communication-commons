@@ -76,6 +76,10 @@
 | Q45 | Member contribution history view component | Frontend & DevOps (07) | DONE | 2026-02-18T04:30Z | 2026-02-18T04:32Z |
 | Q46 | Cross-convergence participant linking (ETHBoulder ↔ Techne) | Data & Integration (04) | DONE | 2026-02-18T04:32Z | 2026-02-18T04:34Z |
 | Q47 | Chain integrity verification script (cron-ready) | Technical Lead (00) | DONE | 2026-02-18T04:34Z | 2026-02-18T04:36Z |
+| Q48 | Port PatronageFormulaEngine from habitat (variable weights) | Technical Lead (00) | DONE | 2026-02-18T04:40Z | 2026-02-18T04:40Z |
+| Q49 | Period open/close chain entries + period lifecycle | Technical Lead (00) | DONE | 2026-02-18T04:40Z | 2026-02-18T04:40Z |
+| Q50 | Allocation calculation → chain entries (formula inputs + outputs recorded) | Technical Lead (00) | DONE | 2026-02-18T04:45Z | 2026-02-18T04:45Z |
+| Q51 | Compliance check entries (704b validator, double-entry checker) | Technical Lead (00) | DONE | 2026-02-18T04:45Z | 2026-02-18T04:45Z |
 
 ---
 
@@ -115,3 +119,37 @@
   - `getReviewQueue()`: Dashboard data source for pending items
 - Documentation: `tio/techne-commons-id/docs/CONTRIBUTION_WORKFLOW.md`
 - Commit: (latest)
+
+### v1.3.0 — 2026-02-18 (Cycle 3: Patronage Engine — Ebb)
+
+**Q48: Patronage Formula Engine (ported from habitat)**
+- PatronageFormulaEngine class with variable weights (labor 1.0, expertise 1.5, capital 1.0, relationship 0.5)
+- Reads approved ContributionViews from chain, maps NL categories → patronage categories
+- IRC 1385 compliant: min 20% cash distribution rate enforced
+- verifyAllocations(): 4 invariants (sum=surplus, cash+retained=total, rate, shares=1.0)
+- MultiPeriodAccumulator for cross-period patronage tracking
+- runAndRecord(): writes allocation chain entries + optional double-entry transactions
+
+**Q49: Period Lifecycle**
+- openPeriod()/closePeriod(): treasury.period.opened/closed chain entries
+- Single-open constraint (only one period open at a time per convergence)
+- Date overlap prevention
+- getOpenPeriod(), getAllPeriods(), getPeriodView(): chain projections
+- getContributionsForPeriod(): filter approvals by period
+
+**Q50: Allocation Chain Recording**
+- Implemented within Q48's runAndRecord():
+  - agreements.allocation.created: formula version, weights, surplus, cashRate, counts
+  - agreements.allocation.approved: per-member allocations (memberId, amount, share)
+  - Optional automatic double-entry transaction posting per member
+
+**Q51: Compliance Engine**
+- 6 compliance checks recorded as chain entries (compliance.check.passed/failed):
+  1. double_entry_balance — all transactions have valid amounts + trial balance
+  2. approval_transaction_match — every approval linked to a posted transaction
+  3. void_compensation_match — voided approvals have compensating transactions
+  4. 704b_cash_rate — cash rates ≥ 20% (IRC 1385)
+  5. 704b_capital_accounts — every approval has validation + valuation records
+  6. chain_integrity — full merkle hash verification
+- runComplianceSuite(): runs all checks, records results at Pattern Layer 6 (Constraint)
+- Quick check helpers for dashboard widgets
