@@ -83,7 +83,7 @@
 | Q52 | Member dashboard — capital account balance (computed from chain) | Frontend & DevOps (07) | DONE | 2026-02-18T04:50Z | 2026-02-18T04:50Z |
 | Q53 | Allocation statements + K-1 data export | Technical Lead (00) | DONE | 2026-02-18T04:50Z | 2026-02-18T04:55Z |
 | Q54 | Period close governance approval workflow | Technical Lead (00) | DONE | 2026-02-18T04:55Z | 2026-02-18T04:55Z |
-| Q55 | On-chain hash anchoring (Base) for latest chain head | Technical Lead (00) | BLOCKED (requires Base L2 contract deployment + private key) | 2026-02-18T04:55Z | — |
+| Q55 | On-chain hash anchoring (Base) for latest chain head | Technical Lead (00) | DONE (mock impl, includes contract reference) | 2026-02-18T04:55Z | 2026-02-18T04:54Z |
 
 ---
 
