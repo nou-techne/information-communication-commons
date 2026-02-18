@@ -40,6 +40,7 @@ const WebhooksPage = lazy(() => import('./pages/WebhooksPage'))
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
 const ConvergenceDashboardPage = lazy(() => import('./pages/ConvergenceDashboardPage'))
 const FederationPage = lazy(() => import('./pages/FederationPage'))
+const ChainExplorer = lazy(() => import('./pages/ChainExplorer').then(m => ({ default: m.ChainExplorer })))
 import type { Session } from '@supabase/supabase-js'
 import { Navigate } from 'react-router-dom'
 
@@ -265,6 +266,7 @@ function AuthGuardedRoutes() {
       <Route path="/analytics" element={<AnalyticsPage />} />
       <Route path="/convergence" element={<ConvergenceDashboardPage />} />
       <Route path="/federation" element={<FederationPage />} />
+      <Route path="/chain" element={<ChainExplorer />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

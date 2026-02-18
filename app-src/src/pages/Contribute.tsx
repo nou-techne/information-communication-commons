@@ -28,12 +28,13 @@ const HLAMT_LABELS: Record<string, { label: string; desc: string }> = {
   T: { label: 'Training', desc: 'Learning, skill development, transformation, practice' },
 }
 
-const CONVERGENCE_ID = '00000000-0000-0000-0000-000000000100'
-
 export function Contribute() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { convergence } = useConvergence()
+  
+  // Sprint Q37: Use convergence ID from context instead of hardcoding
+  const CONVERGENCE_ID = convergence.id
   
   // Gate: check if convergence is open or user is steward
   const opensAt = convergence.opens_at ? new Date(convergence.opens_at).getTime() : 0
