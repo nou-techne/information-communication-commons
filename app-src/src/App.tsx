@@ -52,6 +52,7 @@ const OnboardingWizard = lazy(() => import('./pages/OnboardingWizard').then(m =>
 const SprintProgress = lazy(() => import('./pages/SprintProgress').then(m => ({ default: m.SprintProgress })))
 const TechneLanding = lazy(() => import('./pages/TechneLanding').then(m => ({ default: m.TechneLanding })))
 const MemberDirectory = lazy(() => import('./pages/MemberDirectory').then(m => ({ default: m.MemberDirectory })))
+const ContributionSubmit = lazy(() => import('./pages/ContributionSubmit').then(m => ({ default: m.ContributionSubmit })))
 import type { Session } from '@supabase/supabase-js'
 import { Navigate } from 'react-router-dom'
 
@@ -299,6 +300,7 @@ function AuthGuardedRoutes() {
       <Route path="/progress" element={<SprintProgress />} />
       <Route path="/techne" element={<TechneLanding />} />
       <Route path="/members" element={<MemberDirectory />} />
+      <Route path="/submit" element={<ContributionSubmit />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
