@@ -124,6 +124,10 @@
 | Q93 | App config — environment detection + feature flags per mode | Technical Lead (00) | DONE | 2026-02-18T05:50Z | 2026-02-18T05:51Z |
 | Q94 | Pre-deploy checklist script (8 checks, all passing) | Technical Lead (00) | DONE | 2026-02-18T05:51Z | 2026-02-18T05:52Z |
 | Q95 | Production build verified — clean tsc + vite build | Frontend & DevOps (07) | DONE | 2026-02-18T05:52Z | 2026-02-18T05:53Z |
+| Q96 | Fix GitHub Pages SPA routing (404.html + index.html redirect) | Frontend & DevOps (07) | DONE | 2026-02-18T13:50Z | 2026-02-18T13:52Z |
+| Q97 | Convergence switcher UI (ETHBoulder ↔ Techne) | Frontend & DevOps (07) | DONE | 2026-02-18T13:52Z | 2026-02-18T13:54Z |
+| Q98 | Chain status widget (live entry count, members, contributions) | Frontend & DevOps (07) | DONE | 2026-02-18T13:54Z | 2026-02-18T13:56Z |
+| Q99 | Sprint progress dashboard (/progress — all 9 cycles visualized) | Frontend & DevOps (07) | DONE | 2026-02-18T13:56Z | 2026-02-18T14:00Z |
 
 ---
 

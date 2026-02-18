@@ -1,129 +1,57 @@
-import { useState, useEffect, useRef } from 'react'
-import { ChevronDown, Plus, Check } from 'lucide-react'
-import { convergenceStore } from '../stores/convergence-store'
-import type { Convergence } from '../types/convergence'
+/**
+ * Convergence Switcher — Toggle between ETHBoulder and Techne
+ * Sprint Q97
+ */
 
-interface ConvergenceSwitcherProps {
-  onNewConvergence?: () => void
-}
+import { useConvergence } from '../contexts/ConvergenceContext'
+import { TECHNE_CONFIG } from '../lib/convergence'
+import { ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 
-export function ConvergenceSwitcher({ onNewConvergence }: ConvergenceSwitcherProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [active, setActive] = useState<Convergence | null>(null)
-  const [convergences, setConvergences] = useState<Convergence[]>([])
-  const dropdownRef = useRef<HTMLDivElement>(null)
+const CONVERGENCES = [
+  { id: '00000000-0000-0000-0000-000000000100', name: 'ETHBoulder 2026', badge: 'Event' },
+  { id: TECHNE_CONFIG.id, name: 'Techne', badge: 'Cooperative' },
+]
 
-  // Load convergences and active selection
-  useEffect(() => {
-    loadData()
-  }, [])
+export function ConvergenceSwitcher() {
+  const { convergence } = useConvergence()
+  const [open, setOpen] = useState(false)
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
+  const current = CONVERGENCES.find(c => c.id === convergence.id) || CONVERGENCES[0]
+
+  function switchTo(id: string) {
+    setOpen(false)
+    if (id === TECHNE_CONFIG.id) {
+      window.location.href = '/techne'
+    } else {
+      window.location.href = '/'
     }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
-
-  function loadData() {
-    setActive(convergenceStore.getActive())
-    setConvergences(convergenceStore.list())
-  }
-
-  function selectConvergence(id: string) {
-    convergenceStore.setActive(id)
-    loadData()
-    setIsOpen(false)
-  }
-
-  function handleNewConvergence() {
-    setIsOpen(false)
-    onNewConvergence?.()
   }
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative">
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded border border-[#1d2839] hover:border-[#a6ed2a] bg-[#080c16] hover:bg-[#0a101d] transition-colors"
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-2 text-xs px-2 py-1 rounded border border-white/10 hover:border-white/20 transition-colors"
       >
-        <span className="text-sm font-medium">
-          {active ? active.name : 'Select Convergence'}
-        </span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <span className="w-2 h-2 rounded-full" style={{ background: convergence.theme_primary }} />
+        <span className="text-white/60">{current.name}</span>
+        <ChevronDown className="w-3 h-3 text-white/30" />
       </button>
-
-      {isOpen && (
-        <div className="absolute top-full mt-2 right-0 w-64 bg-[#060a14] border border-[#1d2839] rounded-lg shadow-2xl overflow-hidden z-50">
-          <div className="max-h-96 overflow-y-auto">
-            {convergences.length === 0 ? (
-              <div className="p-4 text-center text-sm text-gray-500">
-                No convergences yet
-              </div>
-            ) : (
-              convergences.map(conv => (
-                <button
-                  key={conv.id}
-                  onClick={() => selectConvergence(conv.id)}
-                  className="w-full text-left px-4 py-3 hover:bg-[#0a101d] transition-colors border-b border-[#1d2839] last:border-b-0"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-white truncate">
-                          {conv.name}
-                        </span>
-                        {active?.id === conv.id && (
-                          <Check className="w-4 h-4 text-[#a6ed2a] flex-shrink-0" />
-                        )}
-                      </div>
-                      <div className="text-xs text-gray-400 truncate">
-                        {conv.location.city}, {conv.location.country}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {new Date(conv.startDate).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                        })}{' '}
-                        -{' '}
-                        {new Date(conv.endDate).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </div>
-                    </div>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
-                        conv.status === 'active'
-                          ? 'bg-green-500/20 text-green-400'
-                          : conv.status === 'upcoming'
-                          ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-gray-500/20 text-gray-400'
-                      }`}
-                    >
-                      {conv.status}
-                    </span>
-                  </div>
-                </button>
-              ))
-            )}
-          </div>
-
-          <button
-            onClick={handleNewConvergence}
-            className="w-full flex items-center gap-2 px-4 py-3 bg-[#0a101d] hover:bg-[#1d2839] transition-colors border-t border-[#1d2839]"
-          >
-            <Plus className="w-4 h-4 text-[#a6ed2a]" />
-            <span className="text-sm font-medium text-[#a6ed2a]">New Convergence</span>
-          </button>
+      {open && (
+        <div className="absolute top-full mt-1 right-0 bg-[#0a101d] border border-white/10 rounded shadow-lg z-50 min-w-[180px]">
+          {CONVERGENCES.map(c => (
+            <button
+              key={c.id}
+              onClick={() => switchTo(c.id)}
+              className={`w-full flex items-center justify-between gap-3 px-3 py-2 text-left text-sm hover:bg-white/5 transition-colors ${
+                c.id === convergence.id ? 'text-white' : 'text-white/50'
+              }`}
+            >
+              <span>{c.name}</span>
+              <span className="text-[9px] text-white/30 uppercase tracking-wider">{c.badge}</span>
+            </button>
+          ))}
         </div>
       )}
     </div>

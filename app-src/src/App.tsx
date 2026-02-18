@@ -9,6 +9,7 @@ import { ThemeToggle } from './components/ThemeToggle'
 import { ToastContainer } from './components/ui/Toast'
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { ConvergenceSwitcher } from './components/ConvergenceSwitcher'
 import { PageLoader } from './components/ui/PageLoader'
 import { Footer } from './components/Footer'
 // Lazy load all page components for code splitting
@@ -48,6 +49,7 @@ const EducationHub = lazy(() => import('./pages/EducationHub').then(m => ({ defa
 const VenturePortfolio = lazy(() => import('./pages/VenturePortfolio').then(m => ({ default: m.default || m.VenturePortfolio })))
 const PublicPortfolio = lazy(() => import('./pages/PublicPortfolio').then(m => ({ default: m.PublicPortfolio })))
 const OnboardingWizard = lazy(() => import('./pages/OnboardingWizard').then(m => ({ default: m.default || m.OnboardingWizard })))
+const SprintProgress = lazy(() => import('./pages/SprintProgress').then(m => ({ default: m.SprintProgress })))
 import type { Session } from '@supabase/supabase-js'
 import { Navigate } from 'react-router-dom'
 
@@ -127,6 +129,7 @@ function Nav() {
             >
               View Live
             </Link>
+            <ConvergenceSwitcher />
             <ThemeToggle />
             <Link to="/search" className="text-gray-400 hover:text-white" aria-label="Search">
               <SearchIcon className="w-5 h-5" />
@@ -291,6 +294,7 @@ function AuthGuardedRoutes() {
       <Route path="/ventures" element={<VenturePortfolio />} />
       <Route path="/portfolio" element={<PublicPortfolio />} />
       <Route path="/onboarding" element={<RequireAuth session={session} loading={authLoading}><OnboardingWizard /></RequireAuth>} />
+      <Route path="/progress" element={<SprintProgress />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
