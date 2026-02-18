@@ -50,6 +50,7 @@ const VenturePortfolio = lazy(() => import('./pages/VenturePortfolio').then(m =>
 const PublicPortfolio = lazy(() => import('./pages/PublicPortfolio').then(m => ({ default: m.PublicPortfolio })))
 const OnboardingWizard = lazy(() => import('./pages/OnboardingWizard').then(m => ({ default: m.default || m.OnboardingWizard })))
 const SprintProgress = lazy(() => import('./pages/SprintProgress').then(m => ({ default: m.SprintProgress })))
+const TechneLanding = lazy(() => import('./pages/TechneLanding').then(m => ({ default: m.TechneLanding })))
 import type { Session } from '@supabase/supabase-js'
 import { Navigate } from 'react-router-dom'
 
@@ -295,6 +296,7 @@ function AuthGuardedRoutes() {
       <Route path="/portfolio" element={<PublicPortfolio />} />
       <Route path="/onboarding" element={<RequireAuth session={session} loading={authLoading}><OnboardingWizard /></RequireAuth>} />
       <Route path="/progress" element={<SprintProgress />} />
+      <Route path="/techne" element={<TechneLanding />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
