@@ -139,7 +139,7 @@ function Nav() {
             >
               Live
             </Link>
-            <ConvergenceSwitcher />
+            {/* ConvergenceSwitcher removed — Techne now at techne.commons.id */}
             <ThemeToggle />
             <Link to="/search" className="text-gray-400 hover:text-white" aria-label="Search">
               <SearchIcon className="w-5 h-5" />
