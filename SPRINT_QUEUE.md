@@ -68,3 +68,17 @@
 | Q37 | Replace hardcoded convergence ID — all pages read from context | Frontend & DevOps (07) | DONE | 2026-02-18T04:11Z | 2026-02-18T04:11Z |
 | Q38 | Techne theme in convergence config (copper/alpine/gold) | Frontend & DevOps (07) | BLOCKED (requires Techne DB row) | 2026-02-18T04:11Z | — |
 | Q39 | Chain explorer page — browse chain entries for any convergence | Frontend & DevOps (07) | DONE (UI ready) | 2026-02-18T04:11Z | 2026-02-18T04:11Z |
+| Q40 | Contribution chain entry types + five-stage lifecycle schema | Technical Lead (00) | DONE | 2026-02-18T04:19Z | 2026-02-18T04:19Z |
+
+---
+
+### v1.2.0 — 2026-02-18 (Cycle 2: Contribution Chain — Ebb)
+
+**Q40: Contribution Lifecycle Foundation**
+- Complete TypeScript types for five-stage lifecycle (Created → Submitted → Validated → Valued → Approved/Rejected)
+- All seven event payloads: ContributionCreated, Submitted, Validated, Valued, Approved, Rejected, Voided
+- State machine: CONTRIBUTION_LIFECYCLE_TRANSITIONS with validation helpers
+- Chain projection helpers: buildContributionView(), getMemberContributions(), getContributionsByState()
+- Comprehensive documentation: tio/techne-commons-id/docs/CONTRIBUTION_LIFECYCLE.md
+- Foundation ready for NL parser (Q41), workflow automation (Q42), and double-entry integration (Q43)
+- Commit: 5f2940a (app-src), bb19a47 (tio)
