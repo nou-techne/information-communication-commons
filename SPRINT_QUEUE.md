@@ -69,6 +69,7 @@
 | Q38 | Techne theme in convergence config (copper/alpine/gold) | Frontend & DevOps (07) | BLOCKED (requires Techne DB row) | 2026-02-18T04:11Z | — |
 | Q39 | Chain explorer page — browse chain entries for any convergence | Frontend & DevOps (07) | DONE (UI ready) | 2026-02-18T04:11Z | 2026-02-18T04:11Z |
 | Q40 | Contribution chain entry types + five-stage lifecycle schema | Technical Lead (00) | DONE | 2026-02-18T04:19Z | 2026-02-18T04:19Z |
+| Q41 | NL contribution parser (rule-based extraction → typed payloads) | Technical Lead (00) | DONE | 2026-02-18T04:21Z | 2026-02-18T04:25Z |
 
 ---
 
