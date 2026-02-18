@@ -71,6 +71,10 @@ export type AggregateType =
   | 'distribution'
   | 'account'
   | 'transaction'
+  | 'venture'
+  | 'royalty_agreement'
+  | 'revenue'
+  | 'education'
 
 /**
  * Chain event types — REA-based, ported from habitat event registry
@@ -109,6 +113,22 @@ export type ChainEventType =
   | 'agreements.distribution.scheduled'
   | 'agreements.distribution.completed'
   | 'agreements.capitalAccount.updated'
+  // Ventures (Sprint Q56)
+  | 'venture.created'
+  | 'venture.updated'
+  | 'venture.archived'
+  | 'venture.statusChanged'
+  // Royalty agreements (Sprint Q57)
+  | 'agreements.royalty.created'
+  | 'agreements.royalty.activated'
+  | 'agreements.royalty.modified'
+  | 'agreements.royalty.terminated'
+  | 'agreements.royalty.vested'
+  | 'agreements.royalty.cliff_reached'
+  // Revenue events (Sprint Q58)
+  | 'treasury.revenue.received'
+  | 'treasury.revenue.allocated'
+  | 'treasury.revenue.distributed'
   // Compliance (704b, double-entry verification)
   | 'compliance.check.passed'
   | 'compliance.check.failed'
