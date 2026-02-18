@@ -41,6 +41,13 @@ const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
 const ConvergenceDashboardPage = lazy(() => import('./pages/ConvergenceDashboardPage'))
 const FederationPage = lazy(() => import('./pages/FederationPage'))
 const ChainExplorer = lazy(() => import('./pages/ChainExplorer').then(m => ({ default: m.ChainExplorer })))
+const MemberProfile = lazy(() => import('./pages/MemberProfile').then(m => ({ default: m.MemberProfile })))
+const AuditTrail = lazy(() => import('./pages/AuditTrail').then(m => ({ default: m.AuditTrail })))
+const CoordinatorQueue = lazy(() => import('./pages/CoordinatorQueue').then(m => ({ default: m.CoordinatorQueue })))
+const EducationHub = lazy(() => import('./pages/EducationHub').then(m => ({ default: m.EducationHub })))
+const VenturePortfolio = lazy(() => import('./pages/VenturePortfolio').then(m => ({ default: m.default || m.VenturePortfolio })))
+const PublicPortfolio = lazy(() => import('./pages/PublicPortfolio').then(m => ({ default: m.PublicPortfolio })))
+const OnboardingWizard = lazy(() => import('./pages/OnboardingWizard').then(m => ({ default: m.default || m.OnboardingWizard })))
 import type { Session } from '@supabase/supabase-js'
 import { Navigate } from 'react-router-dom'
 
@@ -77,7 +84,17 @@ function Nav() {
     { to: '/coordinate', label: 'Coordinate' },
     { to: '/me', label: 'My Activity' },
   ]
-  const links = session ? [...publicLinks, ...authedLinks] : publicLinks
+  // Techne cooperative nav items
+  const isTechne = convergence.id === '00000000-0000-0000-0000-000000000200'
+  const techneLinks = isTechne ? [
+    { to: '/ventures', label: 'Ventures' },
+    { to: '/learn', label: 'Learn' },
+    ...(session ? [
+      { to: '/queue', label: 'Queue' },
+      { to: '/audit', label: 'Audit' },
+    ] : []),
+  ] : []
+  const links = session ? [...publicLinks, ...authedLinks, ...techneLinks] : [...publicLinks, ...techneLinks]
 
   return (
     <nav className="bg-[#080c16] border-b border-[#1d2839] px-4 py-3" aria-label="Main navigation">
@@ -267,6 +284,13 @@ function AuthGuardedRoutes() {
       <Route path="/convergence" element={<ConvergenceDashboardPage />} />
       <Route path="/federation" element={<FederationPage />} />
       <Route path="/chain" element={<ChainExplorer />} />
+      <Route path="/member/:memberId" element={<MemberProfile />} />
+      <Route path="/audit" element={<RequireAuth session={session} loading={authLoading}><AuditTrail /></RequireAuth>} />
+      <Route path="/queue" element={<RequireAuth session={session} loading={authLoading}><CoordinatorQueue /></RequireAuth>} />
+      <Route path="/learn" element={<EducationHub />} />
+      <Route path="/ventures" element={<VenturePortfolio />} />
+      <Route path="/portfolio" element={<PublicPortfolio />} />
+      <Route path="/onboarding" element={<RequireAuth session={session} loading={authLoading}><OnboardingWizard /></RequireAuth>} />
       <Route path="/auth" element={<Auth />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

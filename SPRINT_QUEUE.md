@@ -116,6 +116,14 @@
 | Q85 | REST API endpoints (chain, contribution, member) | Integration (03) | DONE | 2026-02-18T05:35Z | 2026-02-18T05:36Z |
 | Q86 | Convergence setup guide (README for new deployments) | Technical Writer (08) | DONE | 2026-02-18T05:36Z | 2026-02-18T05:37Z |
 | Q87 | Integration test — full lifecycle (NL→parse→patronage→allocate — 3 tests) | QA Test Engineer | DONE | 2026-02-18T05:37Z | 2026-02-18T05:38Z |
+| Q88 | Wire all new pages into App.tsx router (7 routes added) | Frontend & DevOps (07) | DONE | 2026-02-18T05:45Z | 2026-02-18T05:46Z |
+| Q89 | Techne-specific nav items (ventures, learn, queue, audit) | Frontend & DevOps (07) | DONE | 2026-02-18T05:46Z | 2026-02-18T05:47Z |
+| Q90 | Build verification — tsc clean, vite build succeeds (4.5s) | Technical Lead (00) | DONE | 2026-02-18T05:47Z | 2026-02-18T05:48Z |
+| Q91 | Supabase RPC audit — core RPCs verified, fallbacks in place | Technical Lead (00) | DONE | 2026-02-18T05:48Z | 2026-02-18T05:49Z |
+| Q92 | Seed sample contribution on live chain (entries #9-10 verified) | Technical Lead (00) | DONE | 2026-02-18T05:49Z | 2026-02-18T05:50Z |
+| Q93 | App config — environment detection + feature flags per mode | Technical Lead (00) | DONE | 2026-02-18T05:50Z | 2026-02-18T05:51Z |
+| Q94 | Pre-deploy checklist script (8 checks, all passing) | Technical Lead (00) | DONE | 2026-02-18T05:51Z | 2026-02-18T05:52Z |
+| Q95 | Production build verified — clean tsc + vite build | Frontend & DevOps (07) | DONE | 2026-02-18T05:52Z | 2026-02-18T05:53Z |
 
 ---
 
