@@ -1,168 +1,72 @@
-import { Component, ReactNode } from 'react'
-import { AlertTriangle, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react'
-import { Button } from './Button'
+/**
+ * Error Boundary — Graceful Degradation
+ * 
+ * Sprint Q83: Catches render errors and chain read failures.
+ */
 
-interface ErrorBoundaryProps {
+import { Component, type ReactNode } from 'react'
+import { AlertTriangle, RefreshCw } from 'lucide-react'
+
+interface Props {
   children: ReactNode
   fallback?: ReactNode
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  context?: string // e.g. "Chain Dashboard", "Contribution History"
 }
 
-interface ErrorBoundaryState {
+interface State {
   hasError: boolean
   error: Error | null
-  errorInfo: React.ErrorInfo | null
-  showDetails: boolean
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props)
-    this.state = {
-      hasError: false,
-      error: null,
-      errorInfo: null,
-      showDetails: false,
-    }
+export class ErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false, error: null }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error }
   }
 
-  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
-    return {
-      hasError: true,
-      error,
-    }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error(`[ErrorBoundary${this.props.context ? `: ${this.props.context}` : ''}]`, error, info)
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught error:', error, errorInfo)
-    
-    this.setState({
-      errorInfo,
-    })
-
-    // Call optional error handler
-    this.props.onError?.(error, errorInfo)
-  }
-
-  handleReset = () => {
-    this.setState({
-      hasError: false,
-      error: null,
-      errorInfo: null,
-      showDetails: false,
-    })
-  }
-
-  toggleDetails = () => {
-    this.setState(prev => ({
-      showDetails: !prev.showDetails,
-    }))
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null })
   }
 
   render() {
     if (this.state.hasError) {
-      // Use custom fallback if provided
-      if (this.props.fallback) {
-        return this.props.fallback
-      }
+      if (this.props.fallback) return this.props.fallback
 
-      // Default error UI
+      const isChainError = this.state.error?.message?.includes('chain') ||
+                           this.state.error?.message?.includes('does not exist')
+
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-[#060a14]">
-          <div className="max-w-2xl w-full bg-[#0a101d] border border-[#1d2839] rounded-lg p-8">
-            {/* Error icon and title */}
-            <div className="flex items-start gap-4 mb-6">
-              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-red-900/20 flex items-center justify-center">
-                <AlertTriangle className="w-6 h-6 text-red-500" />
-              </div>
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold mb-2">Something went wrong</h1>
-                <p className="text-gray-400">
-                  We encountered an unexpected error. This has been logged and we'll look into it.
-                </p>
-              </div>
-            </div>
-
-            {/* Error message */}
-            {this.state.error && (
-              <div className="mb-6 p-4 bg-[#060a14] border border-red-900/30 rounded">
-                <div className="font-mono text-sm text-red-400">
-                  {this.state.error.toString()}
-                </div>
-              </div>
-            )}
-
-            {/* Actions */}
-            <div className="flex flex-wrap gap-3 mb-6">
-              <Button onClick={this.handleReset}>
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Try Again
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => window.location.href = '/'}
-              >
-                Go to Home
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={this.toggleDetails}
-              >
-                {this.state.showDetails ? (
-                  <>
-                    <ChevronUp className="w-4 h-4 mr-2" />
-                    Hide Details
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="w-4 h-4 mr-2" />
-                    Show Details
-                  </>
-                )}
-              </Button>
-            </div>
-
-            {/* Error details (collapsible) */}
-            {this.state.showDetails && this.state.errorInfo && (
-              <div className="border-t border-[#1d2839] pt-6">
-                <h3 className="text-sm font-bold mb-3 text-gray-400">
-                  Error Details
-                </h3>
-                <div className="bg-[#060a14] border border-[#1d2839] rounded p-4 overflow-x-auto">
-                  <pre className="text-xs text-gray-400 whitespace-pre-wrap">
-                    {this.state.errorInfo.componentStack}
-                  </pre>
-                </div>
-
-                {this.state.error?.stack && (
-                  <>
-                    <h3 className="text-sm font-bold mb-3 mt-4 text-gray-400">
-                      Stack Trace
-                    </h3>
-                    <div className="bg-[#060a14] border border-[#1d2839] rounded p-4 overflow-x-auto">
-                      <pre className="text-xs text-gray-400 whitespace-pre-wrap">
-                        {this.state.error.stack}
-                      </pre>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-
-            {/* Help text */}
-            <div className="mt-6 text-sm text-gray-500">
-              <p>
-                If this problem persists, please{' '}
-                <a
-                  href="mailto:hello@commons.id"
-                  className="text-[#a6ed2a] hover:underline"
-                >
-                  contact support
-                </a>
-                {' '}with the error details above.
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+          <AlertTriangle className="w-8 h-8 text-amber-400/60 mb-3" />
+          <h3 className="text-sm font-medium text-white/70 mb-1">
+            {isChainError ? 'Chain data unavailable' : 'Something went wrong'}
+          </h3>
+          <p className="text-xs text-white/40 max-w-sm mb-4">
+            {isChainError
+              ? 'The chain data could not be loaded. This may be a temporary issue or the chain table may not be initialized yet.'
+              : this.props.context
+                ? `Error loading ${this.props.context}. Please try again.`
+                : 'An unexpected error occurred.'}
+          </p>
+          <button
+            onClick={this.handleRetry}
+            className="flex items-center gap-2 text-xs text-copper-400 hover:text-copper-300 bg-copper-400/10 px-3 py-1.5 rounded transition-colors"
+          >
+            <RefreshCw className="w-3 h-3" /> Try again
+          </button>
+          {this.state.error && (
+            <details className="mt-4 text-left max-w-sm">
+              <summary className="text-[10px] text-white/20 cursor-pointer">Details</summary>
+              <pre className="text-[10px] text-white/15 mt-1 bg-black/20 rounded p-2 overflow-x-auto">
+                {this.state.error.message}
+              </pre>
+            </details>
+          )}
         </div>
       )
     }
@@ -172,17 +76,46 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 }
 
 /**
- * Hook-based wrapper for functional components
+ * Wrapper for async data that might fail.
+ * Shows loading/error/data states.
  */
-export function withErrorBoundary<P extends object>(
-  Component: React.ComponentType<P>,
-  fallback?: ReactNode
-): React.ComponentType<P> {
-  return function WithErrorBoundary(props: P) {
+export function AsyncDataGuard<T>({
+  data,
+  loading,
+  error,
+  context,
+  children,
+}: {
+  data: T | null
+  loading: boolean
+  error: string | null
+  context?: string
+  children: (data: T) => ReactNode
+}) {
+  if (loading) {
     return (
-      <ErrorBoundary fallback={fallback}>
-        <Component {...props} />
-      </ErrorBoundary>
+      <div className="flex items-center justify-center py-8 text-white/30 text-sm">
+        Loading{context ? ` ${context}` : ''}...
+      </div>
     )
   }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center py-8 text-center">
+        <AlertTriangle className="w-5 h-5 text-amber-400/50 mb-2" />
+        <p className="text-xs text-white/40">{error}</p>
+      </div>
+    )
+  }
+
+  if (data === null || data === undefined) {
+    return (
+      <div className="text-center py-8 text-white/20 text-xs">
+        No data available{context ? ` for ${context}` : ''}.
+      </div>
+    )
+  }
+
+  return <>{children(data)}</>
 }

@@ -108,6 +108,14 @@
 | Q77 | Ecosystem interop (Bonfires, ETHBoulder, revenue webhooks) | Data & Integration (04) | DONE | 2026-02-18T05:42Z | 2026-02-18T05:44Z |
 | Q78 | Mobile responsiveness (breakpoint hooks, touch targets, audit) | Frontend & DevOps (07) | DONE | 2026-02-18T05:44Z | 2026-02-18T05:46Z |
 | Q79 | Launch checklist (automated readiness verification) | Technical Lead (00) | DONE | 2026-02-18T05:46Z | 2026-02-18T05:48Z |
+| Q80 | Fix convergences.slug column + migration (test fix) | Schema Architect (01) | DONE | 2026-02-18T05:30Z | 2026-02-18T05:31Z |
+| Q81 | Chain engine unit tests (computeHash, types — 7 tests) | QA Test Engineer | DONE | 2026-02-18T05:31Z | 2026-02-18T05:32Z |
+| Q82 | Patronage engine unit tests (formula, allocation, IRC 1385 — 8 tests) | QA Test Engineer | DONE | 2026-02-18T05:32Z | 2026-02-18T05:33Z |
+| Q83 | ErrorBoundary + AsyncDataGuard (graceful degradation) | Frontend & DevOps (07) | DONE | 2026-02-18T05:33Z | 2026-02-18T05:34Z |
+| Q84 | Coordinator review queue (pending, validate, value, approve) | Frontend & DevOps (07) | DONE | 2026-02-18T05:34Z | 2026-02-18T05:35Z |
+| Q85 | REST API endpoints (chain, contribution, member) | Integration (03) | DONE | 2026-02-18T05:35Z | 2026-02-18T05:36Z |
+| Q86 | Convergence setup guide (README for new deployments) | Technical Writer (08) | DONE | 2026-02-18T05:36Z | 2026-02-18T05:37Z |
+| Q87 | Integration test — full lifecycle (NL→parse→patronage→allocate — 3 tests) | QA Test Engineer | DONE | 2026-02-18T05:37Z | 2026-02-18T05:38Z |
 
 ---
 
