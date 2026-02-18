@@ -102,7 +102,13 @@ export async function getConvergenceConfig(): Promise<ConvergenceConfig> {
         }
         raw.dimensions = mapped
       }
-      cachedConfig = raw as ConvergenceConfig
+      cachedConfig = {
+        ...DEFAULT_CONFIG,
+        ...raw,
+        logo_text: raw.logo_text || raw.name?.toLowerCase() || DEFAULT_CONFIG.logo_text,
+        logo_accent: raw.logo_accent || DEFAULT_CONFIG.logo_accent,
+        tagline: raw.tagline || raw.description || DEFAULT_CONFIG.tagline,
+      } as ConvergenceConfig
       return cachedConfig
     }
   } catch (e) {
