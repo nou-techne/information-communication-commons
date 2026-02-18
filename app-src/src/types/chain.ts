@@ -137,30 +137,215 @@ export interface MemberCreatedPayload {
 }
 
 /**
- * Typed payloads for contribution lifecycle (Sprint Q40+)
+ * Typed payloads for contribution lifecycle (Sprint Q40)
+ * 
+ * Five-stage lifecycle:
+ * 1. Created — Initial capture of contribution intent
+ * 2. Submitted — Ready for review (may include LLM-extracted structured data)
+ * 3. Validated — Verified by coordinator/steward (authenticity + scope)
+ * 4. Valued — Economic value assigned (can be $ or formula-based weight)
+ * 5a. Approved → Capital account credit posted (terminal success state)
+ * 5b. Rejected → Returned with feedback (terminal failure state)
+ * 
+ * Voided — Can happen at any stage (rollback/correction)
  */
+
+// Stage 1: Creation
 export interface ContributionCreatedPayload {
   title: string
   description: string
   contributorId: string
-  submittedAt: string
+  createdAt: string
   nlSource?: string  // original natural language input
+  sourceUrl?: string // link to external artifact (GitHub PR, doc, etc.)
+  tags?: string[]
 }
 
+// Stage 2: Submission (structured data ready for review)
+export interface ContributionSubmittedPayload {
+  contributionId: string
+  submittedBy: string
+  submittedAt: string
+  extractedData?: {
+    category?: string      // e.g., 'code', 'research', 'coordination'
+    effort?: string        // e.g., 'low', 'medium', 'high', 'exceptional'
+    impact?: string        // e.g., 'local', 'convergence', 'ecosystem'
+    relatedArtifactIds?: string[]
+    relatedMemberIds?: string[]
+  }
+  submissionNotes?: string
+}
+
+// Stage 3: Validation (authenticity + scope verified)
+export interface ContributionValidatedPayload {
+  contributionId: string
+  validatedBy: string
+  validatedAt: string
+  validationStatus: 'authentic' | 'needs_clarification' | 'out_of_scope'
+  validationNotes?: string
+  requestedChanges?: string[] // if needs_clarification
+}
+
+// Stage 4: Valuation (economic value assigned)
 export interface ContributionValuedPayload {
   contributionId: string
-  valueUsd: number
   valuedBy: string
   valuedAt: string
+  valueUsd?: number      // direct USD value
+  valueWeight?: number   // formula weight (0.0-1.0)
+  valueMethod: 'fixed_usd' | 'formula_weight' | 'peer_assessment' | 'governance_vote'
   justification?: string
+  assessmentData?: Record<string, unknown>  // method-specific details
 }
 
+// Stage 5a: Approval (capital account credit)
 export interface ContributionApprovedPayload {
   contributionId: string
   approvedBy: string
   approvedAt: string
-  creditAmount: number  // capital account credit
-  transactionId: string // double-entry transaction reference
+  creditAmount: number      // final capital account credit
+  transactionId: string     // double-entry transaction reference
+  periodId?: string         // patronage period if applicable
+  approvalNotes?: string
+}
+
+// Stage 5b: Rejection (terminal failure)
+export interface ContributionRejectedPayload {
+  contributionId: string
+  rejectedBy: string
+  rejectedAt: string
+  rejectionReason: 'duplicate' | 'out_of_scope' | 'insufficient_evidence' | 'policy_violation' | 'other'
+  rejectionNotes?: string
+  appealEligible: boolean
+}
+
+// Rollback/correction (can happen at any stage)
+export interface ContributionVoidedPayload {
+  contributionId: string
+  voidedBy: string
+  voidedAt: string
+  voidReason: string
+  compensatingTransactionId?: string  // if credit needs reversal
+}
+
+/**
+ * Contribution lifecycle state machine
+ */
+export type ContributionLifecycleState = 
+  | 'created'
+  | 'submitted'
+  | 'validated'
+  | 'valued'
+  | 'approved'
+  | 'rejected'
+  | 'voided'
+
+export const CONTRIBUTION_LIFECYCLE_TRANSITIONS: Record<
+  ContributionLifecycleState,
+  ContributionLifecycleState[]
+> = {
+  created: ['submitted', 'voided'],
+  submitted: ['validated', 'rejected', 'voided'],
+  validated: ['valued', 'rejected', 'voided'],
+  valued: ['approved', 'rejected', 'voided'],
+  approved: ['voided'],  // can only void after approval (requires compensating transaction)
+  rejected: [],          // terminal state
+  voided: [],            // terminal state
+}
+
+/**
+ * Helper: Check if a lifecycle transition is valid
+ */
+export function isValidLifecycleTransition(
+  from: ContributionLifecycleState,
+  to: ContributionLifecycleState
+): boolean {
+  return CONTRIBUTION_LIFECYCLE_TRANSITIONS[from]?.includes(to) ?? false
+}
+
+/**
+ * Helper: Get current lifecycle state from chain entries
+ */
+export function deriveContributionState(
+  entries: ChainEntry[]
+): ContributionLifecycleState | null {
+  if (entries.length === 0) return null
+  
+  // Find the latest lifecycle event (sorted by chain_index descending)
+  const sorted = [...entries].sort((a, b) => b.chain_index - a.chain_index)
+  
+  for (const entry of sorted) {
+    switch (entry.event_type) {
+      case 'people.contribution.created':
+        return 'created'
+      case 'people.contribution.submitted':
+        return 'submitted'
+      case 'people.contribution.validated':
+        return 'validated'
+      case 'people.contribution.valued':
+        return 'valued'
+      case 'people.contribution.approved':
+        return 'approved'
+      case 'people.contribution.rejected':
+        return 'rejected'
+      case 'people.contribution.voided':
+        return 'voided'
+    }
+  }
+  
+  return null
+}
+
+/**
+ * Contribution aggregate view (computed from chain entries)
+ */
+export interface ContributionView {
+  id: string
+  convergenceId: string
+  currentState: ContributionLifecycleState
+  
+  // From created event
+  title: string
+  description: string
+  contributorId: string
+  createdAt: string
+  nlSource?: string
+  sourceUrl?: string
+  tags?: string[]
+  
+  // From submitted event (if reached)
+  submittedAt?: string
+  category?: string
+  effort?: string
+  impact?: string
+  
+  // From validated event (if reached)
+  validatedAt?: string
+  validatedBy?: string
+  validationStatus?: string
+  
+  // From valued event (if reached)
+  valuedAt?: string
+  valuedBy?: string
+  valueUsd?: number
+  valueWeight?: number
+  valueMethod?: string
+  
+  // From approved event (if reached)
+  approvedAt?: string
+  approvedBy?: string
+  creditAmount?: number
+  transactionId?: string
+  periodId?: string
+  
+  // From rejected event (if terminal)
+  rejectedAt?: string
+  rejectedBy?: string
+  rejectionReason?: string
+  
+  // Lifecycle metadata
+  chainEntries: ChainEntry[]
+  lastModified: string
 }
 
 /**

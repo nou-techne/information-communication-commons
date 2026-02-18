@@ -356,3 +356,203 @@ export async function computeCapitalAccountBalance(
   
   return balance
 }
+
+/**
+ * Contribution Lifecycle Helpers (Sprint Q40)
+ */
+
+import type {
+  ContributionLifecycleState,
+  ContributionView,
+  isValidLifecycleTransition,
+  deriveContributionState,
+} from '../types/chain'
+
+/**
+ * Get all chain entries for a specific contribution
+ */
+export async function getContributionEntries(
+  convergenceId: string,
+  contributionId: string
+): Promise<ChainEntry[]> {
+  return queryChain({
+    convergenceId,
+    aggregateType: 'contribution',
+    aggregateId: contributionId,
+  })
+}
+
+/**
+ * Build a complete contribution view by projecting chain entries
+ * 
+ * Returns a materialized view of the contribution's current state,
+ * aggregating data from all lifecycle events.
+ */
+export async function buildContributionView(
+  convergenceId: string,
+  contributionId: string
+): Promise<ContributionView | null> {
+  const entries = await getContributionEntries(convergenceId, contributionId)
+  
+  if (entries.length === 0) return null
+  
+  // Import the deriveContributionState function from types
+  const { deriveContributionState } = await import('../types/chain')
+  const currentState = deriveContributionState(entries)
+  
+  if (!currentState) return null
+  
+  // Build view by extracting data from each event type
+  const view: Partial<ContributionView> = {
+    id: contributionId,
+    convergenceId,
+    currentState,
+    chainEntries: entries,
+    lastModified: entries[entries.length - 1].created_at,
+  }
+  
+  for (const entry of entries) {
+    const payload = entry.payload as Record<string, any>
+    
+    switch (entry.event_type) {
+      case 'people.contribution.created':
+        view.title = payload.title
+        view.description = payload.description
+        view.contributorId = payload.contributorId
+        view.createdAt = payload.createdAt
+        view.nlSource = payload.nlSource
+        view.sourceUrl = payload.sourceUrl
+        view.tags = payload.tags
+        break
+        
+      case 'people.contribution.submitted':
+        view.submittedAt = payload.submittedAt
+        view.category = payload.extractedData?.category
+        view.effort = payload.extractedData?.effort
+        view.impact = payload.extractedData?.impact
+        break
+        
+      case 'people.contribution.validated':
+        view.validatedAt = payload.validatedAt
+        view.validatedBy = payload.validatedBy
+        view.validationStatus = payload.validationStatus
+        break
+        
+      case 'people.contribution.valued':
+        view.valuedAt = payload.valuedAt
+        view.valuedBy = payload.valuedBy
+        view.valueUsd = payload.valueUsd
+        view.valueWeight = payload.valueWeight
+        view.valueMethod = payload.valueMethod
+        break
+        
+      case 'people.contribution.approved':
+        view.approvedAt = payload.approvedAt
+        view.approvedBy = payload.approvedBy
+        view.creditAmount = payload.creditAmount
+        view.transactionId = payload.transactionId
+        view.periodId = payload.periodId
+        break
+        
+      case 'people.contribution.rejected':
+        view.rejectedAt = payload.rejectedAt
+        view.rejectedBy = payload.rejectedBy
+        view.rejectionReason = payload.rejectionReason
+        break
+    }
+  }
+  
+  return view as ContributionView
+}
+
+/**
+ * Get all contributions for a member, with current state
+ */
+export async function getMemberContributions(
+  convergenceId: string,
+  memberId: string
+): Promise<ContributionView[]> {
+  // Get all contribution entries for this member
+  const allEntries = await queryChain({
+    convergenceId,
+    eventType: 'people.contribution.created',
+  })
+  
+  // Filter to contributions by this member
+  const memberContributions = allEntries.filter(
+    entry => (entry.payload as any).contributorId === memberId
+  )
+  
+  // Build views for each contribution
+  const views: ContributionView[] = []
+  
+  for (const entry of memberContributions) {
+    const view = await buildContributionView(convergenceId, entry.aggregate_id)
+    if (view) views.push(view)
+  }
+  
+  return views
+}
+
+/**
+ * Get contributions by current lifecycle state
+ * Useful for dashboards: "Show all pending validations"
+ */
+export async function getContributionsByState(
+  convergenceId: string,
+  state: ContributionLifecycleState
+): Promise<ContributionView[]> {
+  // Get all contribution creation entries
+  const createdEntries = await queryChain({
+    convergenceId,
+    eventType: 'people.contribution.created',
+  })
+  
+  const views: ContributionView[] = []
+  
+  for (const entry of createdEntries) {
+    const view = await buildContributionView(convergenceId, entry.aggregate_id)
+    if (view && view.currentState === state) {
+      views.push(view)
+    }
+  }
+  
+  return views
+}
+
+/**
+ * Validate that a lifecycle transition is legal before appending
+ * Prevents invalid state transitions from being written to the chain
+ */
+export async function validateLifecycleTransition(
+  convergenceId: string,
+  contributionId: string,
+  toState: ContributionLifecycleState
+): Promise<{ valid: boolean; currentState?: ContributionLifecycleState; error?: string }> {
+  const entries = await getContributionEntries(convergenceId, contributionId)
+  
+  if (entries.length === 0) {
+    return {
+      valid: false,
+      error: 'Contribution does not exist',
+    }
+  }
+  
+  const { deriveContributionState, isValidLifecycleTransition } = await import('../types/chain')
+  const currentState = deriveContributionState(entries)
+  
+  if (!currentState) {
+    return {
+      valid: false,
+      error: 'Could not determine current state',
+    }
+  }
+  
+  const valid = isValidLifecycleTransition(currentState, toState)
+  
+  return {
+    valid,
+    currentState,
+    error: valid ? undefined : `Invalid transition from ${currentState} to ${toState}`,
+  }
+}
