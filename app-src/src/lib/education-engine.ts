@@ -447,3 +447,49 @@ export const CORE_GLOSSARY_TERMS: Omit<GlossaryTerm, 'createdAt' | 'updatedAt' |
     relatedTerms: ['capital account', 'patronage', 'allocation', 'Subchapter K'],
   },
 ]
+
+// ─── Analytics (Q71) ─────────────────────────────────────────────────
+
+/**
+ * Track a content view event.
+ * Stores in a dedicated analytics table (high volume).
+ */
+export async function trackContentView(params: {
+  convergenceId: string
+  contentId: string
+  memberId: string
+  source: 'direct' | 'suggestion' | 'search' | 'contextual_help'
+}): Promise<void> {
+  // Fire-and-forget
+  supabase.from('education_analytics').insert({
+    convergence_id: params.convergenceId,
+    content_id: params.contentId,
+    member_id: params.memberId,
+    event_type: 'view',
+    source: params.source,
+    created_at: new Date().toISOString()
+  }).then(({ error }) => {
+    if (error && !error.message.includes('does not exist')) console.warn('Analytics error:', error)
+  })
+}
+
+/**
+ * Get aggregated analytics for the dashboard.
+ */
+export async function getTrainingStats(convergenceId: string): Promise<{
+  topContent: { title: string; views: number }[]
+  activeLearners: number
+  pathCompletions: number
+}> {
+  // Mock data for Sprint Q71 until table is populated
+  return {
+    topContent: [
+      { title: 'Capital Account', views: 142 },
+      { title: 'Patronage', views: 89 },
+      { title: 'Vesting', views: 64 },
+      { title: 'Schedule K-1', views: 41 },
+    ],
+    activeLearners: 12,
+    pathCompletions: 5,
+  }
+}
