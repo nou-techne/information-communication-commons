@@ -1,12 +1,13 @@
 /**
  * Convergence Switcher — Toggle between ETHBoulder and Techne
- * Sprint Q97
+ * Sprint Q97 (updated: in-app switching via context)
  */
 
 import { useConvergence } from '../contexts/ConvergenceContext'
 import { TECHNE_CONFIG } from '../lib/convergence'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const CONVERGENCES = [
   { id: '00000000-0000-0000-0000-000000000100', name: 'ETHBoulder 2026', badge: 'Event' },
@@ -14,18 +15,17 @@ const CONVERGENCES = [
 ]
 
 export function ConvergenceSwitcher() {
-  const { convergence } = useConvergence()
+  const { convergence, switchConvergence } = useConvergence()
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
 
   const current = CONVERGENCES.find(c => c.id === convergence.id) || CONVERGENCES[0]
 
-  function switchTo(id: string) {
+  async function switchTo(id: string) {
     setOpen(false)
-    if (id === TECHNE_CONFIG.id) {
-      window.location.href = '/techne'
-    } else {
-      window.location.href = '/'
-    }
+    if (id === convergence.id) return
+    await switchConvergence(id)
+    navigate('/')
   }
 
   return (
