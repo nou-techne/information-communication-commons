@@ -84,6 +84,14 @@
 | Q53 | Allocation statements + K-1 data export | Technical Lead (00) | DONE | 2026-02-18T04:50Z | 2026-02-18T04:55Z |
 | Q54 | Period close governance approval workflow | Technical Lead (00) | DONE | 2026-02-18T04:55Z | 2026-02-18T04:55Z |
 | Q55 | On-chain hash anchoring (Base) for latest chain head | Technical Lead (00) | DONE (mock impl, includes contract reference) | 2026-02-18T04:55Z | 2026-02-18T04:54Z |
+| Q56 | Venture registry chain entries (create, update, status, archive) | Technical Lead (00) | DONE | 2026-02-18T04:55Z | 2026-02-18T04:58Z |
+| Q57 | Royalty agreement types + chain entries (vesting, dilution, shares) | Technical Lead (00) | DONE | 2026-02-18T04:55Z | 2026-02-18T04:58Z |
+| Q58 | Revenue event chain entries (received, allocated, distributed) | Technical Lead (00) | DONE | 2026-02-18T04:55Z | 2026-02-18T04:58Z |
+| Q59 | Royalty vesting engine (linear, cliff, milestone, batch processing) | Technical Lead (00) | DONE | 2026-02-18T04:55Z | 2026-02-18T04:58Z |
+| Q60 | Venture portfolio page (filterable, revenue metrics, status badges) | Frontend & DevOps (07) | DONE | 2026-02-18T04:58Z | 2026-02-18T05:00Z |
+| Q61 | Member royalties dashboard (vesting progress, earned/pending) | Frontend & DevOps (07) | DONE | 2026-02-18T04:58Z | 2026-02-18T05:00Z |
+| Q62 | Royalty agreement builder (shares, vesting timeline, governance) | Frontend & DevOps (07) | DONE | 2026-02-18T04:58Z | 2026-02-18T05:00Z |
+| Q63 | Venture revenue reconciliation (import, auto-allocate, reports) | Technical Lead (00) | DONE | 2026-02-18T04:58Z | 2026-02-18T05:00Z |
 
 ---
 
