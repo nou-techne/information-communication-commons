@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Techne — commons.id</title>
-  <meta name="description" content="Techne on the Information & Communications Commons. A perpetual convergence chain — cooperative patronage accounting as a living knowledge graph.">
+  <title>Techne — Cooperative Venture Studio</title>
+  <meta name="description" content="Techne is a cooperative venture studio in Boulder, Colorado. We build composable tools for cooperative economics — patronage accounting, contribution tracking, and transparent surplus distribution.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="canonical" href="https://commons.id/techne/">
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://commons.id/techne/">
-  <meta property="og:title" content="Techne — commons.id">
-  <meta property="og:description" content="Cooperative patronage accounting as a perpetual convergence chain. Every contribution, allocation, and distribution becomes an immutable entry in a living knowledge graph.">
-  <meta property="og:site_name" content="commons.id">
+  <meta property="og:title" content="Techne — Cooperative Venture Studio">
+  <meta property="og:description" content="A cooperative venture studio building composable tools for cooperative economics. Every contribution is tracked. Every allocation is verifiable. The chain is the ledger.">
+  <meta property="og:site_name" content="Techne">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Techne — commons.id">
-  <meta name="twitter:description" content="The chain is the ledger. The graph is the dashboard.">
+  <meta name="twitter:title" content="Techne — Cooperative Venture Studio">
+  <meta name="twitter:description" content="Cooperative economics with composable tools. The chain is the ledger.">
 
   <script type="application/ld+json">
   {
@@ -25,7 +24,7 @@
     "@type": "Organization",
     "name": "Techne",
     "legalName": "RegenHub, LCA",
-    "description": "A Colorado Limited Cooperative Association operating as a venture studio. Perpetual convergence on the Information & Communications Commons.",
+    "description": "A Colorado Limited Cooperative Association operating as a venture studio, building composable tools for cooperative economics.",
     "foundingDate": "2026-02-06",
     "address": {
       "@type": "PostalAddress",
@@ -117,26 +116,6 @@
       position: relative;
     }
 
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.75rem;
-      margin-bottom: 2rem;
-    }
-
-    .hero-badge .commons-link {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--sky);
-      text-decoration: none;
-      padding: 0.35rem 0.75rem;
-      border: 1px solid var(--blue);
-      border-radius: 100px;
-      transition: all 0.3s;
-    }
-    .hero-badge .commons-link:hover {
-      border-color: var(--sky);
-      background: rgba(91, 157, 228, 0.08);
-    }
-
     .hero h1 {
       font-family: 'DM Serif Display', Georgia, serif;
       font-size: clamp(2.8rem, 8vw, 5.5rem);
@@ -154,9 +133,10 @@
 
     .hero .type-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.1rem;
+      font-size: 0.9rem;
       color: var(--copper);
       margin-bottom: 2rem;
+      letter-spacing: 0.05em;
     }
 
     .hero .lead {
@@ -191,7 +171,7 @@
     .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--copper), transparent); animation: scrollPulse 2s ease-in-out infinite; }
     @keyframes scrollPulse { 0%, 100% { opacity: 0.3; transform: scaleY(0.6); } 50% { opacity: 1; transform: scaleY(1); } }
 
-    /* ===== Sections ===== */
+    /* ===== Section headings ===== */
     section h2 {
       font-family: 'DM Serif Display', Georgia, serif;
       font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -201,8 +181,20 @@
     .intro {
       font-size: 1.1rem; color: var(--text-secondary);
       max-width: 640px; margin-bottom: 3rem; font-weight: 300;
+      line-height: 1.8;
     }
     .intro strong { color: var(--text); font-weight: 500; }
+
+    /* ===== Thesis (text section) ===== */
+    .thesis-text {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      line-height: 1.85;
+      font-weight: 300;
+    }
+    .thesis-text strong { color: var(--text); font-weight: 500; }
+    .thesis-text + .thesis-text { margin-top: 1.5rem; }
 
     /* ===== Feature grid ===== */
     .feature-grid {
@@ -220,16 +212,6 @@
     }
     .feature-card:hover { border-color: var(--copper); box-shadow: 0 4px 30px var(--copper-dim); }
 
-    .feature-card .f-icon {
-      width: 40px; height: 40px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; margin-bottom: 1.25rem;
-      background: var(--copper-dim);
-      color: var(--copper);
-      border: 1px solid var(--copper-mid);
-    }
-
     .feature-card h3 { font-size: 1.05rem; font-weight: 500; color: var(--white); margin-bottom: 0.5rem; }
     .feature-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
 
@@ -243,13 +225,6 @@
       color: var(--text-dim);
       margin-bottom: 0.75rem;
     }
-
-    /* Alternate icon colors per card */
-    .feature-card:nth-child(2) .f-icon { background: var(--alpine-dim); color: var(--alpine); border-color: rgba(74, 140, 111, 0.25); }
-    .feature-card:nth-child(3) .f-icon { background: var(--gold-dim); color: var(--gold); border-color: rgba(217, 180, 87, 0.25); }
-    .feature-card:nth-child(4) .f-icon { background: var(--copper-dim); color: var(--copper); border-color: var(--copper-mid); }
-    .feature-card:nth-child(5) .f-icon { background: var(--alpine-dim); color: var(--alpine); border-color: rgba(74, 140, 111, 0.25); }
-    .feature-card:nth-child(6) .f-icon { background: var(--gold-dim); color: var(--gold); border-color: rgba(217, 180, 87, 0.25); }
 
     /* ===== Tool cards ===== */
     .tool-stack { display: flex; flex-direction: column; gap: 1rem; }
@@ -339,7 +314,6 @@
     .pattern-info h4 { font-size: 0.95rem; font-weight: 500; color: var(--white); margin-bottom: 0.25rem; }
     .pattern-info p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; }
 
-    /* Color gradient for layers */
     .pattern-layer:nth-child(1) .pattern-num { color: var(--copper); }
     .pattern-layer:nth-child(2) .pattern-num { color: var(--copper); }
     .pattern-layer:nth-child(3) .pattern-num { color: var(--alpine); }
@@ -401,7 +375,6 @@
       color: var(--text-dim); margin: 0 auto 0.75rem;
     }
     .member-card h4 { font-size: 0.9rem; font-weight: 500; color: var(--white); margin-bottom: 0.25rem; }
-    .member-card p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
     .member-card .member-number {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.65rem; color: var(--mid);
@@ -437,16 +410,6 @@
     footer a:hover { color: var(--copper); }
     footer .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1rem; }
 
-    /* Lucide */
-    .lucide { display: inline-block; vertical-align: middle; flex-shrink: 0; }
-    .label i { width: 14px; height: 14px; margin-right: 0.75rem; opacity: 0.7; position: relative; top: -1px; }
-    .feature-card .f-icon i { width: 24px; height: 24px; }
-    .btn i { width: 16px; height: 16px; margin-right: 0.25rem; }
-    .commons-link i { width: 14px; height: 14px; margin-right: 0.5rem; position: relative; top: -1px; }
-    .tool-content h3 i { width: 18px; height: 18px; margin-right: 0.4rem; opacity: 0.6; }
-    .step-content h3 i { width: 16px; height: 16px; margin-right: 0.35rem; opacity: 0.6; }
-    .footer-links a i { width: 12px; height: 12px; margin-right: 0.3rem; }
-
     /* Accessibility */
     .skip-link {
       position: absolute; top: -100%; left: 1rem; z-index: 1000;
@@ -473,16 +436,13 @@
 
     <!-- ===== Hero ===== -->
     <header class="hero" id="main-content">
-      <div class="hero-badge reveal">
-        <a href="https://commons.id" class="commons-link">commons.id</a>
-        <span class="label">Perpetual Convergence</span>
-      </div>
+      <div class="label reveal" style="margin-bottom: 1.5rem;">Cooperative Venture Studio</div>
       <h1 class="reveal reveal-delay-1">
         <span class="techne">Techne</span>
       </h1>
-      <div class="type-label reveal reveal-delay-1">RegenHub, LCA · Boulder, Colorado</div>
+      <div class="type-label reveal reveal-delay-1">RegenHub, LCA</div>
       <p class="lead reveal reveal-delay-2">
-        A cooperative venture studio running on a <strong>perpetual convergence chain</strong> — where every contribution, allocation, and distribution becomes an immutable entry in a living knowledge graph. The chain is the ledger. The graph is the dashboard.
+        A cooperative that tracks every contribution, computes every allocation, and distributes surplus transparently — all from <strong>an append-only chain</strong> that serves as the ledger, the audit trail, and the institutional memory.
       </p>
 
       <div class="hero-meta reveal reveal-delay-3">
@@ -495,12 +455,12 @@
           <span class="meta-value">Colorado LCA</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Elevation</span>
-          <span class="meta-value">5,430 ft</span>
+          <span class="meta-label">Location</span>
+          <span class="meta-value">Boulder, Colorado</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Watershed</span>
-          <span class="meta-value">South Boulder Creek</span>
+          <span class="meta-label">Elevation</span>
+          <span class="meta-value">5,430 ft</span>
         </div>
       </div>
 
@@ -512,57 +472,66 @@
 
     <main>
 
-    <!-- ===== What is a perpetual convergence ===== -->
+    <!-- ===== What Techne Is ===== -->
     <section>
-      <div class="label reveal"><i data-lucide="link"></i> The Chain</div>
-      <h2 class="reveal reveal-delay-1">A convergence<br>that never ends</h2>
+      <div class="label reveal">The Studio</div>
+      <h2 class="reveal reveal-delay-1">Infrastructure,<br>not product</h2>
+      <p class="thesis-text reveal reveal-delay-2">
+        Techne is a <strong>venture studio organized as a cooperative</strong>. We provide the infrastructure — legal structure, shared space, planning, capital access — for autonomous ventures. We are soil, not plant.
+      </p>
+      <p class="thesis-text reveal reveal-delay-3">
+        As a Colorado Limited Cooperative Association, ownership isn't static. It's <strong>earned through patronage</strong> — your actual contribution during each period. Work more, contribute more, bring in more revenue? Your share reflects that, period by period.
+      </p>
+      <p class="thesis-text reveal reveal-delay-3" style="margin-top: 1.5rem;">
+        This requires accounting infrastructure that most cooperatives don't have. So we built it.
+      </p>
+    </section>
+
+    <!-- ===== The Chain ===== -->
+    <section>
+      <div class="label reveal">The Approach</div>
+      <h2 class="reveal reveal-delay-1">The chain<br>is the ledger</h2>
       <p class="intro reveal reveal-delay-2">
-        ETHBoulder was a bounded convergence — a 3-day event captured in the knowledge graph. Techne is a <strong>perpetual convergence</strong>: an ongoing, append-only chain where cooperative economic events accumulate over time. There is no closing ceremony. The chain grows with every contribution.
+        Every economic event in the cooperative's life — a contribution logged, a period closed, an allocation approved — becomes an immutable, hash-linked entry in an append-only chain. Capital accounts aren't stored in a database. They're <strong>computed from the chain</strong>.
       </p>
 
       <div class="feature-grid">
         <div class="feature-card reveal">
-          <div class="f-icon"><i data-lucide="link"></i></div>
           <span class="layer-tag">append-only</span>
-          <h3>Merkle chain</h3>
-          <p>Every entry is hash-linked to its predecessor. No edits, no deletes. Corrections create new entries. The chain is the audit trail — verifiable from genesis to now.</p>
+          <h3>Immutable record</h3>
+          <p>Every entry is hash-linked to its predecessor. No edits, no deletes. Corrections create new entries. The chain is the audit trail — verifiable from the first entry to the latest.</p>
         </div>
         <div class="feature-card reveal reveal-delay-1">
-          <div class="f-icon"><i data-lucide="message-square-text"></i></div>
           <span class="layer-tag">natural language</span>
           <h3>Say what you did</h3>
           <p>"Spent 3 hours on the treasury API." The system extracts a typed contribution, classifies it against the patronage formula, and queues it for approval. Five chain entries from one sentence.</p>
         </div>
         <div class="feature-card reveal reveal-delay-2">
-          <div class="f-icon"><i data-lucide="scale"></i></div>
           <span class="layer-tag">IRC 1385</span>
           <h3>Patronage formula</h3>
-          <p>At period close, surplus is allocated to members based on weighted contributions. The formula execution itself becomes a chain entry — you can see exactly how every allocation was computed.</p>
+          <p>At period close, surplus is allocated to members based on weighted contributions. The formula execution itself becomes a chain entry — every allocation is transparent and reproducible.</p>
         </div>
         <div class="feature-card reveal reveal-delay-3">
-          <div class="f-icon"><i data-lucide="shield-check"></i></div>
           <span class="layer-tag">704(b)</span>
-          <h3>Compliance on chain</h3>
-          <p>The system records not just what happened, but what it checked. Double-entry verification, substantial economic effect tests, and allocation invariants — all chain entries.</p>
+          <h3>Compliance as data</h3>
+          <p>The system records not just what happened, but what it checked. Double-entry verification, substantial economic effect tests, and allocation invariants — all entries in the chain.</p>
         </div>
         <div class="feature-card reveal reveal-delay-4">
-          <div class="f-icon"><i data-lucide="calculator"></i></div>
-          <span class="layer-tag">computed</span>
+          <span class="layer-tag">derived state</span>
           <h3>Capital accounts</h3>
-          <p>Balances aren't stored — they're computed from the chain. Beginning balance + contributions + allocations − distributions = ending balance. State is a view over events.</p>
+          <p>Balances aren't stored — they're computed. Beginning balance + contributions + allocations − distributions = ending balance. State is a view over events, not a separate data store.</p>
         </div>
         <div class="feature-card reveal reveal-delay-5">
-          <div class="f-icon"><i data-lucide="git-branch"></i></div>
-          <span class="layer-tag">on-chain anchoring</span>
-          <h3>Integrity proof</h3>
-          <p>The chain lives off-chain in Supabase. Periodically, the head hash is anchored on Base — a public, timestamped proof that the chain hasn't been tampered with.</p>
+          <span class="layer-tag">integrity</span>
+          <h3>On-chain anchoring</h3>
+          <p>The chain lives off-chain for speed and cost. Periodically, the head hash is anchored on-chain — a public, timestamped proof that the record hasn't been tampered with.</p>
         </div>
       </div>
     </section>
 
     <!-- ===== Three Tools ===== -->
     <section>
-      <div class="label reveal"><i data-lucide="boxes"></i> Composable Tools</div>
+      <div class="label reveal">Composable Tools</div>
       <h2 class="reveal reveal-delay-1">Three tools,<br>one chain</h2>
       <p class="intro reveal reveal-delay-2">
         The patronage system is built from three independent, event-sourced tools. They communicate through the chain, not shared databases. Each tool writes entries; the chain connects them.
@@ -572,7 +541,7 @@
         <div class="tool-card reveal">
           <div class="tool-bar"></div>
           <div class="tool-content">
-            <h3><i data-lucide="landmark"></i> Treasury</h3>
+            <h3>Treasury</h3>
             <p>Double-entry accounting, capital accounts, balance computation, and reporting. Every transaction posts a chain entry with matching debits and credits. Balances are computed views — never stored, always derived.</p>
             <div class="tool-tags">
               <span class="tool-tag">double-entry</span>
@@ -586,7 +555,7 @@
         <div class="tool-card reveal reveal-delay-1">
           <div class="tool-bar"></div>
           <div class="tool-content">
-            <h3><i data-lucide="users"></i> People</h3>
+            <h3>People</h3>
             <p>Member identity, contribution lifecycle, valuation, and approval workflows. Each contribution moves through five stages — submit, validate, value, approve, credit — and each transition is a chain entry.</p>
             <div class="tool-tags">
               <span class="tool-tag">member identity</span>
@@ -600,7 +569,7 @@
         <div class="tool-card reveal reveal-delay-2">
           <div class="tool-bar"></div>
           <div class="tool-content">
-            <h3><i data-lucide="handshake"></i> Agreements</h3>
+            <h3>Agreements</h3>
             <p>Patronage formulas, period close, allocation calculation, distribution scheduling, and governance approval. The formula weights are the cooperative's value statement expressed as arithmetic.</p>
             <div class="tool-tags">
               <span class="tool-tag">patronage formula</span>
@@ -615,74 +584,73 @@
 
     <!-- ===== Contribution lifecycle ===== -->
     <section>
-      <div class="label reveal"><i data-lucide="git-commit-horizontal"></i> Contribution Lifecycle</div>
+      <div class="label reveal">Contribution Lifecycle</div>
       <h2 class="reveal reveal-delay-1">From sentence<br>to capital account</h2>
       <p class="intro reveal reveal-delay-2">
-        Every contribution moves through five stages. Each stage transition is an entry in the chain. One sentence generates a verifiable, auditable trail from natural language to capital account credit.
+        Every contribution moves through five stages. Each stage transition creates an entry in the chain. One sentence generates a verifiable trail from natural language to capital account credit.
       </p>
 
       <div class="steps">
         <div class="step reveal">
           <div class="step-number">1</div>
           <div class="step-content">
-            <h3><i data-lucide="message-square"></i> Submit</h3>
-            <p>Member describes their contribution in natural language. "Facilitated the Wednesday standup" or "deposited $500 operating capital." The NL parser extracts type, duration, and context.</p>
+            <h3>Submit</h3>
+            <p>A member describes their contribution in plain language. "Facilitated the Wednesday standup" or "deposited $500 operating capital." A parser extracts the type, duration, and context.</p>
           </div>
         </div>
 
         <div class="step reveal reveal-delay-1">
           <div class="step-number">2</div>
           <div class="step-content">
-            <h3><i data-lucide="check-circle"></i> Validate</h3>
-            <p>System checks: is this a recognized contribution type? Does the member have standing? Is the period open? Validation passes or returns for clarification.</p>
+            <h3>Validate</h3>
+            <p>Is this a recognized contribution type? Does the member have standing? Is the period open? Validation passes or returns for clarification.</p>
           </div>
         </div>
 
         <div class="step reveal reveal-delay-2">
           <div class="step-number">3</div>
           <div class="step-content">
-            <h3><i data-lucide="coins"></i> Value</h3>
-            <p>Contribution receives a monetary value. Labor is valued at the member's rate × hours. Cash at face value. Revenue at amount received. Community involvement at the cooperative's standard rate.</p>
+            <h3>Value</h3>
+            <p>The contribution receives a monetary value. Labor is valued at the member's rate × hours. Cash at face value. Revenue at amount received. Community involvement at the cooperative's standard rate.</p>
           </div>
         </div>
 
         <div class="step reveal reveal-delay-3">
           <div class="step-number">4</div>
           <div class="step-content">
-            <h3><i data-lucide="stamp"></i> Approve</h3>
-            <p>A steward reviews and approves. Approval creates a chain entry linking the approver to the contribution. This is the governance checkpoint — no contribution credits without human review.</p>
+            <h3>Approve</h3>
+            <p>A steward reviews and approves. The approval entry links the approver to the contribution. This is the governance checkpoint — no contribution credits without human review.</p>
           </div>
         </div>
 
         <div class="step reveal reveal-delay-4">
           <div class="step-number">5</div>
           <div class="step-content">
-            <h3><i data-lucide="landmark"></i> Credit</h3>
-            <p>Treasury posts a double-entry transaction: debit the expense category, credit the member's capital account. The balance updates automatically — computed from the chain, not stored.</p>
+            <h3>Credit</h3>
+            <p>Treasury posts a double-entry transaction: debit the expense category, credit the member's capital account. The balance updates — computed from the chain, not stored.</p>
           </div>
         </div>
       </div>
 
-      <!-- Chain example -->
       <div class="chain-example reveal" style="margin-top: 2.5rem;">
-        <div class="entry"><span class="hash">#42</span> <span class="type">people.contribution.created</span> <span class="detail">→ "3 hours on treasury API"</span></div>
+        <div class="entry"><span class="hash">#42</span> <span class="type">contribution.created</span> <span class="detail">→ "3 hours on treasury API"</span></div>
         <div class="connector">│</div>
-        <div class="entry"><span class="hash">#43</span> <span class="type">people.contribution.submitted</span> <span class="detail">→ type: labor, member: 008</span></div>
+        <div class="entry"><span class="hash">#43</span> <span class="type">contribution.submitted</span> <span class="detail">→ type: labor, member: 008</span></div>
         <div class="connector">│</div>
-        <div class="entry"><span class="hash">#44</span> <span class="type">people.contribution.valued</span> <span class="detail">→ hours: 3, rate: $75, value: $225</span></div>
+        <div class="entry"><span class="hash">#44</span> <span class="type">contribution.valued</span> <span class="detail">→ hours: 3, rate: $75, value: $225</span></div>
         <div class="connector">│</div>
-        <div class="entry"><span class="hash">#45</span> <span class="type">people.contribution.approved</span> <span class="detail">→ approvedBy: steward</span></div>
+        <div class="entry"><span class="hash">#45</span> <span class="type">contribution.approved</span> <span class="detail">→ approvedBy: steward</span></div>
         <div class="connector">│</div>
-        <div class="entry"><span class="hash">#46</span> <span class="type">treasury.transaction.posted</span> <span class="detail">→ debit: labor_expense, credit: capital_008</span></div>
+        <div class="entry"><span class="hash">#46</span> <span class="type">transaction.posted</span> <span class="detail">→ debit: labor_expense, credit: capital_008</span></div>
       </div>
     </section>
 
     <!-- ===== Seven-Layer Pattern Stack ===== -->
     <section style="border-top: 1px solid rgba(255,255,255,0.04);">
-      <div class="label reveal"><i data-lucide="layers"></i> Design Framework</div>
+      <div class="label reveal">Design Framework</div>
       <h2 class="reveal reveal-delay-1">Seven layers</h2>
       <p class="intro reveal reveal-delay-2">
-        Every information system decomposes into a progressive set of design patterns. Each layer depends on the ones beneath it. The stack reads bottom-up, like sedimentary rock. Each chain entry is tagged with its layer — making the graph filterable by abstraction level.
+        Every information system decomposes into a progressive set of design patterns. Each layer depends on the ones beneath it. The stack reads bottom-up, like sedimentary rock. Each chain entry is tagged with its layer.
       </p>
 
       <div class="pattern-stack reveal">
@@ -690,21 +658,21 @@
           <div class="pattern-num">1</div>
           <div class="pattern-info">
             <h4>Identity</h4>
-            <p>Distinguishing one thing from another. Member UUIDs, member numbers, ENS names, account codes, transaction IDs. Without identity, nothing else is possible.</p>
+            <p>Distinguishing one thing from another. Member numbers, account codes, transaction IDs. Without identity, nothing else is possible.</p>
           </div>
         </div>
         <div class="pattern-layer">
           <div class="pattern-num">2</div>
           <div class="pattern-info">
             <h4>State</h4>
-            <p>Recording attributes of identifiable things. Member profiles, account balances, contribution amounts, operating agreement versions. Capital accounts are computed state — derived from events.</p>
+            <p>Recording attributes of identifiable things. Member profiles, account balances, contribution amounts. Capital accounts are derived state — computed from events, not stored directly.</p>
           </div>
         </div>
         <div class="pattern-layer">
           <div class="pattern-num">3</div>
           <div class="pattern-info">
             <h4>Relationship</h4>
-            <p>Connecting identifiable things. REA ontology — Event connects Resource to Agent. Member-to-contribution links. Parent-child accounts. Allocation-to-member.</p>
+            <p>Connecting identifiable things. Member-to-contribution links. Parent-child accounts. Allocation-to-member. The REA ontology: Event connects Resource to Agent.</p>
           </div>
         </div>
         <div class="pattern-layer">
@@ -718,79 +686,78 @@
           <div class="pattern-num">5</div>
           <div class="pattern-info">
             <h4>Flow</h4>
-            <p>Value moving between agents. Patronage allocation: surplus flows to members proportional to contribution. Capital account credits and debits. The patronage formula is a flow specification.</p>
+            <p>Value moving between agents. Surplus flows to members proportional to contribution. The patronage formula is a flow specification — it describes how value moves.</p>
           </div>
         </div>
         <div class="pattern-layer">
           <div class="pattern-num">6</div>
           <div class="pattern-info">
             <h4>Constraint</h4>
-            <p>Rules governing valid states. IRC 704(b) compliance. Double-entry invariant: debits must equal credits. Formula weights must have documented business purpose. Cash distribution rate ≥ 20%.</p>
+            <p>Rules governing valid states. Debits must equal credits. Cash distribution rate ≥ 20%. Formula weights must have documented business purpose.</p>
           </div>
         </div>
         <div class="pattern-layer">
           <div class="pattern-num">7</div>
           <div class="pattern-info">
             <h4>View</h4>
-            <p>Presenting information for a purpose. Member allocation statements, balance sheets, K-1 tax forms, the patronage graph. Views make the chain legible to humans and accountants.</p>
+            <p>Presenting information for a purpose. Member statements, balance sheets, K-1 tax forms, the patronage graph. Views make the chain legible to humans and accountants.</p>
           </div>
         </div>
       </div>
 
       <div class="pull-quote reveal" style="margin-top: 2.5rem;">
         <p>The weights are the cooperative's value statement expressed as arithmetic. A development shop might weight labor at 60%. A sales cooperative might weight revenue at 50%. The only requirement: the weights must have documented business purpose, satisfying the IRS substantiality test.</p>
-        <div class="attribution">— The Patronage Formula, Habitat Pattern Library</div>
       </div>
     </section>
 
     <!-- ===== Founding Members ===== -->
     <section>
-      <div class="label reveal">Chain Genesis</div>
+      <div class="label reveal">Genesis</div>
       <h2 class="reveal reveal-delay-1">The founders</h2>
       <p class="intro reveal reveal-delay-2">
-        Eight founding members. Eight chain entries. The first identities in the Techne perpetual convergence, seeded on the day the LCA was filed.
+        Eight founding members. The first identities in the chain, seeded on the day the LCA was filed.
       </p>
 
       <div class="member-grid">
         <div class="member-card reveal">
           <div class="initials">AN</div>
           <h4>Aaron G Neyer</h4>
-          <span class="member-number">member #001</span>
+          <span class="member-number">001</span>
         </div>
         <div class="member-card reveal reveal-delay-1">
           <div class="initials">BR</div>
           <h4>Benjamin Ross</h4>
-          <span class="member-number">member #002</span>
+          <span class="member-number">002</span>
         </div>
         <div class="member-card reveal reveal-delay-2">
           <div class="initials">JB</div>
           <h4>Jonathan Borichevskiy</h4>
-          <span class="member-number">member #003</span>
+          <span class="member-number">003</span>
         </div>
         <div class="member-card reveal reveal-delay-3">
           <div class="initials">KO</div>
           <h4>Kevin Owocki</h4>
-          <span class="member-number">member #004</span>
+          <span class="member-number">004</span>
         </div>
         <div class="member-card reveal reveal-delay-4">
           <div class="initials">LH</div>
           <h4>Lucian Hymer</h4>
-          <span class="member-number">member #005</span>
+          <span class="member-number">005</span>
         </div>
         <div class="member-card reveal reveal-delay-5">
-          <div class="initials">NM</div>
-          <h4>Neil Mackay Yarnal</h4>
-          <span class="member-number">member #006</span>
-        </div>
-        <div class="member-card reveal reveal-delay-6">
           <div class="initials">SK</div>
           <h4>Savannah Kruger</h4>
-          <span class="member-number">member #007</span>
+          <span class="member-number">006</span>
+        </div>
+        <div class="member-card reveal reveal-delay-6">
+          <div class="initials">NM</div>
+          <h4>Neil Mackay Yarnal</h4>
+          <span class="member-number">007</span>
         </div>
         <div class="member-card reveal">
           <div class="initials">TY</div>
           <h4>Todd Youngblood</h4>
-          <span class="member-number">member #008</span>
+          <span class="member-number">008</span>
         </div>
       </div>
     </section>
@@ -798,7 +765,7 @@
     <!-- ===== CTA ===== -->
     <section class="cta">
       <div class="divider reveal"></div>
-      <div class="label reveal reveal-delay-1">Perpetual Convergence</div>
+      <div class="label reveal reveal-delay-1">Boulder, Colorado</div>
       <h2 class="reveal reveal-delay-2">The chain<br>is growing</h2>
       <p class="lead reveal reveal-delay-3">
         Every contribution adds an entry. Every period close seals a chapter. The cooperative's economic life — visible, verifiable, and permanent.
@@ -822,21 +789,17 @@
         <a href="https://the-habitat.org/patronage/">Patronage</a>
         <a href="https://the-habitat.org/patterns/">Patterns</a>
       </div>
-      <p>commons.id/techne · Perpetual Convergence · RegenHub, LCA · 1515 Walnut Street · Boulder, Colorado</p>
+      <p>Techne · RegenHub, LCA · 1515 Walnut Street · Boulder, Colorado</p>
     </footer>
 
   </div>
 
   <script>
-    // Reveal on scroll
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
-
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>lucide.createIcons();</script>
 
 </body>
 </html>
