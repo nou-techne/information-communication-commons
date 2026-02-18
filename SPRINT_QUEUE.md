@@ -69,6 +69,7 @@
 | Q38 | Techne theme in convergence config (copper/alpine/gold) | Frontend & DevOps (07) | BLOCKED (requires Techne DB row) | 2026-02-18T04:11Z | — |
 | Q39 | Chain explorer page — browse chain entries for any convergence | Frontend & DevOps (07) | DONE (UI ready) | 2026-02-18T04:11Z | 2026-02-18T04:11Z |
 | Q40 | Contribution chain entry types + five-stage lifecycle schema | Technical Lead (00) | DONE | 2026-02-18T04:19Z | 2026-02-18T04:19Z |
+| Q41 | NL contribution parser (LLM extraction → typed contribution) | Technical Lead (00) | DONE | 2026-02-18T04:19Z | 2026-02-18T04:19Z |
 | Q41 | NL contribution parser (rule-based extraction → typed payloads) | Technical Lead (00) | DONE | 2026-02-18T04:21Z | 2026-02-18T04:25Z |
 
 ---
@@ -83,3 +84,16 @@
 - Comprehensive documentation: tio/techne-commons-id/docs/CONTRIBUTION_LIFECYCLE.md
 - Foundation ready for NL parser (Q41), workflow automation (Q42), and double-entry integration (Q43)
 - Commit: 5f2940a (app-src), bb19a47 (tio)
+
+**Q41: NL Contribution Parser**
+- LLM-powered extraction via OpenRouter (Claude 3.5 Sonnet)
+- Parses free-form text → structured contribution (title, category, effort, impact)
+- Confidence scoring (0.0-1.0): auto-submit at ≥0.85, manual review below
+- Batch parsing for meeting notes / multiple contributions
+- Integration modules: contribution-parser.ts + contribution-workflow.ts
+- submitContributionFromNL(): parse → create → optionally submit in one call
+- Preview mode for UI forms (no chain writes)
+- Cost: ~$0.003/contribution (~$0.30/month for 100 contributions)
+- Ready for chat bot integration (Discord/Telegram), voice notes, and form auto-fill
+- Documentation: tio/techne-commons-id/docs/NL_CONTRIBUTION_PARSER.md
+- Commit: 2aa19e2 (app-src), ef45dfc (tio)
