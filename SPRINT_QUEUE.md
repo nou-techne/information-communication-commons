@@ -129,6 +129,7 @@
 | Q98 | Chain status widget (live entry count, members, contributions) | Frontend & DevOps (07) | DONE | 2026-02-18T13:54Z | 2026-02-18T13:56Z |
 | Q99 | Sprint progress dashboard (/progress — all 9 cycles visualized) | Frontend & DevOps (07) | DONE | 2026-02-18T13:56Z | 2026-02-18T14:00Z |
 | Q100 | Techne landing page (/techne — stats, model, navigation) | Frontend & DevOps (07) | DONE | 2026-02-18T14:00Z | 2026-02-18T14:04Z |
+| Q101 | Member directory (/members — founding members from chain) | Frontend & DevOps (07) | DONE | 2026-02-18T14:15Z | 2026-02-18T14:18Z |
 
 ---
 
@@ -224,3 +225,4 @@
 **Q55: On-Chain Hash Anchoring (Base L2)**
 - BLOCKED: Requires smart contract deployment on Base + private key management
 - When unblocked: Will anchor chain head hash for tamper-evidence
+| S91 | +++ MossMycelium redesign of the-habitat.org — complete React SPA rebuild | Habitat Frontend | ACTIVE | 2026-02-18T14:10Z | — |
