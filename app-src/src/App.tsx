@@ -9,7 +9,7 @@ import { ThemeToggle } from './components/ThemeToggle'
 import { ToastContainer } from './components/ui/Toast'
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal'
 import { ErrorBoundary } from './components/ErrorBoundary'
-// ConvergenceSwitcher removed — Techne is default
+import { ConvergenceSwitcher } from './components/ConvergenceSwitcher'
 import { PageLoader } from './components/ui/PageLoader'
 import { Footer } from './components/Footer'
 // Lazy load all page components for code splitting
