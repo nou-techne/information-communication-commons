@@ -229,3 +229,4 @@
 | S91 | +++ MossMycelium redesign of the-habitat.org — complete React SPA rebuild | Habitat Frontend | ACTIVE | 2026-02-18T14:10Z | — |
 | S92 | +++ SEO + favicon revision for co-op.us: commons & cooperative concept | co-op.us Branding | COMPLETE | 2026-02-19T03:45Z | 2026-02-19T03:55Z |
 | S93 | +++ commons.id home page: infrastructure positioning, link to co-op.us + ETHBoulder | commons.id Landing | COMPLETE | 2026-02-19T04:15Z | 2026-02-19T04:30Z |
+| S94 | +++ Hide ETHBoulder elements from co-op.us; retain seeded data | co-op.us App | COMPLETE | 2026-02-19T04:05Z | 2026-02-19T04:20Z |
