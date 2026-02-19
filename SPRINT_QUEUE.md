@@ -232,3 +232,4 @@
 | S94 | +++ Hide ETHBoulder elements from co-op.us; retain seeded data | co-op.us App | COMPLETE | 2026-02-19T04:05Z | 2026-02-19T04:20Z |
 | S95 | +++ Remove graph/dimension/artifact elements from co-op.us Explore; show cooperative home | co-op.us App | COMPLETE | 2026-02-19T04:20Z | 2026-02-19T04:35Z |
 | S96 | +++ Reorganize Techne merkle chain to reflect actual organizer signing dates | Chain / DB | COMPLETE | 2026-02-19T04:35Z | 2026-02-19T04:50Z |
+| S97 | +++ Twice-daily chain batching (sunrise/sunset Boulder): pending_activities table, seal_activity_batch(), cron jobs, batch rhythm UI | co-op.us Chain | COMPLETE | 2026-02-19T04:50Z | 2026-02-19T05:10Z |
