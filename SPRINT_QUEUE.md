@@ -231,3 +231,4 @@
 | S93 | +++ commons.id home page: infrastructure positioning, link to co-op.us + ETHBoulder | commons.id Landing | COMPLETE | 2026-02-19T04:15Z | 2026-02-19T04:30Z |
 | S94 | +++ Hide ETHBoulder elements from co-op.us; retain seeded data | co-op.us App | COMPLETE | 2026-02-19T04:05Z | 2026-02-19T04:20Z |
 | S95 | +++ Remove graph/dimension/artifact elements from co-op.us Explore; show cooperative home | co-op.us App | COMPLETE | 2026-02-19T04:20Z | 2026-02-19T04:35Z |
+| S96 | +++ Reorganize Techne merkle chain to reflect actual organizer signing dates | Chain / DB | COMPLETE | 2026-02-19T04:35Z | 2026-02-19T04:50Z |
