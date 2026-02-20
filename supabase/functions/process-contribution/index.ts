@@ -286,6 +286,50 @@ serve(async (req) => {
       })
       .eq('id', contributionId)
 
+    // Issue cloud reward for sealed contribution (best-effort, non-fatal)
+    try {
+      const participantId: string | null = record.participant_id ?? (
+        await supabase.from('contributions').select('participant_id').eq('id', contributionId).single()
+      ).data?.participant_id ?? null
+
+      if (participantId) {
+        // Infer category from first artifact (same logic as UI inferCategory)
+        const firstArtifact = extraction.artifacts?.[0]
+        const t = (firstArtifact?.type || '').toLowerCase()
+        const r = (firstArtifact?.rea_role || '').toLowerCase()
+        let cloudAmount = 5 // observation / reflection / pattern (default)
+        if (t === 'commitment')              cloudAmount = 30
+        else if (t === 'idea' || t === 'proposal') cloudAmount = 10
+        else if (r === 'event')              cloudAmount = 50
+
+        const rewardTitle = (extraction.contribution_title || 'Contribution').slice(0, 60)
+
+        await supabase.from('cloud_transactions').insert({
+          from_id: null,
+          to_id: participantId,
+          amount: cloudAmount,
+          reason: `Contribution sealed: ${rewardTitle}`,
+        })
+
+        // Increment balance (fetch + upsert to avoid race)
+        const { data: bal } = await supabase
+          .from('cloud_balances')
+          .select('balance')
+          .eq('participant_id', participantId)
+          .single()
+
+        await supabase.from('cloud_balances').upsert({
+          participant_id: participantId,
+          balance: (bal?.balance ?? 0) + cloudAmount,
+          updated_at: new Date().toISOString(),
+        })
+
+        console.log(`Cloud reward: +${cloudAmount} to ${participantId} for "${rewardTitle}"`)
+      }
+    } catch (cloudErr) {
+      console.warn('Cloud reward failed (non-fatal):', String(cloudErr))
+    }
+
     // Set event_temporality on event artifacts (post-ingestion)
     if (extraction.artifacts && Array.isArray(extraction.artifacts)) {
       for (const artifact of extraction.artifacts) {
