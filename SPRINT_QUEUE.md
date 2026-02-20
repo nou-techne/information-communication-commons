@@ -236,3 +236,4 @@
 | S104 | +++ Hub application form on About page: web form → Supabase, $1000/10k cloud deposit framing, formation process | co-op.us About / Hubs | COMPLETE | 2026-02-19T04:50Z | 2026-02-19T05:00Z |
 | S105 | +++ Moon cycle countdown: highlighted "Next Moon Cycle" countdown on /app/moons and /app/chain, explain what happens at cycle turn (batch sealing, patronage snapshot, governance window) | co-op.us Moons / Chain | COMPLETE | 2026-02-20T16:30Z | 2026-02-20T16:31Z |
 | S106 | +++ Revise codebase repo contributions in knowledge tree: replace generic "codebase" entries with proper e/H-LAM/T+S dimensional analysis | co-op.us Tree / DB | COMPLETE | 2026-02-20T16:40Z | 2026-02-20T16:50Z |
+| S107 | +++ Knowledge Graph view on /app/chain: Techne at center, peers radiate outward, contributions branch from peers, REA artifacts (Resource/Event/Agent) as leaf nodes | co-op.us Chain / Graph | COMPLETE | 2026-02-20T23:20Z | 2026-02-20T23:45Z |
