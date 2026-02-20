@@ -10,419 +10,183 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg-0: #0a0a0a;
-      --bg-1: #141414;
-      --bg-2: #1a1a1a;
-      --bg-3: #222222;
-      --border: #2a2a2a;
-      --text: #e5e5e5;
-      --text-dim: #888;
-      --text-muted: #555;
-      --accent: #c4956a;
-      --accent-dim: rgba(196,149,106,0.15);
-      --green: #4ade80;
-      --red: #f87171;
-      --blue: #60a5fa;
+      --bg-0: #0a0a0a; --bg-1: #141414; --bg-2: #1a1a1a; --bg-3: #222222;
+      --border: #2a2a2a; --border-hover: #444;
+      --text: #e5e5e5; --text-dim: #888; --text-muted: #555;
+      --accent: #c4956a; --accent-dim: rgba(196,149,106,0.15);
+      --green: #4ade80; --red: #f87171; --blue: #60a5fa; --purple: #a78bfa; --pink: #f472b6; --yellow: #facc15;
     }
-
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--bg-0);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    a { color: var(--accent); text-decoration: none; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-0); color: var(--text); line-height: 1.6; min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; cursor: pointer; }
     a:hover { text-decoration: underline; }
-
     .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .clickable { cursor: pointer; }
 
     /* Header */
-    header {
-      border-bottom: 1px solid var(--border);
-      padding: 40px 0 30px;
-      text-align: center;
-    }
-    header h1 {
-      font-size: 1.8rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
+    header { border-bottom: 1px solid var(--border); padding: 40px 0 30px; text-align: center; }
+    header h1 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; }
     header h1 span { color: var(--accent); }
-    header p {
-      color: var(--text-dim);
-      margin-top: 6px;
-      font-size: 0.95rem;
-    }
-    .pulse-dot {
-      display: inline-block;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      margin-right: 8px;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+    header p { color: var(--text-dim); margin-top: 6px; font-size: 0.95rem; }
+    .pulse-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-right: 8px; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Breadcrumb */
+    .breadcrumb { padding: 12px 0; font-size: 0.85rem; color: var(--text-dim); display: none; }
+    .breadcrumb.visible { display: block; }
+    .breadcrumb a { color: var(--accent); }
 
     /* Status Bar */
-    .status-bar {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .stat-card {
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-    }
-    .stat-card .label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-dim);
-    }
-    .stat-card .value {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-top: 4px;
-    }
-    .stat-card .sub {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+    .status-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .stat-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); }
+    .stat-card .value { font-size: 1.6rem; font-weight: 700; color: var(--accent); margin-top: 4px; }
+    .stat-card .sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
 
     /* Sections */
     section { padding: 28px 0; border-bottom: 1px solid var(--border); }
     section:last-of-type { border-bottom: none; }
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 16px;
-    }
+    .section-title { font-size: 1rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
 
-    /* Activity Feed */
-    .feed-item {
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-bottom: 8px;
-      animation: fadeIn 0.5s ease-out;
-      transition: border-color 0.2s;
-    }
+    /* Feed Items */
+    .feed-item { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; animation: fadeIn 0.5s ease-out; transition: border-color 0.2s; cursor: pointer; }
     .feed-item:hover { border-color: var(--accent); }
-    .feed-item .title { font-weight: 500; color: var(--text); }
-    .feed-item .meta {
-      display: flex;
-      gap: 16px;
-      margin-top: 6px;
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      flex-wrap: wrap;
-    }
-    .feed-item .hash {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 1px 8px;
-      border-radius: 10px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
+    .feed-item .title { font-weight: 500; }
+    .feed-item .meta { display: flex; gap: 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-dim); flex-wrap: wrap; }
+    .feed-item .hash { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.75rem; color: var(--text-muted); }
+    .status-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
     .status-complete { background: rgba(74,222,128,0.15); color: var(--green); }
     .status-pending { background: rgba(250,204,21,0.15); color: #facc15; }
     .status-processing { background: rgba(96,165,250,0.15); color: var(--blue); }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    /* Detail Panel */
+    .detail-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; backdrop-filter: blur(4px); }
+    .detail-overlay.visible { display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+    .detail-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 12px; max-width: 700px; width: 100%; padding: 28px; position: relative; animation: fadeIn 0.2s ease-out; }
+    .detail-close { position: absolute; top: 16px; right: 16px; background: var(--bg-3); border: 1px solid var(--border); color: var(--text-dim); border-radius: 6px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; transition: border-color 0.2s; }
+    .detail-close:hover { border-color: var(--accent); color: var(--text); }
+    .detail-panel h2 { font-size: 1.3rem; font-weight: 600; margin-bottom: 4px; padding-right: 40px; }
+    .detail-panel .detail-subtitle { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 16px; }
+    .detail-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .detail-section h3 { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px; }
+    .detail-kv { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; font-size: 0.85rem; }
+    .detail-kv .k { color: var(--text-dim); }
+    .detail-kv .v { color: var(--text); word-break: break-all; }
+    .detail-kv .v.mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.8rem; }
+    .detail-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; margin: 2px; }
+    .detail-artifact { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; }
+    .detail-artifact:hover { border-color: var(--accent); }
+    .detail-artifact .da-title { font-weight: 500; font-size: 0.9rem; }
+    .detail-artifact .da-meta { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
+    .detail-artifact .da-summary { font-size: 0.85rem; color: var(--text-dim); margin-top: 6px; line-height: 1.5; }
+    .detail-rel { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .detail-rel:last-child { border-bottom: none; }
+    .detail-rel .rel-type { color: var(--accent); font-size: 0.75rem; text-transform: uppercase; font-weight: 600; min-width: 80px; }
+    .detail-rel .rel-target { color: var(--text); cursor: pointer; }
+    .detail-rel .rel-target:hover { color: var(--accent); }
+    .participant-link { color: var(--accent); cursor: pointer; }
+    .participant-link:hover { text-decoration: underline; }
+    .content-block { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6; color: var(--text-dim); white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
 
     /* Graph Stats */
-    .graph-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .graph-panel {
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-    }
-    .graph-panel h3 {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 12px;
-    }
-    .bar-row {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-      gap: 10px;
-    }
-    .bar-label {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      min-width: 90px;
-      text-align: right;
-    }
-    .bar-track {
-      flex: 1;
-      height: 20px;
-      background: var(--bg-3);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .bar-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.6s ease-out;
-      display: flex;
-      align-items: center;
-      padding-left: 8px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--bg-0);
-    }
-
-    /* Dimension bars */
-    .dim-e { background: #4ade80; }
-    .dim-H { background: #c4956a; }
-    .dim-L { background: #60a5fa; }
-    .dim-A { background: #a78bfa; }
-    .dim-M { background: #f472b6; }
-    .dim-T { background: #facc15; }
-    .dim-S { background: #c084fc; }
+    .graph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .graph-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    .graph-panel h3 { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px; }
+    .bar-row { display: flex; align-items: center; margin-bottom: 8px; gap: 10px; cursor: pointer; }
+    .bar-row:hover .bar-label { color: var(--text); }
+    .bar-label { font-size: 0.8rem; color: var(--text-dim); min-width: 90px; text-align: right; transition: color 0.2s; }
+    .bar-track { flex: 1; height: 20px; background: var(--bg-3); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease-out; display: flex; align-items: center; padding-left: 8px; font-size: 0.7rem; font-weight: 600; color: var(--bg-0); }
+    .dim-e{background:#4ade80} .dim-H{background:#c4956a} .dim-L{background:#60a5fa} .dim-A{background:#a78bfa} .dim-M{background:#f472b6} .dim-T{background:#facc15} .dim-S{background:#c084fc}
 
     /* Chain */
-    .chain-box {
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.85rem;
-    }
-    .chain-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    .chain-box { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 20px; font-family: 'SF Mono','Fira Code',monospace; font-size: 0.85rem; }
+    .chain-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); }
     .chain-row:last-child { border-bottom: none; }
     .chain-label { color: var(--text-dim); }
     .chain-value { color: var(--text); }
-    .chain-ok { color: var(--green); }
-    .chain-fail { color: var(--red); }
+    .chain-ok { color: var(--green); } .chain-fail { color: var(--red); }
 
     /* Search */
-    .search-box {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .search-box input {
-      flex: 1;
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+    .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
+    .search-box input { flex: 1; background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
     .search-box input:focus { border-color: var(--accent); }
     .search-box input::placeholder { color: var(--text-muted); }
-    .search-box button {
-      background: var(--accent);
-      color: var(--bg-0);
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-family: inherit;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
+    .search-box button { background: var(--accent); color: var(--bg-0); border: none; border-radius: 8px; padding: 10px 20px; font-family: inherit; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: opacity 0.2s; }
     .search-box button:hover { opacity: 0.85; }
     .search-results { min-height: 40px; }
-    .search-result {
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 8px;
-    }
+    .search-result { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; }
+    .search-result:hover { border-color: var(--accent); }
     .search-result .sr-title { font-weight: 500; }
     .search-result .sr-meta { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
     .search-result .sr-summary { font-size: 0.85rem; color: var(--text-dim); margin-top: 6px; }
 
-    /* Footer */
-    footer {
-      padding: 24px 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      border-top: 1px solid var(--border);
-    }
-    footer a { color: var(--text-dim); }
-    .refresh-note {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-align: right;
-      margin-top: 8px;
-    }
-
     /* Agent Profiles */
-    .agent-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
-    }
-    .agent-card {
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-      cursor: pointer;
-      transition: border-color 0.2s, transform 0.15s;
-    }
+    .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .agent-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 10px; padding: 20px; cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
     .agent-card:hover { border-color: var(--accent); transform: translateY(-2px); }
     .agent-card.expanded { grid-column: 1 / -1; }
-    .agent-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 12px;
-    }
-    .agent-avatar {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: var(--accent-dim);
-      border: 2px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--accent);
-      flex-shrink: 0;
-    }
+    .agent-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .agent-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700; color: var(--accent); flex-shrink: 0; }
     .agent-name { font-size: 1.1rem; font-weight: 600; }
-    .agent-type {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-    }
-    .agent-craft {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      background: var(--accent-dim);
-      color: var(--accent);
-      margin-left: 8px;
-    }
-    .agent-bio {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      line-height: 1.5;
-      margin-bottom: 12px;
-    }
-    .agent-stats {
-      display: flex;
-      gap: 20px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-    .agent-stat .num {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-    .agent-stat .lbl {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-    .agent-detail {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-    .agent-detail h4 {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 10px;
-    }
-    .agent-contribs-list {
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    .agent-contrib-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.85rem;
-    }
+    .agent-type { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+    .agent-craft { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; background: var(--accent-dim); color: var(--accent); margin-left: 8px; }
+    .agent-bio { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 12px; }
+    .agent-stats { display: flex; gap: 20px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .agent-stat .num { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+    .agent-stat .lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+    .agent-detail { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .agent-detail h4 { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px; }
+    .agent-contribs-list { max-height: 300px; overflow-y: auto; }
+    .agent-contrib-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; cursor: pointer; transition: color 0.2s; }
+    .agent-contrib-row:hover .agent-contrib-title { color: var(--accent); }
     .agent-contrib-row:last-child { border-bottom: none; }
     .agent-contrib-title { color: var(--text); flex: 1; }
     .agent-contrib-time { color: var(--text-muted); font-size: 0.75rem; margin-left: 12px; white-space: nowrap; }
     .dim-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
-    .dim-pill {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--bg-0);
-    }
+    .dim-pill { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--bg-0); }
     .dim-pill.locked { opacity: 0.2; }
 
+    /* Artifact list (dimension/type drilldown) */
+    .artifact-list-item { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; }
+    .artifact-list-item:hover { border-color: var(--accent); }
+    .artifact-list-item .ali-title { font-weight: 500; }
+    .artifact-list-item .ali-meta { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
+    .artifact-list-item .ali-summary { font-size: 0.85rem; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+
+    /* Inline drilldown (replaces section content temporarily) */
+    .drilldown { animation: fadeIn 0.3s ease-out; }
+    .drilldown-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .drilldown-back { background: var(--bg-3); border: 1px solid var(--border); color: var(--text-dim); border-radius: 6px; padding: 4px 12px; cursor: pointer; font-size: 0.85rem; transition: border-color 0.2s; }
+    .drilldown-back:hover { border-color: var(--accent); color: var(--text); }
+    .drilldown-title { font-size: 1.1rem; font-weight: 600; }
+    .load-more { text-align: center; padding: 12px; }
+    .load-more button { background: var(--bg-3); border: 1px solid var(--border); color: var(--text-dim); border-radius: 8px; padding: 8px 20px; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+    .load-more button:hover { border-color: var(--accent); color: var(--text); }
+
     .empty { color: var(--text-muted); font-style: italic; padding: 20px; text-align: center; }
+    .refresh-note { font-size: 0.75rem; color: var(--text-muted); text-align: right; margin-top: 8px; }
+    footer { padding: 24px 0; text-align: center; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); }
+    footer a { color: var(--text-dim); }
 
     @media (max-width: 640px) {
       header h1 { font-size: 1.4rem; }
       .graph-grid { grid-template-columns: 1fr; }
       .status-bar { grid-template-columns: repeat(2, 1fr); }
+      .detail-overlay.visible { padding: 20px 10px; }
+      .detail-panel { padding: 20px; }
+      .detail-kv { grid-template-columns: 100px 1fr; }
     }
   </style>
 </head>
 <body>
+
+<!-- Detail Overlay -->
+<div class="detail-overlay" id="detail-overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-panel" id="detail-panel"></div>
+</div>
 
 <header>
   <div class="container">
@@ -432,18 +196,16 @@
 </header>
 
 <main class="container">
-
-  <!-- Status Bar -->
   <div class="status-bar" id="status-bar">
-    <div class="stat-card">
+    <div class="stat-card" onclick="showArtifactList()">
       <div class="label">Artifacts</div>
       <div class="value" id="s-artifacts">—</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" onclick="showContributionList()">
       <div class="label">Contributions</div>
       <div class="value" id="s-contributions">—</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" onclick="showParticipantList()">
       <div class="label">Participants</div>
       <div class="value" id="s-participants">—</div>
     </div>
@@ -454,20 +216,17 @@
     </div>
   </div>
 
-  <!-- Agent Profiles -->
   <section>
     <div class="section-title">Agent Profiles</div>
     <div class="agent-grid" id="agent-grid"><div class="empty">Loading agents...</div></div>
   </section>
 
-  <!-- Live Activity Feed -->
   <section>
     <div class="section-title">Live Activity Feed</div>
     <div id="activity-feed"><div class="empty">Loading...</div></div>
     <div class="refresh-note" id="refresh-note"></div>
   </section>
 
-  <!-- Knowledge Graph Stats + Dimensions -->
   <section>
     <div class="section-title">Knowledge Graph</div>
     <div class="graph-grid">
@@ -487,13 +246,11 @@
     <div id="dimension-bars"></div>
   </section>
 
-  <!-- Chain Integrity -->
   <section>
     <div class="section-title">Chain Integrity</div>
     <div class="chain-box" id="chain-box"><div class="empty">Loading...</div></div>
   </section>
 
-  <!-- Search -->
   <section>
     <div class="section-title">Search the Commons</div>
     <div class="search-box">
@@ -502,7 +259,6 @@
     </div>
     <div class="search-results" id="search-results"></div>
   </section>
-
 </main>
 
 <footer>
@@ -515,51 +271,246 @@
 <script>
 const API = 'https://hvbdpgkdcdskhpbdeeim.supabase.co/functions/v1/api';
 let lastContribIds = new Set();
+const dimColors = { e:'#4ade80', H:'#c4956a', L:'#60a5fa', A:'#a78bfa', M:'#f472b6', T:'#facc15', S:'#c084fc' };
+const dimNames = { e:'Ecology', H:'Human', L:'Language', A:'Artifacts', M:'Methodology', T:'Training', S:'Solar Cycles' };
+const dimOrder = ['e','H','L','A','M','T','S'];
+const typeColors = { idea:'#5b9de4', proposal:'#3d7cc9', commitment:'#f4d9a0', pattern:'#7ccfb8', synthesis:'#a8d4f0', question:'#c4b5fd', reflection:'#fca5a5' };
+let participantCache = {};
 
-function truncHash(h) {
-  if (!h || h.length < 16) return h || '—';
-  return h.slice(0, 8) + '...' + h.slice(-4);
-}
-
+// Utilities
+function truncHash(h) { if (!h || h.length < 16) return h || '—'; return h.slice(0,8) + '...' + h.slice(-4); }
 function relTime(iso) {
   const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return mins + ' min ago';
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return hrs + 'h ago';
-  const days = Math.floor(hrs / 24);
-  return days + 'd ago';
+  const m = Math.floor(diff/60000);
+  if (m < 1) return 'just now'; if (m < 60) return m + ' min ago';
+  const h = Math.floor(m/60); if (h < 24) return h + 'h ago';
+  return Math.floor(h/24) + 'd ago';
+}
+function absTime(iso) { return new Date(iso).toLocaleString(); }
+function statusClass(s) { return s === 'complete' ? 'status-complete' : s === 'pending' ? 'status-pending' : 'status-processing'; }
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+async function fetchJSON(path) { const r = await fetch(API + path); return r.json(); }
+
+// Detail panel
+function openDetail(html) {
+  document.getElementById('detail-panel').innerHTML = `<div class="detail-close" onclick="closeDetail()">&times;</div>` + html;
+  document.getElementById('detail-overlay').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+// Show contribution detail
+async function showContribution(id) {
+  openDetail('<div class="empty">Loading contribution...</div>');
+  try {
+    // Fetch contribution + its artifacts
+    const [contribs] = await Promise.all([fetchJSON('/contributions?limit=100&status=complete')]);
+    const c = (contribs.data || []).find(x => x.id === id);
+    if (!c) { openDetail('<div class="empty">Contribution not found.</div>'); return; }
+
+    // Look up participant name
+    let authorName = truncHash(c.participant_id || '');
+    if (c.participant_id && participantCache[c.participant_id]) {
+      authorName = participantCache[c.participant_id].name;
+    }
+
+    let html = `<h2>${esc(c.title || 'Untitled contribution')}</h2>`;
+    html += `<div class="detail-subtitle"><span class="status-badge ${statusClass(c.status)}">${c.status}</span> · ${relTime(c.created_at)}</div>`;
+    html += `<div class="detail-kv">
+      <span class="k">Sequence</span><span class="v">${c.seq || '—'}</span>
+      <span class="k">Author</span><span class="v">${c.participant_id ? `<span class="participant-link" onclick="showParticipant('${c.participant_id}')">${esc(authorName)}</span>` : 'Anonymous'}</span>
+      <span class="k">Submitted</span><span class="v">${absTime(c.created_at)}</span>
+      <span class="k">Chain Hash</span><span class="v mono">${c.chain_hash || 'pending batch'}</span>
+    </div>`;
+
+    openDetail(html);
+  } catch(e) { openDetail('<div class="empty">Failed to load contribution.</div>'); }
 }
 
-function statusClass(s) {
-  if (s === 'complete') return 'status-complete';
-  if (s === 'pending') return 'status-pending';
-  return 'status-processing';
+// Show artifact detail
+async function showArtifact(id) {
+  openDetail('<div class="empty">Loading artifact...</div>');
+  try {
+    const a = await fetchJSON('/artifacts/' + id);
+    if (a.error) { openDetail('<div class="empty">Artifact not found.</div>'); return; }
+
+    let html = `<h2>${esc(a.title || 'Untitled')}</h2>`;
+    html += `<div class="detail-subtitle">${a.type || ''} ${a.rea_role ? '· ' + a.rea_role : ''} · ${relTime(a.created_at)}</div>`;
+
+    if (a.summary) html += `<p style="color:var(--text-dim);margin:12px 0;line-height:1.6">${esc(a.summary)}</p>`;
+
+    // Tags
+    const tags = a.tags || [];
+    if (tags.length > 0) {
+      html += `<div style="margin:12px 0">`;
+      tags.forEach(t => {
+        const dimKey = t.replace('hlamt:','');
+        const color = dimColors[dimKey] || 'var(--accent)';
+        html += `<span class="detail-tag" style="background:${color}20;color:${color};cursor:pointer" onclick="showDimensionArtifacts('${dimKey}')">${esc(t)}</span>`;
+      });
+      html += `</div>`;
+    }
+
+    // Metadata
+    html += `<div class="detail-section"><h3>Details</h3><div class="detail-kv">
+      <span class="k">ID</span><span class="v mono">${a.id}</span>
+      <span class="k">Type</span><span class="v">${a.type || '—'}</span>
+      <span class="k">REA Role</span><span class="v">${a.rea_role || '—'}</span>
+      <span class="k">State</span><span class="v">${a.state || '—'}</span>
+      <span class="k">Created</span><span class="v">${absTime(a.created_at)}</span>
+    </div></div>`;
+
+    // Relationships
+    const rels = a.relationships || [];
+    if (rels.length > 0) {
+      html += `<div class="detail-section"><h3>Relationships (${rels.length})</h3>`;
+      rels.forEach(r => {
+        html += `<div class="detail-rel">
+          <span class="rel-type">${r.type}</span>
+          <span class="rel-target" onclick="showArtifact('${r.target_id}')">${truncHash(r.target_id)}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    openDetail(html);
+  } catch(e) { openDetail('<div class="empty">Failed to load artifact.</div>'); }
 }
 
-function renderBars(container, data, colorFn) {
-  const el = document.getElementById(container);
-  const max = Math.max(...Object.values(data), 1);
-  el.innerHTML = Object.entries(data)
-    .sort((a,b) => b[1] - a[1])
-    .map(([k, v]) => `
-      <div class="bar-row">
-        <div class="bar-label">${k}</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${(v/max)*100}%;background:${colorFn(k)}">${v}</div>
-        </div>
-      </div>
-    `).join('');
+// Show participant detail
+async function showParticipant(id) {
+  openDetail('<div class="empty">Loading participant...</div>');
+  try {
+    const p = await fetchJSON('/participants/' + id);
+    if (p.error) { openDetail('<div class="empty">Participant not found.</div>'); return; }
+    participantCache[id] = p;
+
+    let html = `<h2>${esc(p.name || 'Unknown')}</h2>`;
+    html += `<div class="detail-subtitle">${p.affiliation ? esc(p.affiliation) + ' · ' : ''}${p.location || ''}</div>`;
+    if (p.bio) html += `<p style="color:var(--text-dim);margin:12px 0;line-height:1.6">${esc(p.bio)}</p>`;
+
+    // Skills & interests
+    const skills = p.skills || [];
+    const interests = p.interests || [];
+    if (skills.length > 0 || interests.length > 0) {
+      html += `<div style="margin:12px 0">`;
+      skills.forEach(s => { html += `<span class="detail-tag" style="background:var(--accent-dim);color:var(--accent)">${esc(s)}</span>`; });
+      interests.forEach(i => { html += `<span class="detail-tag" style="background:rgba(96,165,250,0.15);color:var(--blue)">${esc(i)}</span>`; });
+      html += `</div>`;
+    }
+
+    html += `<div class="detail-section"><h3>Details</h3><div class="detail-kv">
+      <span class="k">ID</span><span class="v mono">${p.id}</span>
+      <span class="k">Joined</span><span class="v">${absTime(p.created_at)}</span>
+    </div></div>`;
+
+    // Recent contributions by this participant
+    const contribs = await fetchJSON('/contributions?limit=50&status=complete');
+    const mine = (contribs.data || []).filter(c => c.participant_id === id);
+    if (mine.length > 0) {
+      html += `<div class="detail-section"><h3>Contributions (${mine.length})</h3>`;
+      mine.forEach(c => {
+        html += `<div class="detail-artifact" onclick="showContribution('${c.id}')">
+          <div class="da-title">${esc(c.title || 'Untitled')}</div>
+          <div class="da-meta"><span class="status-badge ${statusClass(c.status)}">${c.status}</span> · ${relTime(c.created_at)}</div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    openDetail(html);
+  } catch(e) { openDetail('<div class="empty">Failed to load participant.</div>'); }
 }
 
-const dimColors = { e:'#4ade80', H:'#c4956a', L:'#60a5fa', A:'#a78bfa', M:'#f472b6', T:'#facc15', S:'#c084fc' };
-
-async function fetchJSON(path) {
-  const r = await fetch(API + path);
-  return r.json();
+// Show artifacts filtered by dimension
+async function showDimensionArtifacts(dimKey) {
+  const name = dimNames[dimKey] || dimKey;
+  openDetail(`<div class="empty">Loading ${name} artifacts...</div>`);
+  try {
+    const d = await fetchJSON('/artifacts?dimension=' + dimKey + '&limit=50');
+    let html = `<h2>${dimKey}/ ${esc(name)}</h2>`;
+    html += `<div class="detail-subtitle">${(d.data||[]).length} of ${d.total||0} artifacts in this dimension</div>`;
+    if (!d.data || d.data.length === 0) {
+      html += `<div class="empty">No artifacts tagged with this dimension yet.</div>`;
+    } else {
+      d.data.forEach(a => {
+        const color = typeColors[a.type] || 'var(--text-dim)';
+        html += `<div class="detail-artifact" onclick="showArtifact('${a.id}')">
+          <div class="da-title">${esc(a.title || 'Untitled')}</div>
+          <div class="da-meta"><span style="color:${color}">${a.type}</span> ${a.rea_role ? '· ' + a.rea_role : ''} · ${relTime(a.created_at)}</div>
+          ${a.summary ? `<div class="da-summary">${esc(a.summary)}</div>` : ''}
+        </div>`;
+      });
+    }
+    openDetail(html);
+  } catch(e) { openDetail('<div class="empty">Failed to load dimension artifacts.</div>'); }
 }
 
+// Show artifacts by type
+async function showArtifactsByType(type) {
+  openDetail(`<div class="empty">Loading ${type} artifacts...</div>`);
+  try {
+    const d = await fetchJSON('/artifacts?type=' + type + '&limit=50');
+    let html = `<h2>${esc(type.charAt(0).toUpperCase() + type.slice(1))} Artifacts</h2>`;
+    html += `<div class="detail-subtitle">${(d.data||[]).length} of ${d.total||0} total</div>`;
+    (d.data||[]).forEach(a => {
+      html += `<div class="detail-artifact" onclick="showArtifact('${a.id}')">
+        <div class="da-title">${esc(a.title || 'Untitled')}</div>
+        <div class="da-meta">${a.rea_role || ''} · ${relTime(a.created_at)}</div>
+        ${a.summary ? `<div class="da-summary">${esc(a.summary)}</div>` : ''}
+      </div>`;
+    });
+    openDetail(html);
+  } catch(e) { openDetail('<div class="empty">Failed to load artifacts.</div>'); }
+}
+
+// Stat card drilldowns
+async function showArtifactList() {
+  openDetail('<div class="empty">Loading artifacts...</div>');
+  const d = await fetchJSON('/artifacts?limit=30');
+  let html = `<h2>All Artifacts</h2><div class="detail-subtitle">${d.total || 0} total</div>`;
+  (d.data||[]).forEach(a => {
+    const color = typeColors[a.type] || 'var(--text-dim)';
+    html += `<div class="detail-artifact" onclick="showArtifact('${a.id}')">
+      <div class="da-title">${esc(a.title || 'Untitled')}</div>
+      <div class="da-meta"><span style="color:${color}">${a.type}</span> ${a.rea_role ? '· '+a.rea_role : ''} · ${relTime(a.created_at)}</div>
+      ${a.summary ? `<div class="da-summary">${esc(a.summary)}</div>` : ''}
+    </div>`;
+  });
+  openDetail(html);
+}
+async function showContributionList() {
+  openDetail('<div class="empty">Loading contributions...</div>');
+  const d = await fetchJSON('/contributions?limit=50&status=complete');
+  let html = `<h2>All Contributions</h2><div class="detail-subtitle">${(d.data||[]).length} shown</div>`;
+  (d.data||[]).forEach(c => {
+    html += `<div class="detail-artifact" onclick="showContribution('${c.id}')">
+      <div class="da-title">${esc(c.title || 'Untitled')}</div>
+      <div class="da-meta"><span class="status-badge ${statusClass(c.status)}">${c.status}</span> · #${c.seq||'—'} · ${relTime(c.created_at)}</div>
+    </div>`;
+  });
+  openDetail(html);
+}
+async function showParticipantList() {
+  openDetail('<div class="empty">Loading participants...</div>');
+  const d = await fetchJSON('/participants?limit=50');
+  let html = `<h2>All Participants</h2><div class="detail-subtitle">${(d.data||[]).length} total</div>`;
+  (d.data||[]).forEach(p => {
+    participantCache[p.id] = p;
+    html += `<div class="detail-artifact" onclick="showParticipant('${p.id}')">
+      <div class="da-title">${esc(p.name || 'Unknown')}</div>
+      <div class="da-meta">${p.affiliation ? esc(p.affiliation) + ' · ' : ''}${p.location || ''}</div>
+      ${p.bio ? `<div class="da-summary">${esc(p.bio.slice(0,120))}${p.bio.length>120?'...':''}</div>` : ''}
+    </div>`;
+  });
+  openDetail(html);
+}
+
+// Status
 async function loadStatus() {
   try {
     const d = await fetchJSON('/status');
@@ -568,24 +519,33 @@ async function loadStatus() {
     document.getElementById('s-participants').textContent = d.participants;
     document.getElementById('s-chain-seq').textContent = d.chain ? '#' + d.chain.seq : '—';
     document.getElementById('s-chain-hash').textContent = d.chain ? truncHash(d.chain.hash) : '';
-  } catch(e) { console.error('status', e); }
+  } catch(e) {}
 }
 
+// Feed
 async function loadFeed() {
   try {
     const d = await fetchJSON('/contributions?limit=20&status=complete');
     const el = document.getElementById('activity-feed');
-    if (!d.data || d.data.length === 0) {
-      el.innerHTML = '<div class="empty">No contributions yet. The agents haven\'t started.</div>';
-      return;
+    if (!d.data || d.data.length === 0) { el.innerHTML = '<div class="empty">No contributions yet.</div>'; return; }
+
+    // Cache participant names
+    const pids = [...new Set((d.data).map(c => c.participant_id).filter(Boolean))];
+    for (const pid of pids) {
+      if (!participantCache[pid]) {
+        try { participantCache[pid] = await fetchJSON('/participants/' + pid); } catch(e) {}
+      }
     }
+
     const newIds = new Set(d.data.map(c => c.id));
     el.innerHTML = d.data.map(c => {
       const isNew = !lastContribIds.has(c.id) && lastContribIds.size > 0;
-      return `<div class="feed-item" ${isNew ? 'style="animation:fadeIn 0.5s ease-out"' : ''}>
-        <div class="title">${c.title || 'Untitled contribution'}</div>
+      const author = c.participant_id && participantCache[c.participant_id] ? participantCache[c.participant_id].name : '';
+      return `<div class="feed-item" onclick="showContribution('${c.id}')" ${isNew ? 'style="animation:fadeIn 0.5s ease-out"' : ''}>
+        <div class="title">${esc(c.title || 'Untitled contribution')}</div>
         <div class="meta">
           <span class="status-badge ${statusClass(c.status)}">${c.status}</span>
+          ${author ? `<span class="participant-link" onclick="event.stopPropagation();showParticipant('${c.participant_id}')">${esc(author)}</span>` : ''}
           <span>#${c.seq || '—'}</span>
           <span>${relTime(c.created_at)}</span>
           <span class="hash">${truncHash(c.chain_hash)}</span>
@@ -594,61 +554,68 @@ async function loadFeed() {
     }).join('');
     lastContribIds = newIds;
     document.getElementById('refresh-note').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
-  } catch(e) { console.error('feed', e); }
+  } catch(e) {}
 }
 
+// Graph with clickable bars
 async function loadGraph() {
   try {
     const d = await fetchJSON('/graph');
     const hue = (i) => `hsl(${30 + i * 40}, 60%, 60%)`;
-    renderBars('node-bars', d.nodes || {}, (k) => {
-      const keys = Object.keys(d.nodes);
-      return hue(keys.indexOf(k));
-    });
-    renderBars('edge-bars', d.edges || {}, (k) => {
-      const keys = Object.keys(d.edges);
-      return hue(keys.indexOf(k) + 5);
-    });
-  } catch(e) { console.error('graph', e); }
+    const nodeEl = document.getElementById('node-bars');
+    const edgeEl = document.getElementById('edge-bars');
+    const nodes = d.nodes || {};
+    const edges = d.edges || {};
+    const nMax = Math.max(...Object.values(nodes), 1);
+    const eMax = Math.max(...Object.values(edges), 1);
+
+    nodeEl.innerHTML = Object.entries(nodes).sort((a,b)=>b[1]-a[1]).map(([k,v],i) => `
+      <div class="bar-row" onclick="showArtifactsByType('${k}')">
+        <div class="bar-label">${k}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(v/nMax)*100}%;background:${typeColors[k]||hue(i)}">${v}</div></div>
+      </div>`).join('');
+
+    edgeEl.innerHTML = Object.entries(edges).sort((a,b)=>b[1]-a[1]).map(([k,v],i) => `
+      <div class="bar-row">
+        <div class="bar-label">${k}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(v/eMax)*100}%;background:${hue(i+5)}">${v}</div></div>
+      </div>`).join('');
+  } catch(e) {}
 }
 
+// Dimension bars (clickable)
 async function loadDimensions() {
   try {
     const d = await fetchJSON('/dimensions');
     const el = document.getElementById('dimension-bars');
-    const dims = (d.dimensions || []).sort((a,b) => {
-      const order = 'eHLAMTS';
-      return order.indexOf(a.key) - order.indexOf(b.key);
-    });
+    const dims = (d.dimensions||[]).sort((a,b) => dimOrder.indexOf(a.key) - dimOrder.indexOf(b.key));
     const max = Math.max(...dims.map(d => d.count), 1);
     el.innerHTML = dims.map(dim => `
-      <div class="bar-row">
-        <div class="bar-label">${dim.key}/</div>
-        <div class="bar-track">
-          <div class="bar-fill dim-${dim.key}" style="width:${(dim.count/max)*100}%">${dim.count}</div>
-        </div>
-      </div>
-    `).join('');
-  } catch(e) { console.error('dimensions', e); }
+      <div class="bar-row" onclick="showDimensionArtifacts('${dim.key}')">
+        <div class="bar-label" title="${dimNames[dim.key]||dim.key}">${dim.key}/</div>
+        <div class="bar-track"><div class="bar-fill dim-${dim.key}" style="width:${(dim.count/max)*100}%">${dim.count}</div></div>
+      </div>`).join('');
+  } catch(e) {}
 }
 
+// Chain
 async function loadChain() {
   try {
     const d = await fetchJSON('/chain');
     const el = document.getElementById('chain-box');
-    const h = d.head || {};
-    const v = d.verification || {};
-    const ok = v.is_valid !== false;
+    const h = d.head || {}; const v = d.verification || {};
+    const ok = v.chain_intact !== false;
     el.innerHTML = `
-      <div class="chain-row"><span class="chain-label">Status</span><span class="${ok ? 'chain-ok' : 'chain-fail'}">${ok ? 'Intact — all hashes verified' : 'BROKEN — integrity failure'}</span></div>
-      <div class="chain-row"><span class="chain-label">Head Seq</span><span class="chain-value">${h.head_seq || '—'}</span></div>
-      <div class="chain-row"><span class="chain-label">Head Hash</span><span class="chain-value">${truncHash(h.head_hash)}</span></div>
-      <div class="chain-row"><span class="chain-label">Total Entries</span><span class="chain-value">${v.total_entries || h.head_seq || '—'}</span></div>
-      ${v.checked_at ? `<div class="chain-row"><span class="chain-label">Verified</span><span class="chain-value">${relTime(v.checked_at)}</span></div>` : ''}
+      <div class="chain-row"><span class="chain-label">Status</span><span class="${ok?'chain-ok':'chain-fail'}">${ok?'Intact':'Integrity issue at seq '+v.broken_at_seq}</span></div>
+      <div class="chain-row"><span class="chain-label">Head Seq</span><span class="chain-value">${h.head_seq||'—'}</span></div>
+      <div class="chain-row"><span class="chain-label">Head Hash</span><span class="chain-value">${h.head_hash||'—'}</span></div>
+      <div class="chain-row"><span class="chain-label">Valid Links</span><span class="chain-value">${v.valid_links||0} / ${v.total_links||0}</span></div>
+      <div class="chain-row"><span class="chain-label">Genesis Hash</span><span class="chain-value">${truncHash(v.genesis_hash)}</span></div>
     `;
-  } catch(e) { console.error('chain', e); }
+  } catch(e) {}
 }
 
+// Search (clickable results)
 async function doSearch() {
   const q = document.getElementById('search-input').value.trim();
   const el = document.getElementById('search-results');
@@ -657,82 +624,60 @@ async function doSearch() {
   try {
     const d = await fetchJSON('/search?q=' + encodeURIComponent(q));
     const results = d.results || [];
-    if (results.length === 0) {
-      el.innerHTML = '<div class="empty">No results found.</div>';
-      return;
-    }
+    if (results.length === 0) { el.innerHTML = '<div class="empty">No results found.</div>'; return; }
     el.innerHTML = results.map(r => `
-      <div class="search-result">
-        <div class="sr-title">${r.title || 'Untitled'}</div>
-        <div class="sr-meta">${r.type || ''} ${r.rea_role ? '· ' + r.rea_role : ''}</div>
-        ${r.summary ? `<div class="sr-summary">${r.summary}</div>` : ''}
-      </div>
-    `).join('');
-  } catch(e) {
-    el.innerHTML = '<div class="empty">Search failed.</div>';
-  }
+      <div class="search-result" onclick="showArtifact('${r.id}')">
+        <div class="sr-title">${esc(r.title || 'Untitled')}</div>
+        <div class="sr-meta">${r.type || ''} ${r.rea_role ? '· '+r.rea_role : ''} ${r.rank ? '· relevance '+r.rank.toFixed(2) : ''}</div>
+        ${r.summary ? `<div class="sr-summary">${esc(r.summary)}</div>` : ''}
+      </div>`).join('');
+  } catch(e) { el.innerHTML = '<div class="empty">Search failed.</div>'; }
 }
-
-document.getElementById('search-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doSearch();
-});
+document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 
 // Agent Profiles
-const dimOrder = ['e','H','L','A','M','T','S'];
 let agentCache = {};
-
 function dimPills(unlocked) {
   return dimOrder.map(d => {
     const on = unlocked && unlocked[d];
-    const bg = dimColors[d] || '#888';
-    return `<span class="dim-pill ${on ? '' : 'locked'}" style="background:${bg}" title="${d}/ ${on ? 'unlocked' : 'locked'}">${d}</span>`;
+    return `<span class="dim-pill ${on?'':'locked'}" style="background:${dimColors[d]||'#888'}" title="${d}/ ${dimNames[d]||d}">${d}</span>`;
   }).join('');
 }
-
-function craftLabel(primary, secondary) {
-  if (!primary) return '';
-  const p = primary.charAt(0).toUpperCase() + primary.slice(1);
-  if (!secondary) return p;
-  const s = secondary.charAt(0).toUpperCase() + secondary.slice(1);
-  return p + ' × ' + s;
+function craftLabel(p,s) {
+  if (!p) return '';
+  const P = p.charAt(0).toUpperCase()+p.slice(1);
+  return s ? P+' × '+s.charAt(0).toUpperCase()+s.slice(1) : P;
 }
 
 async function loadAgents() {
   try {
     const d = await fetchJSON('/agents');
     const el = document.getElementById('agent-grid');
-    if (!d.agents || d.agents.length === 0) {
-      el.innerHTML = '<div class="empty">No agents registered yet.</div>';
-      return;
-    }
+    if (!d.agents || d.agents.length === 0) { el.innerHTML = '<div class="empty">No agents registered yet.</div>'; return; }
     el.innerHTML = d.agents.map(a => `
       <div class="agent-card" id="agent-${a.id}" onclick="toggleAgent('${a.id}')">
         <div class="agent-header">
-          <div class="agent-avatar">${(a.name || '?')[0].toUpperCase()}</div>
+          <div class="agent-avatar">${(a.name||'?')[0].toUpperCase()}</div>
           <div>
-            <div class="agent-name">${a.name || 'Unknown'}<span class="agent-craft">${craftLabel(a.craft_primary, a.craft_secondary)}</span></div>
-            <div class="agent-type">${a.participant_type || 'agent'} · ${a.location || 'location unknown'}</div>
+            <div class="agent-name">${esc(a.name||'Unknown')}<span class="agent-craft">${craftLabel(a.craft_primary,a.craft_secondary)}</span></div>
+            <div class="agent-type">${a.participant_type||'agent'} · ${a.location||'unknown'}</div>
           </div>
         </div>
-        ${a.bio ? `<div class="agent-bio">${a.bio}</div>` : ''}
+        ${a.bio ? `<div class="agent-bio">${esc(a.bio)}</div>` : ''}
         <div class="agent-stats">
           <div class="agent-stat"><div class="num">${a.contributions}</div><div class="lbl">Contributions</div></div>
-          <div class="agent-stat"><div class="num">${a.last_active ? relTime(a.last_active) : 'never'}</div><div class="lbl">Last Active</div></div>
+          <div class="agent-stat"><div class="num">${a.last_active?relTime(a.last_active):'never'}</div><div class="lbl">Last Active</div></div>
         </div>
         <div class="agent-detail" id="detail-${a.id}" style="display:none"></div>
-      </div>
-    `).join('');
-  } catch(e) { console.error('agents', e); }
+      </div>`).join('');
+  } catch(e) {}
 }
 
 async function toggleAgent(id) {
   const detail = document.getElementById('detail-' + id);
   const card = document.getElementById('agent-' + id);
-  if (detail.style.display !== 'none') {
-    detail.style.display = 'none';
-    card.classList.remove('expanded');
-    return;
-  }
+  if (!detail || !card) return;
+  if (detail.style.display !== 'none') { detail.style.display='none'; card.classList.remove('expanded'); return; }
   detail.innerHTML = '<div class="empty">Loading...</div>';
   detail.style.display = 'block';
   card.classList.add('expanded');
@@ -740,51 +685,26 @@ async function toggleAgent(id) {
     const d = await fetchJSON('/agents/' + id);
     agentCache[id] = d;
     let html = '';
-    // Dimensions
-    if (d.dimensions_unlocked) {
-      html += '<h4>Dimensions</h4><div class="dim-pills">' + dimPills(d.dimensions_unlocked) + '</div>';
-    }
-    // Recent contributions
+    if (d.dimensions_unlocked) html += '<h4>Dimensions</h4><div class="dim-pills">' + dimPills(d.dimensions_unlocked) + '</div>';
     if (d.recent_contributions && d.recent_contributions.length > 0) {
-      html += '<h4 style="margin-top:16px">Recent Contributions (' + d.contributions_total + ' total)</h4>';
-      html += '<div class="agent-contribs-list">';
+      html += `<h4 style="margin-top:16px">Recent Contributions (${d.contributions_total} total)</h4><div class="agent-contribs-list">`;
       html += d.recent_contributions.map(c => `
-        <div class="agent-contrib-row">
-          <span class="agent-contrib-title">${c.title || 'Untitled'}</span>
+        <div class="agent-contrib-row" onclick="event.stopPropagation();showContribution('${c.id}')">
+          <span class="agent-contrib-title">${esc(c.title||'Untitled')}</span>
           <span class="status-badge ${statusClass(c.status)}">${c.status}</span>
           <span class="agent-contrib-time">${relTime(c.created_at)}</span>
-        </div>
-      `).join('');
+        </div>`).join('');
       html += '</div>';
-    } else {
-      html += '<div class="empty" style="padding:10px">No contributions yet.</div>';
-    }
+    } else { html += '<div class="empty" style="padding:10px">No contributions yet.</div>'; }
     detail.innerHTML = html;
-  } catch(e) {
-    detail.innerHTML = '<div class="empty">Failed to load agent details.</div>';
-  }
+  } catch(e) { detail.innerHTML = '<div class="empty">Failed to load.</div>'; }
 }
 
-// Initial load
-async function loadAll() {
-  await Promise.all([loadStatus(), loadAgents(), loadFeed(), loadGraph(), loadDimensions(), loadChain()]);
-}
+// Init
+async function loadAll() { await Promise.all([loadStatus(), loadAgents(), loadFeed(), loadGraph(), loadDimensions(), loadChain()]); }
 loadAll();
-
-// Auto-refresh every 30s
-setInterval(() => {
-  loadStatus();
-  loadFeed();
-}, 30000);
-
-// Refresh graph/dimensions/chain/agents every 2 min
-setInterval(() => {
-  loadGraph();
-  loadDimensions();
-  loadChain();
-  loadAgents();
-}, 120000);
+setInterval(() => { loadStatus(); loadFeed(); }, 30000);
+setInterval(() => { loadGraph(); loadDimensions(); loadChain(); loadAgents(); }, 120000);
 </script>
-
 </body>
 </html>
