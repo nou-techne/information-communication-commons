@@ -535,7 +535,7 @@ async function loadFeed() {
       document.getElementById('feed-pager').style.display = 'none';
       return;
     }
-    allContribs = d.data;
+    allContribs = d.data.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
     // Cache participant names
     const pids = [...new Set(allContribs.map(c => c.participant_id).filter(Boolean))];
     for (const pid of pids) {
