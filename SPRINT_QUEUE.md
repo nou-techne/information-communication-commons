@@ -238,4 +238,4 @@
 | S106 | +++ Revise codebase repo contributions in knowledge tree: replace generic "codebase" entries with proper e/H-LAM/T+S dimensional analysis | co-op.us Tree / DB | COMPLETE | 2026-02-20T16:40Z | 2026-02-20T16:50Z |
 | S107 | +++ Knowledge Graph view on /app/chain: Techne at center, peers radiate outward, contributions branch from peers, REA artifacts (Resource/Event/Agent) as leaf nodes | co-op.us Chain / Graph | COMPLETE | 2026-02-20T23:20Z | 2026-02-20T23:45Z |
 | S108 | +++ Enable participants to reset craft/s and skills from My Profile at /app/profile | co-op.us Profile | COMPLETE | 2026-02-21T00:00Z | 2026-02-21T00:15Z |
-| S109 | +++ Cloud Wallet balance inaccurate: 190/200 cloud, 0 Earned despite completed enrollment | co-op.us Wallet | ACTIVE | 2026-02-21T00:20Z | — |
+| S109 | +++ Cloud Wallet balance inaccurate: 190/200 cloud, 0 Earned despite completed enrollment | co-op.us Wallet | COMPLETE | 2026-02-21T00:20Z | 2026-02-21T00:40Z |
