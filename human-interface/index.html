@@ -224,6 +224,7 @@
   <section>
     <div class="section-title">Live Activity Feed</div>
     <div id="activity-feed"><div class="empty">Loading...</div></div>
+    <div id="feed-pager" style="display:none;text-align:center;padding:12px;display:flex;justify-content:center;gap:8px;align-items:center"></div>
     <div class="refresh-note" id="refresh-note"></div>
   </section>
 
@@ -271,6 +272,9 @@
 <script>
 const API = 'https://hvbdpgkdcdskhpbdeeim.supabase.co/functions/v1/api';
 let lastContribIds = new Set();
+let allContribs = [];
+let feedPage = 0;
+const FEED_PAGE_SIZE = 10;
 const dimColors = { e:'#4ade80', H:'#c4956a', L:'#60a5fa', A:'#a78bfa', M:'#f472b6', T:'#facc15', S:'#c084fc' };
 const dimNames = { e:'Ecology', H:'Human', L:'Language', A:'Artifacts', M:'Methodology', T:'Training', S:'Solar Cycles' };
 const dimOrder = ['e','H','L','A','M','T','S'];
@@ -525,36 +529,53 @@ async function loadStatus() {
 // Feed
 async function loadFeed() {
   try {
-    const d = await fetchJSON('/contributions?limit=20&status=complete');
-    const el = document.getElementById('activity-feed');
-    if (!d.data || d.data.length === 0) { el.innerHTML = '<div class="empty">No contributions yet.</div>'; return; }
-
-    // Cache participant names
-    const pids = [...new Set((d.data).map(c => c.participant_id).filter(Boolean))];
-    for (const pid of pids) {
-      if (!participantCache[pid]) {
-        try { participantCache[pid] = await fetchJSON('/participants/' + pid); } catch(e) {}
-      }
+    const d = await fetchJSON('/contributions?limit=100&status=complete');
+    if (!d.data || d.data.length === 0) {
+      document.getElementById('activity-feed').innerHTML = '<div class="empty">No contributions yet.</div>';
+      document.getElementById('feed-pager').style.display = 'none';
+      return;
     }
-
-    const newIds = new Set(d.data.map(c => c.id));
-    el.innerHTML = d.data.map(c => {
-      const isNew = !lastContribIds.has(c.id) && lastContribIds.size > 0;
-      const author = c.participant_id && participantCache[c.participant_id] ? participantCache[c.participant_id].name : '';
-      return `<div class="feed-item" onclick="showContribution('${c.id}')" ${isNew ? 'style="animation:fadeIn 0.5s ease-out"' : ''}>
-        <div class="title">${esc(c.title || 'Untitled contribution')}</div>
-        <div class="meta">
-          <span class="status-badge ${statusClass(c.status)}">${c.status}</span>
-          ${author ? `<span class="participant-link" onclick="event.stopPropagation();showParticipant('${c.participant_id}')">${esc(author)}</span>` : ''}
-          <span>#${c.seq || '—'}</span>
-          <span>${relTime(c.created_at)}</span>
-          <span class="hash">${truncHash(c.chain_hash)}</span>
-        </div>
-      </div>`;
-    }).join('');
+    allContribs = d.data;
+    // Cache participant names
+    const pids = [...new Set(allContribs.map(c => c.participant_id).filter(Boolean))];
+    for (const pid of pids) {
+      if (!participantCache[pid]) { try { participantCache[pid] = await fetchJSON('/participants/' + pid); } catch(e) {} }
+    }
+    const newIds = new Set(allContribs.map(c => c.id));
     lastContribIds = newIds;
+    renderFeedPage();
     document.getElementById('refresh-note').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
   } catch(e) {}
+}
+function renderFeedPage() {
+  const el = document.getElementById('activity-feed');
+  const total = allContribs.length;
+  const pages = Math.ceil(total / FEED_PAGE_SIZE);
+  if (feedPage >= pages) feedPage = pages - 1;
+  if (feedPage < 0) feedPage = 0;
+  const start = feedPage * FEED_PAGE_SIZE;
+  const slice = allContribs.slice(start, start + FEED_PAGE_SIZE);
+  el.innerHTML = slice.map(c => {
+    const author = c.participant_id && participantCache[c.participant_id] ? participantCache[c.participant_id].name : '';
+    return `<div class="feed-item" onclick="showContribution('${c.id}')">
+      <div class="title">${esc(c.title || 'Untitled contribution')}</div>
+      <div class="meta">
+        <span class="status-badge ${statusClass(c.status)}">${c.status}</span>
+        ${author ? `<span class="participant-link" onclick="event.stopPropagation();showParticipant('${c.participant_id}')">${esc(author)}</span>` : ''}
+        <span>#${c.seq || '—'}</span>
+        <span>${relTime(c.created_at)}</span>
+        <span class="hash">${truncHash(c.chain_hash)}</span>
+      </div>
+    </div>`;
+  }).join('');
+  // Pager
+  const pager = document.getElementById('feed-pager');
+  if (pages <= 1) { pager.style.display = 'none'; return; }
+  pager.style.display = 'flex';
+  let ph = `<button class="load-more" ${feedPage===0?'disabled style="opacity:0.3;pointer-events:none"':''} onclick="feedPage--;renderFeedPage()">Prev</button>`;
+  ph += `<span style="font-size:0.85rem;color:var(--text-dim)">${feedPage+1} / ${pages}</span>`;
+  ph += `<button class="load-more" ${feedPage>=pages-1?'disabled style="opacity:0.3;pointer-events:none"':''} onclick="feedPage++;renderFeedPage()">Next</button>`;
+  pager.innerHTML = ph;
 }
 
 // Graph with clickable bars
