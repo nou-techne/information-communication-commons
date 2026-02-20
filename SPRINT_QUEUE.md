@@ -233,3 +233,4 @@
 | S95 | +++ Remove graph/dimension/artifact elements from co-op.us Explore; show cooperative home | co-op.us App | COMPLETE | 2026-02-19T04:20Z | 2026-02-19T04:35Z |
 | S96 | +++ Reorganize Techne merkle chain to reflect actual organizer signing dates | Chain / DB | COMPLETE | 2026-02-19T04:35Z | 2026-02-19T04:50Z |
 | S97 | +++ Twice-daily chain batching (sunrise/sunset Boulder): pending_activities table, seal_activity_batch(), cron jobs, batch rhythm UI | co-op.us Chain | COMPLETE | 2026-02-19T04:50Z | 2026-02-19T05:10Z |
+| S104 | +++ Hub application form on About page: web form → Supabase, $1000/10k cloud deposit framing, formation process | co-op.us About / Hubs | COMPLETE | 2026-02-19T04:50Z | 2026-02-19T05:00Z |

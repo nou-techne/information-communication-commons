@@ -149,10 +149,24 @@ serve(async (req) => {
 
     let result
     if (participantId) {
-      // Update existing participant
+      // Update existing participant — preserve name, location, and other user-set fields
+      // Only overwrite fields that the AI extraction actually produced
+      const updateData: Record<string, unknown> = { updated_at: new Date().toISOString() }
+      if (profile.bio) updateData.bio = profile.bio
+      if (profile.affiliation) updateData.affiliation = profile.affiliation
+      if (profile.background) updateData.background = profile.background
+      if (profile.experience?.length) updateData.experience = profile.experience
+      if (profile.skills?.length) updateData.skills = profile.skills
+      if (profile.capabilities?.length) updateData.capabilities = profile.capabilities
+      if (profile.interests?.length) updateData.interests = profile.interests
+      if (profile.looking_for?.length) updateData.looking_for = profile.looking_for
+      if (profile.offering?.length) updateData.offering = profile.offering
+      // Never overwrite name, location, or github_username on existing profiles
+      // — those are set by the user directly via profile edit
+
       const { data, error } = await supabase
         .from('participants')
-        .update({ ...profileData, updated_at: new Date().toISOString() })
+        .update(updateData)
         .eq('id', participantId)
         .select()
         .single()
