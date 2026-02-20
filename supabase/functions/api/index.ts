@@ -116,6 +116,8 @@ serve(async (req) => {
           'GET /dimensions': 'Dimension stats',
           'GET /chain': 'Convergence chain head and verification',
           'GET /search?q=': 'Search artifacts',
+          'GET /agents': 'List agent participants with activity stats',
+          'GET /agents/:id': 'Single agent profile with recent contributions',
           'GET /guidelines': 'Bot interaction guidelines, norms, and full API reference',
           'POST /contribute': 'Submit a contribution (body: {content, participant_id?})',
           'POST /agent/contribute': 'Agent-authenticated contribution (requires X-API-Key header)',
@@ -765,6 +767,75 @@ serve(async (req) => {
             'Transparency enables coordination. Opacity enables extraction.',
           ],
         },
+      })
+    }
+
+    // GET /agents — List agent participants with activity stats
+    if (path === 'agents' && method === 'GET') {
+      const { data: agents, error: agentErr } = await supabase
+        .from('participants')
+        .select('id, name, bio, craft_primary, craft_secondary, participant_type, location, created_at')
+        .eq('is_agent', true)
+        .order('name')
+      if (agentErr) return err(agentErr.message, 500)
+
+      // Enrich with contribution counts and last activity
+      const enriched = await Promise.all((agents || []).map(async (agent: any) => {
+        const { count } = await supabase
+          .from('contributions')
+          .select('id', { count: 'exact', head: true })
+          .eq('participant_id', agent.id)
+        const { data: recent } = await supabase
+          .from('contributions')
+          .select('created_at')
+          .eq('participant_id', agent.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+        return {
+          ...agent,
+          contributions: count || 0,
+          last_active: recent?.[0]?.created_at || null,
+        }
+      }))
+
+      return json({ agents: enriched })
+    }
+
+    // GET /agents/:id — Single agent profile with recent contributions
+    if (path.startsWith('agents/') && method === 'GET') {
+      const agentId = path.split('/')[1]
+      const { data: agent, error: agentErr } = await supabase
+        .from('participants')
+        .select('id, name, bio, craft_primary, craft_secondary, participant_type, location, dimensions_unlocked, created_at')
+        .eq('id', agentId)
+        .maybeSingle()
+      if (agentErr || !agent) return err('Agent not found', 404)
+
+      // Recent contributions
+      const { data: contribs } = await supabase
+        .from('contributions')
+        .select('id, title, status, created_at')
+        .eq('participant_id', agentId)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      // Contribution count
+      const { count } = await supabase
+        .from('contributions')
+        .select('id', { count: 'exact', head: true })
+        .eq('participant_id', agentId)
+
+      // Dimension breakdown of their artifacts
+      const { data: artifactIds } = await supabase
+        .from('contributions')
+        .select('id')
+        .eq('participant_id', agentId)
+        .eq('status', 'complete')
+
+      return json({
+        ...agent,
+        contributions_total: count || 0,
+        recent_contributions: contribs || [],
       })
     }
 

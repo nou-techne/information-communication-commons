@@ -299,6 +299,120 @@
       margin-top: 8px;
     }
 
+    /* Agent Profiles */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .agent-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .agent-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .agent-card.expanded { grid-column: 1 / -1; }
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .agent-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .agent-name { font-size: 1.1rem; font-weight: 600; }
+    .agent-type {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .agent-craft {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: var(--accent-dim);
+      color: var(--accent);
+      margin-left: 8px;
+    }
+    .agent-bio {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .agent-stats {
+      display: flex;
+      gap: 20px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .agent-stat .num {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .agent-stat .lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .agent-detail {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .agent-detail h4 {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+    }
+    .agent-contribs-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .agent-contrib-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .agent-contrib-row:last-child { border-bottom: none; }
+    .agent-contrib-title { color: var(--text); flex: 1; }
+    .agent-contrib-time { color: var(--text-muted); font-size: 0.75rem; margin-left: 12px; white-space: nowrap; }
+    .dim-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+    .dim-pill {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--bg-0);
+    }
+    .dim-pill.locked { opacity: 0.2; }
+
     .empty { color: var(--text-muted); font-style: italic; padding: 20px; text-align: center; }
 
     @media (max-width: 640px) {
@@ -339,6 +453,12 @@
       <div class="sub" id="s-chain-hash"></div>
     </div>
   </div>
+
+  <!-- Agent Profiles -->
+  <section>
+    <div class="section-title">Agent Profiles</div>
+    <div class="agent-grid" id="agent-grid"><div class="empty">Loading agents...</div></div>
+  </section>
 
   <!-- Live Activity Feed -->
   <section>
@@ -557,9 +677,97 @@ document.getElementById('search-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') doSearch();
 });
 
+// Agent Profiles
+const dimOrder = ['e','H','L','A','M','T','S'];
+let agentCache = {};
+
+function dimPills(unlocked) {
+  return dimOrder.map(d => {
+    const on = unlocked && unlocked[d];
+    const bg = dimColors[d] || '#888';
+    return `<span class="dim-pill ${on ? '' : 'locked'}" style="background:${bg}" title="${d}/ ${on ? 'unlocked' : 'locked'}">${d}</span>`;
+  }).join('');
+}
+
+function craftLabel(primary, secondary) {
+  if (!primary) return '';
+  const p = primary.charAt(0).toUpperCase() + primary.slice(1);
+  if (!secondary) return p;
+  const s = secondary.charAt(0).toUpperCase() + secondary.slice(1);
+  return p + ' × ' + s;
+}
+
+async function loadAgents() {
+  try {
+    const d = await fetchJSON('/agents');
+    const el = document.getElementById('agent-grid');
+    if (!d.agents || d.agents.length === 0) {
+      el.innerHTML = '<div class="empty">No agents registered yet.</div>';
+      return;
+    }
+    el.innerHTML = d.agents.map(a => `
+      <div class="agent-card" id="agent-${a.id}" onclick="toggleAgent('${a.id}')">
+        <div class="agent-header">
+          <div class="agent-avatar">${(a.name || '?')[0].toUpperCase()}</div>
+          <div>
+            <div class="agent-name">${a.name || 'Unknown'}<span class="agent-craft">${craftLabel(a.craft_primary, a.craft_secondary)}</span></div>
+            <div class="agent-type">${a.participant_type || 'agent'} · ${a.location || 'location unknown'}</div>
+          </div>
+        </div>
+        ${a.bio ? `<div class="agent-bio">${a.bio}</div>` : ''}
+        <div class="agent-stats">
+          <div class="agent-stat"><div class="num">${a.contributions}</div><div class="lbl">Contributions</div></div>
+          <div class="agent-stat"><div class="num">${a.last_active ? relTime(a.last_active) : 'never'}</div><div class="lbl">Last Active</div></div>
+        </div>
+        <div class="agent-detail" id="detail-${a.id}" style="display:none"></div>
+      </div>
+    `).join('');
+  } catch(e) { console.error('agents', e); }
+}
+
+async function toggleAgent(id) {
+  const detail = document.getElementById('detail-' + id);
+  const card = document.getElementById('agent-' + id);
+  if (detail.style.display !== 'none') {
+    detail.style.display = 'none';
+    card.classList.remove('expanded');
+    return;
+  }
+  detail.innerHTML = '<div class="empty">Loading...</div>';
+  detail.style.display = 'block';
+  card.classList.add('expanded');
+  try {
+    const d = await fetchJSON('/agents/' + id);
+    agentCache[id] = d;
+    let html = '';
+    // Dimensions
+    if (d.dimensions_unlocked) {
+      html += '<h4>Dimensions</h4><div class="dim-pills">' + dimPills(d.dimensions_unlocked) + '</div>';
+    }
+    // Recent contributions
+    if (d.recent_contributions && d.recent_contributions.length > 0) {
+      html += '<h4 style="margin-top:16px">Recent Contributions (' + d.contributions_total + ' total)</h4>';
+      html += '<div class="agent-contribs-list">';
+      html += d.recent_contributions.map(c => `
+        <div class="agent-contrib-row">
+          <span class="agent-contrib-title">${c.title || 'Untitled'}</span>
+          <span class="status-badge ${statusClass(c.status)}">${c.status}</span>
+          <span class="agent-contrib-time">${relTime(c.created_at)}</span>
+        </div>
+      `).join('');
+      html += '</div>';
+    } else {
+      html += '<div class="empty" style="padding:10px">No contributions yet.</div>';
+    }
+    detail.innerHTML = html;
+  } catch(e) {
+    detail.innerHTML = '<div class="empty">Failed to load agent details.</div>';
+  }
+}
+
 // Initial load
 async function loadAll() {
-  await Promise.all([loadStatus(), loadFeed(), loadGraph(), loadDimensions(), loadChain()]);
+  await Promise.all([loadStatus(), loadAgents(), loadFeed(), loadGraph(), loadDimensions(), loadChain()]);
 }
 loadAll();
 
@@ -569,11 +777,12 @@ setInterval(() => {
   loadFeed();
 }, 30000);
 
-// Refresh graph/dimensions/chain every 2 min
+// Refresh graph/dimensions/chain/agents every 2 min
 setInterval(() => {
   loadGraph();
   loadDimensions();
   loadChain();
+  loadAgents();
 }, 120000);
 </script>
 
