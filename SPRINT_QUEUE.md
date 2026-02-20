@@ -234,3 +234,5 @@
 | S96 | +++ Reorganize Techne merkle chain to reflect actual organizer signing dates | Chain / DB | COMPLETE | 2026-02-19T04:35Z | 2026-02-19T04:50Z |
 | S97 | +++ Twice-daily chain batching (sunrise/sunset Boulder): pending_activities table, seal_activity_batch(), cron jobs, batch rhythm UI | co-op.us Chain | COMPLETE | 2026-02-19T04:50Z | 2026-02-19T05:10Z |
 | S104 | +++ Hub application form on About page: web form → Supabase, $1000/10k cloud deposit framing, formation process | co-op.us About / Hubs | COMPLETE | 2026-02-19T04:50Z | 2026-02-19T05:00Z |
+| S105 | +++ Moon cycle countdown: highlighted "Next Moon Cycle" countdown on /app/moons and /app/chain, explain what happens at cycle turn (batch sealing, patronage snapshot, governance window) | co-op.us Moons / Chain | COMPLETE | 2026-02-20T16:30Z | 2026-02-20T16:31Z |
+| S106 | +++ Revise codebase repo contributions in knowledge tree: replace generic "codebase" entries with proper e/H-LAM/T+S dimensional analysis | co-op.us Tree / DB | COMPLETE | 2026-02-20T16:40Z | 2026-02-20T16:50Z |

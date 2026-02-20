@@ -19,7 +19,11 @@
         '/federation', '/threads', '/my-thread', '/artifact', '/session',
         '/participant', '/convergence', '/public-portfolio', '/portfolio'];
 
-      var isSpaRoute = spaRoutes.some(function(r) { return path === r || path.startsWith(r + '/'); });
+      // Static pages that should NOT redirect to SPA
+      var staticPaths = ['/human-interface', '/ethboulder'];
+      var isStaticPath = staticPaths.some(function(r) { return path === r || path.startsWith(r + '/'); });
+
+      var isSpaRoute = !isStaticPath && spaRoutes.some(function(r) { return path === r || path.startsWith(r + '/'); });
 
       if (isSpaRoute) {
         // Redirect to /app/ with path preserved for the SPA router
