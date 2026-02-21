@@ -248,3 +248,9 @@
 | S116 | +++ Investigate and fix PENDING contributions by Clawmniharmonic at commons.id/human-interface/ | commons.id Human Interface | COMPLETE | 2026-02-21T02:00Z | 2026-02-21T02:05Z |
 | S117 | +++ Enhance commons.id/human-interface/ to represent more elements detailing agent use of api.commons.id | commons.id Human Interface | COMPLETE | 2026-02-21T02:00Z | 2026-02-21T03:15Z |
 | S118 | +++ Replace 2D Force Graph with Network Graph in Knowledge Graph section of /app/chain | co-op.us Chain | COMPLETE | 2026-02-21T00:45Z | 2026-02-21T01:00Z |
+| S119 | +++ NetworkKnowledgeGraph: Add "View full" navigation links (contribution detail, peer profile, artifact context) | co-op.us Chain | COMPLETE | 2026-02-21T01:05Z | 2026-02-21T01:30Z |
+| S120 | +++ NetworkKnowledgeGraph: Highlight node connections on click (brighten edges to/from selected node) | co-op.us Chain | COMPLETE | 2026-02-21T01:05Z | 2026-02-21T01:30Z |
+| S121 | +++ NetworkKnowledgeGraph: Thread view — show contribution in chain context (what it builds on, what builds on it) | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
+| S122 | +++ NetworkKnowledgeGraph: Signal indicator + quick signal button in node tooltip | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
+| S123 | +++ NetworkKnowledgeGraph: Dimension filter — click dimension tag to filter graph view | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
+| S124 | +++ NetworkKnowledgeGraph: Member presence indicator — show active/watching status | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
