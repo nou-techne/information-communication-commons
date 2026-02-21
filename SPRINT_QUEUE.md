@@ -263,3 +263,17 @@
 - **API verification results:** 16/26 valid links, chain_intact = false, broken_at_seq = 1
 - **Impact:** Chain integrity check reports "Integrity issue at seq 1" on human-interface
 - **Next:** Find the correct hashing algorithm used when entry 1 was created (Feb 6), or recalculate hash
+
+| S126 | +++ Replace Evolution Roadmap card on /app/chain with detailed status window | co-op.us Chain | COMPLETE | 2026-02-21T02:45Z | 2026-02-21T02:50Z |
+| S127 | +++ Fix artifact navigation ("Artifact not found" on click) — API endpoint join issue | commons.id API | ACTIVE | 2026-02-21T03:00Z | — |
+| S128 | +++ Investigate process-contribution edge function status — Todd's submission stuck? | commons.id Edge | ACTIVE | 2026-02-21T03:15Z | — |
+
+**S127 Status:**
+- Fixed: API endpoint `/artifacts/:id` now uses separate queries instead of complex join
+- Deployed: Code committed to `c4dc4bb`
+- Awaiting: Supabase CLI deployment (requires `supabase login` + `npx supabase functions deploy api`)
+
+**S128 Investigation:**
+- Todd submitted a contribution but it may not be processing
+- API `/contributions?status=pending` endpoint appears to hang
+- Need to check: Edge function logs, Supabase function status, recent contribution records
