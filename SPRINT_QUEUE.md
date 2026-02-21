@@ -252,5 +252,5 @@
 | S120 | +++ NetworkKnowledgeGraph: Highlight node connections on click (brighten edges to/from selected node) | co-op.us Chain | COMPLETE | 2026-02-21T01:05Z | 2026-02-21T01:30Z |
 | S121 | +++ NetworkKnowledgeGraph: Thread view — show contribution in chain context (what it builds on, what builds on it) | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
 | S122 | +++ NetworkKnowledgeGraph: Signal indicator + quick signal button in node tooltip | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
-| S123 | +++ NetworkKnowledgeGraph: Dimension filter — click dimension tag to filter graph view | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
+| S123 | +++ NetworkKnowledgeGraph: Dimension filter — click dimension tag to filter graph view | co-op.us Chain | COMPLETE | 2026-02-21T01:05Z | 2026-02-21T01:40Z |
 | S124 | +++ NetworkKnowledgeGraph: Member presence indicator — show active/watching status | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
