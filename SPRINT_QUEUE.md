@@ -254,3 +254,12 @@
 | S122 | +++ NetworkKnowledgeGraph: Signal indicator + quick signal button in node tooltip | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
 | S123 | +++ NetworkKnowledgeGraph: Dimension filter — click dimension tag to filter graph view | co-op.us Chain | COMPLETE | 2026-02-21T01:05Z | 2026-02-21T01:40Z |
 | S124 | +++ NetworkKnowledgeGraph: Member presence indicator — show active/watching status | co-op.us Chain | QUEUED | 2026-02-21T01:05Z | — |
+| S125 | +++ Chain Integrity: Investigate and fix "Integrity issue at seq 1" | commons.id Chain | ACTIVE | 2026-02-21T02:30Z | — |
+
+**S125 Investigation Summary:**
+- **Root cause:** Entry 1 (genesis entry) has an incorrect content_hash
+- **Current stored hash:** `187ac87f1bc7f97270bfc133480dabea5b470edbe688edf08c5184d44e8e72d3`
+- **Computed hash:** `3a8bbbf8da2a3c476db3d5ebf64bcfb1568a084db4467fc58108bbcf5f1b396c`
+- **API verification results:** 16/26 valid links, chain_intact = false, broken_at_seq = 1
+- **Impact:** Chain integrity check reports "Integrity issue at seq 1" on human-interface
+- **Next:** Find the correct hashing algorithm used when entry 1 was created (Feb 6), or recalculate hash
