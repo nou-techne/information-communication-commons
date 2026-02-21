@@ -277,3 +277,18 @@
 - Todd submitted a contribution but it may not be processing
 - API `/contributions?status=pending` endpoint appears to hang
 - Need to check: Edge function logs, Supabase function status, recent contribution records
+
+| S129 | +++ Investigate slow NLP extraction — avg 3757s per contribution | commons.id Edge | ACTIVE | 2026-02-21T03:17Z | — |
+
+**S129 Investigation Notes:**
+- Extraction is working but extremely slow (3757 seconds average = 62 minutes/contribution)
+- Function calls Anthropic's Claude API for extraction
+- Possible causes: API rate limiting, token limits, queue backup, model latency
+- Your contribution is processing but will take ~1 hour to complete
+
+**S129 Remediation Options:**
+1. Check Anthropic API usage/limits in dashboard
+2. Add batching or parallel processing
+3. Reduce prompt size to reduce token consumption
+4. Cache extraction results for similar content
+5. Fall back to simpler extraction if API times out
