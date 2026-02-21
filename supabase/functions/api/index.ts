@@ -157,17 +157,37 @@ serve(async (req) => {
       const parts = path.split('/')
       if (parts.length > 1 && parts[1]) {
         // Single artifact
-        const { data, error } = await supabase
+        const id = parts[1]
+        const { data: artifact, error: artifactErr } = await supabase
           .from('artifacts')
-          .select('*, artifact_tags(tag:tags(name)), artifact_relationships!artifact_relationships_source_id_fkey(target_id, type)')
-          .eq('id', parts[1])
+          .select('*')
+          .eq('id', id)
           .maybeSingle()
-        if (error || !data) return err('Artifact not found', 404)
+        if (artifactErr || !artifact) return err('Artifact not found', 404)
+
+        // Get tags separately
+        const { data: tagData } = await supabase
+          .from('artifact_tags')
+          .select('tags(name)')
+          .eq('artifact_id', id)
+
+        // Get relationships separately
+        const { data: relData } = await supabase
+          .from('artifact_relationships')
+          .select('id, type, from_artifact_id, to_artifact_id')
+          .or(`from_artifact_id.eq.${id},to_artifact_id.eq.${id}`)
+
+        const tags = tagData?.map((t: any) => t.tags?.name).filter(Boolean) || []
+        const relationships = relData?.map((r: any) => ({
+          type: r.type,
+          target_id: r.from_artifact_id === id ? r.to_artifact_id : r.from_artifact_id,
+          direction: r.from_artifact_id === id ? 'outbound' : 'inbound',
+        })) || []
+
         return json({
-          ...data,
-          tags: data.artifact_tags?.map((t: any) => t.tag?.name).filter(Boolean) || [],
-          relationships: data.artifact_relationships || [],
-          artifact_tags: undefined,
+          ...artifact,
+          tags,
+          relationships,
         })
       }
       // List
