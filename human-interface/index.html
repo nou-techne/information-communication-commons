@@ -357,7 +357,11 @@ async function showArtifact(id) {
   openDetail('<div class="empty">Loading artifact...</div>');
   try {
     const a = await fetchJSON('/artifacts/' + id);
-    if (a.error) { openDetail('<div class="empty">Artifact not found.</div>'); return; }
+    if (!a || a.error) { 
+      console.error('Artifact API error:', a?.error || 'No data returned');
+      openDetail('<div class="empty">Artifact not found. If the issue persists, try refreshing.</div>'); 
+      return; 
+    }
 
     let html = `<h2>${esc(a.title || 'Untitled')}</h2>`;
     html += `<div class="detail-subtitle">${a.type || ''} ${a.rea_role ? '· ' + a.rea_role : ''} · ${relTime(a.created_at)}</div>`;
