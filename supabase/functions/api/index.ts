@@ -6,7 +6,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SB_SERVICE_KEY') || Deno.env.get
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PATCH, OPTIONS',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-api-key',
   'Content-Type': 'application/json',
 }
@@ -121,6 +121,7 @@ serve(async (req) => {
           'GET /guidelines': 'Bot interaction guidelines, norms, and full API reference',
           'POST /contribute': 'Submit a contribution (body: {content, participant_id?})',
           'POST /agent/contribute': 'Agent-authenticated contribution (requires X-API-Key header)',
+          'PATCH /agent/contributions/:id': 'Edit a pending contribution and reprocess NLP extraction (requires X-API-Key)',
           'POST /agent/message': 'Agent-authenticated message to thread (requires X-API-Key header)',
           'GET /agent/channels': 'List channels (query: ?convergence_id=, ?visibility=)',
           'GET /agent/threads': 'List threads (query: ?channel_id=, ?status=, ?limit=)',
@@ -358,6 +359,64 @@ serve(async (req) => {
         message: 'Contribution received from agent. Processing in progress.',
       }), {
         status: 201,
+        headers: { ...CORS_HEADERS, ...auth.headers }
+      })
+    }
+
+    // Sprint 81: PATCH /agent/contributions/:id — Edit pending contribution (reprocesses NLP)
+    if (path.startsWith('agent/contributions/') && method === 'PATCH') {
+      const auth = await validateApiKey(req, supabase)
+      if (!auth.valid) return json({ error: auth.error }, auth.status)
+
+      const contributionId = path.split('/')[2]
+      if (!contributionId) return err('Missing contribution id')
+
+      const body = await req.json()
+      const content = body.content
+      if (!content || content.length < 10) return err('Content must be at least 10 characters')
+
+      // Fetch existing contribution — verify ownership and pending status
+      const { data: existing, error: fetchErr } = await supabase
+        .from('contributions')
+        .select('id, participant_id, status, convergence_id')
+        .eq('id', contributionId)
+        .maybeSingle()
+
+      if (fetchErr || !existing) return err('Contribution not found', 404)
+      if (existing.participant_id !== auth.participantId) return err('Not your contribution', 403)
+      if (existing.status !== 'pending') return err('Cannot edit a sealed contribution. Submit a follow-up instead.', 409)
+
+      // Delete previously extracted artifacts so they regenerate
+      await supabase
+        .from('artifacts')
+        .delete()
+        .eq('contribution_id', contributionId)
+
+      // Update the contribution content, reset to pending
+      const { error: updateErr } = await supabase
+        .from('contributions')
+        .update({ content, status: 'pending', updated_at: new Date().toISOString() })
+        .eq('id', contributionId)
+
+      if (updateErr) return err(updateErr.message, 500)
+
+      // Retrigger full NLP extraction
+      const processUrl = `${SUPABASE_URL}/functions/v1/process-contribution`
+      fetch(processUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ record: { id: contributionId, content, convergence_id: existing.convergence_id } }),
+      }).catch(() => {})
+
+      return new Response(JSON.stringify({
+        id: contributionId,
+        status: 'pending',
+        message: 'Contribution updated. NLP extraction restarted.',
+      }), {
+        status: 200,
         headers: { ...CORS_HEADERS, ...auth.headers }
       })
     }
@@ -751,6 +810,7 @@ serve(async (req) => {
             'GET /guidelines': 'This document',
             'POST /contribute': 'Submit a contribution ({content, participant_id?, convergence_id?})',
             'POST /agent/contribute': 'Agent-authenticated contribution (requires X-API-Key header)',
+            'PATCH /agent/contributions/:id': 'Edit pending contribution + reprocess NLP ({content})',
             'POST /agent/message': 'Post message to thread as agent ({thread_id, content, type?})',
             'GET /agent/channels': 'List channels (?convergence_id=, ?visibility=)',
             'GET /agent/threads': 'List threads (?channel_id=, ?status=, ?limit=)',
@@ -811,10 +871,10 @@ serve(async (req) => {
         .maybeSingle()
       if (agentErr || !agent) return err('Agent not found', 404)
 
-      // Recent contributions
+      // Recent contributions (include extraction for artifact breakdown)
       const { data: contribs } = await supabase
         .from('contributions')
-        .select('id, title, status, created_at')
+        .select('id, title, status, created_at, extraction')
         .eq('participant_id', agentId)
         .order('created_at', { ascending: false })
         .limit(20)

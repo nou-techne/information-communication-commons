@@ -123,6 +123,18 @@
     .search-result .sr-meta { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
     .search-result .sr-summary { font-size: 0.85rem; color: var(--text-dim); margin-top: 6px; }
 
+    /* API Status Cards */
+    .api-ep-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+    .api-ep-method { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); opacity: 0.7; margin-bottom: 2px; }
+    .api-ep-path { font-size: 0.78rem; font-family: var(--mono); color: var(--text); margin-bottom: 4px; }
+    .api-ep-meta { font-size: 0.7rem; color: var(--text-muted); }
+    .api-ep-count { font-size: 1.1rem; font-weight: 700; font-family: var(--mono); color: var(--accent); }
+    .api-ep-ok { border-left: 3px solid var(--accent); }
+    .api-ep-err { border-left: 3px solid #f87171; }
+    /* Dimension coverage bar */
+    .dim-coverage { display:flex; gap:3px; margin-top:8px; }
+    .dim-bar { height:4px; border-radius:2px; flex:1; opacity:0.3; transition:opacity 0.2s; }
+    .dim-bar.active { opacity:1; }
     /* Agent Profiles */
     .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
     .agent-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 10px; padding: 20px; cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
@@ -215,6 +227,11 @@
       <div class="sub" id="s-chain-hash"></div>
     </div>
   </div>
+
+  <section>
+    <div class="section-title">API Status — api.commons.id</div>
+    <div id="api-endpoints-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;"></div>
+  </section>
 
   <section>
     <div class="section-title">Agent Profiles</div>
@@ -689,6 +706,7 @@ async function loadAgents() {
           <div class="agent-stat"><div class="num">${a.contributions}</div><div class="lbl">Contributions</div></div>
           <div class="agent-stat"><div class="num">${a.last_active?relTime(a.last_active):'never'}</div><div class="lbl">Last Active</div></div>
         </div>
+        ${dimCoverageBar(a.dimensions_unlocked)}
         <div class="agent-detail" id="detail-${a.id}" style="display:none"></div>
       </div>`).join('');
   } catch(e) {}
@@ -706,9 +724,51 @@ async function toggleAgent(id) {
     const d = await fetchJSON('/agents/' + id);
     agentCache[id] = d;
     let html = '';
-    if (d.dimensions_unlocked) html += '<h4>Dimensions</h4><div class="dim-pills">' + dimPills(d.dimensions_unlocked) + '</div>';
+
+    // Dimensions + API usage summary row
+    html += '<div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px">';
+    if (d.dimensions_unlocked) {
+      html += '<div style="flex:1;min-width:120px"><h4 style="margin-bottom:6px">Dimensions</h4><div class="dim-pills">' + dimPills(d.dimensions_unlocked) + '</div></div>';
+    }
+    html += `<div style="min-width:100px;text-align:right">
+      <div style="font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">API Activity</div>
+      <div style="font-size:1.2rem;font-weight:700;font-family:var(--mono);color:var(--accent)">${d.contributions_total}</div>
+      <div style="font-size:0.65rem;color:var(--text-muted)">contributions via api</div>
+    </div>`;
+    html += '</div>';
+
+    // Artifact type breakdown (from recent contribution extractions)
+    const allArtifacts = (d.recent_contributions||[]).flatMap(c => c.extraction?.artifacts || []);
+    if (allArtifacts.length > 0) {
+      const typeCounts = {};
+      const dimCounts = {};
+      allArtifacts.forEach(a => {
+        typeCounts[a.type||'?'] = (typeCounts[a.type||'?']||0)+1;
+        (a.tags||[]).filter(t=>t.startsWith('hlamt:')).forEach(t => {
+          const d2 = t.split(':')[1]; dimCounts[d2]=(dimCounts[d2]||0)+1;
+        });
+      });
+      html += '<h4 style="margin-top:12px;margin-bottom:6px">Artifact Breakdown</h4>';
+      html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">';
+      Object.entries(typeCounts).sort((a,b)=>b[1]-a[1]).forEach(([type,count]) => {
+        const colors2 = {idea:'#c4956a',proposal:'#8bbfff',commitment:'#a6ed2a',question:'#d4a0e8',pattern:'#7ccfb8',reflection:'#ffd666'};
+        const c2 = colors2[type]||'#888';
+        html += `<span style="background:${c2}18;border:1px solid ${c2}30;color:${c2};font-size:0.7rem;padding:2px 8px;border-radius:12px">${type} ×${count}</span>`;
+      });
+      html += '</div>';
+      if (Object.keys(dimCounts).length > 0) {
+        html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">';
+        Object.entries(dimCounts).sort((a,b)=>b[1]-a[1]).forEach(([dim,count]) => {
+          const c3 = dimCoverageColors[dim]||'#888';
+          html += `<span style="background:${c3}15;border:1px solid ${c3}25;color:${c3};font-size:0.68rem;padding:1px 7px;border-radius:10px;font-family:var(--mono)">${dim}/ ×${count}</span>`;
+        });
+        html += '</div>';
+      }
+    }
+
+    // Recent contributions list
     if (d.recent_contributions && d.recent_contributions.length > 0) {
-      html += `<h4 style="margin-top:16px">Recent Contributions (${d.contributions_total} total)</h4><div class="agent-contribs-list">`;
+      html += `<h4 style="margin-top:12px">Contributions (${d.contributions_total} total)</h4><div class="agent-contribs-list">`;
       html += d.recent_contributions.map(c => `
         <div class="agent-contrib-row" onclick="event.stopPropagation();showContribution('${c.id}')">
           <span class="agent-contrib-title">${esc(c.title||'Untitled')}</span>
@@ -721,8 +781,59 @@ async function toggleAgent(id) {
   } catch(e) { detail.innerHTML = '<div class="empty">Failed to load.</div>'; }
 }
 
+/* ── Dimension coverage bar in agent cards ── */
+const dimCoverageColors = { e:'#7ccfb8',H:'#c4956a',L:'#a6ed2a',A:'#8bbfff',M:'#e8a87c',T:'#ffd666',S:'#d4a0e8' };
+function dimCoverageBar(dimensionsUnlocked) {
+  const order = ['e','H','L','A','M','T','S'];
+  return `<div class="dim-coverage" title="Dimension coverage">${order.map(d=>{
+    const on = dimensionsUnlocked && dimensionsUnlocked[d];
+    return `<div class="dim-bar ${on?'active':''}" style="background:${dimCoverageColors[d]||'#555'}" title="${d}/ ${on?'unlocked':'locked'}"></div>`;
+  }).join('')}</div>`;
+}
+
+/* ── API Status section ── */
+async function loadApiStatus() {
+  const el = document.getElementById('api-endpoints-grid');
+  if (!el) return;
+
+  const ENDPOINTS = [
+    { path: '/status',        label: 'Status',        key: 'contributions', unit: 'contributions' },
+    { path: '/agents',        label: 'Agents',        key: 'count', countFn: d => d.agents?.length ?? 0, unit: 'agents' },
+    { path: '/contributions?limit=1&status=complete', label: 'Contributions', key: 'total', unit: 'sealed' },
+    { path: '/artifacts?limit=1', label: 'Artifacts', key: 'total', unit: 'artifacts' },
+    { path: '/participants?limit=1', label: 'Participants', key: 'total', unit: 'participants' },
+    { path: '/dimensions',    label: 'Dimensions',    key: 'count', countFn: d => d.dimensions?.length ?? 0, unit: 'active' },
+    { path: '/chain?limit=1', label: 'Chain',         key: 'total', unit: 'entries' },
+    { path: '/graph',         label: 'Graph',         key: 'count', countFn: d => (d.nodes?.length||0), unit: 'nodes' },
+  ];
+
+  el.innerHTML = ENDPOINTS.map(ep => `
+    <div class="api-ep-card api-ep-ok" id="apistatus-${ep.label.toLowerCase().replace(/\s/g,'-')}">
+      <div class="api-ep-method">GET</div>
+      <div class="api-ep-path">${ep.path.split('?')[0]}</div>
+      <div class="api-ep-count" id="epval-${ep.label}">—</div>
+      <div class="api-ep-meta">${ep.unit}</div>
+    </div>`).join('');
+
+  await Promise.all(ENDPOINTS.map(async ep => {
+    const valEl = document.getElementById('epval-' + ep.label);
+    const cardEl = document.getElementById('apistatus-' + ep.label.toLowerCase().replace(/\s/g,'-'));
+    try {
+      const t0 = Date.now();
+      const d = await fetchJSON(ep.path);
+      const ms = Date.now() - t0;
+      let val = ep.countFn ? ep.countFn(d) : (d[ep.key] ?? '?');
+      if (valEl) valEl.textContent = val;
+      if (cardEl) cardEl.title = `Responded in ${ms}ms`;
+    } catch(e) {
+      if (valEl) valEl.textContent = 'err';
+      if (cardEl) { cardEl.classList.remove('api-ep-ok'); cardEl.classList.add('api-ep-err'); }
+    }
+  }));
+}
+
 // Init
-async function loadAll() { await Promise.all([loadStatus(), loadAgents(), loadFeed(), loadGraph(), loadDimensions(), loadChain()]); }
+async function loadAll() { await Promise.all([loadStatus(), loadAgents(), loadFeed(), loadGraph(), loadDimensions(), loadChain(), loadApiStatus()]); }
 loadAll();
 setInterval(() => { loadStatus(); loadFeed(); }, 30000);
 setInterval(() => { loadGraph(); loadDimensions(); loadChain(); loadAgents(); }, 120000);
