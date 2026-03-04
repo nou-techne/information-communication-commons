@@ -279,6 +279,8 @@
 - Need to check: Edge function logs, Supabase function status, recent contribution records
 
 | S129 | +++ Investigate slow NLP extraction — avg 3757s per contribution | commons.id Edge | ACTIVE | 2026-02-21T03:17Z | — |
+| S130 | +++ Profile Skills "Clear All" — add bulk clear button to TagInput component on /app/profile edit | co-op.us Profile | COMPLETE | 2026-02-24T23:05Z | 2026-02-24T23:08Z |
+| S131 | +++ Greetings "Mark all read" — user-controlled clear of NEW badges on /app/me/greetings | co-op.us Greetings | COMPLETE | 2026-02-24T23:12Z | 2026-02-24T23:15Z |
 
 **S129 Investigation Notes:**
 - Extraction is working but extremely slow (3757 seconds average = 62 minutes/contribution)
