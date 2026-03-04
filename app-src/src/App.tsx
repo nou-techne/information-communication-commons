@@ -50,7 +50,9 @@ const VenturePortfolio = lazy(() => import('./pages/VenturePortfolio').then(m =>
 const PublicPortfolio = lazy(() => import('./pages/PublicPortfolio').then(m => ({ default: m.PublicPortfolio })))
 const OnboardingWizard = lazy(() => import('./pages/OnboardingWizard').then(m => ({ default: m.default || m.OnboardingWizard })))
 const SprintProgress = lazy(() => import('./pages/SprintProgress').then(m => ({ default: m.SprintProgress })))
+const WorkcraftRoadmap = lazy(() => import('./pages/WorkcraftRoadmap').then(m => ({ default: m.WorkcraftRoadmap })))
 const TechneLanding = lazy(() => import('./pages/TechneLanding').then(m => ({ default: m.TechneLanding })))
+const SolarLunarTime = lazy(() => import('./pages/SolarLunarTime').then(m => ({ default: m.SolarLunarTime })))
 const MemberDirectory = lazy(() => import('./pages/MemberDirectory').then(m => ({ default: m.MemberDirectory })))
 const ContributionSubmit = lazy(() => import('./pages/ContributionSubmit').then(m => ({ default: m.ContributionSubmit })))
 import type { Session } from '@supabase/supabase-js'
@@ -300,7 +302,9 @@ function AuthGuardedRoutes() {
       <Route path="/portfolio" element={<PublicPortfolio />} />
       <Route path="/onboarding" element={<RequireAuth session={session} loading={authLoading}><OnboardingWizard /></RequireAuth>} />
       <Route path="/progress" element={<SprintProgress />} />
+      <Route path="/workcraft" element={<WorkcraftRoadmap />} />
       <Route path="/techne" element={<TechneLanding />} />
+      <Route path="/time" element={<SolarLunarTime />} />
       <Route path="/members" element={<MemberDirectory />} />
       <Route path="/submit" element={<ContributionSubmit />} />
       <Route path="/auth" element={<Auth />} />
